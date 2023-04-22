@@ -422,7 +422,7 @@ export async function deleteBlock(id) {
     return parseBody(request(url, { id }));
 }
 
-export async function moveBlock(id: string, previousID: string, parentID: string) {
+export async function moveBlock(id: string, previousID: string | null = null, parentID: string | null = null) {
     let url = '/api/block/moveBlock';
     return parseBody(
         request(url, { id: id, previousID: previousID, parentID: parentID })
