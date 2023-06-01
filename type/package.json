@@ -1,6 +1,6 @@
 {
     "name": "siyuan",
-    "author": ["zuoez02", "Vanessa"],
+    "contributors": ["zuoez02", "Vanessa"],
     "types": "siyuan.d.ts",
     "version": "0.7.2",
     "repository": "https://github.com/siyuan-note/petal/tree/main/type"
