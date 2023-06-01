@@ -1,6 +1,0 @@
-type/
-.*
-src/
-examples/
-doc/
-vite.config.js
