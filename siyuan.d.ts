@@ -190,6 +190,7 @@ export abstract class Plugin {
     name: string;
     app: App;
     commands: ICommandOption[];
+    setting: Setting;
 
     constructor(options: {
         app: App,
@@ -266,6 +267,24 @@ export abstract class Plugin {
         y?: number,
         targetElement?: HTMLElement
     }): void
+}
+
+export class Setting {
+    constructor(options: {
+        height?: string,
+        width?: string,
+        destroyCallback?: () => void
+        confirmCallback?: () => void
+    })
+
+    addItem(options: {
+        title: string
+        description?: string
+        actionElement?: HTMLElement
+        createActionElement?(): HTMLElement
+    }): void;
+
+    open(name: string): void;
 }
 
 export class EventBus {
