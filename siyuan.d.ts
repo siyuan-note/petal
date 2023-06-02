@@ -1,5 +1,5 @@
 type TEventBus = "ws-main" | "click-blockicon" | "click-editorcontent" | "click-pdf" |
-    "click-editortitleicon" | "open-noneditableblock"
+    "click-editortitleicon" | "open-noneditableblock" | "loaded-protyle"
 
 type TCardType = "doc" | "notebook" | "all"
 
@@ -79,7 +79,7 @@ interface IWebSocketData {
     sid: string
 }
 
-declare interface IPluginDockTab {
+interface IPluginDockTab {
     position: "LeftTop" | "LeftBottom" | "RightTop" | "RightBottom" | "BottomLeft" | "BottomRight",
     size: { width: number, height: number },
     icon: string,
@@ -317,7 +317,7 @@ export class Menu {
     close(): void;
 }
 
-declare class Lute {
+export class Lute {
     public static WalkStop: number;
     public static WalkSkipChildren: number;
     public static WalkContinue: number;
