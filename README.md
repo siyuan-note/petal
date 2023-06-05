@@ -1,5 +1,3 @@
-# Siyuan Plugin API
+# SiYuan Plugin API
 
-This is Siyuan Plugin System API. Only types declaration here.
-
-[SiYuan plugin sample](https://github.com/siyuan-note/plugin-sample)
+Here is the API declaration of SiYuan Plugin System, usages please refer to  [SiYuan plugin sample](https://github.com/siyuan-note/plugin-sample).
