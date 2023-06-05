@@ -207,6 +207,7 @@ export abstract class Plugin {
     /**
      * Must be executed before the synchronous function.
      * @param {string} [options.position=right]
+     * @param {string} options.icon - Support svg id or svg tag.
      */
     addTopBar(options: {
         icon: string,
