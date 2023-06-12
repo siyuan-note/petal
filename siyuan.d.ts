@@ -240,6 +240,7 @@ export abstract class Plugin {
      */
     addTab(options: {
         type: string,
+        beforeDestroy?: () => void,
         destroy?: () => void,
         resize?: () => void,
         update?: () => void,

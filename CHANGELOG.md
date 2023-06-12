@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.7.4 2023-06-13
+1. [Add `beforeDestroy`](https://github.com/siyuan-note/siyuan/issues/8467)
+
 ## v0.7.2
 1. 更换为 SiYuan 官方 API
 
