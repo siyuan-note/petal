@@ -111,7 +111,8 @@ interface IMenuItemOption {
 }
 
 interface ICommandOption {
-    langKey: string, // 多语言 key
+    langKey: string, // 用于区分不同快捷键的 key
+    langText?: string, // 快捷键功能描述文本
     /**
      * 目前需使用 MacOS 符号标识，顺序按照 ⌥⇧⌘，入 ⌥⇧⌘A
      * "Ctrl": "⌘",
