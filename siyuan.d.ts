@@ -35,6 +35,10 @@ interface IObject {
     [key: string]: string;
 }
 
+interface I18N {
+    [key: string]: any;
+}
+
 interface ILuteNode {
     TokensStr: () => string;
     __internal_object__: {
@@ -107,7 +111,8 @@ interface IMenuItemOption {
 }
 
 interface ICommandOption {
-    langKey: string, // 多语言 key
+    langKey: string, // 用于区分不同快捷键的 key
+    langText?: string, // 快捷键功能描述文本
     /**
      * 目前需使用 MacOS 符号标识，顺序按照 ⌥⇧⌘，入 ⌥⇧⌘A
      * "Ctrl": "⌘",
@@ -185,7 +190,7 @@ export class App {
 
 export abstract class Plugin {
     eventBus: EventBus;
-    i18n: IObject;
+    i18n: I18N;
     data: any;
     name: string;
     app: App;
@@ -195,7 +200,7 @@ export abstract class Plugin {
     constructor(options: {
         app: App,
         name: string,
-        i18n: IObject
+        i18n: I18N
     })
 
     onload(): void;
