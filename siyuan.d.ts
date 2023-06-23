@@ -133,7 +133,7 @@ interface ICommandOption {
 
 interface IProtyleOption {
     action?: string[],
-    mode?:  "preview" | "wysiwyg",
+    mode?: "preview" | "wysiwyg",
     blockId: string
     key?: string
     scrollAttr?: {
@@ -156,6 +156,7 @@ interface IProtyleOption {
         breadcrumbDocName?: boolean
     }
     typewriterMode?: boolean;
+
     after?(protyle: Protyle): void;
 }
 
@@ -224,6 +225,12 @@ export abstract class Plugin {
     app: App;
     commands: ICommandOption[];
     setting: Setting;
+    protyleSlash: {
+        filter: string[],
+        html: string,
+        id: string
+        callback(protyle: Protyle): void
+    }[];
 
     constructor(options: {
         app: App,
@@ -319,7 +326,7 @@ export class Protyle {
      * @param {boolean} [isBlock=false]
      * @param {boolean} [useProtyleRange=false]
      */
-    insert(html: string, isBlock: boolean, useProtyleRange: boolean): void
+    insert(html: string, isBlock?: boolean, useProtyleRange?: boolean): void
 }
 
 export class Setting {
