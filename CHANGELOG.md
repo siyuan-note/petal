@@ -2,6 +2,7 @@
 
 ## v0.7.5
 
+* [Add protyleSlash to the plugin](https://github.com/siyuan-note/siyuan/issues/8599)
 * [Add plugin API protyle ](https://github.com/siyuan-note/siyuan/issues/8445)
 * [Add ICommand.langText and change the type of i18n](https://github.com/siyuan-note/petal/pull/11)
 
