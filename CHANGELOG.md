@@ -2,6 +2,7 @@
 
 ## v0.7.5
 
+* [Add plugin API protyle ](https://github.com/siyuan-note/siyuan/issues/8445)
 * [Add ICommand.langText and change the type of i18n](https://github.com/siyuan-note/petal/pull/11)
 
 ## v0.7.4 2023-06-13

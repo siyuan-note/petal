@@ -131,6 +131,34 @@ interface ICommandOption {
     dockCallback?: (element: HTMLElement) => void
 }
 
+interface IProtyleOption {
+    action?: string[],
+    mode?:  "preview" | "wysiwyg",
+    blockId: string
+    key?: string
+    scrollAttr?: {
+        rootId: string,
+        startId: string,
+        endId: string
+        scrollTop: number,
+        focusId?: string,
+        focusStart?: number
+        focusEnd?: number
+        zoomInId?: string
+    }
+    defId?: string
+    render?: {
+        background?: boolean
+        title?: boolean
+        gutter?: boolean
+        scroll?: boolean
+        breadcrumb?: boolean
+        breadcrumbDocName?: boolean
+    }
+    typewriterMode?: boolean;
+    after?(protyle: Protyle): void;
+}
+
 export function fetchPost(url: string, data?: any, callback?: (response: IWebSocketData) => void, headers?: IObject): void;
 
 export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
@@ -274,6 +302,24 @@ export abstract class Plugin {
         y?: number,
         targetElement?: HTMLElement
     }): void
+}
+
+export class Protyle {
+    constructor(app: App, element: HTMLElement, options?: IProtyleOption)
+
+    isUploading(): boolean
+
+    destroy(): void
+
+    resize(): void
+
+    reload(focus: boolean): void
+
+    /**
+     * @param {boolean} [isBlock=false]
+     * @param {boolean} [useProtyleRange=false]
+     */
+    insert(html: string, isBlock: boolean, useProtyleRange: boolean): void
 }
 
 export class Setting {
