@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.7.6
+
+* [Add `open-menu-xxx` event bus for plugins ](https://github.com/siyuan-note/siyuan/issues/8617)
+
 ## v0.7.5
 
 * [Add protyleSlash to the plugin](https://github.com/siyuan-note/siyuan/issues/8599)
