@@ -225,6 +225,7 @@ export abstract class Plugin {
     eventBus: EventBus;
     i18n: I18N;
     data: any;
+    displayName: string;
     name: string;
     app: App;
     commands: ICommandOption[];

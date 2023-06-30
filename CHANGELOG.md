@@ -2,7 +2,8 @@
 
 ## v0.7.6
 
-* [Add `open-menu-xxx` event bus for plugins ](https://github.com/siyuan-note/siyuan/issues/8617)
+* [Add plugin name to command palette](https://github.com/siyuan-note/siyuan/issues/8644)
+* [Add `open-menu-xxx` event bus for plugins](https://github.com/siyuan-note/siyuan/issues/8617)
 
 ## v0.7.5
 
