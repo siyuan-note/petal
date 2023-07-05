@@ -3,6 +3,7 @@ type TEventBus = "ws-main" |
     "open-noneditableblock" |
     "open-menu-blockref" | "open-menu-fileannotationref" | "open-menu-tag" | "open-menu-link" | "open-menu-image" |
     "open-menu-av" | "open-menu-content" |
+    "open-menu-breadcrumbmore" |
     "loaded-protyle"
 
 type TCardType = "doc" | "notebook" | "all"
