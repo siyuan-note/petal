@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.8
+
+* [Add `input-search` event bus to plugins](https://github.com/siyuan-note/siyuan/issues/8725)
+
 ## v0.7.7
 
 * [Add `open-menu-breadcrumbmore` event bus to plugins](https://github.com/siyuan-note/siyuan/issues/8666)
