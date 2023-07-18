@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.9
+
+* [Add protyle to the Protyle class](https://github.com/siyuan-note/petal/issues/12)
+
 ## 0.7.8
 
 * [Add `input-search` event bus to plugins](https://github.com/siyuan-note/siyuan/issues/8725)

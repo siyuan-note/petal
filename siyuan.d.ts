@@ -319,6 +319,9 @@ export abstract class Plugin {
 }
 
 export class Protyle {
+
+    public protyle: any;
+
     constructor(app: App, element: HTMLElement, options?: IProtyleOption)
 
     isUploading(): boolean
