@@ -211,7 +211,7 @@ export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "andro
 
 export function adaptHotkey(hotkey: string): string;
 
-export function confirm(title: string, text: string, confirmCallback?: () => void, cancelCallback?: () => void): void;
+export function confirm(title: string, text: string, confirmCallback?: (dialog: Dialog) => void, cancelCallback?: (dialog: Dialog) => void): void;
 
 /**
  * @param timeout - ms. 0: manual close；-1: always show; 6000: default

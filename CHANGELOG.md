@@ -2,6 +2,7 @@
 
 ## 0.7.9
 
+* [Add parameter dialog to the "confirm" callback](https://github.com/siyuan-note/siyuan/issues/8851)
 * [Add protyle to the Protyle class](https://github.com/siyuan-note/petal/issues/12)
 
 ## 0.7.8 2023-07-18
