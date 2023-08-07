@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.7.9 2023-08-01
+
+* [Add parameter dialog to the "confirm" callback](https://github.com/siyuan-note/siyuan/issues/8851)
+* [Add protyle to the Protyle class](https://github.com/siyuan-note/petal/issues/12)
+
+## 0.7.8 2023-07-18
+
+* [Add `input-search` event bus to plugins](https://github.com/siyuan-note/siyuan/issues/8725)
+
+## v0.7.7
+
+* [Add `open-menu-breadcrumbmore` event bus to plugins](https://github.com/siyuan-note/siyuan/issues/8666)
+
+## v0.7.6
+
+* [Add plugin name to command palette](https://github.com/siyuan-note/siyuan/issues/8644)
+* [Add `open-menu-xxx` event bus for plugins](https://github.com/siyuan-note/siyuan/issues/8617)
+
+## v0.7.5
+
+* [Add protyleSlash to the plugin](https://github.com/siyuan-note/siyuan/issues/8599)
+* [Add plugin API protyle ](https://github.com/siyuan-note/siyuan/issues/8445)
+* [Add ICommand.langText and change the type of i18n](https://github.com/siyuan-note/petal/pull/11)
+
 ## v0.7.4 2023-06-13
 1. [Add `beforeDestroy`](https://github.com/siyuan-note/siyuan/issues/8467)
 

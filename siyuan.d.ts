@@ -1,5 +1,11 @@
-type TEventBus = "ws-main" | "click-blockicon" | "click-editorcontent" | "click-pdf" |
-    "click-editortitleicon" | "open-noneditableblock" | "loaded-protyle"
+type TEventBus = "ws-main" |
+    "click-blockicon" | "click-editorcontent" | "click-pdf" | "click-editortitleicon" |
+    "open-noneditableblock" |
+    "open-menu-blockref" | "open-menu-fileannotationref" | "open-menu-tag" | "open-menu-link" | "open-menu-image" |
+    "open-menu-av" | "open-menu-content" |
+    "open-menu-breadcrumbmore" |
+    "input-search" |
+    "loaded-protyle"
 
 type TCardType = "doc" | "notebook" | "all"
 
@@ -131,6 +137,35 @@ interface ICommandOption {
     dockCallback?: (element: HTMLElement) => void
 }
 
+interface IProtyleOption {
+    action?: string[],
+    mode?: "preview" | "wysiwyg",
+    blockId: string
+    key?: string
+    scrollAttr?: {
+        rootId: string,
+        startId: string,
+        endId: string
+        scrollTop: number,
+        focusId?: string,
+        focusStart?: number
+        focusEnd?: number
+        zoomInId?: string
+    }
+    defId?: string
+    render?: {
+        background?: boolean
+        title?: boolean
+        gutter?: boolean
+        scroll?: boolean
+        breadcrumb?: boolean
+        breadcrumbDocName?: boolean
+    }
+    typewriterMode?: boolean;
+
+    after?(protyle: Protyle): void;
+}
+
 export function fetchPost(url: string, data?: any, callback?: (response: IWebSocketData) => void, headers?: IObject): void;
 
 export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
@@ -176,7 +211,7 @@ export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "andro
 
 export function adaptHotkey(hotkey: string): string;
 
-export function confirm(title: string, text: string, confirmCallback?: () => void, cancelCallback?: () => void): void;
+export function confirm(title: string, text: string, confirmCallback?: (dialog: Dialog) => void, cancelCallback?: (dialog: Dialog) => void): void;
 
 /**
  * @param timeout - ms. 0: manual close；-1: always show; 6000: default
@@ -192,10 +227,17 @@ export abstract class Plugin {
     eventBus: EventBus;
     i18n: I18N;
     data: any;
+    displayName: string;
     name: string;
     app: App;
     commands: ICommandOption[];
     setting: Setting;
+    protyleSlash: {
+        filter: string[],
+        html: string,
+        id: string
+        callback(protyle: Protyle): void
+    }[];
 
     constructor(options: {
         app: App,
@@ -274,6 +316,27 @@ export abstract class Plugin {
         y?: number,
         targetElement?: HTMLElement
     }): void
+}
+
+export class Protyle {
+
+    public protyle: any;
+
+    constructor(app: App, element: HTMLElement, options?: IProtyleOption)
+
+    isUploading(): boolean
+
+    destroy(): void
+
+    resize(): void
+
+    reload(focus: boolean): void
+
+    /**
+     * @param {boolean} [isBlock=false]
+     * @param {boolean} [useProtyleRange=false]
+     */
+    insert(html: string, isBlock?: boolean, useProtyleRange?: boolean): void
 }
 
 export class Setting {
