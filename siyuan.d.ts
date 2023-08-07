@@ -4,6 +4,7 @@ type TEventBus = "ws-main" |
     "open-menu-blockref" | "open-menu-fileannotationref" | "open-menu-tag" | "open-menu-link" | "open-menu-image" |
     "open-menu-av" | "open-menu-content" |
     "open-menu-breadcrumbmore" |
+    "open-siyuan-url" |
     "input-search" |
     "loaded-protyle"
 
