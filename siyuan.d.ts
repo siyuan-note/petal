@@ -5,6 +5,8 @@ type TEventBus = "ws-main" |
     "open-menu-av" | "open-menu-content" |
     "open-menu-breadcrumbmore" |
     "open-siyuan-url" |
+    "open-siyuan-url-blocks" |
+    "open-siyuan-url-plugins" |
     "input-search" |
     "loaded-protyle"
 
