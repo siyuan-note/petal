@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+* [Add plugin event bus `open-siyuan-url-plugin` and `open-siyuan-url-block`](https://github.com/siyuan-note/siyuan/pull/8927)
+
 ## 0.7.9 2023-08-01
 
 * [Add parameter dialog to the "confirm" callback](https://github.com/siyuan-note/siyuan/issues/8851)
