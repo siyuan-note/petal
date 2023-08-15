@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.8.0
+## 0.8.0 2023-08-15
 
 * [Add plugin event bus `open-siyuan-url-plugin` and `open-siyuan-url-block`](https://github.com/siyuan-note/siyuan/pull/8927)
 
