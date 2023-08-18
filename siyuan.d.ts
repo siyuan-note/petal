@@ -282,6 +282,8 @@ export abstract class Plugin {
 
     addIcons(svg: string): void;
 
+    getOpenedTab(): { [key: string]: IModel[] } ;
+
     /**
      * Must be executed before the synchronous function.
      */

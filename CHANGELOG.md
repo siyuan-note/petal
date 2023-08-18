@@ -2,6 +2,7 @@
 
 ## 0.8.1 2023-08
 
+* [Plugin API add getOpenedTab method](https://github.com/siyuan-note/siyuan/issues/9002)
 * [Plugin API custom.fn => custom.id in openTab](https://github.com/siyuan-note/siyuan/issues/8944)
 
 ## 0.8.0 2023-08-15
