@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.1 2023-08
+
+* [Plugin API custom.fn => custom.id in openTab](https://github.com/siyuan-note/siyuan/issues/8944)
+
 ## 0.8.0 2023-08-15
 
 * [Add plugin event bus `open-siyuan-url-plugin` and `open-siyuan-url-block`](https://github.com/siyuan-note/siyuan/pull/8927)

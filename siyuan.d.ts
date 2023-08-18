@@ -197,7 +197,7 @@ export function openTab(options: {
         title: string,
         icon: string,
         data?: any
-        fn?: () => IModel,
+        id: string,
     }
     position?: "right" | "bottom",
     keepCursor?: boolean // 是否跳转到新 tab 上
