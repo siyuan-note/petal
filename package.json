@@ -2,6 +2,6 @@
     "name": "siyuan",
     "contributors": ["zuoez02", "Vanessa"],
     "types": "siyuan.d.ts",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "repository": "https://github.com/siyuan-note/petal"
 }
