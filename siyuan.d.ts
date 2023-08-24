@@ -296,11 +296,11 @@ export abstract class Plugin {
      */
     addTab(options: {
         type: string,
-        beforeDestroy?: () => void,
-        destroy?: () => void,
-        resize?: () => void,
-        update?: () => void,
-        init: () => void
+        beforeDestroy?: (this: IModel) => void,
+        destroy?: (this: IModel) => void,
+        resize?: (this: IModel) => void,
+        update?: (this: IModel) => void,
+        init: (this: IModel) => void
     }): () => IModel
 
     /**
