@@ -32,7 +32,7 @@ interface ITab {
 }
 
 interface IModel {
-    element: Element;
+    element: HTMLElement;
     app: App;
     tab: ITab;
     data: any;
