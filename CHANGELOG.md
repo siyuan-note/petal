@@ -2,6 +2,9 @@
 
 ## 0.8.2 2023-08
 
+* [Add plugin event bus `destroy-protyle`](https://github.com/siyuan-note/siyuan/issues/9033)
+* [Add plugin event bus `loaded-protyle-dynamic`](https://github.com/siyuan-note/siyuan/issues/9021)
+
 ## 0.8.1 2023-08-21
 
 * [Plugin API add getOpenedTab method](https://github.com/siyuan-note/siyuan/issues/9002)
