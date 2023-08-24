@@ -33,9 +33,15 @@ interface ITab {
 
 interface IModel {
     element: Element;
+    app: App;
     tab: ITab;
     data: any;
     type: string;
+    init: (this: IModel) => void;
+    destroy: (this: IModel) => void;
+    beforeDestroy: (this: IModel) => void;
+    resize: (this: IModel) => void;
+    update: (this: IModel) => void;
 }
 
 interface IObject {
@@ -177,7 +183,7 @@ export function openTab(options: {
     app: App,
     doc?: {
         id: string,     // 块 id
-        action?: string [] // cb-get-all：获取所有内容；cb-get-focus：打开后光标定位在 id 所在的块；cb-get-hl: 打开后 id 块高亮
+        action?: string[] // cb-get-all：获取所有内容；cb-get-focus：打开后光标定位在 id 所在的块；cb-get-hl: 打开后 id 块高亮
         zoomIn?: boolean // 是否缩放
     },
     pdf?: {
@@ -283,7 +289,7 @@ export abstract class Plugin {
 
     addIcons(svg: string): void;
 
-    getOpenedTab(): { [key: string]: IModel[] } ;
+    getOpenedTab(): { [key: string]: IModel[] };
 
     /**
      * Must be executed before the synchronous function.
@@ -304,10 +310,10 @@ export abstract class Plugin {
         config: IPluginDockTab,
         data: any,
         type: string,
-        destroy?: () => void,
-        resize?: () => void,
-        update?: () => void,
-        init: () => void
+        destroy?: (this: IModel) => void,
+        resize?: (this: IModel) => void,
+        update?: (this: IModel) => void,
+        init: (this: IModel) => void
     }): { config: IPluginDockTab, model: IModel }
 
     addCommand(options: ICommandOption): void
