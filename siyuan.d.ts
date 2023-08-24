@@ -2,11 +2,11 @@ type TEventBus = "ws-main" |
     "click-blockicon" | "click-editorcontent" | "click-pdf" | "click-editortitleicon" |
     "open-noneditableblock" |
     "open-menu-blockref" | "open-menu-fileannotationref" | "open-menu-tag" | "open-menu-link" | "open-menu-image" |
-    "open-menu-av" | "open-menu-content" |
-    "open-menu-breadcrumbmore" |
-    "open-siyuan-url" | "open-siyuan-url-blocks" | "open-siyuan-url-plugins" |
+    "open-menu-av" | "open-menu-content" | "open-menu-breadcrumbmore" |
+    "open-siyuan-url-plugin" | "open-siyuan-url-block" |
     "input-search" |
-    "loaded-protyle"
+    "loaded-protyle" | "loaded-protyle-dynamic" |
+    "destroy-protyle"
 
 type TCardType = "doc" | "notebook" | "all"
 
@@ -198,7 +198,7 @@ export function openTab(options: {
         title: string,
         icon: string,
         data?: any
-        fn?: () => IModel,
+        id: string,
     }
     position?: "right" | "bottom",
     keepCursor?: boolean // 是否跳转到新 tab 上
@@ -282,6 +282,8 @@ export abstract class Plugin {
     removeData(storageName: string): Promise<any>;
 
     addIcons(svg: string): void;
+
+    getOpenedTab(): { [key: string]: IModel[] } ;
 
     /**
      * Must be executed before the synchronous function.

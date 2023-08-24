@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.8.2 2023-08
+
+* [Add plugin event bus `destroy-protyle`](https://github.com/siyuan-note/siyuan/issues/9033)
+* [Add plugin event bus `loaded-protyle-dynamic`](https://github.com/siyuan-note/siyuan/issues/9021)
+
+## 0.8.1 2023-08-21
+
+* [Plugin API add getOpenedTab method](https://github.com/siyuan-note/siyuan/issues/9002)
+* [Plugin API custom.fn => custom.id in openTab](https://github.com/siyuan-note/siyuan/issues/8944)
+
+## 0.8.0 2023-08-15
+
+* [Add plugin event bus `open-siyuan-url-plugin` and `open-siyuan-url-block`](https://github.com/siyuan-note/siyuan/pull/8927)
+
 ## 0.7.9 2023-08-01
 
 * [Add parameter dialog to the "confirm" callback](https://github.com/siyuan-note/siyuan/issues/8851)
