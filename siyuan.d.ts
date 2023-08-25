@@ -37,7 +37,7 @@ interface IModel {
     tab: ITab;
     data: any;
     type: string;
-    init: (this: IModel) => void;
+    init?: (this: IModel) => void;
     destroy: (this: IModel) => void;
     beforeDestroy: (this: IModel) => void;
     resize: (this: IModel) => void;
