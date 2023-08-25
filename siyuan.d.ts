@@ -198,7 +198,7 @@ export function openTab(options: {
         title: string,
         icon: string,
         data?: any
-        id: string,
+        id: string, // 插件名称+页签类型：plugin.name + tab.type
     }
     position?: "right" | "bottom",
     keepCursor?: boolean // 是否跳转到新 tab 上
