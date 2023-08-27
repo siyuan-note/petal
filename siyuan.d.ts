@@ -10,6 +10,21 @@ type TEventBus = "ws-main" |
 
 type TCardType = "doc" | "notebook" | "all"
 
+type TProtyleAction = "cb-get-append" | // 向下滚动加载
+    "cb-get-before" | // 向上滚动加载
+    "cb-get-unchangeid" | // 上下滚动，定位时不修改 blockid
+    "cb-get-hl" | // 高亮
+    "cb-get-focus" | // 光标定位
+    "cb-get-focusfirst" | // 动态定位到第一个块
+    "cb-get-setid" | // 重置 blockid
+    "cb-get-all" | // 获取所有块
+    "cb-get-backlink" | // 悬浮窗为传递型需展示上下文
+    "cb-get-unundo" | // 不需要记录历史
+    "cb-get-scroll" | // 滚动到指定位置
+    "cb-get-context" | // 包含上下文
+    "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
+    "cb-get-history" // 历史渲染
+
 declare global {
     interface Window {
         Lute: Lute
@@ -139,7 +154,7 @@ interface ICommandOption {
 }
 
 interface IProtyleOption {
-    action?: string[],
+    action?: TProtyleAction[],
     mode?: "preview" | "wysiwyg",
     blockId: string
     key?: string
