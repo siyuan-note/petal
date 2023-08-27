@@ -40,7 +40,6 @@ interface IModel {
 }
 
 interface ICustomModel extends IModel {
-    app: App;
     tab: ITab;
     data: any;
     type: string;
@@ -57,7 +56,8 @@ interface ICustomModel extends IModel {
 interface IDockModel extends Omit<ICustomModel, "beforeDestroy"> {
 }
 
-interface ITabModel extends ICustomModel { }
+interface ITabModel extends ICustomModel {
+}
 
 interface IObject {
     [key: string]: string;
