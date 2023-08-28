@@ -47,10 +47,31 @@ interface ITab {
 }
 
 interface IModel {
-    element: Element;
+    ws: WebSocket;
+    app: App;
+    reqId: number;
+    parent: ITab | any;
+    send(cmd: string, param: Record<string, unknown>, process?: boolean): void;
+}
+
+interface ICustomModel extends IModel {
     tab: ITab;
     data: any;
     type: string;
+    element: HTMLElement;
+    init(): void;
+    update?(): void;
+    resize?(): void;
+    beforeDestroy?(): void;
+    destroy?(): void;
+
+    [key: string]: any;
+}
+
+interface IDockModel extends Omit<ICustomModel, "beforeDestroy"> {
+}
+
+interface ITabModel extends ICustomModel {
 }
 
 interface IObject {
@@ -192,7 +213,7 @@ export function openTab(options: {
     app: App,
     doc?: {
         id: string,     // 块 id
-        action?: string [] // cb-get-all：获取所有内容；cb-get-focus：打开后光标定位在 id 所在的块；cb-get-hl: 打开后 id 块高亮
+        action?: string[] // cb-get-all：获取所有内容；cb-get-focus：打开后光标定位在 id 所在的块；cb-get-hl: 打开后 id 块高亮
         zoomIn?: boolean // 是否缩放
     },
     pdf?: {
@@ -298,19 +319,19 @@ export abstract class Plugin {
 
     addIcons(svg: string): void;
 
-    getOpenedTab(): { [key: string]: IModel[] } ;
+    getOpenedTab(): { [key: string]: ICustomModel[] };
 
     /**
      * Must be executed before the synchronous function.
      */
     addTab(options: {
         type: string,
-        beforeDestroy?: () => void,
-        destroy?: () => void,
-        resize?: () => void,
-        update?: () => void,
-        init: () => void
-    }): () => IModel
+        beforeDestroy?: (this: ITabModel) => void,
+        destroy?: (this: ITabModel) => void,
+        resize?: (this: ITabModel) => void,
+        update?: (this: ITabModel) => void,
+        init: (this: ITabModel) => void
+    }): () => ITabModel
 
     /**
      * Must be executed before the synchronous function.
@@ -319,11 +340,11 @@ export abstract class Plugin {
         config: IPluginDockTab,
         data: any,
         type: string,
-        destroy?: () => void,
-        resize?: () => void,
-        update?: () => void,
-        init: () => void
-    }): { config: IPluginDockTab, model: IModel }
+        destroy?: (this: IDockModel) => void,
+        resize?: (this: IDockModel) => void,
+        update?: (this: IDockModel) => void,
+        init: (this: IDockModel) => void
+    }): { config: IPluginDockTab, model: IDockModel }
 
     addCommand(options: ICommandOption): void
 
