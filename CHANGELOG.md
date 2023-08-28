@@ -2,6 +2,7 @@
 
 ## 0.8.2 2023-08
 
+* [Improve IModel type definitions](https://github.com/siyuan-note/petal/pull/14)
 * [Add plugin type `TProtyleAction`](https://github.com/siyuan-note/siyuan/issues/8988)
 * [Add plugin event bus `destroy-protyle`](https://github.com/siyuan-note/siyuan/issues/9033)
 * [Add plugin event bus `loaded-protyle-dynamic`](https://github.com/siyuan-note/siyuan/issues/9021)

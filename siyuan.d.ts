@@ -64,8 +64,6 @@ interface ICustomModel extends IModel {
     resize?(): void;
     beforeDestroy?(): void;
     destroy?(): void;
-
-    [key: string]: any;
 }
 
 interface IDockModel extends Omit<ICustomModel, "beforeDestroy"> {
