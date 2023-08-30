@@ -51,6 +51,7 @@ interface IModel {
     app: App;
     reqId: number;
     parent: ITab | any;
+
     send(cmd: string, param: Record<string, unknown>, process?: boolean): void;
 }
 
@@ -59,10 +60,15 @@ interface ICustomModel extends IModel {
     data: any;
     type: string;
     element: HTMLElement;
+
     init(): void;
+
     update?(): void;
+
     resize?(): void;
+
     beforeDestroy?(): void;
+
     destroy?(): void;
 }
 
@@ -166,10 +172,11 @@ interface ICommandOption {
      */
     hotkey: string,
     customHotkey?: string,
-    callback?: () => void
-    fileTreeCallback?: (file: any) => void
-    editorCallback?: (protyle: any) => void
-    dockCallback?: (element: HTMLElement) => void
+    callback?: () => void   // 其余回调存在时将不会触
+    globalCallback?: () => void // 焦点不在应用内时执行的回调
+    fileTreeCallback?: (file: any) => void // 焦点在文档树上时执行的回调
+    editorCallback?: (protyle: any) => void     // 焦点在编辑器上时执行的回调
+    dockCallback?: (element: HTMLElement) => void    // 焦点在 dock 上时执行的回调
 }
 
 interface IProtyleOption {
@@ -206,6 +213,13 @@ export function fetchPost(url: string, data?: any, callback?: (response: IWebSoc
 export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
 
 export function fetchGet(url: string, callback: (response: IWebSocketData) => void): void;
+
+export function openWindow(options: {
+    tab?: ITab,
+    doc?: {
+        id: string,     // 块 id
+    },
+}): void;
 
 export function openTab(options: {
     app: App,
