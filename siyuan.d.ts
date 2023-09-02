@@ -215,6 +215,12 @@ export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
 export function fetchGet(url: string, callback: (response: IWebSocketData) => void): void;
 
 export function openWindow(options: {
+    position?: {
+        x: number,
+        y: number,
+    },
+    height?: number,
+    width?: number,
     tab?: ITab,
     doc?: {
         id: string,     // 块 id
