@@ -1,12 +1,12 @@
-type TEventBus = "ws-main" |
-    "click-blockicon" | "click-editorcontent" | "click-pdf" | "click-editortitleicon" |
-    "open-noneditableblock" |
-    "open-menu-blockref" | "open-menu-fileannotationref" | "open-menu-tag" | "open-menu-link" | "open-menu-image" |
-    "open-menu-av" | "open-menu-content" | "open-menu-breadcrumbmore" |
-    "open-siyuan-url-plugin" | "open-siyuan-url-block" |
-    "input-search" |
-    "loaded-protyle" | "loaded-protyle-dynamic" |
-    "destroy-protyle"
+export type * from "./types";
+
+import type * as events from "./types/events";
+
+declare global {
+    interface Window extends Global { }
+}
+
+type TEventBus = keyof IEventBusMap
 
 type TCardType = "doc" | "notebook" | "all"
 
@@ -25,10 +25,31 @@ type TProtyleAction = "cb-get-append" | // 向下滚动加载
     "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
     "cb-get-history" // 历史渲染
 
-declare global {
-    interface Window {
-        Lute: Lute
-    }
+interface Global {
+    Lute: Lute;
+}
+
+interface IEventBusMap {
+    "click-blockicon": CustomEvent<events.IClickBlockIconDetail>;
+    "click-editorcontent": CustomEvent<events.IClickEditorContentDetail>;
+    "click-editortitleicon": CustomEvent<events.IClickEditorTitleIconDetail>;
+    "click-pdf": CustomEvent<events.IClickPdfDetail>;
+    "destroy-protyle": CustomEvent<events.IDestroyProtyleDetail>;
+    "input-search": CustomEvent<events.IInputSearchDetail>;
+    "loaded-protyle-dynamic": CustomEvent<events.ILoadedProtyleDynamicDetail>;
+    "loaded-protyle": CustomEvent<events.ILoadedProtyleDetail>;
+    "open-menu-av": CustomEvent<any>;
+    "open-menu-blockref": CustomEvent<events.IOpenMenuBlockRefDetail>;
+    "open-menu-breadcrumbmore": CustomEvent<events.IOpenMenuBreadcrumbMoreDetail>;
+    "open-menu-content": CustomEvent<events.IOpenMenuContentDetail>;
+    "open-menu-fileannotationref": CustomEvent<events.IOpenMenuFileAnnotationRefDetail>;
+    "open-menu-image": CustomEvent<events.IOpenMenuImageDetail>;
+    "open-menu-link": CustomEvent<events.IOpenMenuLinkDetail>;
+    "open-menu-tag": CustomEvent<events.IOpenMenuTagDetail>;
+    "open-noneditableblock": CustomEvent<events.IOpenNonEditableBlockDetail>;
+    "open-siyuan-url-block": CustomEvent<events.IOpenSiyuanUrlBlockDetail>;
+    "open-siyuan-url-plugin": CustomEvent<events.IOpenSiyuanUrlPluginDetail>;
+    "ws-main": CustomEvent<events.IWebSocketMainDetail>;
 }
 
 interface ITab {
@@ -415,13 +436,13 @@ export class Setting {
 }
 
 export class EventBus {
-    on(type: TEventBus, listener: (event: CustomEvent<any>) => void): void;
+    on<K extends TEventBus>(type: K, listener: (event: IEventBusMap[K]) => void): void;
 
-    once(type: TEventBus, listener: (event: CustomEvent<any>) => void): void;
+    once<K extends TEventBus>(type: K, listener: (event: IEventBusMap[K]) => void): void;
 
-    off(type: TEventBus, listener: (event: CustomEvent<any>) => void): void;
+    off<K extends TEventBus>(type: K, listener: (event: IEventBusMap[K]) => void): void;
 
-    emit(type: TEventBus, detail?: any): boolean;
+    emit<K extends TEventBus>(type: K, detail?: any): boolean;
 }
 
 export class Dialog {
