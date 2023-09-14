@@ -10,6 +10,21 @@ type TEventBus = "ws-main" |
 
 type TCardType = "doc" | "notebook" | "all"
 
+type TProtyleAction = "cb-get-append" | // 向下滚动加载
+    "cb-get-before" | // 向上滚动加载
+    "cb-get-unchangeid" | // 上下滚动，定位时不修改 blockid
+    "cb-get-hl" | // 高亮
+    "cb-get-focus" | // 光标定位
+    "cb-get-focusfirst" | // 动态定位到第一个块
+    "cb-get-setid" | // 重置 blockid
+    "cb-get-all" | // 获取所有块
+    "cb-get-backlink" | // 悬浮窗为传递型需展示上下文
+    "cb-get-unundo" | // 不需要记录历史
+    "cb-get-scroll" | // 滚动到指定位置
+    "cb-get-context" | // 包含上下文
+    "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
+    "cb-get-history" // 历史渲染
+
 declare global {
     interface Window {
         Lute: Lute
@@ -36,6 +51,7 @@ interface IModel {
     app: App;
     reqId: number;
     parent: ITab | any;
+
     send(cmd: string, param: Record<string, unknown>, process?: boolean): void;
 }
 
@@ -44,13 +60,16 @@ interface ICustomModel extends IModel {
     data: any;
     type: string;
     element: HTMLElement;
-    init(): void;
-    update?(): void;
-    resize?(): void;
-    beforeDestroy?(): void;
-    destroy?(): void;
 
-    [key: string]: any;
+    init(): void;
+
+    update?(): void;
+
+    resize?(): void;
+
+    beforeDestroy?(): void;
+
+    destroy?(): void;
 }
 
 interface IDockModel extends Omit<ICustomModel, "beforeDestroy"> {
@@ -153,14 +172,15 @@ interface ICommandOption {
      */
     hotkey: string,
     customHotkey?: string,
-    callback?: () => void
-    fileTreeCallback?: (file: any) => void
-    editorCallback?: (protyle: any) => void
-    dockCallback?: (element: HTMLElement) => void
+    callback?: () => void   // 其余回调存在时将不会触
+    globalCallback?: () => void // 焦点不在应用内时执行的回调
+    fileTreeCallback?: (file: any) => void // 焦点在文档树上时执行的回调
+    editorCallback?: (protyle: any) => void     // 焦点在编辑器上时执行的回调
+    dockCallback?: (element: HTMLElement) => void    // 焦点在 dock 上时执行的回调
 }
 
 interface IProtyleOption {
-    action?: string[],
+    action?: TProtyleAction[],
     mode?: "preview" | "wysiwyg",
     blockId: string
     key?: string
@@ -194,6 +214,19 @@ export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
 
 export function fetchGet(url: string, callback: (response: IWebSocketData) => void): void;
 
+export function openWindow(options: {
+    position?: {
+        x: number,
+        y: number,
+    },
+    height?: number,
+    width?: number,
+    tab?: ITab,
+    doc?: {
+        id: string,     // 块 id
+    },
+}): void;
+
 export function openTab(options: {
     app: App,
     doc?: {
@@ -219,7 +252,7 @@ export function openTab(options: {
         title: string,
         icon: string,
         data?: any
-        id: string,
+        id: string, // 插件名称+页签类型：plugin.name + tab.type
     }
     position?: "right" | "bottom",
     keepCursor?: boolean // 是否跳转到新 tab 上
