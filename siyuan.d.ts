@@ -30,26 +30,26 @@ interface Global {
 }
 
 interface IEventBusMap {
-    "click-blockicon": CustomEvent<events.IClickBlockIconDetail>;
-    "click-editorcontent": CustomEvent<events.IClickEditorContentDetail>;
-    "click-editortitleicon": CustomEvent<events.IClickEditorTitleIconDetail>;
-    "click-pdf": CustomEvent<events.IClickPdfDetail>;
-    "destroy-protyle": CustomEvent<events.IDestroyProtyleDetail>;
-    "input-search": CustomEvent<events.IInputSearchDetail>;
-    "loaded-protyle-dynamic": CustomEvent<events.ILoadedProtyleDynamicDetail>;
-    "loaded-protyle": CustomEvent<events.ILoadedProtyleDetail>;
-    "open-menu-av": CustomEvent<any>;
-    "open-menu-blockref": CustomEvent<events.IOpenMenuBlockRefDetail>;
-    "open-menu-breadcrumbmore": CustomEvent<events.IOpenMenuBreadcrumbMoreDetail>;
-    "open-menu-content": CustomEvent<events.IOpenMenuContentDetail>;
-    "open-menu-fileannotationref": CustomEvent<events.IOpenMenuFileAnnotationRefDetail>;
-    "open-menu-image": CustomEvent<events.IOpenMenuImageDetail>;
-    "open-menu-link": CustomEvent<events.IOpenMenuLinkDetail>;
-    "open-menu-tag": CustomEvent<events.IOpenMenuTagDetail>;
-    "open-noneditableblock": CustomEvent<events.IOpenNonEditableBlockDetail>;
-    "open-siyuan-url-block": CustomEvent<events.IOpenSiyuanUrlBlockDetail>;
-    "open-siyuan-url-plugin": CustomEvent<events.IOpenSiyuanUrlPluginDetail>;
-    "ws-main": CustomEvent<events.IWebSocketMainDetail>;
+    "click-blockicon": events.IClickBlockIconDetail;
+    "click-editorcontent": events.IClickEditorContentDetail;
+    "click-editortitleicon": events.IClickEditorTitleIconDetail;
+    "click-pdf": events.IClickPdfDetail;
+    "destroy-protyle": events.IDestroyProtyleDetail;
+    "input-search": events.IInputSearchDetail;
+    "loaded-protyle-dynamic": events.ILoadedProtyleDynamicDetail;
+    "loaded-protyle": events.ILoadedProtyleDetail;
+    "open-menu-av": any;
+    "open-menu-blockref": events.IOpenMenuBlockRefDetail;
+    "open-menu-breadcrumbmore": events.IOpenMenuBreadcrumbMoreDetail;
+    "open-menu-content": events.IOpenMenuContentDetail;
+    "open-menu-fileannotationref": events.IOpenMenuFileAnnotationRefDetail;
+    "open-menu-image": events.IOpenMenuImageDetail;
+    "open-menu-link": events.IOpenMenuLinkDetail;
+    "open-menu-tag": events.IOpenMenuTagDetail;
+    "open-noneditableblock": events.IOpenNonEditableBlockDetail;
+    "open-siyuan-url-block": events.IOpenSiyuanUrlBlockDetail;
+    "open-siyuan-url-plugin": events.IOpenSiyuanUrlPluginDetail;
+    "ws-main": events.IWebSocketMainDetail;
 }
 
 interface ITab {
@@ -436,13 +436,25 @@ export class Setting {
 }
 
 export class EventBus {
-    on<K extends TEventBus>(type: K, listener: (event: IEventBusMap[K]) => any): void;
+    on<
+        K extends TEventBus,
+        E = CustomEvent<IEventBusMap[K]>,
+    >(type: K, listener: (event: E) => any): void;
 
-    once<K extends TEventBus>(type: K, listener: (event: IEventBusMap[K]) => any): void;
+    once<
+        K extends TEventBus,
+        E = CustomEvent<IEventBusMap[K]>,
+    >(type: K, listener: (event: E) => any): void;
 
-    off<K extends TEventBus>(type: K, listener: (event: IEventBusMap[K]) => any): void;
+    off<
+        K extends TEventBus,
+        E = CustomEvent<IEventBusMap[K]>,
+    >(type: K, listener: (event: E) => any): void;
 
-    emit<K extends TEventBus>(type: K, detail?: any): boolean;
+    emit<
+        K extends TEventBus,
+        D = IEventBusMap[K],
+    >(type: K, detail?: D): boolean;
 }
 
 export class Dialog {
