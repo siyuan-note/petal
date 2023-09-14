@@ -1,5 +1,3 @@
-export type * from "./types";
-
 import type * as events from "./types/events";
 
 declare global {
