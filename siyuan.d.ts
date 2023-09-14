@@ -1,4 +1,4 @@
-import type * as events from "./types/events";
+import type * as types from "./types";
 
 declare global {
     interface Window extends Global { }
@@ -28,26 +28,26 @@ interface Global {
 }
 
 interface IEventBusMap {
-    "click-blockicon": events.IClickBlockIconDetail;
-    "click-editorcontent": events.IClickEditorContentDetail;
-    "click-editortitleicon": events.IClickEditorTitleIconDetail;
-    "click-pdf": events.IClickPdfDetail;
-    "destroy-protyle": events.IDestroyProtyleDetail;
-    "input-search": events.IInputSearchDetail;
-    "loaded-protyle-dynamic": events.ILoadedProtyleDynamicDetail;
-    "loaded-protyle": events.ILoadedProtyleDetail;
+    "click-blockicon": types.events.IClickBlockIconDetail;
+    "click-editorcontent": types.events.IClickEditorContentDetail;
+    "click-editortitleicon": types.events.IClickEditorTitleIconDetail;
+    "click-pdf": types.events.IClickPdfDetail;
+    "destroy-protyle": types.events.IDestroyProtyleDetail;
+    "input-search": types.events.IInputSearchDetail;
+    "loaded-protyle-dynamic": types.events.ILoadedProtyleDynamicDetail;
+    "loaded-protyle": types.events.ILoadedProtyleDetail;
     "open-menu-av": any;
-    "open-menu-blockref": events.IOpenMenuBlockRefDetail;
-    "open-menu-breadcrumbmore": events.IOpenMenuBreadcrumbMoreDetail;
-    "open-menu-content": events.IOpenMenuContentDetail;
-    "open-menu-fileannotationref": events.IOpenMenuFileAnnotationRefDetail;
-    "open-menu-image": events.IOpenMenuImageDetail;
-    "open-menu-link": events.IOpenMenuLinkDetail;
-    "open-menu-tag": events.IOpenMenuTagDetail;
-    "open-noneditableblock": events.IOpenNonEditableBlockDetail;
-    "open-siyuan-url-block": events.IOpenSiyuanUrlBlockDetail;
-    "open-siyuan-url-plugin": events.IOpenSiyuanUrlPluginDetail;
-    "ws-main": events.IWebSocketMainDetail;
+    "open-menu-blockref": types.events.IOpenMenuBlockRefDetail;
+    "open-menu-breadcrumbmore": types.events.IOpenMenuBreadcrumbMoreDetail;
+    "open-menu-content": types.events.IOpenMenuContentDetail;
+    "open-menu-fileannotationref": types.events.IOpenMenuFileAnnotationRefDetail;
+    "open-menu-image": types.events.IOpenMenuImageDetail;
+    "open-menu-link": types.events.IOpenMenuLinkDetail;
+    "open-menu-tag": types.events.IOpenMenuTagDetail;
+    "open-noneditableblock": types.events.IOpenNonEditableBlockDetail;
+    "open-siyuan-url-block": types.events.IOpenSiyuanUrlBlockDetail;
+    "open-siyuan-url-plugin": types.events.IOpenSiyuanUrlPluginDetail;
+    "ws-main": types.events.IWebSocketMainDetail;
 }
 
 interface ITab {
