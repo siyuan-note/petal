@@ -436,11 +436,11 @@ export class Setting {
 }
 
 export class EventBus {
-    on<K extends TEventBus>(type: K, listener: (event: IEventBusMap[K]) => void): void;
+    on<K extends TEventBus>(type: K, listener: (event: IEventBusMap[K]) => any): void;
 
-    once<K extends TEventBus>(type: K, listener: (event: IEventBusMap[K]) => void): void;
+    once<K extends TEventBus>(type: K, listener: (event: IEventBusMap[K]) => any): void;
 
-    off<K extends TEventBus>(type: K, listener: (event: IEventBusMap[K]) => void): void;
+    off<K extends TEventBus>(type: K, listener: (event: IEventBusMap[K]) => any): void;
 
     emit<K extends TEventBus>(type: K, detail?: any): boolean;
 }
