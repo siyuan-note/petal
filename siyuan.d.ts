@@ -1,7 +1,9 @@
 import type * as types from "./types";
+import {IProtyle} from "./types/protyle";
 
 declare global {
-    interface Window extends Global { }
+    interface Window extends Global {
+    }
 }
 
 type TEventBus = keyof IEventBusMap
@@ -22,6 +24,51 @@ type TProtyleAction = "cb-get-append" | // 向下滚动加载
     "cb-get-context" | // 包含上下文
     "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
     "cb-get-history" // 历史渲染
+
+type TOperation =
+    "insert"
+    | "update"
+    | "delete"
+    | "move"
+    | "foldHeading"
+    | "unfoldHeading"
+    | "setAttrs"
+    | "updateAttrs"
+    | "append"
+    | "insertAttrViewBlock"
+    | "removeAttrViewBlock"
+    | "addAttrViewCol"
+    | "removeAttrViewCol"
+    | "addFlashcards"
+    | "removeFlashcards"
+    | "updateAttrViewCell"
+    | "updateAttrViewCol"
+    | "sortAttrViewRow"
+    | "sortAttrViewCol"
+    | "setAttrViewColHidden"
+    | "setAttrViewColWrap"
+    | "setAttrViewColWidth"
+    | "updateAttrViewColOptions"
+    | "removeAttrViewColOption"
+    | "updateAttrViewColOption"
+    | "setAttrViewName"
+    | "setAttrViewFilters"
+    | "setAttrViewSorts"
+    | "setAttrViewColCalc"
+    | "updateAttrViewColNumberFormat"
+
+type TAVCol =
+    "text"
+    | "date"
+    | "number"
+    | "relation"
+    | "rollup"
+    | "select"
+    | "block"
+    | "mSelect"
+    | "url"
+    | "email"
+    | "phone"
 
 interface Global {
     Lute: Lute;
@@ -227,6 +274,25 @@ interface IProtyleOption {
     after?(protyle: Protyle): void;
 }
 
+interface IOperation {
+    action: TOperation, // move， delete 不需要传 data
+    id?: string,
+    avID?: string,  // av
+    format?: string // updateAttrViewColNumberFormat 专享
+    keyID?: string // updateAttrViewCell 专享
+    rowID?: string // updateAttrViewCell 专享
+    data?: any, // updateAttr 时为  { old: IObject, new: IObject }, updateAttrViewCell 时为 {TAVCol: {content: string}}
+    parentID?: string
+    previousID?: string
+    retData?: any
+    nextID?: string // insert 专享
+    srcIDs?: string[] // insertAttrViewBlock 专享
+    name?: string // addAttrViewCol 专享
+    type?: TAVCol // addAttrViewCol 专享
+    deckID?: string // add/removeFlashcards 专享
+    blockIDs?: string[] // add/removeFlashcards 专享
+}
+
 export function fetchPost(url: string, data?: any, callback?: (response: IWebSocketData) => void, headers?: IObject): void;
 
 export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
@@ -292,6 +358,8 @@ export function confirm(title: string, text: string, confirmCallback?: (dialog: 
  * @param {string} [type=info]
  */
 export function showMessage(text: string, timeout?: number, type?: "info" | "error", id?: string): void;
+
+export function transaction(protyle: IProtyle, doOperations: IOperation[], undoOperations: IOperation[]): void;
 
 export class App {
     plugins: Plugin[];

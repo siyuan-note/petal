@@ -1,8 +1,8 @@
-import type siyuan from "./../siyuan";
+import {App, Lute} from "./../siyuan";
 
 // REF: https://github.com/siyuan-note/siyuan/blob/dev/app/src/types/protyle.d.ts
 export interface IProtyle {
-    app: any;
+    app: App;
     transactionTime: number;
     id: string;
     block: {
@@ -44,7 +44,7 @@ export interface IProtyle {
     };
     contentElement?: HTMLElement;
     options: any;
-    lute?: siyuan.Lute;
+    lute?: Lute;
     toolbar?: any;
     preview?: any;
     hint?: any;

@@ -1,9 +1,9 @@
-import type siyuan from "./../siyuan";
 import type { IProtyle } from "./protyle";
+import {Menu} from "./../siyuan";
 
 //#region click-block-icon
 interface IBlockIconDetail {
-    menu: InstanceType<typeof siyuan.Menu>;
+    menu: InstanceType<typeof Menu>;
     protyle: IProtyle;
     data?: IDocumentData;
     blockElements?: HTMLElement[];
@@ -121,7 +121,7 @@ export interface IInputSearchDetail {
 
 //#region open-menu
 interface IMenuBaseDetail {
-    menu: InstanceType<typeof siyuan.Menu>;
+    menu: InstanceType<typeof Menu>;
     protyle: IProtyle;
 }
 
