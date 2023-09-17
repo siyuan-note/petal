@@ -359,8 +359,6 @@ export function confirm(title: string, text: string, confirmCallback?: (dialog: 
  */
 export function showMessage(text: string, timeout?: number, type?: "info" | "error", id?: string): void;
 
-export function transaction(protyle: IProtyle, doOperations: IOperation[], undoOperations: IOperation[]): void;
-
 export class App {
     plugins: Plugin[];
 }
@@ -481,6 +479,8 @@ export class Protyle {
      * @param {boolean} [useProtyleRange=false]
      */
     insert(html: string, isBlock?: boolean, useProtyleRange?: boolean): void
+
+    transaction(doOperations: IOperation[], undoOperations?: IOperation[]): void;
 }
 
 export class Setting {
