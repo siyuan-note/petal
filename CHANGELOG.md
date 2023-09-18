@@ -2,6 +2,9 @@
 
 ## 0.8.4 2023-09
 
+* [Add plugin function `transaction`](https://github.com/siyuan-note/siyuan/issues/9172)
+* [Add `CustomEvent` type definition](https://github.com/siyuan-note/petal/pull/15)
+
 ## 0.8.3 2023-09-05
 
 * [Plugin API add openWindow and command.globalCallback](https://github.com/siyuan-note/siyuan/issues/9032)

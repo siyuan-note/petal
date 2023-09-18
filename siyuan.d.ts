@@ -1,12 +1,12 @@
-type TEventBus = "ws-main" |
-    "click-blockicon" | "click-editorcontent" | "click-pdf" | "click-editortitleicon" |
-    "open-noneditableblock" |
-    "open-menu-blockref" | "open-menu-fileannotationref" | "open-menu-tag" | "open-menu-link" | "open-menu-image" |
-    "open-menu-av" | "open-menu-content" | "open-menu-breadcrumbmore" |
-    "open-siyuan-url-plugin" | "open-siyuan-url-block" |
-    "input-search" |
-    "loaded-protyle" | "loaded-protyle-dynamic" |
-    "destroy-protyle"
+import type * as types from "./types";
+import {IProtyle} from "./types/protyle";
+
+declare global {
+    interface Window extends Global {
+    }
+}
+
+type TEventBus = keyof IEventBusMap
 
 type TCardType = "doc" | "notebook" | "all"
 
@@ -25,10 +25,76 @@ type TProtyleAction = "cb-get-append" | // 向下滚动加载
     "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
     "cb-get-history" // 历史渲染
 
-declare global {
-    interface Window {
-        Lute: Lute
-    }
+type TOperation =
+    "insert"
+    | "update"
+    | "delete"
+    | "move"
+    | "foldHeading"
+    | "unfoldHeading"
+    | "setAttrs"
+    | "updateAttrs"
+    | "append"
+    | "insertAttrViewBlock"
+    | "removeAttrViewBlock"
+    | "addAttrViewCol"
+    | "removeAttrViewCol"
+    | "addFlashcards"
+    | "removeFlashcards"
+    | "updateAttrViewCell"
+    | "updateAttrViewCol"
+    | "sortAttrViewRow"
+    | "sortAttrViewCol"
+    | "setAttrViewColHidden"
+    | "setAttrViewColWrap"
+    | "setAttrViewColWidth"
+    | "updateAttrViewColOptions"
+    | "removeAttrViewColOption"
+    | "updateAttrViewColOption"
+    | "setAttrViewName"
+    | "setAttrViewFilters"
+    | "setAttrViewSorts"
+    | "setAttrViewColCalc"
+    | "updateAttrViewColNumberFormat"
+
+type TAVCol =
+    "text"
+    | "date"
+    | "number"
+    | "relation"
+    | "rollup"
+    | "select"
+    | "block"
+    | "mSelect"
+    | "url"
+    | "email"
+    | "phone"
+
+interface Global {
+    Lute: Lute;
+}
+
+interface IEventBusMap {
+    "click-blockicon": types.events.IClickBlockIconDetail;
+    "click-editorcontent": types.events.IClickEditorContentDetail;
+    "click-editortitleicon": types.events.IClickEditorTitleIconDetail;
+    "click-pdf": types.events.IClickPdfDetail;
+    "destroy-protyle": types.events.IDestroyProtyleDetail;
+    "input-search": types.events.IInputSearchDetail;
+    "loaded-protyle-dynamic": types.events.ILoadedProtyleDynamicDetail;
+    "loaded-protyle": types.events.ILoadedProtyleDetail;
+    "open-menu-av": any;
+    "open-menu-blockref": types.events.IOpenMenuBlockRefDetail;
+    "open-menu-breadcrumbmore": types.events.IOpenMenuBreadcrumbMoreDetail;
+    "open-menu-content": types.events.IOpenMenuContentDetail;
+    "open-menu-fileannotationref": types.events.IOpenMenuFileAnnotationRefDetail;
+    "open-menu-image": types.events.IOpenMenuImageDetail;
+    "open-menu-link": types.events.IOpenMenuLinkDetail;
+    "open-menu-tag": types.events.IOpenMenuTagDetail;
+    "open-noneditableblock": types.events.IOpenNonEditableBlockDetail;
+    "open-siyuan-url-block": types.events.IOpenSiyuanUrlBlockDetail;
+    "open-siyuan-url-plugin": types.events.IOpenSiyuanUrlPluginDetail;
+    "ws-main": types.events.IWebSocketMainDetail;
 }
 
 interface ITab {
@@ -206,6 +272,25 @@ interface IProtyleOption {
     typewriterMode?: boolean;
 
     after?(protyle: Protyle): void;
+}
+
+interface IOperation {
+    action: TOperation, // move， delete 不需要传 data
+    id?: string,
+    avID?: string,  // av
+    format?: string // updateAttrViewColNumberFormat 专享
+    keyID?: string // updateAttrViewCell 专享
+    rowID?: string // updateAttrViewCell 专享
+    data?: any, // updateAttr 时为  { old: IObject, new: IObject }, updateAttrViewCell 时为 {TAVCol: {content: string}}
+    parentID?: string
+    previousID?: string
+    retData?: any
+    nextID?: string // insert 专享
+    srcIDs?: string[] // insertAttrViewBlock 专享
+    name?: string // addAttrViewCol 专享
+    type?: TAVCol // addAttrViewCol 专享
+    deckID?: string // add/removeFlashcards 专享
+    blockIDs?: string[] // add/removeFlashcards 专享
 }
 
 export function fetchPost(url: string, data?: any, callback?: (response: IWebSocketData) => void, headers?: IObject): void;
@@ -394,6 +479,8 @@ export class Protyle {
      * @param {boolean} [useProtyleRange=false]
      */
     insert(html: string, isBlock?: boolean, useProtyleRange?: boolean): void
+
+    transaction(doOperations: IOperation[], undoOperations?: IOperation[]): void;
 }
 
 export class Setting {
@@ -415,13 +502,25 @@ export class Setting {
 }
 
 export class EventBus {
-    on(type: TEventBus, listener: (event: CustomEvent<any>) => void): void;
+    on<
+        K extends TEventBus,
+        D = IEventBusMap[K],
+    >(type: K, listener: (event: CustomEvent<D>) => any): void;
 
-    once(type: TEventBus, listener: (event: CustomEvent<any>) => void): void;
+    once<
+        K extends TEventBus,
+        D = IEventBusMap[K],
+    >(type: K, listener: (event: CustomEvent<D>) => any): void;
 
-    off(type: TEventBus, listener: (event: CustomEvent<any>) => void): void;
+    off<
+        K extends TEventBus,
+        D = IEventBusMap[K],
+    >(type: K, listener: (event: CustomEvent<D>) => any): void;
 
-    emit(type: TEventBus, detail?: any): boolean;
+    emit<
+        K extends TEventBus,
+        D = IEventBusMap[K],
+    >(type: K, detail?: D): boolean;
 }
 
 export class Dialog {
