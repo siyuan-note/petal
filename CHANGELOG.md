@@ -2,6 +2,7 @@
 
 ## 0.8.4 2023-09
 
+* [Improve `Menu`](https://github.com/siyuan-note/petal/pull/16)
 * [Add plugin function `transaction`](https://github.com/siyuan-note/siyuan/issues/9172)
 * [Add `CustomEvent` type definition](https://github.com/siyuan-note/petal/pull/15)
 
