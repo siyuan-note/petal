@@ -546,6 +546,8 @@ export class Dialog {
 export class Menu {
     constructor(id?: string, closeCallback?: () => void);
 
+    element: HTMLElement;
+
     showSubMenu(subMenuElement: HTMLElement): void;
 
     addItem(options: IMenuItemOption): HTMLElement;
