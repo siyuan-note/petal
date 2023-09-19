@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.8.4 2023-09
+## 0.8.5 2023-09
+
+## 0.8.4 2023-09-19
 
 * [Improve `Menu`](https://github.com/siyuan-note/petal/pull/16)
 * [Add plugin function `transaction`](https://github.com/siyuan-note/siyuan/issues/9172)
