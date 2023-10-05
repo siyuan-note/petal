@@ -2,6 +2,8 @@
 
 ## 0.8.5 2023-09
 
+* [Add plugin event bus `open-menu-doctree`](https://github.com/siyuan-note/siyuan/issues/9351)
+
 ## 0.8.4 2023-09-19
 
 * [Improve `Menu`](https://github.com/siyuan-note/petal/pull/16)

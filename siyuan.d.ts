@@ -83,7 +83,11 @@ interface IEventBusMap {
     "input-search": types.events.IInputSearchDetail;
     "loaded-protyle-dynamic": types.events.ILoadedProtyleDynamicDetail;
     "loaded-protyle": types.events.ILoadedProtyleDetail;
-    "open-menu-av": any;
+    "open-menu-av": {
+        menu: EventMenu,
+        protyle: IProtyle,
+        element: HTMLElement
+    };
     "open-menu-blockref": types.events.IOpenMenuBlockRefDetail;
     "open-menu-breadcrumbmore": types.events.IOpenMenuBreadcrumbMoreDetail;
     "open-menu-content": types.events.IOpenMenuContentDetail;
@@ -91,6 +95,7 @@ interface IEventBusMap {
     "open-menu-image": types.events.IOpenMenuImageDetail;
     "open-menu-link": types.events.IOpenMenuLinkDetail;
     "open-menu-tag": types.events.IOpenMenuTagDetail;
+    "open-menu-doctree": { menu: EventMenu, elements: NodeListOf<Element>, type: "doc" | "docs" | "notebook" };
     "open-noneditableblock": types.events.IOpenNonEditableBlockDetail;
     "open-siyuan-url-block": types.events.IOpenSiyuanUrlBlockDetail;
     "open-siyuan-url-plugin": types.events.IOpenSiyuanUrlPluginDetail;
@@ -207,8 +212,9 @@ interface IPluginDockTab {
 }
 
 interface IMenuItemOption {
+    iconClass?: string,
     label?: string,
-    click?: (element: HTMLElement) => void,
+    click?: (element: HTMLElement, event: MouseEvent) => boolean | void | Promise<boolean | void>
     type?: "separator" | "submenu" | "readonly",
     accelerator?: string,
     action?: string,
@@ -562,6 +568,16 @@ export class Menu {
     fullscreen(position?: "bottom" | "all"): void;
 
     close(): void;
+}
+
+export class EventMenu {
+    public menus: IMenuItemOption[];
+
+    constructor()
+
+    public addSeparator(index?: number): void
+
+    public addItem(menu: IMenuItemOption): void
 }
 
 export class Lute {
