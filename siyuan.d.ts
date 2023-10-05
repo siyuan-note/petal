@@ -1,6 +1,6 @@
 import {IProtyle, Lute, Protyle, Toolbar} from "./types/protyle";
 import {IMenuBaseDetail} from "./types/events";
-import {IGetDocInfo} from "./types/response";
+import {IGetDocInfo, IGetTreeStat} from "./types/response";
 
 declare global {
     interface Window extends Global {
@@ -111,7 +111,7 @@ interface IEventBusMap {
     "open-menu-breadcrumbmore": {
         menu: EventMenu,
         protyle: IProtyle,
-        data: IGetDocInfo,
+        data: IGetTreeStat,
     };
     "open-menu-content": IMenuBaseDetail & { range: Range };
     "open-menu-fileannotationref": IMenuBaseDetail
