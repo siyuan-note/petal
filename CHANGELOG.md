@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.8.5 2023-09
+## 0.8.6 2023-10
+
+## 0.8.5 2023-10-10
 
 * [Add plugin event bus `open-menu-doctree`](https://github.com/siyuan-note/siyuan/issues/9351)
 
