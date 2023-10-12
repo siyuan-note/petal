@@ -2,9 +2,9 @@ import {IObject} from "../siyuan";
 
 export interface IGetDocInfo {
     ial: IObject;
-    icon: number;
+    icon: string;
     id: string;
-    name: number;
+    name: string;
     refCount: number;
     refIDs: string[];
     rootID: string;
