@@ -5,15 +5,15 @@ import {IMenuBaseDetail} from "./types/events";
 import {IGetDocInfo, IGetTreeStat} from "./types/response";
 
 declare global {
-    interface Window extends Global {
+    export interface Window extends Global {
     }
 }
 
-type TEventBus = keyof IEventBusMap
+export type TEventBus = keyof IEventBusMap
 
-type TCardType = "doc" | "notebook" | "all"
+export type TCardType = "doc" | "notebook" | "all"
 
-type TProtyleAction = "cb-get-append" | // 向下滚动加载
+export type TProtyleAction = "cb-get-append" | // 向下滚动加载
     "cb-get-before" | // 向上滚动加载
     "cb-get-unchangeid" | // 上下滚动，定位时不修改 blockid
     "cb-get-hl" | // 高亮
@@ -28,7 +28,7 @@ type TProtyleAction = "cb-get-append" | // 向下滚动加载
     "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
     "cb-get-history" // 历史渲染
 
-type TOperation =
+export type TOperation =
     "insert"
     | "update"
     | "delete"
@@ -60,7 +60,7 @@ type TOperation =
     | "setAttrViewColCalc"
     | "updateAttrViewColNumberFormat"
 
-type TAVCol =
+export type TAVCol =
     "text"
     | "date"
     | "number"
@@ -73,11 +73,11 @@ type TAVCol =
     | "email"
     | "phone"
 
-interface Global {
+export interface Global {
     Lute: Lute;
 }
 
-interface IEventBusMap {
+export interface IEventBusMap {
     "click-blockicon": {
         menu: EventMenu,
         protyle: IProtyle,
@@ -143,7 +143,7 @@ interface IEventBusMap {
     "ws-main": IWebSocketData;
 }
 
-interface IPosition {
+export interface IPosition {
     x: number,
     y: number,
     w?: number,
@@ -151,7 +151,7 @@ interface IPosition {
     isLeft?: boolean
 }
 
-interface ITab {
+export interface ITab {
     id: string;
     headElement: HTMLElement;
     panelElement: HTMLElement;
@@ -166,7 +166,7 @@ interface ITab {
     close: () => void;
 }
 
-interface IModel {
+export interface IModel {
     ws: WebSocket;
     app: App;
     reqId: number;
@@ -175,7 +175,7 @@ interface IModel {
     send(cmd: string, param: Record<string, unknown>, process?: boolean): void;
 }
 
-interface ICustomModel extends IModel {
+export interface ICustomModel extends IModel {
     tab: ITab;
     data: any;
     type: string;
@@ -192,21 +192,21 @@ interface ICustomModel extends IModel {
     destroy?(): void;
 }
 
-interface IDockModel extends Omit<ICustomModel, "beforeDestroy"> {
+export interface IDockModel extends Omit<ICustomModel, "beforeDestroy"> {
 }
 
-interface ITabModel extends ICustomModel {
+export interface ITabModel extends ICustomModel {
 }
 
-interface IObject {
+export interface IObject {
     [key: string]: string;
 }
 
-interface I18N {
+export interface I18N {
     [key: string]: any;
 }
 
-interface ILuteNode {
+export interface ILuteNode {
     TokensStr: () => string;
     __internal_object__: {
         Parent: {
@@ -216,7 +216,7 @@ interface ILuteNode {
     };
 }
 
-interface ISearchOption {
+export interface ISearchOption {
     page?: number
     removed?: boolean  // 移除后需记录搜索内容 https://github.com/siyuan-note/siyuan/issues/7745
     name?: string
@@ -245,7 +245,7 @@ interface ISearchOption {
     }
 }
 
-interface IWebSocketData {
+export interface IWebSocketData {
     cmd: string
     callback?: string
     data: any
@@ -254,7 +254,7 @@ interface IWebSocketData {
     sid: string
 }
 
-interface IPluginDockTab {
+export interface IPluginDockTab {
     position: "LeftTop" | "LeftBottom" | "RightTop" | "RightBottom" | "BottomLeft" | "BottomRight",
     size: { width: number, height: number },
     icon: string,
@@ -264,7 +264,7 @@ interface IPluginDockTab {
     show?: boolean
 }
 
-interface IMenuItemOption {
+export interface IMenuItemOption {
     iconClass?: string,
     label?: string,
     click?: (element: HTMLElement, event: MouseEvent) => boolean | void | Promise<boolean | void>
@@ -282,7 +282,7 @@ interface IMenuItemOption {
     element?: HTMLElement
 }
 
-interface ICommandOption {
+export interface ICommandOption {
     langKey: string, // 用于区分不同快捷键的 key
     langText?: string, // 快捷键功能描述文本
     /**
@@ -304,7 +304,7 @@ interface ICommandOption {
     dockCallback?: (element: HTMLElement) => void    // 焦点在 dock 上时执行的回调
 }
 
-interface IProtyleOption {
+export interface IProtyleOption {
     action?: TProtyleAction[],
     mode?: "preview" | "wysiwyg",
     blockId: string
@@ -333,7 +333,7 @@ interface IProtyleOption {
     after?(protyle: Protyle): void;
 }
 
-interface IOperation {
+export interface IOperation {
     action: TOperation, // move， delete 不需要传 data
     id?: string,
     avID?: string,  // av

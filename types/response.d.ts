@@ -1,6 +1,6 @@
 import {IObject} from "../siyuan";
 
-interface IGetDocInfo {
+export interface IGetDocInfo {
     ial: IObject
     icon: number
     id: number
@@ -11,7 +11,7 @@ interface IGetDocInfo {
     subFileCount: number
 }
 
-interface IGetTreeStat {
+export interface IGetTreeStat {
     imageCount: number;
     linkCount: number;
     refCount: number;
