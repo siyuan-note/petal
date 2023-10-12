@@ -1,5 +1,6 @@
-import type * as types from "./types";
-import {IProtyle} from "./types/protyle";
+import {IProtyle, Lute, Protyle, Toolbar} from "./types/protyle";
+import {IMenuBaseDetail} from "./types/events";
+import {IGetDocInfo, IGetTreeStat} from "./types/response";
 
 declare global {
     interface Window extends Global {
@@ -75,26 +76,75 @@ interface Global {
 }
 
 interface IEventBusMap {
-    "click-blockicon": types.events.IClickBlockIconDetail;
-    "click-editorcontent": types.events.IClickEditorContentDetail;
-    "click-editortitleicon": types.events.IClickEditorTitleIconDetail;
-    "click-pdf": types.events.IClickPdfDetail;
-    "destroy-protyle": types.events.IDestroyProtyleDetail;
-    "input-search": types.events.IInputSearchDetail;
-    "loaded-protyle-dynamic": types.events.ILoadedProtyleDynamicDetail;
-    "loaded-protyle": types.events.ILoadedProtyleDetail;
-    "open-menu-av": any;
-    "open-menu-blockref": types.events.IOpenMenuBlockRefDetail;
-    "open-menu-breadcrumbmore": types.events.IOpenMenuBreadcrumbMoreDetail;
-    "open-menu-content": types.events.IOpenMenuContentDetail;
-    "open-menu-fileannotationref": types.events.IOpenMenuFileAnnotationRefDetail;
-    "open-menu-image": types.events.IOpenMenuImageDetail;
-    "open-menu-link": types.events.IOpenMenuLinkDetail;
-    "open-menu-tag": types.events.IOpenMenuTagDetail;
-    "open-noneditableblock": types.events.IOpenNonEditableBlockDetail;
-    "open-siyuan-url-block": types.events.IOpenSiyuanUrlBlockDetail;
-    "open-siyuan-url-plugin": types.events.IOpenSiyuanUrlPluginDetail;
-    "ws-main": types.events.IWebSocketMainDetail;
+    "click-blockicon": {
+        protyle: IProtyle,
+        blockElements: HTMLElement[]
+    };
+    "click-editorcontent": {
+        protyle: IProtyle,
+        event: MouseEvent
+    };
+    "click-editortitleicon": {
+        protyle: IProtyle,
+        data: IGetDocInfo,
+    };
+    "click-pdf": {
+        event: MouseEvent
+    };
+    "destroy-protyle": {
+        protyle: IProtyle
+    };
+    "input-search": {
+        protyle: Protyle,
+        config: ISearchOption,
+        searchElement: HTMLInputElement,
+    };
+    "loaded-protyle-dynamic": {
+        protyle: IProtyle,
+        positon: "afterend" | "beforebegin"
+    };
+    "loaded-protyle": {
+        protyle: IProtyle,
+    };
+    "open-menu-av": IMenuBaseDetail;
+    "open-menu-blockref": IMenuBaseDetail;
+    "open-menu-breadcrumbmore": {
+        menu: EventMenu,
+        protyle: IProtyle,
+        data: IGetTreeStat,
+    };
+    "open-menu-content": IMenuBaseDetail & { range: Range };
+    "open-menu-fileannotationref": IMenuBaseDetail
+    "open-menu-image": IMenuBaseDetail
+    "open-menu-link": IMenuBaseDetail
+    "open-menu-tag": IMenuBaseDetail
+    "open-menu-doctree": {
+        menu: EventMenu,
+        elements: NodeListOf<Element>,
+        type: "doc" | "docs" | "notebook"
+    };
+    "open-noneditableblock": {
+        protyle: IProtyle,
+        toolbar: Toolbar
+    };
+    "open-siyuan-url-block": {
+        url: string,
+        id: string,
+        focus: boolean,
+        exist: boolean,
+    };
+    "open-siyuan-url-plugin": {
+        url: string
+    }
+    "ws-main": IWebSocketData;
+}
+
+interface IPosition {
+    x: number,
+    y: number,
+    w?: number,
+    h?: number,
+    isLeft?: boolean
 }
 
 interface ITab {
@@ -164,6 +214,9 @@ interface ILuteNode {
 
 interface ISearchOption {
     page?: number
+    removed?: boolean  // 移除后需记录搜索内容 https://github.com/siyuan-note/siyuan/issues/7745
+    name?: string
+    sort?: number,  //  0：按块类型（默认），1：按创建时间升序，2：按创建时间降序，3：按更新时间升序，4：按更新时间降序，5：按内容顺序（仅在按文档分组时），6：按相关度升序，7：按相关度降序
     group?: number,  // 0：不分组，1：按文档分组
     hasReplace?: boolean,
     method?: number //  0：文本，1：查询语法，2：SQL，3：正则表达式
@@ -184,6 +237,7 @@ interface ISearchOption {
         codeBlock: boolean
         htmlBlock: boolean
         embedBlock: boolean
+        databaseBlock: boolean
     }
 }
 
@@ -207,8 +261,9 @@ interface IPluginDockTab {
 }
 
 interface IMenuItemOption {
+    iconClass?: string,
     label?: string,
-    click?: (element: HTMLElement) => void,
+    click?: (element: HTMLElement, event: MouseEvent) => boolean | void | Promise<boolean | void>
     type?: "separator" | "submenu" | "readonly",
     accelerator?: string,
     action?: string,
@@ -460,29 +515,6 @@ export abstract class Plugin {
     }): void
 }
 
-export class Protyle {
-
-    public protyle: any;
-
-    constructor(app: App, element: HTMLElement, options?: IProtyleOption)
-
-    isUploading(): boolean
-
-    destroy(): void
-
-    resize(): void
-
-    reload(focus: boolean): void
-
-    /**
-     * @param {boolean} [isBlock=false]
-     * @param {boolean} [useProtyleRange=false]
-     */
-    insert(html: string, isBlock?: boolean, useProtyleRange?: boolean): void
-
-    transaction(doOperations: IOperation[], undoOperations?: IOperation[]): void;
-}
-
 export class Setting {
     constructor(options: {
         height?: string,
@@ -546,6 +578,8 @@ export class Dialog {
 export class Menu {
     constructor(id?: string, closeCallback?: () => void);
 
+    element: HTMLElement;
+
     showSubMenu(subMenuElement: HTMLElement): void;
 
     addItem(options: IMenuItemOption): HTMLElement;
@@ -562,108 +596,12 @@ export class Menu {
     close(): void;
 }
 
-export class Lute {
-    public static WalkStop: number;
-    public static WalkSkipChildren: number;
-    public static WalkContinue: number;
-    public static Version: string;
-    public static Caret: string;
+export class EventMenu {
+    public menus: IMenuItemOption[];
 
-    public static New(): Lute;
+    constructor()
 
-    public static EChartsMindmapStr(text: string): string;
+    public addSeparator(index?: number): void
 
-    public static NewNodeID(): string;
-
-    public static Sanitize(html: string): string;
-
-    public static EscapeHTMLStr(str: string): string;
-
-    public static UnEscapeHTMLStr(str: string): string;
-
-    public static GetHeadingID(node: ILuteNode): string;
-
-    public static BlockDOM2Content(html: string): string;
-
-    private constructor();
-
-    public BlockDOM2Content(text: string): string;
-
-    public BlockDOM2EscapeMarkerContent(text: string): string;
-
-    public SetTextMark(enable: boolean): void;
-
-    public SetHeadingID(enable: boolean): void;
-
-    public SetProtyleMarkNetImg(enable: boolean): void;
-
-    public SetSpellcheck(enable: boolean): void;
-
-    public SetFileAnnotationRef(enable: boolean): void;
-
-    public SetSetext(enable: boolean): void;
-
-    public SetYamlFrontMatter(enable: boolean): void;
-
-    public SetChineseParagraphBeginningSpace(enable: boolean): void;
-
-    public SetRenderListStyle(enable: boolean): void;
-
-    public SetImgPathAllowSpace(enable: boolean): void;
-
-    public SetKramdownIAL(enable: boolean): void;
-
-    public BlockDOM2Md(html: string): string;
-
-    public BlockDOM2StdMd(html: string): string;
-
-    public SetGitConflict(enable: boolean): void;
-
-    public SetSuperBlock(enable: boolean): void;
-
-    public SetTag(enable: boolean): void;
-
-    public SetMark(enable: boolean): void;
-
-    public SetSub(enable: boolean): void;
-
-    public SetSup(enable: boolean): void;
-
-    public SetBlockRef(enable: boolean): void;
-
-    public SetSanitize(enable: boolean): void;
-
-    public SetHeadingAnchor(enable: boolean): void;
-
-    public SetImageLazyLoading(imagePath: string): void;
-
-    public SetInlineMathAllowDigitAfterOpenMarker(enable: boolean): void;
-
-    public SetToC(enable: boolean): void;
-
-    public SetIndentCodeBlock(enable: boolean): void;
-
-    public SetParagraphBeginningSpace(enable: boolean): void;
-
-    public SetFootnotes(enable: boolean): void;
-
-    public SetLinkRef(enalbe: boolean): void;
-
-    public SetEmojiSite(emojiSite: string): void;
-
-    public PutEmojis(emojis: IObject): void;
-
-    public SpinBlockDOM(html: string): string;
-
-    public Md2BlockDOM(html: string): string;
-
-    public SetProtyleWYSIWYG(wysiwyg: boolean): void;
-
-    public MarkdownStr(name: string, md: string): string;
-
-    public IsValidLinkDest(text: string): boolean;
-
-    public BlockDOM2InlineBlockDOM(html: string): string;
-
-    public BlockDOM2HTML(html: string): string;
+    public addItem(menu: IMenuItemOption): void
 }
