@@ -1,3 +1,5 @@
+export * from "./types";
+
 import {IProtyle, Lute, Protyle, Toolbar} from "./types/protyle";
 import {IMenuBaseDetail} from "./types/events";
 import {IGetDocInfo, IGetTreeStat} from "./types/response";
