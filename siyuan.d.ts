@@ -77,6 +77,7 @@ interface Global {
 
 interface IEventBusMap {
     "click-blockicon": {
+        menu: EventMenu,
         protyle: IProtyle,
         blockElements: HTMLElement[]
     };
@@ -85,6 +86,7 @@ interface IEventBusMap {
         event: MouseEvent
     };
     "click-editortitleicon": {
+        menu: EventMenu,
         protyle: IProtyle,
         data: IGetDocInfo,
     };
@@ -120,7 +122,7 @@ interface IEventBusMap {
     "open-menu-tag": IMenuBaseDetail
     "open-menu-doctree": {
         menu: EventMenu,
-        elements: NodeListOf<Element>,
+        elements: NodeListOf<HTMLElement>,
         type: "doc" | "docs" | "notebook"
     };
     "open-noneditableblock": {
