@@ -106,7 +106,7 @@ interface IEventBusMap {
     "loaded-protyle": {
         protyle: IProtyle,
     };
-    "open-menu-av": IMenuBaseDetail;
+    "open-menu-av": IMenuBaseDetail & { selectRowElements: HTMLElement[] };
     "open-menu-blockref": IMenuBaseDetail;
     "open-menu-breadcrumbmore": {
         menu: EventMenu,
