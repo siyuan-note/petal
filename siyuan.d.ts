@@ -1,17 +1,19 @@
+export * from "./types";
+
 import {IProtyle, Lute, Protyle, Toolbar} from "./types/protyle";
 import {IMenuBaseDetail} from "./types/events";
 import {IGetDocInfo, IGetTreeStat} from "./types/response";
 
 declare global {
-    interface Window extends Global {
+    export interface Window extends Global {
     }
 }
 
-type TEventBus = keyof IEventBusMap
+export type TEventBus = keyof IEventBusMap
 
-type TCardType = "doc" | "notebook" | "all"
+export type TCardType = "doc" | "notebook" | "all"
 
-type TProtyleAction = "cb-get-append" | // 向下滚动加载
+export type TProtyleAction = "cb-get-append" | // 向下滚动加载
     "cb-get-before" | // 向上滚动加载
     "cb-get-unchangeid" | // 上下滚动，定位时不修改 blockid
     "cb-get-hl" | // 高亮
@@ -26,7 +28,7 @@ type TProtyleAction = "cb-get-append" | // 向下滚动加载
     "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
     "cb-get-history" // 历史渲染
 
-type TOperation =
+export type TOperation =
     "insert"
     | "update"
     | "delete"
@@ -58,7 +60,7 @@ type TOperation =
     | "setAttrViewColCalc"
     | "updateAttrViewColNumberFormat"
 
-type TAVCol =
+export type TAVCol =
     "text"
     | "date"
     | "number"
@@ -71,28 +73,30 @@ type TAVCol =
     | "email"
     | "phone"
 
-interface Global {
+export interface Global {
     Lute: Lute;
 }
 
-interface IEventBusMap {
+export interface IEventBusMap {
     "click-blockicon": {
+        menu: EventMenu,
         protyle: IProtyle,
-        blockElements: HTMLElement[]
+        blockElements: HTMLElement[],
     };
     "click-editorcontent": {
         protyle: IProtyle,
-        event: MouseEvent
+        event: MouseEvent,
     };
     "click-editortitleicon": {
+        menu: EventMenu,
         protyle: IProtyle,
         data: IGetDocInfo,
     };
     "click-pdf": {
-        event: MouseEvent
+        event: MouseEvent,
     };
     "destroy-protyle": {
-        protyle: IProtyle
+        protyle: IProtyle,
     };
     "input-search": {
         protyle: Protyle,
@@ -101,7 +105,7 @@ interface IEventBusMap {
     };
     "loaded-protyle-dynamic": {
         protyle: IProtyle,
-        positon: "afterend" | "beforebegin"
+        positon: "afterend" | "beforebegin",
     };
     "loaded-protyle": {
         protyle: IProtyle,
@@ -114,18 +118,18 @@ interface IEventBusMap {
         data: IGetTreeStat,
     };
     "open-menu-content": IMenuBaseDetail & { range: Range };
-    "open-menu-fileannotationref": IMenuBaseDetail
-    "open-menu-image": IMenuBaseDetail
-    "open-menu-link": IMenuBaseDetail
-    "open-menu-tag": IMenuBaseDetail
+    "open-menu-fileannotationref": IMenuBaseDetail;
+    "open-menu-image": IMenuBaseDetail;
+    "open-menu-link": IMenuBaseDetail;
+    "open-menu-tag": IMenuBaseDetail;
     "open-menu-doctree": {
         menu: EventMenu,
-        elements: NodeListOf<Element>,
-        type: "doc" | "docs" | "notebook"
+        elements: NodeListOf<HTMLElement>,
+        type: "doc" | "docs" | "notebook",
     };
     "open-noneditableblock": {
         protyle: IProtyle,
-        toolbar: Toolbar
+        toolbar: Toolbar,
     };
     "open-siyuan-url-block": {
         url: string,
@@ -134,20 +138,20 @@ interface IEventBusMap {
         exist: boolean,
     };
     "open-siyuan-url-plugin": {
-        url: string
-    }
+        url: string,
+    };
     "ws-main": IWebSocketData;
 }
 
-interface IPosition {
-    x: number,
-    y: number,
-    w?: number,
-    h?: number,
-    isLeft?: boolean
+export interface IPosition {
+    x: number;
+    y: number;
+    w?: number;
+    h?: number;
+    isLeft?: boolean;
 }
 
-interface ITab {
+export interface ITab {
     id: string;
     headElement: HTMLElement;
     panelElement: HTMLElement;
@@ -162,7 +166,7 @@ interface ITab {
     close: () => void;
 }
 
-interface IModel {
+export interface IModel {
     ws: WebSocket;
     app: App;
     reqId: number;
@@ -171,7 +175,7 @@ interface IModel {
     send(cmd: string, param: Record<string, unknown>, process?: boolean): void;
 }
 
-interface ICustomModel extends IModel {
+export interface ICustomModel extends IModel {
     tab: ITab;
     data: any;
     type: string;
@@ -188,21 +192,21 @@ interface ICustomModel extends IModel {
     destroy?(): void;
 }
 
-interface IDockModel extends Omit<ICustomModel, "beforeDestroy"> {
+export interface IDockModel extends Omit<ICustomModel, "beforeDestroy"> {
 }
 
-interface ITabModel extends ICustomModel {
+export interface ITabModel extends ICustomModel {
 }
 
-interface IObject {
+export interface IObject {
     [key: string]: string;
 }
 
-interface I18N {
+export interface I18N {
     [key: string]: any;
 }
 
-interface ILuteNode {
+export interface ILuteNode {
     TokensStr: () => string;
     __internal_object__: {
         Parent: {
@@ -212,75 +216,78 @@ interface ILuteNode {
     };
 }
 
-interface ISearchOption {
-    page?: number
-    removed?: boolean  // 移除后需记录搜索内容 https://github.com/siyuan-note/siyuan/issues/7745
-    name?: string
-    sort?: number,  //  0：按块类型（默认），1：按创建时间升序，2：按创建时间降序，3：按更新时间升序，4：按更新时间降序，5：按内容顺序（仅在按文档分组时），6：按相关度升序，7：按相关度降序
-    group?: number,  // 0：不分组，1：按文档分组
-    hasReplace?: boolean,
-    method?: number //  0：文本，1：查询语法，2：SQL，3：正则表达式
-    hPath?: string
-    idPath?: string[]
-    k: string
-    r?: string
+export interface ISearchOption {
+    page?: number;
+    removed?: boolean;  // 移除后需记录搜索内容 https://github.com/siyuan-note/siyuan/issues/7745
+    name?: string;
+    sort?: number;  //  0：按块类型（默认），1：按创建时间升序，2：按创建时间降序，3：按更新时间升序，4：按更新时间降序，5：按内容顺序（仅在按文档分组时），6：按相关度升序，7：按相关度降序
+    group?: number;  // 0：不分组，1：按文档分组
+    hasReplace?: boolean;
+    method?: number; //  0：文本，1：查询语法，2：SQL，3：正则表达式
+    hPath?: string;
+    idPath?: string[];
+    k: string;
+    r?: string;
     types?: {
-        mathBlock: boolean
-        table: boolean
-        blockquote: boolean
-        superBlock: boolean
-        paragraph: boolean
-        document: boolean
-        heading: boolean
-        list: boolean
-        listItem: boolean
-        codeBlock: boolean
-        htmlBlock: boolean
-        embedBlock: boolean
-        databaseBlock: boolean
-    }
+        mathBlock: boolean,
+        table: boolean,
+        blockquote: boolean,
+        superBlock: boolean,
+        paragraph: boolean,
+        document: boolean,
+        heading: boolean,
+        list: boolean,
+        listItem: boolean,
+        codeBlock: boolean,
+        htmlBlock: boolean,
+        embedBlock: boolean,
+        databaseBlock: boolean,
+    };
 }
 
-interface IWebSocketData {
-    cmd: string
-    callback?: string
-    data: any
-    msg: string
-    code: number
-    sid: string
+export interface IWebSocketData {
+    cmd: string;
+    callback?: string;
+    data: any;
+    msg: string;
+    code: number;
+    sid: string;
 }
 
-interface IPluginDockTab {
-    position: "LeftTop" | "LeftBottom" | "RightTop" | "RightBottom" | "BottomLeft" | "BottomRight",
-    size: { width: number, height: number },
-    icon: string,
-    hotkey?: string,
-    title: string,
-    index?: number,
-    show?: boolean
+export interface IPluginDockTab {
+    position: "LeftTop" | "LeftBottom" | "RightTop" | "RightBottom" | "BottomLeft" | "BottomRight";
+    size: {
+        width: number,
+        height: number,
+    };
+    icon: string;
+    hotkey?: string;
+    title: string;
+    index?: number;
+    show?: boolean;
 }
 
-interface IMenuItemOption {
-    iconClass?: string,
-    label?: string,
-    click?: (element: HTMLElement, event: MouseEvent) => boolean | void | Promise<boolean | void>
-    type?: "separator" | "submenu" | "readonly",
-    accelerator?: string,
-    action?: string,
-    id?: string,
-    submenu?: IMenuItemOption[]
-    disabled?: boolean
-    icon?: string
-    iconHTML?: string
-    current?: boolean
-    bind?: (element: HTMLElement) => void
-    index?: number
-    element?: HTMLElement
+export interface IMenuItemOption {
+    iconClass?: string;
+    label?: string;
+    click?: (element: HTMLElement, event: MouseEvent) => boolean | void | Promise<boolean | void>;
+    type?: "separator" | "submenu" | "readonly";
+    accelerator?: string;
+    action?: string;
+    id?: string;
+    submenu?: IMenuItemOption[];
+    disabled?: boolean;
+    icon?: string;
+    iconHTML?: string;
+    current?: boolean;
+    bind?: (element: HTMLElement) => void;
+    index?: number;
+    element?: HTMLElement;
 }
 
-interface ICommandOption {
-    langKey: string, // 用于区分不同快捷键的 key
-    langText?: string, // 快捷键功能描述文本
+export interface ICommandOption {
+    langKey: string // 用于区分不同快捷键的 key
+    langText?: string // 快捷键功能描述文本
     /**
      * 目前需使用 MacOS 符号标识，顺序按照 ⌥⇧⌘，入 ⌥⇧⌘A
      * "Ctrl": "⌘",
@@ -293,59 +300,59 @@ interface ICommandOption {
      */
     hotkey: string,
     customHotkey?: string,
-    callback?: () => void   // 其余回调存在时将不会触
+    callback?: () => void // 其余回调存在时将不会触
     globalCallback?: () => void // 焦点不在应用内时执行的回调
     fileTreeCallback?: (file: any) => void // 焦点在文档树上时执行的回调
-    editorCallback?: (protyle: any) => void     // 焦点在编辑器上时执行的回调
-    dockCallback?: (element: HTMLElement) => void    // 焦点在 dock 上时执行的回调
+    editorCallback?: (protyle: any) => void // 焦点在编辑器上时执行的回调
+    dockCallback?: (element: HTMLElement) => void // 焦点在 dock 上时执行的回调
 }
 
-interface IProtyleOption {
-    action?: TProtyleAction[],
-    mode?: "preview" | "wysiwyg",
-    blockId: string
-    key?: string
+export interface IProtyleOption {
+    action?: TProtyleAction[];
+    mode?: "preview" | "wysiwyg";
+    blockId: string;
+    key?: string;
     scrollAttr?: {
         rootId: string,
         startId: string,
-        endId: string
+        endId: string,
         scrollTop: number,
         focusId?: string,
-        focusStart?: number
-        focusEnd?: number
-        zoomInId?: string
-    }
-    defId?: string
+        focusStart?: number,
+        focusEnd?: number,
+        zoomInId?: string,
+    };
+    defId?: string;
     render?: {
-        background?: boolean
-        title?: boolean
-        gutter?: boolean
-        scroll?: boolean
-        breadcrumb?: boolean
-        breadcrumbDocName?: boolean
-    }
+        background?: boolean,
+        title?: boolean,
+        gutter?: boolean,
+        scroll?: boolean,
+        breadcrumb?: boolean,
+        breadcrumbDocName?: boolean,
+    };
     typewriterMode?: boolean;
 
     after?(protyle: Protyle): void;
 }
 
-interface IOperation {
-    action: TOperation, // move， delete 不需要传 data
-    id?: string,
-    avID?: string,  // av
-    format?: string // updateAttrViewColNumberFormat 专享
-    keyID?: string // updateAttrViewCell 专享
-    rowID?: string // updateAttrViewCell 专享
-    data?: any, // updateAttr 时为  { old: IObject, new: IObject }, updateAttrViewCell 时为 {TAVCol: {content: string}}
-    parentID?: string
-    previousID?: string
-    retData?: any
-    nextID?: string // insert 专享
-    srcIDs?: string[] // insertAttrViewBlock 专享
-    name?: string // addAttrViewCol 专享
-    type?: TAVCol // addAttrViewCol 专享
-    deckID?: string // add/removeFlashcards 专享
-    blockIDs?: string[] // add/removeFlashcards 专享
+export interface IOperation {
+    action: TOperation; // move， delete 不需要传 data
+    id?: string;
+    avID?: string; // av
+    format?: string; // updateAttrViewColNumberFormat 专享
+    keyID?: string; // updateAttrViewCell 专享
+    rowID?: string; // updateAttrViewCell 专享
+    data?: any; // updateAttr 时为  { old: IObject, new: IObject }, updateAttrViewCell 时为 {TAVCol: {content: string}}
+    parentID?: string;
+    previousID?: string;
+    retData?: any;
+    nextID?: string; // insert 专享
+    srcIDs?: string[]; // insertAttrViewBlock 专享
+    name?: string; // addAttrViewCol 专享
+    type?: TAVCol; // addAttrViewCol 专享
+    deckID?: string; // add/removeFlashcards 专享
+    blockIDs?: string[]; // add/removeFlashcards 专享
 }
 
 export function fetchPost(url: string, data?: any, callback?: (response: IWebSocketData) => void, headers?: IObject): void;
@@ -363,46 +370,46 @@ export function openWindow(options: {
     width?: number,
     tab?: ITab,
     doc?: {
-        id: string,     // 块 id
+        id: string; // 块 id
     },
 }): void;
 
 export function openTab(options: {
     app: App,
     doc?: {
-        id: string,     // 块 id
-        action?: string[] // cb-get-all：获取所有内容；cb-get-focus：打开后光标定位在 id 所在的块；cb-get-hl: 打开后 id 块高亮
-        zoomIn?: boolean // 是否缩放
-    },
+        id: string, // 块 id
+        action?: string[], // cb-get-all：获取所有内容；cb-get-focus：打开后光标定位在 id 所在的块；cb-get-hl: 打开后 id 块高亮
+        zoomIn?: boolean, // 是否缩放
+    };
     pdf?: {
         path: string,
         page?: number,  // pdf 页码
         id?: string,    // File Annotation id
-    },
+    };
     asset?: {
         path: string,
-    },
-    search?: ISearchOption
+    };
+    search?: ISearchOption;
     card?: {
         type: TCardType,
         id?: string, //  cardType 为 all 时不传，否则传文档或笔记本 id
-        title?: string //  cardType 为 all 时不传，否则传文档或笔记本名称
-    },
+        title?: string, //  cardType 为 all 时不传，否则传文档或笔记本名称
+    };
     custom?: {
-        title: string,
-        icon: string,
-        data?: any
         id: string, // 插件名称+页签类型：plugin.name + tab.type
-    }
-    position?: "right" | "bottom",
-    keepCursor?: boolean // 是否跳转到新 tab 上
-    removeCurrentTab?: boolean // 在当前页签打开时需移除原有页签
-    afterOpen?: () => void // 打开后回调
+        icon: string,
+        title: string,
+        data?: any,
+    };
+    position?: "right" | "bottom";
+    keepCursor?: boolean; // 是否跳转到新 tab 上
+    removeCurrentTab?: boolean; // 在当前页签打开时需移除原有页签
+    afterOpen?: () => void; // 打开后回调
 }): ITab
 
 export function getFrontend(): "desktop" | "desktop-window" | "mobile" | "browser-desktop" | "browser-mobile";
 
-export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "android" | "ios"
+export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "android" | "ios";
 
 export function adaptHotkey(hotkey: string): string;
 
@@ -430,15 +437,15 @@ export abstract class Plugin {
     protyleSlash: {
         filter: string[],
         html: string,
-        id: string
-        callback(protyle: Protyle): void
+        id: string,
+        callback(protyle: Protyle): void,
     }[];
 
     constructor(options: {
         app: App,
         name: string,
-        i18n: I18N
-    })
+        i18n: I18N,
+    });
 
     onload(): void;
 
@@ -464,10 +471,10 @@ export abstract class Plugin {
      */
     addStatusBar(options: {
         element: HTMLElement,
-        position?: "right" | "left"
-    }): HTMLElement
+        position?: "right" | "left",
+    }): HTMLElement;
 
-    openSetting(): void
+    openSetting(): void;
 
     loadData(storageName: string): Promise<any>;
 
@@ -488,8 +495,8 @@ export abstract class Plugin {
         destroy?: (this: ITabModel) => void,
         resize?: (this: ITabModel) => void,
         update?: (this: ITabModel) => void,
-        init: (this: ITabModel) => void
-    }): () => ITabModel
+        init: (this: ITabModel) => void,
+    }): () => ITabModel;
 
     /**
      * Must be executed before the synchronous function.
@@ -501,10 +508,10 @@ export abstract class Plugin {
         destroy?: (this: IDockModel) => void,
         resize?: (this: IDockModel) => void,
         update?: (this: IDockModel) => void,
-        init: (this: IDockModel) => void
-    }): { config: IPluginDockTab, model: IDockModel }
+        init: (this: IDockModel) => void,
+    }): { config: IPluginDockTab, model: IDockModel };
 
-    addCommand(options: ICommandOption): void
+    addCommand(options: ICommandOption): void;
 
     addFloatLayer(options: {
         ids: string[],
@@ -512,22 +519,22 @@ export abstract class Plugin {
         x?: number,
         y?: number,
         targetElement?: HTMLElement
-    }): void
+    }): void;
 }
 
 export class Setting {
     constructor(options: {
         height?: string,
         width?: string,
-        destroyCallback?: () => void
-        confirmCallback?: () => void
-    })
+        destroyCallback?: () => void,
+        confirmCallback?: () => void,
+    });
 
     addItem(options: {
-        title: string
-        description?: string
-        actionElement?: HTMLElement
-        createActionElement?(): HTMLElement
+        title: string,
+        description?: string,
+        actionElement?: HTMLElement,
+        createActionElement?(): HTMLElement,
     }): void;
 
     open(name: string): void;
@@ -565,9 +572,9 @@ export class Dialog {
         content: string,
         width?: string
         height?: string,
-        destroyCallback?: (options?: IObject) => void
-        disableClose?: boolean
-        disableAnimation?: boolean
+        destroyCallback?: (options?: IObject) => void,
+        disableClose?: boolean,
+        disableAnimation?: boolean,
     });
 
     destroy(options?: IObject): void;
@@ -599,9 +606,9 @@ export class Menu {
 export class EventMenu {
     public menus: IMenuItemOption[];
 
-    constructor()
+    constructor();
 
-    public addSeparator(index?: number): void
+    public addSeparator(index?: number): void;
 
-    public addItem(menu: IMenuItemOption): void
+    public addItem(menu: IMenuItemOption): void;
 }
