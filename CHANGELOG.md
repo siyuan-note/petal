@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.8.6 2023-10
+## 0.8.7 2023-10
+
+## 0.8.6 2023-10-17
 
 * [Update some definitions](https://github.com/siyuan-note/petal/pull/17)
 
