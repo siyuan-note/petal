@@ -107,9 +107,7 @@ export interface IEventBusMap {
         protyle: IProtyle,
         positon: "afterend" | "beforebegin",
     };
-    "loaded-protyle": {
-        protyle: IProtyle,
-    };
+    "loaded-protyle": IProtyle;
     "open-menu-av": IMenuBaseDetail & { selectRowElements: HTMLElement[] };
     "open-menu-blockref": IMenuBaseDetail;
     "open-menu-breadcrumbmore": {
