@@ -140,6 +140,14 @@ export interface IEventBusMap {
     "open-siyuan-url-plugin": {
         url: string,
     };
+    "paste": {
+        protyle: IProtyle,
+        resolve: new <T>(value: T | PromiseLike<T>) => void,
+        textHTML: string,
+        textPlain: string,
+        siyuanHTML: string,
+        files: FileList | DataTransferItemList;
+    }
     "ws-main": IWebSocketData;
 }
 

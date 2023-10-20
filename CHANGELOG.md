@@ -2,6 +2,8 @@
 
 ## 0.8.7 2023-10
 
+* [Add plugin event bus `paste`](https://github.com/siyuan-note/siyuan/issues/9452)
+
 ## 0.8.6 2023-10-17
 
 * [Update some definitions](https://github.com/siyuan-note/petal/pull/17)
