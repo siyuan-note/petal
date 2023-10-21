@@ -2,7 +2,8 @@
 
 ## 0.8.7 2023-10
 
-* [Fix event defail for loaded-protyle](https://github.com/siyuan-note/petal/pull/18)
+* [Deprecated `loaded-protyle` use `loaded-protyle-static` instead](https://github.com/siyuan-note/siyuan/issues/9468)
+* [Fix event defail for `loaded-protyle`](https://github.com/siyuan-note/petal/pull/18)
 * [Add plugin event bus `paste`](https://github.com/siyuan-note/siyuan/issues/9452)
 
 ## 0.8.6 2023-10-17
