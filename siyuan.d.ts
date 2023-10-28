@@ -110,6 +110,9 @@ export interface IEventBusMap {
     "loaded-protyle-static": {
         protyle: IProtyle,
     };
+    "switch-protyle": {
+        protyle: IProtyle,
+    };
     "open-menu-av": IMenuBaseDetail & { selectRowElements: HTMLElement[] };
     "open-menu-blockref": IMenuBaseDetail;
     "open-menu-breadcrumbmore": {
