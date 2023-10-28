@@ -434,6 +434,7 @@ export function showMessage(text: string, timeout?: number, type?: "info" | "err
 
 export class App {
     plugins: Plugin[];
+    appId: string
 }
 
 export abstract class Plugin {
