@@ -1,6 +1,16 @@
 # Changelog
 
-## 0.8.7 2023-10
+## 0.8.8 2023-10
+
+* [Export `Constants` to plugin](https://github.com/siyuan-note/siyuan/issues/9555)
+* [Add plugin `app.appId`](https://github.com/siyuan-note/siyuan/issues/9538)
+* [Add plugin event bus `switch-protyle`](https://github.com/siyuan-note/siyuan/issues/9454)
+
+## 0.8.7 2023-10-24
+
+* [Deprecated `loaded-protyle` use `loaded-protyle-static` instead](https://github.com/siyuan-note/siyuan/issues/9468)
+* [Fix event defail for `loaded-protyle`](https://github.com/siyuan-note/petal/pull/18)
+* [Add plugin event bus `paste`](https://github.com/siyuan-note/siyuan/issues/9452)
 
 ## 0.8.6 2023-10-17
 

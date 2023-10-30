@@ -77,6 +77,39 @@ export interface Global {
     Lute: Lute;
 }
 
+interface IKeymapItem {
+    default: string,
+    custom: string
+}
+
+export interface IKeymap {
+    plugin: {
+        [key: string]: {
+            [key: string]: IKeymapItem
+        }
+    }
+    general: {
+        [key: string]: IKeymapItem
+    }
+    editor: {
+        general: {
+            [key: string]: IKeymapItem
+        }
+        insert: {
+            [key: string]: IKeymapItem
+        }
+        heading: {
+            [key: string]: IKeymapItem
+        }
+        list: {
+            [key: string]: IKeymapItem
+        }
+        table: {
+            [key: string]: IKeymapItem
+        }
+    }
+}
+
 export interface IEventBusMap {
     "click-blockicon": {
         menu: EventMenu,
@@ -107,7 +140,10 @@ export interface IEventBusMap {
         protyle: IProtyle,
         positon: "afterend" | "beforebegin",
     };
-    "loaded-protyle": {
+    "loaded-protyle-static": {
+        protyle: IProtyle,
+    };
+    "switch-protyle": {
         protyle: IProtyle,
     };
     "open-menu-av": IMenuBaseDetail & { selectRowElements: HTMLElement[] };
@@ -140,6 +176,14 @@ export interface IEventBusMap {
     "open-siyuan-url-plugin": {
         url: string,
     };
+    "paste": {
+        protyle: IProtyle,
+        resolve: new <T>(value: T | PromiseLike<T>) => void,
+        textHTML: string,
+        textPlain: string,
+        siyuanHTML: string,
+        files: FileList | DataTransferItemList;
+    }
     "ws-main": IWebSocketData;
 }
 
@@ -423,6 +467,7 @@ export function showMessage(text: string, timeout?: number, type?: "info" | "err
 
 export class App {
     plugins: Plugin[];
+    appId: string
 }
 
 export abstract class Plugin {
