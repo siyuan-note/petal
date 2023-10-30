@@ -363,6 +363,14 @@ export interface IOperation {
     blockIDs?: string[]; // add/removeFlashcards 专享
 }
 
+export interface ISnippet {
+    id: string;
+    name: string;
+    type: string;
+    enabled: boolean;
+    content: string;
+}
+
 export function fetchPost(url: string, data?: any, callback?: (response: IWebSocketData) => void, headers?: IObject): void;
 
 export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
@@ -428,6 +436,10 @@ export function confirm(title: string, text: string, confirmCallback?: (dialog: 
  * @param {string} [type=info]
  */
 export function showMessage(text: string, timeout?: number, type?: "info" | "error", id?: string): void;
+
+export function renderSnippet(): void;
+
+export function renderSnippets(snippets: ISnippet[]): void;
 
 export class App {
     plugins: Plugin[];
