@@ -77,6 +77,39 @@ export interface Global {
     Lute: Lute;
 }
 
+interface IKeymapItem {
+    default: string,
+    custom: string
+}
+
+export interface IKeymap {
+    plugin: {
+        [key: string]: {
+            [key: string]: IKeymapItem
+        }
+    }
+    general: {
+        [key: string]: IKeymapItem
+    }
+    editor: {
+        general: {
+            [key: string]: IKeymapItem
+        }
+        insert: {
+            [key: string]: IKeymapItem
+        }
+        heading: {
+            [key: string]: IKeymapItem
+        }
+        list: {
+            [key: string]: IKeymapItem
+        }
+        table: {
+            [key: string]: IKeymapItem
+        }
+    }
+}
+
 export interface IEventBusMap {
     "click-blockicon": {
         menu: EventMenu,
