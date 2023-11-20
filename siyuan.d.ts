@@ -449,7 +449,7 @@ export function openTab(options: {
     keepCursor?: boolean; // 是否跳转到新 tab 上
     removeCurrentTab?: boolean; // 在当前页签打开时需移除原有页签
     afterOpen?: () => void; // 打开后回调
-}): ITab
+}): Promise<ITab>
 
 export function getFrontend(): "desktop" | "desktop-window" | "mobile" | "browser-desktop" | "browser-mobile";
 
