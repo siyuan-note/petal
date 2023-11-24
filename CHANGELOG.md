@@ -2,6 +2,7 @@
 
 ## 0.8.9 2023-11
 
+* [Add plugin method `openMobileFileById`](https://github.com/siyuan-note/siyuan/issues/9738)
 * [Update openTab return value](https://github.com/siyuan-note/petal/pull/20/files)
 
 ## 0.8.8 2023-10-31
