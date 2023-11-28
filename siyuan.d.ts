@@ -418,7 +418,7 @@ export function openWindow(options: {
     },
 }): void;
 
-export function openMobileFileById(app: App, id: string, action: string[]): void;
+export function openMobileFileById(app: App, id: string, action?: string[]): void;
 
 export function openTab(options: {
     app: App,
