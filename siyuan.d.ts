@@ -11,6 +11,12 @@ declare global {
 
 export type TEventBus = keyof IEventBusMap
 
+export type TTurnIntoOne = "BlocksMergeSuperBlock" | "Blocks2ULs" | "Blocks2OLs" | "Blocks2TLs" | "Blocks2Blockquote"
+
+export type TTurnIntoOneSub = "row" | "col"
+
+export type TTurnInto = "Blocks2Ps" | "Blocks2Hs"
+
 export type TCardType = "doc" | "notebook" | "all"
 
 export type TProtyleAction = "cb-get-append" | // 向下滚动加载

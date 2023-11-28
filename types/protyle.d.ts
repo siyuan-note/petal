@@ -1,4 +1,13 @@
-import {App, ILuteNode, IObject, IOperation, IPosition, IProtyleOption} from "./../siyuan";
+import {
+    App,
+    ILuteNode,
+    IObject,
+    IOperation,
+    IPosition,
+    IProtyleOption, TTurnInto,
+    TTurnIntoOne,
+    TTurnIntoOneSub
+} from "./../siyuan";
 
 // REF: https://github.com/siyuan-note/siyuan/blob/dev/app/src/types/protyle.d.ts
 export interface IProtyle {
@@ -74,6 +83,33 @@ export class Protyle {
     insert(html: string, isBlock?: boolean, useProtyleRange?: boolean): void
 
     transaction(doOperations: IOperation[], undoOperations?: IOperation[]): void;
+
+    /**
+     * 多个块转换为一个块
+     * @param {TTurnIntoOneSub} [subType] type 为 "BlocksMergeSuperBlock" 时必传
+     */
+    public turnIntoOneTransaction(selectsElement: Element[], type: TTurnIntoOne, subType?: TTurnIntoOneSub): void
+
+    /**
+     * 多个块转换
+     * @param {Element} [nodeElement] 优先使用包含 protyle-wysiwyg--select 的块，否则使用 nodeElement 单块
+     * @param type
+     * @param {number} [subType] type 为 "Blocks2Hs" 时必传
+     */
+    public turnIntoTransaction(nodeElement: Element, type: TTurnInto, subType?: number): void
+
+    public updateTransaction(id: string, newHTML: string, html: string): void
+
+    public updateBatchTransaction(nodeElements: Element[], cb: (e: HTMLElement) => void): void
+
+    public getRange(element: Element): Range
+
+    public hasClosestBlock(element: Node): false | HTMLElement
+
+    /**
+     * @param {boolean} [toStart=true]
+     */
+    public focusBlock(element: Element, toStart?: boolean): false | Range
 }
 
 export class Toolbar {

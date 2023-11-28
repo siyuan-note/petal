@@ -2,6 +2,8 @@
 
 ## 0.9.0 2023-12
 
+* [Add some `Protyle` methods to the plugin API](https://github.com/siyuan-note/petal/issues/21)
+
 ## 0.8.9 2023-11-28
 
 * [Add plugin method `openMobileFileById`](https://github.com/siyuan-note/siyuan/issues/9738)
