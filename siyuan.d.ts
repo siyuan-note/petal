@@ -191,6 +191,8 @@ export interface IEventBusMap {
         files: FileList | DataTransferItemList;
     }
     "ws-main": IWebSocketData;
+    "mobile-keyboard-show": void;
+    "mobile-keyboard-hide": void;
 }
 
 export interface IPosition {
