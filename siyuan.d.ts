@@ -191,6 +191,9 @@ export interface IEventBusMap {
         files: FileList | DataTransferItemList;
     }
     "ws-main": IWebSocketData;
+    "sync-start": IWebSocketData;
+    "sync-end": IWebSocketData;
+    "sync-fail": IWebSocketData;
     "mobile-keyboard-show": void;
     "mobile-keyboard-hide": void;
 }
