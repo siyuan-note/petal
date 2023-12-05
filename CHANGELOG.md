@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.9.0 2023-12
+## 0.9.1 2023-12
+
+## 0.9.0 2023-12-05
 
 * [Add plugin eventbus `sync-start`, `sync-end`, and `sync-fail`](https://github.com/siyuan-note/siyuan/issues/9798)
 * [Add plugin event bus `mobile-keyboard-show` and `mobile-keyboard-hide`](https://github.com/siyuan-note/siyuan/issues/9773)
