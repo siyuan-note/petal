@@ -488,7 +488,7 @@ export abstract class Plugin {
     i18n: I18N;
     data: any;
     displayName: string;
-    name: string;
+    readonly name: string;
     app: App;
     commands: ICommandOption[];
     setting: Setting;
