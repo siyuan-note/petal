@@ -566,7 +566,7 @@ export abstract class Plugin {
         destroy?: (this: IDockModel) => void,
         resize?: (this: IDockModel) => void,
         update?: (this: IDockModel) => void,
-        init: (this: IDockModel) => void,
+        init: (this: IDockModel, dock: IDockModel) => void,
     }): { config: IPluginDockTab, model: IDockModel };
 
     addCommand(options: ICommandOption): void;

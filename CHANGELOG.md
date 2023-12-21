@@ -2,6 +2,8 @@
 
 ## 0.9.1 2023-12
 
+* [Support `dock plugin` and `Command Palette` on mobile](https://github.com/siyuan-note/siyuan/issues/9926)
+
 ## 0.9.0 2023-12-05
 
 * [Add plugin eventbus `sync-start`, `sync-end`, and `sync-fail`](https://github.com/siyuan-note/siyuan/issues/9798)
