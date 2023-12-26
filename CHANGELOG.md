@@ -1,9 +1,12 @@
 # Changelog
 
-## 0.9.1 2023-12
+## 0.9.2 2024-01
+
+
+## 0.9.1 2023-12-26
 
 * [Set `plugin.name` to read-only](https://github.com/siyuan-note/siyuan/issues/9943)
-* [Support `dock plugin` and `Command Palette` on mobile](https://github.com/siyuan-note/siyuan/issues/9926)
+* [Support `Dock Plugin` and `Command Palette` on mobile](https://github.com/siyuan-note/siyuan/issues/9926)
 
 ## 0.9.0 2023-12-05
 
