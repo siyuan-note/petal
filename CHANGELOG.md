@@ -2,6 +2,7 @@
 
 ## 0.9.2 2024-01
 
+* [Add plugin event bus `open-menu-inbox`](https://github.com/siyuan-note/siyuan/pull/9967)
 
 ## 0.9.1 2023-12-26
 
@@ -10,7 +11,7 @@
 
 ## 0.9.0 2023-12-05
 
-* [Add plugin eventbus `sync-start`, `sync-end`, and `sync-fail`](https://github.com/siyuan-note/siyuan/issues/9798)
+* [Add plugin event bus `sync-start`, `sync-end`, and `sync-fail`](https://github.com/siyuan-note/siyuan/issues/9798)
 * [Add plugin event bus `mobile-keyboard-show` and `mobile-keyboard-hide`](https://github.com/siyuan-note/siyuan/issues/9773)
 * [Add some `Protyle` methods to the plugin API](https://github.com/siyuan-note/petal/issues/21)
 

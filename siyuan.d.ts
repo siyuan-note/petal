@@ -169,6 +169,11 @@ export interface IEventBusMap {
         elements: NodeListOf<HTMLElement>,
         type: "doc" | "docs" | "notebook",
     };
+    "open-menu-inbox": {
+        menu: EventMenu,
+        element: HTMLElement,
+        ids: string[],
+    };
     "open-noneditableblock": {
         protyle: IProtyle,
         toolbar: Toolbar,
