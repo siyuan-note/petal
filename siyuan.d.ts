@@ -199,6 +199,7 @@ export interface IEventBusMap {
     "sync-start": IWebSocketData;
     "sync-end": IWebSocketData;
     "sync-fail": IWebSocketData;
+    "lock-screen": void;
     "mobile-keyboard-show": void;
     "mobile-keyboard-hide": void;
 }
