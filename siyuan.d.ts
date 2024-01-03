@@ -472,6 +472,8 @@ export function openTab(options: {
 
 export function getFrontend(): "desktop" | "desktop-window" | "mobile" | "browser-desktop" | "browser-mobile";
 
+export function lockScreen(app: App): void
+
 export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "android" | "ios";
 
 export function adaptHotkey(hotkey: string): string;
