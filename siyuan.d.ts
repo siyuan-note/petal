@@ -200,6 +200,20 @@ export interface IEventBusMap {
     "sync-end": IWebSocketData;
     "sync-fail": IWebSocketData;
     "lock-screen": void;
+    "update-cards": {
+        cardType: TCardType,
+        element:HTMLElement,
+        cardsData:{
+            cards: ICard[],
+            unreviewedCount: number,
+            unreviewedNewCardCount: number,
+            unreviewedOldCardCount: number,
+        },
+        dialog?: Dialog,
+        index?: number,
+        title?:string,
+        id?: string,
+    };
     "mobile-keyboard-show": void;
     "mobile-keyboard-hide": void;
 }
@@ -414,6 +428,13 @@ export interface IOperation {
     type?: TAVCol; // addAttrViewCol 专享
     deckID?: string; // add/removeFlashcards 专享
     blockIDs?: string[]; // add/removeFlashcards 专享
+}
+
+export interface ICard {
+    deckID: string
+    cardID: string
+    blockID: string
+    nextDues: IObject
 }
 
 export function fetchPost(url: string, data?: any, callback?: (response: IWebSocketData) => void, headers?: IObject): void;
