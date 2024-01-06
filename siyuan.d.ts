@@ -538,6 +538,8 @@ export abstract class Plugin {
 
     onunload(): void;
 
+    uninstall(): void;
+
     onLayoutReady(): void;
 
     /**
