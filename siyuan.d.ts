@@ -1,6 +1,6 @@
 export * from "./types";
 
-import {IProtyle, Lute, Protyle, Toolbar} from "./types/protyle";
+import {IProtyle, Lute, Protyle, Toolbar, IProtyleOption} from "./types/protyle";
 import {IMenuBaseDetail} from "./types/events";
 import {IGetDocInfo, IGetTreeStat} from "./types/response";
 
@@ -18,21 +18,6 @@ export type TTurnIntoOneSub = "row" | "col"
 export type TTurnInto = "Blocks2Ps" | "Blocks2Hs"
 
 export type TCardType = "doc" | "notebook" | "all"
-
-export type TProtyleAction = "cb-get-append" | // 向下滚动加载
-    "cb-get-before" | // 向上滚动加载
-    "cb-get-unchangeid" | // 上下滚动，定位时不修改 blockid
-    "cb-get-hl" | // 高亮
-    "cb-get-focus" | // 光标定位
-    "cb-get-focusfirst" | // 动态定位到第一个块
-    "cb-get-setid" | // 重置 blockid
-    "cb-get-all" | // 获取所有块
-    "cb-get-backlink" | // 悬浮窗为传递型需展示上下文
-    "cb-get-unundo" | // 不需要记录历史
-    "cb-get-scroll" | // 滚动到指定位置
-    "cb-get-context" | // 包含上下文
-    "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
-    "cb-get-history" // 历史渲染
 
 export type TOperation =
     "insert"
@@ -202,8 +187,8 @@ export interface IEventBusMap {
     "lock-screen": void;
     "update-cards": {
         cardType: TCardType,
-        element:HTMLElement,
-        cardsData:{
+        element: HTMLElement,
+        cardsData: {
             cards: ICard[],
             unreviewedCount: number,
             unreviewedNewCardCount: number,
@@ -211,7 +196,7 @@ export interface IEventBusMap {
         },
         dialog?: Dialog,
         index?: number,
-        title?:string,
+        title?: string,
         id?: string,
     };
     "mobile-keyboard-show": void;
@@ -382,38 +367,11 @@ export interface ICommandOption {
     dockCallback?: (element: HTMLElement) => void // 焦点在 dock 上时执行的回调
 }
 
-export interface IProtyleOption {
-    action?: TProtyleAction[];
-    mode?: "preview" | "wysiwyg";
-    blockId: string;
-    key?: string;
-    scrollAttr?: {
-        rootId: string,
-        startId: string,
-        endId: string,
-        scrollTop: number,
-        focusId?: string,
-        focusStart?: number,
-        focusEnd?: number,
-        zoomInId?: string,
-    };
-    defId?: string;
-    render?: {
-        background?: boolean,
-        title?: boolean,
-        gutter?: boolean,
-        scroll?: boolean,
-        breadcrumb?: boolean,
-        breadcrumbDocName?: boolean,
-    };
-    typewriterMode?: boolean;
-
-    after?(protyle: Protyle): void;
-}
-
 export interface IOperation {
     action: TOperation; // move， delete 不需要传 data
     id?: string;
+    isTwoWay?: boolean; // 是否双向关联
+    backRelationKeyID?: string; // 双向关联的目标关联列 ID
     avID?: string; // av
     format?: string; // updateAttrViewColNumberFormat 专享
     keyID?: string; // updateAttrViewCell 专享
@@ -423,6 +381,7 @@ export interface IOperation {
     previousID?: string;
     retData?: any;
     nextID?: string; // insert 专享
+    isDetached?: boolean; // insertAttrViewBlock 专享
     srcIDs?: string[]; // insertAttrViewBlock 专享
     name?: string; // addAttrViewCol 专享
     type?: TAVCol; // addAttrViewCol 专享
@@ -527,6 +486,7 @@ export abstract class Plugin {
         id: string,
         callback(protyle: Protyle): void,
     }[];
+    protyleOptions: IProtyleOption;
 
     constructor(options: {
         app: App,

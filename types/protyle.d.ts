@@ -4,10 +4,69 @@ import {
     IObject,
     IOperation,
     IPosition,
-    IProtyleOption, TTurnInto,
+    TTurnInto,
     TTurnIntoOne,
     TTurnIntoOneSub
 } from "./../siyuan";
+
+type TProtyleAction = "cb-get-append" | // 向下滚动加载
+    "cb-get-before" | // 向上滚动加载
+    "cb-get-unchangeid" | // 上下滚动，定位时不修改 blockid
+    "cb-get-hl" | // 高亮
+    "cb-get-focus" | // 光标定位
+    "cb-get-focusfirst" | // 动态定位到第一个块
+    "cb-get-setid" | // 重置 blockid
+    "cb-get-all" | // 获取所有块
+    "cb-get-backlink" | // 悬浮窗为传递型需展示上下文
+    "cb-get-unundo" | // 不需要记录历史
+    "cb-get-scroll" | // 滚动到指定位置
+    "cb-get-context" | // 包含上下文
+    "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
+    "cb-get-history" // 历史渲染
+
+interface IToolbarItem {
+    /** 唯一标示 */
+    name: string;
+    /** 提示 */
+    tip?: string;
+    /** svg 图标 */
+    icon: string;
+    /** 快捷键 */
+    hotkey?: string;
+    /** 提示位置 */
+    tipPosition: string;
+    click?(protyle: Protyle): void;
+}
+
+export interface IProtyleOption {
+    action?: TProtyleAction[];
+    mode?: "preview" | "wysiwyg";
+    toolbar?: Array<string | IToolbarItem>;
+    blockId?: string;
+    key?: string;
+    scrollAttr?: {
+        rootId: string,
+        startId: string,
+        endId: string,
+        scrollTop: number,
+        focusId?: string,
+        focusStart?: number,
+        focusEnd?: number,
+        zoomInId?: string,
+    };
+    defId?: string;
+    render?: {
+        background?: boolean,
+        title?: boolean,
+        gutter?: boolean,
+        scroll?: boolean,
+        breadcrumb?: boolean,
+        breadcrumbDocName?: boolean,
+    };
+    typewriterMode?: boolean;
+
+    after?(protyle: Protyle): void;
+}
 
 // REF: https://github.com/siyuan-note/siyuan/blob/dev/app/src/types/protyle.d.ts
 export interface IProtyle {
@@ -54,7 +113,7 @@ export interface IProtyle {
     contentElement?: HTMLElement;
     options: any;
     lute?: Lute;
-    toolbar?: any;
+    toolbar?: Toolbar;
     preview?: any;
     hint?: any;
     upload?: any;
