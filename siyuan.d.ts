@@ -185,20 +185,6 @@ export interface IEventBusMap {
     "sync-end": IWebSocketData;
     "sync-fail": IWebSocketData;
     "lock-screen": void;
-    "update-cards": {
-        cardType: TCardType,
-        element: HTMLElement,
-        cardsData: {
-            cards: ICard[],
-            unreviewedCount: number,
-            unreviewedNewCardCount: number,
-            unreviewedOldCardCount: number,
-        },
-        dialog?: Dialog,
-        index?: number,
-        title?: string,
-        id?: string,
-    };
     "mobile-keyboard-show": void;
     "mobile-keyboard-hide": void;
 }
@@ -396,6 +382,13 @@ export interface ICard {
     nextDues: IObject
 }
 
+export interface ICardData {
+    cards: ICard[],
+    unreviewedCount: number
+    unreviewedNewCardCount: number
+    unreviewedOldCardCount: number
+}
+
 export function fetchPost(url: string, data?: any, callback?: (response: IWebSocketData) => void, headers?: IObject): void;
 
 export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
@@ -569,6 +562,8 @@ export abstract class Plugin {
         y?: number,
         targetElement?: HTMLElement
     }): void;
+
+    updateCards(options: ICardData): Promise<ICardData> | ICardData;
 }
 
 export class Setting {
