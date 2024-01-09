@@ -1,6 +1,9 @@
 # Changelog
 
-## 0.9.2 2024-01
+## 0.9.3 2024-01
+
+
+## 0.9.2 2024-01-09
 
 * [Add plugin `protyleOptions`](https://github.com/siyuan-note/siyuan/issues/10090)
 * [Add plugin api `uninstall`](https://github.com/siyuan-note/siyuan/issues/10063)
