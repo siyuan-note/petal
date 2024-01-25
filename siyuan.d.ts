@@ -1,6 +1,6 @@
 export * from "./types";
 
-import {IProtyle, Lute, Protyle, Toolbar, IProtyleOption} from "./types/protyle";
+import {IProtyle, Lute, Protyle, Toolbar, IProtyleOption, TProtyleAction} from "./types/protyle";
 import {IMenuBaseDetail} from "./types/events";
 import {IGetDocInfo, IGetTreeStat} from "./types/response";
 
@@ -414,7 +414,7 @@ export function openTab(options: {
     app: App,
     doc?: {
         id: string, // 块 id
-        action?: string[], // cb-get-all：获取所有内容；cb-get-focus：打开后光标定位在 id 所在的块；cb-get-hl: 打开后 id 块高亮
+        action?: TProtyleAction[],
         zoomIn?: boolean, // 是否缩放
     };
     pdf?: {
