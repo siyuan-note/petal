@@ -65,7 +65,7 @@ export type TAVCol =
     | "phone"
 
 export interface Global {
-    Lute: Lute;
+    Lute: typeof Lute;
 }
 
 interface IKeymapItem {

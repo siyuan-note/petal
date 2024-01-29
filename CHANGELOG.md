@@ -2,6 +2,7 @@
 
 ## 0.9.3 2024-01
 
+* [Improve Global.Lute type](https://github.com/siyuan-note/petal/issues/23)
 
 ## 0.9.2 2024-01-09
 
