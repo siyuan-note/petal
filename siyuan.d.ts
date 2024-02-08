@@ -103,7 +103,7 @@ export interface IKeymap {
 
 export interface IEventBusMap {
     "click-flashcard-action": {
-        cards: ICard[],
+        card: ICard,
         type: string,   // 1 - 重来；2 - 困难；3 - 良好；4 - 简单；-1 - 显示答案；-2 - 上一个 ；-3 - 跳过
     };
     "click-blockicon": {
