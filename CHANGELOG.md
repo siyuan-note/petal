@@ -2,6 +2,8 @@
 
 ## 0.9.5 2024-03
 
+* [Update `Dialog`](https://github.com/siyuan-note/petal/issues/24)
+
 ## 0.9.4 2024-02-20
 
 * [Add plugin event bus `click-flashcard-action`](https://github.com/siyuan-note/siyuan/issues/10318)

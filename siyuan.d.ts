@@ -613,6 +613,8 @@ export class EventBus {
 export class Dialog {
 
     element: HTMLElement;
+    editors: { [key: string]: Protyle };
+    data: any;
 
     constructor(options: {
         title?: string,
