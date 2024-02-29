@@ -617,14 +617,17 @@ export class Dialog {
     data: any;
 
     constructor(options: {
+        positionId?: string,
         title?: string,
         transparent?: boolean,
         content: string,
-        width?: string
+        width?: string,
         height?: string,
         destroyCallback?: (options?: IObject) => void,
         disableClose?: boolean,
+        hideCloseIcon?: boolean,
         disableAnimation?: boolean,
+        resizeCallback?: (type: string) => void
     });
 
     destroy(options?: IObject): void;
