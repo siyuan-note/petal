@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.9.5 2024-03
+## 0.9.6 2024-03
+
+## 0.9.5 2024-03-05
 
 * [Update `Dialog`](https://github.com/siyuan-note/petal/issues/24)
 
