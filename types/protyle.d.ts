@@ -70,6 +70,7 @@ export interface IProtyleOption {
 
 // REF: https://github.com/siyuan-note/siyuan/blob/dev/app/src/types/protyle.d.ts
 export interface IProtyle {
+    getInstance: () => Protyle;
     app: App;
     transactionTime: number;
     id: string;
