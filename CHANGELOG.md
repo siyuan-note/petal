@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.9.6 2024-03
+## 0.9.7 2024-03
+
+## 0.9.6 2024-03-19
+
+* [Add method `getInstance` to IProtyle](https://github.com/siyuan-note/petal/pull/25)
 
 ## 0.9.5 2024-03-05
 
