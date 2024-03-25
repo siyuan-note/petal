@@ -1,6 +1,6 @@
 export * from "./types";
 
-import {IProtyle, Lute, Protyle, Toolbar} from "./types/protyle";
+import {IProtyle, Lute, Protyle, Toolbar, IProtyleOption, TProtyleAction} from "./types/protyle";
 import {IMenuBaseDetail} from "./types/events";
 import {IGetDocInfo, IGetTreeStat} from "./types/response";
 
@@ -11,22 +11,13 @@ declare global {
 
 export type TEventBus = keyof IEventBusMap
 
-export type TCardType = "doc" | "notebook" | "all"
+export type TTurnIntoOne = "BlocksMergeSuperBlock" | "Blocks2ULs" | "Blocks2OLs" | "Blocks2TLs" | "Blocks2Blockquote"
 
-export type TProtyleAction = "cb-get-append" | // 向下滚动加载
-    "cb-get-before" | // 向上滚动加载
-    "cb-get-unchangeid" | // 上下滚动，定位时不修改 blockid
-    "cb-get-hl" | // 高亮
-    "cb-get-focus" | // 光标定位
-    "cb-get-focusfirst" | // 动态定位到第一个块
-    "cb-get-setid" | // 重置 blockid
-    "cb-get-all" | // 获取所有块
-    "cb-get-backlink" | // 悬浮窗为传递型需展示上下文
-    "cb-get-unundo" | // 不需要记录历史
-    "cb-get-scroll" | // 滚动到指定位置
-    "cb-get-context" | // 包含上下文
-    "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
-    "cb-get-history" // 历史渲染
+export type TTurnIntoOneSub = "row" | "col"
+
+export type TTurnInto = "Blocks2Ps" | "Blocks2Hs"
+
+export type TCardType = "doc" | "notebook" | "all"
 
 export type TOperation =
     "insert"
@@ -74,7 +65,7 @@ export type TAVCol =
     | "phone"
 
 export interface Global {
-    Lute: Lute;
+    Lute: typeof Lute;
 }
 
 interface IKeymapItem {
@@ -111,6 +102,10 @@ export interface IKeymap {
 }
 
 export interface IEventBusMap {
+    "click-flashcard-action": {
+        card: ICard,
+        type: string,   // 1 - 重来；2 - 困难；3 - 良好；4 - 简单；-1 - 显示答案；-2 - 上一个 ；-3 - 跳过
+    };
     "click-blockicon": {
         menu: EventMenu,
         protyle: IProtyle,
@@ -163,6 +158,11 @@ export interface IEventBusMap {
         elements: NodeListOf<HTMLElement>,
         type: "doc" | "docs" | "notebook",
     };
+    "open-menu-inbox": {
+        menu: EventMenu,
+        element: HTMLElement,
+        ids: string[],
+    };
     "open-noneditableblock": {
         protyle: IProtyle,
         toolbar: Toolbar,
@@ -185,6 +185,12 @@ export interface IEventBusMap {
         files: FileList | DataTransferItemList;
     }
     "ws-main": IWebSocketData;
+    "sync-start": IWebSocketData;
+    "sync-end": IWebSocketData;
+    "sync-fail": IWebSocketData;
+    "lock-screen": void;
+    "mobile-keyboard-show": void;
+    "mobile-keyboard-hide": void;
 }
 
 export interface IPosition {
@@ -351,38 +357,11 @@ export interface ICommandOption {
     dockCallback?: (element: HTMLElement) => void // 焦点在 dock 上时执行的回调
 }
 
-export interface IProtyleOption {
-    action?: TProtyleAction[];
-    mode?: "preview" | "wysiwyg";
-    blockId: string;
-    key?: string;
-    scrollAttr?: {
-        rootId: string,
-        startId: string,
-        endId: string,
-        scrollTop: number,
-        focusId?: string,
-        focusStart?: number,
-        focusEnd?: number,
-        zoomInId?: string,
-    };
-    defId?: string;
-    render?: {
-        background?: boolean,
-        title?: boolean,
-        gutter?: boolean,
-        scroll?: boolean,
-        breadcrumb?: boolean,
-        breadcrumbDocName?: boolean,
-    };
-    typewriterMode?: boolean;
-
-    after?(protyle: Protyle): void;
-}
-
 export interface IOperation {
     action: TOperation; // move， delete 不需要传 data
     id?: string;
+    isTwoWay?: boolean; // 是否双向关联
+    backRelationKeyID?: string; // 双向关联的目标关联列 ID
     avID?: string; // av
     format?: string; // updateAttrViewColNumberFormat 专享
     keyID?: string; // updateAttrViewCell 专享
@@ -392,11 +371,26 @@ export interface IOperation {
     previousID?: string;
     retData?: any;
     nextID?: string; // insert 专享
+    isDetached?: boolean; // insertAttrViewBlock 专享
     srcIDs?: string[]; // insertAttrViewBlock 专享
     name?: string; // addAttrViewCol 专享
     type?: TAVCol; // addAttrViewCol 专享
     deckID?: string; // add/removeFlashcards 专享
     blockIDs?: string[]; // add/removeFlashcards 专享
+}
+
+export interface ICard {
+    deckID: string
+    cardID: string
+    blockID: string
+    nextDues: IObject
+}
+
+export interface ICardData {
+    cards: ICard[],
+    unreviewedCount: number
+    unreviewedNewCardCount: number
+    unreviewedOldCardCount: number
 }
 
 export function fetchPost(url: string, data?: any, callback?: (response: IWebSocketData) => void, headers?: IObject): void;
@@ -418,11 +412,13 @@ export function openWindow(options: {
     },
 }): void;
 
+export function openMobileFileById(app: App, id: string, action?: string[]): void;
+
 export function openTab(options: {
     app: App,
     doc?: {
         id: string, // 块 id
-        action?: string[], // cb-get-all：获取所有内容；cb-get-focus：打开后光标定位在 id 所在的块；cb-get-hl: 打开后 id 块高亮
+        action?: TProtyleAction[],
         zoomIn?: boolean, // 是否缩放
     };
     pdf?: {
@@ -449,9 +445,11 @@ export function openTab(options: {
     keepCursor?: boolean; // 是否跳转到新 tab 上
     removeCurrentTab?: boolean; // 在当前页签打开时需移除原有页签
     afterOpen?: () => void; // 打开后回调
-}): ITab
+}): Promise<ITab>
 
 export function getFrontend(): "desktop" | "desktop-window" | "mobile" | "browser-desktop" | "browser-mobile";
+
+export function lockScreen(app: App): void
 
 export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "android" | "ios";
 
@@ -475,7 +473,7 @@ export abstract class Plugin {
     i18n: I18N;
     data: any;
     displayName: string;
-    name: string;
+    readonly name: string;
     app: App;
     commands: ICommandOption[];
     setting: Setting;
@@ -485,6 +483,7 @@ export abstract class Plugin {
         id: string,
         callback(protyle: Protyle): void,
     }[];
+    protyleOptions: IProtyleOption;
 
     constructor(options: {
         app: App,
@@ -495,6 +494,8 @@ export abstract class Plugin {
     onload(): void;
 
     onunload(): void;
+
+    uninstall(): void;
 
     onLayoutReady(): void;
 
@@ -553,7 +554,7 @@ export abstract class Plugin {
         destroy?: (this: IDockModel) => void,
         resize?: (this: IDockModel) => void,
         update?: (this: IDockModel) => void,
-        init: (this: IDockModel) => void,
+        init: (this: IDockModel, dock: IDockModel) => void,
     }): { config: IPluginDockTab, model: IDockModel };
 
     addCommand(options: ICommandOption): void;
@@ -565,6 +566,8 @@ export abstract class Plugin {
         y?: number,
         targetElement?: HTMLElement
     }): void;
+
+    updateCards(options: ICardData): Promise<ICardData> | ICardData;
 }
 
 export class Setting {
@@ -610,16 +613,21 @@ export class EventBus {
 export class Dialog {
 
     element: HTMLElement;
+    editors: { [key: string]: Protyle };
+    data: any;
 
     constructor(options: {
+        positionId?: string,
         title?: string,
         transparent?: boolean,
         content: string,
-        width?: string
+        width?: string,
         height?: string,
         destroyCallback?: (options?: IObject) => void,
         disableClose?: boolean,
+        hideCloseIcon?: boolean,
         disableAnimation?: boolean,
+        resizeCallback?: (type: string) => void
     });
 
     destroy(options?: IObject): void;
