@@ -1,6 +1,7 @@
 export * from "./types";
 
 import {IProtyle, Lute, Protyle, Toolbar, IProtyleOption, TProtyleAction} from "./types/protyle";
+import {Config} from "./types/config";
 import {IMenuBaseDetail} from "./types/events";
 import {IGetDocInfo, IGetTreeStat} from "./types/response";
 
@@ -64,8 +65,13 @@ export type TAVCol =
     | "email"
     | "phone"
 
+export interface ISiyuan {
+    config: Config.IConf;
+}
+
 export interface Global {
     Lute: typeof Lute;
+    siyuan: ISiyuan;
 }
 
 interface IKeymapItem {
