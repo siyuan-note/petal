@@ -1083,7 +1083,7 @@ export namespace Config {
         /**
          * Whether to search in iframe blocks
          */
-        iFrameBlock: boolean;
+        iframeBlock: boolean;
         /**
          * Whether to search resource file paths
          */
@@ -2113,7 +2113,7 @@ export namespace Config {
          * Search results contain iframe blocks
          * @default false
          */
-        iFrameBlock: boolean;
+        iframeBlock: boolean;
         /**
          * Search results contain list blocks
          * @default false
