@@ -2,6 +2,8 @@
 
 ## 0.9.7 2024-03
 
+* [Add `global.siyuan.config` type definition](https://github.com/siyuan-note/petal/pull/27)
+
 ## 0.9.6 2024-03-19
 
 * [Add method `getInstance` to IProtyle](https://github.com/siyuan-note/petal/pull/25)
