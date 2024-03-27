@@ -38,9 +38,11 @@ interface IToolbarItem {
     click?(protyle: Protyle): void;
 }
 
+export type TEditorMode = "preview" | "wysiwyg"
+
 export interface IProtyleOption {
     action?: TProtyleAction[];
-    mode?: "preview" | "wysiwyg";
+    mode?: TEditorMode;
     toolbar?: Array<string | IToolbarItem>;
     blockId?: string;
     key?: string;
