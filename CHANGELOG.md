@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.9.7 2024-03
+## 0.9.9 2024-04
+
+## 0.9.7 2024-04-02
 
 * [Add `global.siyuan.config` type definition](https://github.com/siyuan-note/petal/pull/27)
 
