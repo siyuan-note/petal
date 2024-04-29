@@ -587,6 +587,7 @@ export class Setting {
 
     addItem(options: {
         title: string,
+        direction?: "column" | "row"
         description?: string,
         actionElement?: HTMLElement,
         createActionElement?(): HTMLElement,

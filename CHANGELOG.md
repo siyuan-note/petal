@@ -5,6 +5,7 @@
 ## v0.9.8 2024-04-30
 
 * [Add `editors` to the plugin's `Custom` class](https://github.com/siyuan-note/siyuan/issues/11072)
+* [Add `direction` to plugin method `Setting.addItem`](https://github.com/siyuan-note/siyuan/issues/11183)
 
 ## v0.9.7 2024-04-02
 
