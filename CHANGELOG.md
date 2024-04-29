@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.9.9 2024-04
+## v0.9.9 2024-05
+
+## v0.9.8 2024-04-30
+
+* [Add `editors` to the plugin's `Custom` class](https://github.com/siyuan-note/siyuan/issues/11072)
 
 ## v0.9.7 2024-04-02
 

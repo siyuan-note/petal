@@ -236,6 +236,7 @@ export interface ICustomModel extends IModel {
     data: any;
     type: string;
     element: HTMLElement;
+    editors: Protyle[]; // 系统内部处理快捷键等操作需要用到 https://github.com/siyuan-note/siyuan/issues/11072
 
     init(): void;
 
