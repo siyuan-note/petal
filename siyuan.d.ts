@@ -139,7 +139,7 @@ export interface IEventBusMap {
     };
     "loaded-protyle-dynamic": {
         protyle: IProtyle,
-        positon: "afterend" | "beforebegin",
+        position: "afterend" | "beforebegin",
     };
     "loaded-protyle-static": {
         protyle: IProtyle,
