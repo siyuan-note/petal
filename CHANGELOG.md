@@ -2,6 +2,8 @@
 
 ## v0.9.9 2024-05
 
+* [Update plugin `loaded-protyle-dynamic` parameter positon to position](https://github.com/siyuan-note/siyuan/pull/11298)
+
 ## v0.9.8 2024-04-30
 
 * [Add `editors` to the plugin's `Custom` class](https://github.com/siyuan-note/siyuan/issues/11072)
