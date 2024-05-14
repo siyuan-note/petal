@@ -1,7 +1,10 @@
 # Changelog
 
-## v0.9.9 2024-05
+## v1.0.0 2024-05
 
+## v0.9.9 2024-05-14
+
+* Update Config.d.ts
 * [Update plugin `loaded-protyle-dynamic` parameter positon to position](https://github.com/siyuan-note/siyuan/pull/11298)
 
 ## v0.9.8 2024-04-30
