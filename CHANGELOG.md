@@ -2,6 +2,8 @@
 
 ## v1.0.0 2024-05
 
+* [Add `dialog` object to `Setting` property](https://github.com/siyuan-note/petal/issues/28)
+
 ## v0.9.9 2024-05-14
 
 * Update Config.d.ts
