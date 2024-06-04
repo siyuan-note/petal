@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.0.0 2024-05
+## v1.0.0 2024-06
+
+## v1.0.0 2024-06-04
 
 * [Add `dialog` object to `Setting` property](https://github.com/siyuan-note/petal/issues/28)
 
