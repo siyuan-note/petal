@@ -1,4 +1,6 @@
-import {IObject, IKeymap} from "../siyuan";
+/* cSpell:disable */
+
+import type { IKeymap, IObject } from "../siyuan";
 
 export abstract class Constants {
     public static readonly SIYUAN_VERSION: string;
@@ -59,11 +61,11 @@ export abstract class Constants {
     public static readonly CB_MOUNT_REMOVE = "cb-mount-remove";
     public static readonly CB_GET_APPEND = "cb-get-append"; // 向下滚动加载
     public static readonly CB_GET_BEFORE = "cb-get-before"; // 向上滚动加载
-    public static readonly CB_GET_UNCHANGEID = "cb-get-unchangeid"; // 上下滚动，定位时不修改 blockid
+    public static readonly CB_GET_UNCHANGEID = "cb-get-unchangeid"; // 上下滚动，定位时不修改 block ID
     public static readonly CB_GET_HL = "cb-get-hl"; // 高亮
     public static readonly CB_GET_FOCUS = "cb-get-focus"; // 光标定位
     public static readonly CB_GET_FOCUSFIRST = "cb-get-focusfirst"; // 动态定位到第一个块
-    public static readonly CB_GET_SETID = "cb-get-setid"; // 重置 blockid
+    public static readonly CB_GET_SETID = "cb-get-setid"; // 重置 block ID
     public static readonly CB_GET_ALL = "cb-get-all"; // 获取所有块
     public static readonly CB_GET_BACKLINK = "cb-get-backlink"; // 悬浮窗为传递型需展示上下文
     public static readonly CB_GET_UNUNDO = "cb-get-unundo"; // 不需要记录历史
@@ -107,6 +109,7 @@ export abstract class Constants {
         en_US: "20210808180117-6v0mkxr",
         fr_FR: "20210808180117-6v0mkxr",
     };
+
     public static readonly QUICK_DECK_ID = "20230218211946-2kw8jgx";
 
     public static readonly KEYCODELIST: { [key: number]: string } = {
@@ -213,163 +216,164 @@ export abstract class Constants {
         221: "]",
         222: "'",
     };
+
     // 冲突不使用 "⌘S/Q"
     // "⌘", "⇧", "⌥", "⌃"
     // "⌘A", "⌘X", "⌘C", "⌘V", "⌘-", "⌘=", "⌘0", "⇧⌘V", "⌘/", "⇧↑", "⇧↓", "⇧→", "⇧←", "⇧⇥", "⌃⇧⇥", "⌃⇥", "⌘⇥", "⇧⌘⇥", "⇧⌘→", "⇧⌘←",
     // "⌘Home", "⌘End", "⇧↩", "↩", "PageUp", "PageDown", "⌫", "⌦" 不可自定义
     public static readonly SIYUAN_KEYMAP: IKeymap = {
         general: {
-            mainMenu: {default: "⌥\\", custom: "⌥\\"},
-            commandPanel: {default: "⌥⇧P", custom: "⌥⇧P"},
-            editReadonly: {default: "⇧⌘G", custom: "⇧⌘G"},
-            syncNow: {default: "F9", custom: "F9"},
-            enterBack: {default: "⌥←", custom: "⌥←"},
-            enter: {default: "⌥→", custom: "⌥→"},
-            goForward: {default: "⌘]", custom: "⌘]"},
-            goBack: {default: "⌘[", custom: "⌘["},
-            newFile: {default: "⌘N", custom: "⌘N"},
-            search: {default: "⌘F", custom: "⌘F"},
-            globalSearch: {default: "⌘P", custom: "⌘P"},
-            stickSearch: {default: "⇧⌘F", custom: "⇧⌘F"},
-            replace: {default: "⌘R", custom: "⌘R"},
-            closeTab: {default: "⌘W", custom: "⌘W"},
-            fileTree: {default: "⌥1", custom: "⌥1"},
-            outline: {default: "⌥2", custom: "⌥2"},
-            bookmark: {default: "⌥3", custom: "⌥3"},
-            tag: {default: "⌥4", custom: "⌥4"},
-            dailyNote: {default: "⌥5", custom: "⌥5"},
-            inbox: {default: "⌥6", custom: "⌥6"},
-            backlinks: {default: "⌥7", custom: "⌥7"},
-            graphView: {default: "⌥8", custom: "⌥8"},
-            globalGraph: {default: "⌥9", custom: "⌥9"},
-            riffCard: {default: "⌥0", custom: "⌥0"},
-            config: {default: "⌥P", custom: "⌥P"},
-            dataHistory: {default: "⌥H", custom: "⌥H"},
-            toggleWin: {default: "⌥M", custom: "⌥M"},
-            lockScreen: {default: "⌥N", custom: "⌥N"},
-            recentDocs: {default: "⌘E", custom: "⌘E"},
-            goToTab1: {default: "⌘1", custom: "⌘1"},
-            goToTab2: {default: "⌘2", custom: "⌘2"},
-            goToTab3: {default: "⌘3", custom: "⌘3"},
-            goToTab4: {default: "⌘4", custom: "⌘4"},
-            goToTab5: {default: "⌘5", custom: "⌘5"},
-            goToTab6: {default: "⌘6", custom: "⌘6"},
-            goToTab7: {default: "⌘7", custom: "⌘7"},
-            goToTab8: {default: "⌘8", custom: "⌘8"},
-            goToTab9: {default: "⌘9", custom: "⌘9"},
-            goToTabNext: {default: "⇧⌘]", custom: "⇧⌘]"},
-            goToTabPrev: {default: "⇧⌘[", custom: "⇧⌘["},
-            move: {default: "", custom: ""},
-            selectOpen1: {default: "", custom: ""},
-            toggleDock: {default: "", custom: ""},
-            splitLR: {default: "", custom: ""},
-            splitMoveR: {default: "", custom: ""},
-            splitTB: {default: "", custom: ""},
-            splitMoveB: {default: "", custom: ""},
-            closeOthers: {default: "", custom: ""},
-            closeAll: {default: "", custom: ""},
-            closeUnmodified: {default: "", custom: ""},
-            closeLeft: {default: "", custom: ""},
-            closeRight: {default: "", custom: ""},
+            mainMenu: { default: "⌥\\", custom: "⌥\\" },
+            commandPanel: { default: "⌥⇧P", custom: "⌥⇧P" },
+            editReadonly: { default: "⇧⌘G", custom: "⇧⌘G" },
+            syncNow: { default: "F9", custom: "F9" },
+            enterBack: { default: "⌥←", custom: "⌥←" },
+            enter: { default: "⌥→", custom: "⌥→" },
+            goForward: { default: "⌘]", custom: "⌘]" },
+            goBack: { default: "⌘[", custom: "⌘[" },
+            newFile: { default: "⌘N", custom: "⌘N" },
+            search: { default: "⌘F", custom: "⌘F" },
+            globalSearch: { default: "⌘P", custom: "⌘P" },
+            stickSearch: { default: "⇧⌘F", custom: "⇧⌘F" },
+            replace: { default: "⌘R", custom: "⌘R" },
+            closeTab: { default: "⌘W", custom: "⌘W" },
+            fileTree: { default: "⌥1", custom: "⌥1" },
+            outline: { default: "⌥2", custom: "⌥2" },
+            bookmark: { default: "⌥3", custom: "⌥3" },
+            tag: { default: "⌥4", custom: "⌥4" },
+            dailyNote: { default: "⌥5", custom: "⌥5" },
+            inbox: { default: "⌥6", custom: "⌥6" },
+            backlinks: { default: "⌥7", custom: "⌥7" },
+            graphView: { default: "⌥8", custom: "⌥8" },
+            globalGraph: { default: "⌥9", custom: "⌥9" },
+            riffCard: { default: "⌥0", custom: "⌥0" },
+            config: { default: "⌥P", custom: "⌥P" },
+            dataHistory: { default: "⌥H", custom: "⌥H" },
+            toggleWin: { default: "⌥M", custom: "⌥M" },
+            lockScreen: { default: "⌥N", custom: "⌥N" },
+            recentDocs: { default: "⌘E", custom: "⌘E" },
+            goToTab1: { default: "⌘1", custom: "⌘1" },
+            goToTab2: { default: "⌘2", custom: "⌘2" },
+            goToTab3: { default: "⌘3", custom: "⌘3" },
+            goToTab4: { default: "⌘4", custom: "⌘4" },
+            goToTab5: { default: "⌘5", custom: "⌘5" },
+            goToTab6: { default: "⌘6", custom: "⌘6" },
+            goToTab7: { default: "⌘7", custom: "⌘7" },
+            goToTab8: { default: "⌘8", custom: "⌘8" },
+            goToTab9: { default: "⌘9", custom: "⌘9" },
+            goToTabNext: { default: "⇧⌘]", custom: "⇧⌘]" },
+            goToTabPrev: { default: "⇧⌘[", custom: "⇧⌘[" },
+            move: { default: "", custom: "" },
+            selectOpen1: { default: "", custom: "" },
+            toggleDock: { default: "", custom: "" },
+            splitLR: { default: "", custom: "" },
+            splitMoveR: { default: "", custom: "" },
+            splitTB: { default: "", custom: "" },
+            splitMoveB: { default: "", custom: "" },
+            closeOthers: { default: "", custom: "" },
+            closeAll: { default: "", custom: "" },
+            closeUnmodified: { default: "", custom: "" },
+            closeLeft: { default: "", custom: "" },
+            closeRight: { default: "", custom: "" },
         },
         editor: {
             general: {
-                duplicate: {default: "⌘D", custom: "⌘D"},
-                expandDown: {default: "⌥⇧↓", custom: "⌥⇧↓"},
-                expandUp: {default: "⌥⇧↑", custom: "⌥⇧↑"},
-                copyPlainText: {default: "", custom: ""},
-                copyID: {default: "", custom: ""},
-                copyProtocolInMd: {default: "", custom: ""},
-                netImg2LocalAsset: {default: "", custom: ""},
-                optimizeTypography: {default: "", custom: ""},
-                hLayout: {default: "", custom: ""},
-                vLayout: {default: "", custom: ""},
-                refPopover: {default: "", custom: ""},
-                copyText: {default: "", custom: ""},
-                expand: {default: "⌘↓", custom: "⌘↓"},
-                collapse: {default: "⌘↑", custom: "⌘↑"},
-                insertBottom: {default: "⌥⌘.", custom: "⌥⌘."},
-                refTab: {default: "⇧⌘.", custom: "⇧⌘."},
-                openBy: {default: "⌥,", custom: "⌥,"},
-                insertRight: {default: "⌥.", custom: "⌥."},
-                attr: {default: "⌥⌘A", custom: "⌥⌘A"},
-                quickMakeCard: {default: "⌥⌘F", custom: "⌥⌘F"},
-                refresh: {default: "F5", custom: "F5"},
-                copyBlockRef: {default: "⇧⌘C", custom: "⇧⌘C"},
-                copyProtocol: {default: "⇧⌘H", custom: "⇧⌘H"},
-                copyBlockEmbed: {default: "⇧⌘E", custom: "⇧⌘E"},
-                copyHPath: {default: "⇧⌘P", custom: "⇧⌘P"},
-                undo: {default: "⌘Z", custom: "⌘Z"},
-                redo: {default: "⌘Y", custom: "⌘Y"},
-                rename: {default: "F2", custom: "F2"},
-                newNameFile: {default: "F3", custom: "F3"},
-                newContentFile: {default: "F4", custom: "F4"},
-                newNameSettingFile: {default: "⌘F3", custom: "⌘F3"},
-                showInFolder: {default: "⌥A", custom: "⌥A"},
-                outline: {default: "⌥O", custom: "⌥O"},
-                backlinks: {default: "⌥B", custom: "⌥B"},
-                graphView: {default: "⌥G", custom: "⌥G"},
-                spaceRepetition: {default: "⌥F", custom: "⌥F"},
-                fullscreen: {default: "⌥Y", custom: "⌥Y"},
-                alignLeft: {default: "⌥L", custom: "⌥L"},
-                alignCenter: {default: "⌥C", custom: "⌥C"},
-                alignRight: {default: "⌥R", custom: "⌥R"},
-                wysiwyg: {default: "⌥⌘7", custom: "⌥⌘7"},
-                preview: {default: "⌥⌘9", custom: "⌥⌘9"},
-                insertBefore: {default: "⇧⌘B", custom: "⇧⌘B"},
-                insertAfter: {default: "⇧⌘A", custom: "⇧⌘A"},
-                jumpToParentNext: {default: "⇧⌘N", custom: "⇧⌘N"},
-                moveToUp: {default: "⇧⌘↑", custom: "⇧⌘↑"},
-                moveToDown: {default: "⇧⌘↓", custom: "⇧⌘↓"},
+                duplicate: { default: "⌘D", custom: "⌘D" },
+                expandDown: { default: "⌥⇧↓", custom: "⌥⇧↓" },
+                expandUp: { default: "⌥⇧↑", custom: "⌥⇧↑" },
+                copyPlainText: { default: "", custom: "" },
+                copyID: { default: "", custom: "" },
+                copyProtocolInMd: { default: "", custom: "" },
+                netImg2LocalAsset: { default: "", custom: "" },
+                optimizeTypography: { default: "", custom: "" },
+                hLayout: { default: "", custom: "" },
+                vLayout: { default: "", custom: "" },
+                refPopover: { default: "", custom: "" },
+                copyText: { default: "", custom: "" },
+                expand: { default: "⌘↓", custom: "⌘↓" },
+                collapse: { default: "⌘↑", custom: "⌘↑" },
+                insertBottom: { default: "⌥⌘.", custom: "⌥⌘." },
+                refTab: { default: "⇧⌘.", custom: "⇧⌘." },
+                openBy: { default: "⌥,", custom: "⌥," },
+                insertRight: { default: "⌥.", custom: "⌥." },
+                attr: { default: "⌥⌘A", custom: "⌥⌘A" },
+                quickMakeCard: { default: "⌥⌘F", custom: "⌥⌘F" },
+                refresh: { default: "F5", custom: "F5" },
+                copyBlockRef: { default: "⇧⌘C", custom: "⇧⌘C" },
+                copyProtocol: { default: "⇧⌘H", custom: "⇧⌘H" },
+                copyBlockEmbed: { default: "⇧⌘E", custom: "⇧⌘E" },
+                copyHPath: { default: "⇧⌘P", custom: "⇧⌘P" },
+                undo: { default: "⌘Z", custom: "⌘Z" },
+                redo: { default: "⌘Y", custom: "⌘Y" },
+                rename: { default: "F2", custom: "F2" },
+                newNameFile: { default: "F3", custom: "F3" },
+                newContentFile: { default: "F4", custom: "F4" },
+                newNameSettingFile: { default: "⌘F3", custom: "⌘F3" },
+                showInFolder: { default: "⌥A", custom: "⌥A" },
+                outline: { default: "⌥O", custom: "⌥O" },
+                backlinks: { default: "⌥B", custom: "⌥B" },
+                graphView: { default: "⌥G", custom: "⌥G" },
+                spaceRepetition: { default: "⌥F", custom: "⌥F" },
+                fullscreen: { default: "⌥Y", custom: "⌥Y" },
+                alignLeft: { default: "⌥L", custom: "⌥L" },
+                alignCenter: { default: "⌥C", custom: "⌥C" },
+                alignRight: { default: "⌥R", custom: "⌥R" },
+                wysiwyg: { default: "⌥⌘7", custom: "⌥⌘7" },
+                preview: { default: "⌥⌘9", custom: "⌥⌘9" },
+                insertBefore: { default: "⇧⌘B", custom: "⇧⌘B" },
+                insertAfter: { default: "⇧⌘A", custom: "⇧⌘A" },
+                jumpToParentNext: { default: "⇧⌘N", custom: "⇧⌘N" },
+                moveToUp: { default: "⇧⌘↑", custom: "⇧⌘↑" },
+                moveToDown: { default: "⇧⌘↓", custom: "⇧⌘↓" },
             },
             insert: {
-                appearance: {default: "⌥⌘X", custom: "⌥⌘X"},
-                lastUsed: {default: "⌥X", custom: "⌥X"},
-                ref: {default: "⌥[", custom: "⌥["},
-                kbd: {default: "⌘'", custom: "⌘'"},
-                sup: {default: "⌘H", custom: "⌘H"},
-                sub: {default: "⌘J", custom: "⌘J"},
-                bold: {default: "⌘B", custom: "⌘B"},
-                "inline-math": {default: "⌘M", custom: "⌘M"},
-                memo: {default: "⌥⌘M", custom: "⌥⌘M"},
-                underline: {default: "⌘U", custom: "⌘U"},
-                italic: {default: "⌘I", custom: "⌘I"},
-                mark: {default: "⌥D", custom: "⌥D"},
-                tag: {default: "⌘T", custom: "⌘T"},
-                strike: {default: "⇧⌘S", custom: "⇧⌘S"},
-                "inline-code": {default: "⌘G", custom: "⌘G"},
-                link: {default: "⌘K", custom: "⌘K"},
-                check: {default: "⌘L", custom: "⌘L"},
-                table: {default: "⌘O", custom: "⌘O"},
-                code: {default: "⇧⌘K", custom: "⇧⌘K"},
-                clearInline: {default: "⌘\\", custom: "⌘\\"},
+                "appearance": { default: "⌥⌘X", custom: "⌥⌘X" },
+                "lastUsed": { default: "⌥X", custom: "⌥X" },
+                "ref": { default: "⌥[", custom: "⌥[" },
+                "kbd": { default: "⌘'", custom: "⌘'" },
+                "sup": { default: "⌘H", custom: "⌘H" },
+                "sub": { default: "⌘J", custom: "⌘J" },
+                "bold": { default: "⌘B", custom: "⌘B" },
+                "inline-math": { default: "⌘M", custom: "⌘M" },
+                "memo": { default: "⌥⌘M", custom: "⌥⌘M" },
+                "underline": { default: "⌘U", custom: "⌘U" },
+                "italic": { default: "⌘I", custom: "⌘I" },
+                "mark": { default: "⌥D", custom: "⌥D" },
+                "tag": { default: "⌘T", custom: "⌘T" },
+                "strike": { default: "⇧⌘S", custom: "⇧⌘S" },
+                "inline-code": { default: "⌘G", custom: "⌘G" },
+                "link": { default: "⌘K", custom: "⌘K" },
+                "check": { default: "⌘L", custom: "⌘L" },
+                "table": { default: "⌘O", custom: "⌘O" },
+                "code": { default: "⇧⌘K", custom: "⇧⌘K" },
+                "clearInline": { default: "⌘\\", custom: "⌘\\" },
             },
             heading: {
-                paragraph: {default: "⌥⌘0", custom: "⌥⌘0"},
-                heading1: {default: "⌥⌘1", custom: "⌥⌘1"},
-                heading2: {default: "⌥⌘2", custom: "⌥⌘2"},
-                heading3: {default: "⌥⌘3", custom: "⌥⌘3"},
-                heading4: {default: "⌥⌘4", custom: "⌥⌘4"},
-                heading5: {default: "⌥⌘5", custom: "⌥⌘5"},
-                heading6: {default: "⌥⌘6", custom: "⌥⌘6"},
+                paragraph: { default: "⌥⌘0", custom: "⌥⌘0" },
+                heading1: { default: "⌥⌘1", custom: "⌥⌘1" },
+                heading2: { default: "⌥⌘2", custom: "⌥⌘2" },
+                heading3: { default: "⌥⌘3", custom: "⌥⌘3" },
+                heading4: { default: "⌥⌘4", custom: "⌥⌘4" },
+                heading5: { default: "⌥⌘5", custom: "⌥⌘5" },
+                heading6: { default: "⌥⌘6", custom: "⌥⌘6" },
             },
             list: {
-                indent: {default: "⇥", custom: "⇥"},
-                outdent: {default: "⇧⇥", custom: "⇧⇥"},
-                checkToggle: {default: "⌘↩", custom: "⌘↩"},
+                indent: { default: "⇥", custom: "⇥" },
+                outdent: { default: "⇧⇥", custom: "⇧⇥" },
+                checkToggle: { default: "⌘↩", custom: "⌘↩" },
             },
             table: {
-                insertRowAbove: {default: "⇧⌘T", custom: "⇧⌘T"},
-                insertRowBelow: {default: "⇧⌘D", custom: "⇧⌘D"},
-                insertColumnLeft: {default: "⇧⌘L", custom: "⇧⌘L"},
-                insertColumnRight: {default: "⇧⌘R", custom: "⇧⌘R"},
-                moveToUp: {default: "⌥⌘T", custom: "⌥⌘T"},
-                moveToDown: {default: "⌥⌘B", custom: "⌥⌘B"},
-                moveToLeft: {default: "⌥⌘L", custom: "⌥⌘L"},
-                moveToRight: {default: "⌥⌘R", custom: "⌥⌘R"},
-                "delete-row": {default: "⌘-", custom: "⌘-"},
-                "delete-column": {default: "⇧⌘-", custom: "⇧⌘-"}
-            }
+                "insertRowAbove": { default: "⇧⌘T", custom: "⇧⌘T" },
+                "insertRowBelow": { default: "⇧⌘D", custom: "⇧⌘D" },
+                "insertColumnLeft": { default: "⇧⌘L", custom: "⇧⌘L" },
+                "insertColumnRight": { default: "⇧⌘R", custom: "⇧⌘R" },
+                "moveToUp": { default: "⌥⌘T", custom: "⌥⌘T" },
+                "moveToDown": { default: "⌥⌘B", custom: "⌥⌘B" },
+                "moveToLeft": { default: "⌥⌘L", custom: "⌥⌘L" },
+                "moveToRight": { default: "⌥⌘R", custom: "⌥⌘R" },
+                "delete-row": { default: "⌘-", custom: "⌘-" },
+                "delete-column": { default: "⇧⌘-", custom: "⇧⌘-" },
+            },
         },
         plugin: {},
     };
@@ -377,130 +381,132 @@ export abstract class Constants {
     public static readonly SIYUAN_EMPTY_LAYOUT: Record<string, unknown> = {
         hideDock: false,
         layout: {
-            "direction": "tb",
-            "size": "0px",
-            "type": "normal",
-            "instance": "Layout",
-            "children": [{
-                "direction": "lr",
-                "size": "auto",
-                "type": "normal",
-                "instance": "Layout",
-                "children": [{
-                    "direction": "tb",
-                    "size": "0px",
-                    "type": "left",
-                    "instance": "Layout",
-                    "children": [{
-                        "instance": "Wnd",
-                        "children": []
+            direction: "tb",
+            size: "0px",
+            type: "normal",
+            instance: "Layout",
+            children: [{
+                direction: "lr",
+                size: "auto",
+                type: "normal",
+                instance: "Layout",
+                children: [{
+                    direction: "tb",
+                    size: "0px",
+                    type: "left",
+                    instance: "Layout",
+                    children: [{
+                        instance: "Wnd",
+                        children: [],
                     }, {
-                        "instance": "Wnd",
-                        "resize": "tb",
-                        "children": []
-                    }]
+                        instance: "Wnd",
+                        resize: "tb",
+                        children: [],
+                    }],
                 }, {
-                    "direction": "lr",
-                    "resize": "lr",
-                    "size": "auto",
-                    "type": "center",
-                    "instance": "Layout",
-                    "children": [{"instance": "Wnd", "children": [{"instance": "Tab", "children": []}]}]
+                    direction: "lr",
+                    resize: "lr",
+                    size: "auto",
+                    type: "center",
+                    instance: "Layout",
+                    children: [{ instance: "Wnd", children: [{ instance: "Tab", children: [] }] }],
                 }, {
-                    "direction": "tb",
-                    "size": "0px",
-                    "resize": "lr",
-                    "type": "right",
-                    "instance": "Layout",
-                    "children": [{
-                        "instance": "Wnd",
-                        "children": []
+                    direction: "tb",
+                    size: "0px",
+                    resize: "lr",
+                    type: "right",
+                    instance: "Layout",
+                    children: [{
+                        instance: "Wnd",
+                        children: [],
                     }, {
-                        "instance": "Wnd",
-                        "resize": "tb",
-                        "children": []
-                    }]
-                }]
+                        instance: "Wnd",
+                        resize: "tb",
+                        children: [],
+                    }],
+                }],
             }, {
-                "direction": "lr",
-                "size": "0px",
-                "resize": "tb",
-                "type": "bottom",
-                "instance": "Layout",
-                "children": [{
-                    "instance": "Wnd",
-                    "children": []
+                direction: "lr",
+                size: "0px",
+                resize: "tb",
+                type: "bottom",
+                instance: "Layout",
+                children: [{
+                    instance: "Wnd",
+                    children: [],
                 }, {
-                    "instance": "Wnd",
-                    "resize": "lr",
-                    "children": []
-                }]
-            }]
+                    instance: "Wnd",
+                    resize: "lr",
+                    children: [],
+                }],
+            }],
         },
         bottom: {
             pin: true,
-            data: []
+            data: [],
         },
         left: {
             pin: true,
             data: [
                 [{
                     type: "file",
-                    size: {width: 227, height: 0},
+                    size: { width: 227, height: 0 },
                     show: true,
                     icon: "iconFiles",
                     hotkeyLangId: "fileTree",
                 }, {
                     type: "outline",
-                    size: {width: 227, height: 0},
+                    size: { width: 227, height: 0 },
                     show: false,
                     icon: "iconAlignCenter",
                     hotkeyLangId: "outline",
                 }, {
                     type: "inbox",
-                    size: {width: 320, height: 0},
+                    size: { width: 320, height: 0 },
                     show: false,
                     icon: "iconInbox",
                     hotkeyLangId: "inbox",
-                }], [{
+                }],
+                [{
                     type: "bookmark",
-                    size: {width: 227, height: 0},
+                    size: { width: 227, height: 0 },
                     show: false,
                     icon: "iconBookmark",
                     hotkeyLangId: "bookmark",
                 }, {
                     type: "tag",
-                    size: {width: 227, height: 0},
+                    size: { width: 227, height: 0 },
                     show: false,
                     icon: "iconTags",
                     hotkeyLangId: "tag",
-                }]
-            ]
+                }],
+            ],
         },
         right: {
             pin: true,
             data: [
                 [{
                     type: "graph",
-                    size: {width: 320, height: 0},
+                    size: { width: 320, height: 0 },
                     show: false,
                     icon: "iconGraph",
                     hotkeyLangId: "graphView",
                 }, {
                     type: "globalGraph",
-                    size: {width: 320, height: 0},
+                    size: { width: 320, height: 0 },
                     show: false,
                     icon: "iconGlobalGraph",
                     hotkeyLangId: "globalGraph",
-                }], [{
+                }],
+                [{
                     type: "backlink",
-                    size: {width: 320, height: 0},
+                    size: { width: 320, height: 0 },
                     show: false,
                     icon: "iconLink",
                     hotkeyLangId: "backlinks",
-                }]
-            ]
-        }
+                }],
+            ],
+        },
     };
 
     // image
@@ -511,6 +517,7 @@ export abstract class Constants {
 <path fill="#ffdd4e" d="M15.396 8.403l11.659 15.921c0.401 0.579 0.432 1.317 0.081 1.924-0.361 0.594-1.005 0.985-1.741 0.985-0.008 0-0.017-0-0.025-0h-9.344l-0.63-18.83z"></path>
 <path fill="#ffd00f" d="M13.868 6.478c0 0.946 0.767 1.712 1.712 1.712s1.712-0.767 1.712-1.712v0c0-0.945-0.766-1.712-1.712-1.712s-1.712 0.766-1.712 1.712v0zM28.577 10.818c0 0.945 0.766 1.712 1.712 1.712s1.712-0.766 1.712-1.712v0c0-0.945-0.766-1.712-1.712-1.712s-1.712 0.766-1.712 1.712v0zM0 10.822c0 0.945 0.766 1.712 1.712 1.712s1.712-0.766 1.712-1.712v0c0-0.945-0.766-1.712-1.712-1.712s-1.712 0.766-1.712 1.712v0z"></path>
 </svg>`;
+
     public static readonly SIYUAN_IMAGE_FILE: string = "1f4c4";
     public static readonly SIYUAN_IMAGE_NOTE: string = "1f5c3";
     public static readonly SIYUAN_IMAGE_FOLDER: string = "1f4d1";
@@ -520,50 +527,27 @@ export abstract class Constants {
     public static readonly SIYUAN_ASSETS_AUDIO: string[] = [".mp3", ".wav", ".ogg", ".m4a"];
     public static readonly SIYUAN_ASSETS_VIDEO: string[] = [".mov", ".weba", ".mkv", ".mp4", ".webm"];
     public static readonly SIYUAN_ASSETS_EXTS: string[] = [".pdf"].concat(Constants.SIYUAN_ASSETS_IMAGE).concat(Constants.SIYUAN_ASSETS_AUDIO).concat(Constants.SIYUAN_ASSETS_VIDEO);
-    public static readonly SIYUAN_ASSETS_SEARCH: string[] = [".txt", ".md", ".markdown", ".docx", ".xlsx", ".pptx", ".pdf", ".json", ".log", ".sql", ".html", ".xml", ".java", ".h", ".c",
-        ".cpp", ".go", ".rs", ".swift", ".kt", ".py", ".php", ".js", ".css", ".ts", ".sh", ".bat", ".cmd", ".ini", ".yaml",
-        ".rst", ".adoc", ".textile", ".opml", ".org", ".wiki", ".epub"];
+    public static readonly SIYUAN_ASSETS_SEARCH: string[] = [".txt", ".md", ".markdown", ".docx", ".xlsx", ".pptx", ".pdf", ".json", ".log", ".sql", ".html", ".xml", ".java", ".h", ".c", ".cpp", ".go", ".rs", ".swift", ".kt", ".py", ".php", ".js", ".css", ".ts", ".sh", ".bat", ".cmd", ".ini", ".yaml", ".rst", ".adoc", ".textile", ".opml", ".org", ".wiki", ".epub"];
 
     // protyle
-    public static readonly SIYUAN_CONFIG_APPEARANCE_DARK_CODE: string[] = ["a11y-dark", "agate", "an-old-hope", "androidstudio",
-        "arta", "atom-one-dark", "atom-one-dark-reasonable", "base16/3024", "base16/apathy", "base16/apprentice", "base16/ashes", "base16/atelier-cave", "base16/atelier-dune",
-        "base16/atelier-estuary", "base16/atelier-forest", "base16/atelier-heath", "base16/atelier-lakeside", "base16/atelier-plateau", "base16/atelier-savanna", "base16/atelier-seaside", "base16/atelier-sulphurpool",
-        "base16/atlas", "base16/bespin", "base16/black-metal", "base16/black-metal-bathory", "base16/black-metal-burzum", "base16/black-metal-dark-funeral", "base16/black-metal-gorgoroth", "base16/black-metal-immortal", "base16/black-metal-khold", "base16/black-metal-marduk", "base16/black-metal-mayhem", "base16/black-metal-nile", "base16/black-metal-venom", "base16/brewer", "base16/bright", "base16/brogrammer",
-        "base16/brush-trees-dark", "base16/chalk", "base16/circus", "base16/classic-dark", "base16/codeschool", "base16/colors", "base16/danqing", "base16/darcula", "base16/dark-violet",
-        "base16/darkmoss", "base16/darktooth", "base16/decaf", "base16/default-dark", "base16/dracula", "base16/edge-dark", "base16/eighties", "base16/embers", "base16/equilibrium-dark",
-        "base16/equilibrium-gray-dark", "base16/espresso", "base16/eva", "base16/eva-dim", "base16/flat", "base16/framer", "base16/gigavolt", "base16/google-dark", "base16/grayscale-dark", "base16/green-screen", "base16/gruvbox-dark-hard", "base16/gruvbox-dark-medium",
-        "base16/gruvbox-dark-pale", "base16/gruvbox-dark-soft", "base16/hardcore", "base16/harmonic16-dark", "base16/heetch-dark", "base16/helios", "base16/hopscotch", "base16/horizon-dark", "base16/humanoid-dark", "base16/ia-dark", "base16/icy-dark", "base16/ir-black", "base16/isotope",
-        "base16/kimber", "base16/london-tube", "base16/macintosh", "base16/marrakesh", "base16/materia", "base16/material", "base16/material-darker", "base16/material-palenight", "base16/material-vivid",
-        "base16/mellow-purple", "base16/mocha", "base16/monokai", "base16/nebula", "base16/nord", "base16/nova", "base16/ocean", "base16/oceanicnext", "base16/onedark", "base16/outrun-dark",
-        "base16/papercolor-dark", "base16/paraiso", "base16/pasque", "base16/phd", "base16/pico", "base16/pop", "base16/porple", "base16/qualia", "base16/railscasts", "base16/rebecca",
-        "base16/ros-pine", "base16/ros-pine-moon", "base16/sandcastle", "base16/seti-ui", "base16/silk-dark", "base16/snazzy", "base16/solar-flare", "base16/solarized-dark", "base16/spacemacs", "base16/summercamp", "base16/summerfruit-dark",
-        "base16/synth-midnight-terminal-dark", "base16/tango", "base16/tender", "base16/tomorrow-night", "base16/twilight", "base16/unikitty-dark", "base16/vulcan",
-        "base16/windows-10", "base16/windows-95", "base16/windows-high-contrast", "base16/windows-nt", "base16/woodland", "base16/xcode-dusk", "base16/zenburn", "codepen-embed", "dark",
-        "devibeans", "far", "felipec", "github-dark", "github-dark-dimmed", "gml", "gradient-dark", "hybrid", "ir-black", "isbl-editor-dark", "kimbie-dark", "lioshi",
-        "monokai", "monokai-sublime", "night-owl", "nnfx-dark", "nord", "obsidian", "panda-syntax-dark", "paraiso-dark", "pojoaque", "qtcreator-dark", "rainbow", "shades-of-purple", "srcery", "stackoverflow-dark",
-        "sunburst", "tomorrow-night-blue", "tomorrow-night-bright", "tokyo-night-dark", "vs2015", "xt256"
+    public static readonly SIYUAN_CONFIG_APPEARANCE_DARK_CODE: string[] = ["a11y-dark", "agate", "an-old-hope", "androidstudio", "arta", "atom-one-dark", "atom-one-dark-reasonable", "base16/3024", "base16/apathy", "base16/apprentice", "base16/ashes", "base16/atelier-cave", "base16/atelier-dune", "base16/atelier-estuary", "base16/atelier-forest", "base16/atelier-heath", "base16/atelier-lakeside", "base16/atelier-plateau", "base16/atelier-savanna", "base16/atelier-seaside", "base16/atelier-sulphurpool", "base16/atlas", "base16/bespin", "base16/black-metal", "base16/black-metal-bathory", "base16/black-metal-burzum", "base16/black-metal-dark-funeral", "base16/black-metal-gorgoroth", "base16/black-metal-immortal", "base16/black-metal-khold", "base16/black-metal-marduk", "base16/black-metal-mayhem", "base16/black-metal-nile", "base16/black-metal-venom", "base16/brewer", "base16/bright", "base16/brogrammer", "base16/brush-trees-dark", "base16/chalk", "base16/circus", "base16/classic-dark", "base16/codeschool", "base16/colors", "base16/danqing", "base16/darcula", "base16/dark-violet", "base16/darkmoss", "base16/darktooth", "base16/decaf", "base16/default-dark", "base16/dracula", "base16/edge-dark", "base16/eighties", "base16/embers", "base16/equilibrium-dark", "base16/equilibrium-gray-dark", "base16/espresso", "base16/eva", "base16/eva-dim", "base16/flat", "base16/framer", "base16/gigavolt", "base16/google-dark", "base16/grayscale-dark", "base16/green-screen", "base16/gruvbox-dark-hard", "base16/gruvbox-dark-medium", "base16/gruvbox-dark-pale", "base16/gruvbox-dark-soft", "base16/hardcore", "base16/harmonic16-dark", "base16/heetch-dark", "base16/helios", "base16/hopscotch", "base16/horizon-dark", "base16/humanoid-dark", "base16/ia-dark", "base16/icy-dark", "base16/ir-black", "base16/isotope", "base16/kimber", "base16/london-tube", "base16/macintosh", "base16/marrakesh", "base16/materia", "base16/material", "base16/material-darker", "base16/material-palenight", "base16/material-vivid", "base16/mellow-purple", "base16/mocha", "base16/monokai", "base16/nebula", "base16/nord", "base16/nova", "base16/ocean", "base16/oceanicnext", "base16/onedark", "base16/outrun-dark", "base16/papercolor-dark", "base16/paraiso", "base16/pasque", "base16/phd", "base16/pico", "base16/pop", "base16/porple", "base16/qualia", "base16/railscasts", "base16/rebecca", "base16/ros-pine", "base16/ros-pine-moon", "base16/sandcastle", "base16/seti-ui", "base16/silk-dark", "base16/snazzy", "base16/solar-flare", "base16/solarized-dark", "base16/spacemacs", "base16/summercamp", "base16/summerfruit-dark", "base16/synth-midnight-terminal-dark", "base16/tango", "base16/tender", "base16/tomorrow-night", "base16/twilight", "base16/unikitty-dark", "base16/vulcan", "base16/windows-10", "base16/windows-95", "base16/windows-high-contrast", "base16/windows-nt", "base16/woodland", "base16/xcode-dusk", "base16/zenburn", "codepen-embed", "dark", "devibeans", "far", "felipec", "github-dark", "github-dark-dimmed", "gml", "gradient-dark", "hybrid", "ir-black", "isbl-editor-dark", "kimbie-dark", "lioshi", "monokai", "monokai-sublime", "night-owl", "nnfx-dark", "nord", "obsidian", "panda-syntax-dark", "paraiso-dark", "pojoaque", "qtcreator-dark", "rainbow", "shades-of-purple", "srcery", "stackoverflow-dark", "sunburst", "tomorrow-night-blue", "tomorrow-night-bright", "tokyo-night-dark", "vs2015", "xt256",
     ];
-    public static readonly SIYUAN_CONFIG_APPEARANCE_LIGHT_CODE: string[] = ["ant-design",
-        "a11y-light", "arduino-light", "ascetic", "atom-one-light", "base16/atelier-cave-light",
-        "base16/atelier-dune-light", "base16/atelier-estuary-light", "base16/atelier-forest-light", "base16/atelier-heath-light",
-        "base16/atelier-lakeside-light", "base16/atelier-plateau-light", "base16/atelier-savanna-light", "base16/atelier-seaside-light", "base16/atelier-sulphurpool-light", "base16/brush-trees",
-        "base16/classic-light", "base16/cupcake", "base16/cupertino", "base16/default-light", "base16/dirtysea", "base16/edge-light", "base16/equilibrium-gray-light", "base16/equilibrium-light",
-        "base16/fruit-soda", "base16/github", "base16/google-light", "base16/grayscale-light", "base16/gruvbox-light-hard", "base16/gruvbox-light-medium", "base16/gruvbox-light-soft",
-        "base16/harmonic16-light", "base16/heetch-light", "base16/humanoid-light", "base16/horizon-light", "base16/ia-light", "base16/material-lighter", "base16/mexico-light",
-        "base16/one-light", "base16/papercolor-light", "base16/ros-pine-dawn", "base16/sagelight", "base16/shapeshifter",
-        "base16/silk-light", "base16/solar-flare-light", "base16/solarized-light", "base16/summerfruit-light", "base16/synth-midnight-terminal-light", "base16/tomorrow",
-        "base16/unikitty-light", "base16/windows-10-light", "base16/windows-95-light", "base16/windows-high-contrast-light", "brown-paper", "base16/windows-nt-light",
-        "color-brewer", "docco", "foundation", "github", "googlecode", "gradient-light", "grayscale", "idea", "intellij-light", "isbl-editor-light", "kimbie-light",
-        "lightfair", "magula", "mono-blue", "nnfx-light", "panda-syntax-light", "paraiso-light", "purebasic", "qtcreator-light", "routeros", "school-book",
-        "stackoverflow-light", "tokyo-night-light", "vs", "xcode", "default"];
-    public static readonly ZWSP: string = "\u200b";
+
+    public static readonly SIYUAN_CONFIG_APPEARANCE_LIGHT_CODE: string[] = ["ant-design", "a11y-light", "arduino-light", "ascetic", "atom-one-light", "base16/atelier-cave-light", "base16/atelier-dune-light", "base16/atelier-estuary-light", "base16/atelier-forest-light", "base16/atelier-heath-light", "base16/atelier-lakeside-light", "base16/atelier-plateau-light", "base16/atelier-savanna-light", "base16/atelier-seaside-light", "base16/atelier-sulphurpool-light", "base16/brush-trees", "base16/classic-light", "base16/cupcake", "base16/cupertino", "base16/default-light", "base16/dirtysea", "base16/edge-light", "base16/equilibrium-gray-light", "base16/equilibrium-light", "base16/fruit-soda", "base16/github", "base16/google-light", "base16/grayscale-light", "base16/gruvbox-light-hard", "base16/gruvbox-light-medium", "base16/gruvbox-light-soft", "base16/harmonic16-light", "base16/heetch-light", "base16/humanoid-light", "base16/horizon-light", "base16/ia-light", "base16/material-lighter", "base16/mexico-light", "base16/one-light", "base16/papercolor-light", "base16/ros-pine-dawn", "base16/sagelight", "base16/shapeshifter", "base16/silk-light", "base16/solar-flare-light", "base16/solarized-light", "base16/summerfruit-light", "base16/synth-midnight-terminal-light", "base16/tomorrow", "base16/unikitty-light", "base16/windows-10-light", "base16/windows-95-light", "base16/windows-high-contrast-light", "brown-paper", "base16/windows-nt-light", "color-brewer", "docco", "foundation", "github", "googlecode", "gradient-light", "grayscale", "idea", "intellij-light", "isbl-editor-light", "kimbie-light", "lightfair", "magula", "mono-blue", "nnfx-light", "panda-syntax-light", "paraiso-light", "purebasic", "qtcreator-light", "routeros", "school-book", "stackoverflow-light", "tokyo-night-light", "vs", "xcode", "default"];
+
+    public static readonly ZWSP: string = "\u200B";
     public static readonly INLINE_TYPE: string[] = ["block-ref", "kbd", "text", "file-annotation-ref", "a", "strong", "em", "u", "s", "mark", "sup", "sub", "tag", "code", "inline-math", "inline-memo"];
     public static readonly BLOCK_HINT_KEYS: string[] = ["((", "[[", "（（", "【【"];
     public static readonly BLOCK_HINT_CLOSE_KEYS: IObject;
     // common: "bash", "c", "csharp", "cpp", "css", "diff", "go", "xml", "json", "java", "javascript", "kotlin", "less", "lua", "makefile", "markdown", "objectivec", "php", "php-template", "perl", "plaintext", "python", "python-repl", "r", "ruby", "rust", "scss", "sql", "shell", "swift", "ini", "typescript", "vbnet", "yaml", "properties", "1c", "armasm", "avrasm", "actionscript", "ada", "angelscript", "accesslog", "apache", "applescript", "arcade", "arduino", "asciidoc", "aspectj", "abnf", "autohotkey", "autoit", "awk", "basic", "bnf", "dos", "brainfuck", "cal", "cmake", "csp", "cos", "capnproto", "ceylon", "clean", "clojure", "clojure-repl", "coffeescript", "coq", "crystal", "d", "dns", "dart", "delphi", "dts", "django", "dockerfile", "dust", "erb", "elixir", "elm", "erlang", "erlang-repl", "excel", "ebnf", "fsharp", "fix", "flix", "fortran", "gcode", "gams", "gauss", "glsl", "gml", "gherkin", "golo", "gradle", "groovy", "haml", "hsp", "http", "handlebars", "haskell", "haxe", "hy", "irpf90", "isbl", "inform7", "x86asm", "jboss-cli", "julia", "julia-repl", "ldif", "llvm", "lsl", "latex", "lasso", "leaf", "lisp", "livecodeserver", "livescript", "mel", "mipsasm", "matlab", "maxima", "mercury", "axapta", "routeros", "mizar", "mojolicious", "monkey", "moonscript", "n1ql", "nsis", "nestedtext", "nginx", "nim", "nix", "node-repl", "ocaml", "openscad", "ruleslanguage", "oxygene", "pf", "parser3", "pony", "pgsql", "powershell", "processing", "prolog", "protobuf", "puppet", "purebasic", "profile", "q", "qml", "reasonml", "rib", "rsl", "roboconf", "sas", "sml", "sqf", "step21", "scala", "scheme", "scilab", "smali", "smalltalk", "stan", "stata", "stylus", "subunit", "tp", "taggerscript", "tcl", "tap", "thrift", "twig", "vbscript", "vbscript-html", "vhdl", "vala", "verilog", "vim", "wasm", "mathematica", "wren", "xl", "xquery", "zephir", "crmsh", "dsconfig", "graphql",
     // third: "yul", "solidity", "abap", "hlsl"
     public static readonly ALIAS_CODE_LANGUAGES: string[] = [
-        "js", "ts", "html", "toml", "c#", "bat",
+        "js",
+        "ts",
+        "html",
+        "toml",
+        "c#",
+        "bat",
     ];
 
     // Google Analytics 事件

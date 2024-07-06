@@ -1,4 +1,4 @@
-import {IObject} from "../siyuan";
+import type { IObject } from "../siyuan";
 
 export interface IGetDocInfo {
     ial: IObject;

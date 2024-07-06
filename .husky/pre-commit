@@ -1,0 +1,8 @@
+pnpm run docs:build
+pnpm run docs:format
+
+pnpm run format
+
+git add ./docs
+
+exit 0
