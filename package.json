@@ -1,17 +1,37 @@
 {
+    "$schema": "https://json.schemastore.org/package.json",
     "name": "siyuan",
     "type": "module",
     "version": "1.0.2",
-    "description": "The API declaration and documents of SiYuan Plugin System",
+    "description": "The Plugin API declaration and documents of SiYuan.",
+    "author": {
+        "name": "zuoez02",
+        "url": "https://github.com/zuoez02"
+    },
     "contributors": [
-        "zuoez02",
-        "Vanessa",
-        "Zuoqiu-Yingyi"
+        {
+            "name": "Vanessa",
+            "url": "https://github.com/Vanessa"
+        },
+        {
+            "name": "Zuoqiu Yingyi",
+            "url": "https://github.com/Zuoqiu-Yingyi"
+        }
     ],
+    "homepage": "https://github.com/siyuan-note/petal/tree/main/docs/markdown",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/siyuan-note/petal.git"
     },
+    "bugs": {
+        "url": "https://github.com/siyuan-note/petal/issues"
+    },
+    "keywords": [
+        "siyuan",
+        "siyuan-note",
+        "plugin",
+        "api"
+    ],
     "types": "siyuan.d.ts",
     "files": [
         "CHANGELOG.md",
@@ -23,6 +43,8 @@
     ],
     "scripts": {
         "prepare": "husky",
+        "docs:build": "typedoc",
+        "docs:format": "eslint --fix ./docs",
         "check": "run-s check:eslint check:cspell",
         "check:eslint": "eslint --max-warnings 0 .",
         "check:cspell": "cspell .",
@@ -37,6 +59,7 @@
         "husky": "^9.0.11",
         "npm-run-all": "^4.1.5",
         "typedoc": "^0.26.3",
+        "typedoc-plugin-markdown": "^4.1.2",
         "typescript": "^5.5.3"
     }
 }

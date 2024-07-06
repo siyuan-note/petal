@@ -12,6 +12,12 @@ export default antfu({
                 "warn",
                 "always",
             ],
+            "style/no-trailing-spaces": [
+                "warn",
+                {
+                    ignoreComments: true,
+                },
+            ],
             "style/linebreak-style": [
                 "error",
                 "unix",
@@ -45,6 +51,11 @@ export default antfu({
                 "error",
                 2,
             ],
+        },
+    },
+    markdown: {
+        overrides: {
+            "ts/no-unused-expressions": ["off"],
         },
     },
     typescript: {

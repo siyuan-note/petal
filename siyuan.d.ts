@@ -111,7 +111,7 @@ export interface Global {
     siyuan: ISiyuan;
 }
 
-interface IKeymapItem {
+export interface IKeymapItem {
     default: string;
     custom: string;
 }
@@ -511,17 +511,23 @@ export function adaptHotkey(hotkey: string): string;
 export function confirm(title: string, text: string, confirmCallback?: (dialog: Dialog) => void, cancelCallback?: (dialog: Dialog) => void): void;
 
 /**
- * @param text - Message text
+ * @param text
+ * Message text <br/>
  * 消息文本
- * @param timeout - Timeout in milliseconds
+ * @param timeout
+ * Timeout in milliseconds <br/>
  * 超时时间（毫秒）
- * - `0`: manual close
- * - `-1`: always show
- * - `6000`: default
+ * - `0`: manual close | 手动关闭
+ * - `-1`: always show | 永远显示
+ * - `6000`: default | 默认
  */
 export function showMessage(
     text: string, timeout?: number, type?: "error" | "info", id?: string): void;
 
+/**
+ * The context of the SiYuan plug-in <br/>
+ * 思源插件的上下文
+ */
 export class App {
     plugins: Plugin[];
     appId: string;

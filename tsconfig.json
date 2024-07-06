@@ -31,8 +31,7 @@
     },
     "include": [
         "types",
-        "cspell.config.js",
-        "eslint.config.js",
-        "siyuan.d.ts",
+        "./*.js",
+        "./*.ts",
     ],
 }

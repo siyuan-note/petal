@@ -293,6 +293,7 @@ export namespace Config {
 
         /**
          * Whether to allow to execute javascript in the HTML block
+         * TODO: fix the typo
          */
         allowHTMLBLockScript: boolean; // cspell:disable-line
 

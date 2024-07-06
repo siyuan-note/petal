@@ -4,6 +4,7 @@
 
 - Add `eslint` formatting configuration
 - Add `cSpell` spelling check configuration
+- Add `typedoc` documentation generation configuration
 
 ## v1.0.2 2024-06-04
 
