@@ -4,6 +4,9 @@
  */
 const config = {
     // #region typedoc
+
+    // REF: https://typedoc.org/options/input/#name
+    name: "SiYuan Plugin API",
     entryPoints: [
         "./siyuan.d.ts",
     ],
@@ -18,6 +21,9 @@ const config = {
     // REF: https://typedoc.org/options/input/#readme
     readme: "none",
 
+    // REF: https://typedoc.org/options/input/#includeversion
+    includeVersion: true,
+
     // #endregion typedoc-plugin-markdown
     // #region typedoc-plugin-markdown
 
@@ -31,22 +37,22 @@ const config = {
     indexFormat: "table",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/display-options#--parametersFormat
-    parametersFormat: "htmlTable",
+    parametersFormat: "table",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/display-options#--interfacePropertiesFormat
-    interfacePropertiesFormat: "htmlTable",
+    interfacePropertiesFormat: "table",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/display-options#--classPropertiesFormat
-    classPropertiesFormat: "htmlTable",
+    classPropertiesFormat: "table",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/display-options#--enumMembersFormat
-    enumMembersFormat: "htmlTable",
+    enumMembersFormat: "table",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/display-options#--typeDeclarationFormat
-    typeDeclarationFormat: "htmlTable",
+    typeDeclarationFormat: "table",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/display-options#--propertyMembersFormat
-    propertyMembersFormat: "htmlTable",
+    propertyMembersFormat: "table",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/utility-options#--publicpath
     // publicPath: "https://github.com/siyuan-note/petal/tree/main/docs/markdown/",

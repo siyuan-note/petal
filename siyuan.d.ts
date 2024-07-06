@@ -512,10 +512,12 @@ export function confirm(title: string, text: string, confirmCallback?: (dialog: 
 
 /**
  * @param text
- * Message text <br/>
+ * Message text
+ * <br/>
  * 消息文本
  * @param timeout
- * Timeout in milliseconds <br/>
+ * Timeout in milliseconds
+ * <br/>
  * 超时时间（毫秒）
  * - `0`: manual close | 手动关闭
  * - `-1`: always show | 永远显示
@@ -525,7 +527,8 @@ export function showMessage(
     text: string, timeout?: number, type?: "error" | "info", id?: string): void;
 
 /**
- * The context of the SiYuan plug-in <br/>
+ * The context of the SiYuan plugin
+ * <br/>
  * 思源插件的上下文
  */
 export class App {
