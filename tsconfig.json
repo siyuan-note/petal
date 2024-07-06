@@ -1,0 +1,38 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig.json",
+    "compilerOptions": {
+        "target": "ESNext",
+        "lib": [
+            "ESNext",
+            "DOM",
+        ],
+        "useDefineForClassFields": true,
+        /* path */
+        "baseUrl": "./",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "paths": {
+            "~/*": [
+                "./*",
+            ],
+            "@/*": [
+                "./types/*",
+            ],
+        },
+        "resolveJsonModule": true,
+        "strict": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noEmit": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "skipLibCheck": true,
+    },
+    "include": [
+        "types",
+        "cspell.config.js",
+        "eslint.config.js",
+        "siyuan.d.ts",
+    ],
+}

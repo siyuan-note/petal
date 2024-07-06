@@ -1,21 +1,4 @@
-/**
- * Copyright (C) 2023 SiYuan Community
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-import {TEditorMode} from "./protyle";
+import type { TEditorMode } from "./protyle";
 
 export namespace Config {
 
@@ -168,12 +151,12 @@ export namespace Config {
     /**
      * The model name called by the API
      */
-    export type TOpenAIAPIModel = "gpt-4" | "gpt-4-32k" | "gpt-3.5-turbo" | "gpt-3.5-turbo-16k";
+    export type TOpenAIAPIModel = "gpt-3.5-turbo-16k" | "gpt-3.5-turbo" | "gpt-4-32k" | "gpt-4";
 
     /**
      * API Provider
      */
-    export type TOpenAAPIProvider = "OpenAI" | "Azure";
+    export type TOpenAAPIProvider = "Azure" | "OpenAI";
 
     /**
      * SiYuan API related configuration
@@ -265,7 +248,7 @@ export namespace Config {
      * User interface language
      * Same as {@link IAppearance.lang}
      */
-    export type TLang = "en_US" | "es_ES" | "fr_FR" | "zh_CHT" | "zh_CN" | "ja_JP";
+    export type TLang = "en_US" | "es_ES" | "fr_FR" | "ja_JP" | "zh_CHT" | "zh_CN";
 
     /**
      * SiYuan bazaar related configuration
@@ -897,26 +880,26 @@ export namespace Config {
      * SiYuan editor insert shortcut keys
      */
     export interface IKeymapEditorInsert extends IKeys {
-        appearance: IKey;
-        bold: IKey;
-        check: IKey;
-        clearInline: IKey;
-        code: IKey;
+        "appearance": IKey;
+        "bold": IKey;
+        "check": IKey;
+        "clearInline": IKey;
+        "code": IKey;
         "inline-code": IKey;
         "inline-math": IKey;
-        italic: IKey;
-        kbd: IKey;
-        lastUsed: IKey;
-        link: IKey;
-        mark: IKey;
-        memo: IKey;
-        ref: IKey;
-        strike: IKey;
-        sub: IKey;
-        sup: IKey;
-        table: IKey;
-        tag: IKey;
-        underline: IKey;
+        "italic": IKey;
+        "kbd": IKey;
+        "lastUsed": IKey;
+        "link": IKey;
+        "mark": IKey;
+        "memo": IKey;
+        "ref": IKey;
+        "strike": IKey;
+        "sub": IKey;
+        "sup": IKey;
+        "table": IKey;
+        "tag": IKey;
+        "underline": IKey;
     }
 
     /**
@@ -934,14 +917,14 @@ export namespace Config {
     export interface IKeymapEditorTable extends IKeys {
         "delete-column": IKey;
         "delete-row": IKey;
-        insertColumnLeft: IKey;
-        insertColumnRight: IKey;
-        insertRowAbove: IKey;
-        insertRowBelow: IKey;
-        moveToDown: IKey;
-        moveToLeft: IKey;
-        moveToRight: IKey;
-        moveToUp: IKey;
+        "insertColumnLeft": IKey;
+        "insertColumnRight": IKey;
+        "insertRowAbove": IKey;
+        "insertRowBelow": IKey;
+        "moveToDown": IKey;
+        "moveToLeft": IKey;
+        "moveToRight": IKey;
+        "moveToUp": IKey;
     }
 
     /**
@@ -1030,7 +1013,14 @@ export namespace Config {
     /**
      * Log level
      */
-    export type TLogLevel = "off" | "trace" | "debug" | "info" | "warn" | "error" | "fatal";
+    export type TLogLevel =
+        | "debug"
+        | "error"
+        | "fatal"
+        | "info"
+        | "off"
+        | "trace"
+        | "warn";
 
     /**
      * Snapshot repository related configuration
@@ -1453,7 +1443,7 @@ export namespace Config {
      * - `ios`: iOS device
      * - `std`: Desktop Electron environment
      */
-    export type TSystemContainer = "docker" | "android" | "ios" | "std";
+    export type TSystemContainer = "android" | "docker" | "ios" | "std";
 
     /**
      * SiYuan Network proxy configuration
@@ -1590,18 +1580,18 @@ export namespace Config {
      * SiYuan layout item
      */
     export type TUILayoutItem = IUILayoutLayout
-        | IUILayoutWnd
         | IUILayoutTab
-        | IUILayoutTabEditor
         | IUILayoutTabAsset
-        | IUILayoutTabCustom
         | IUILayoutTabBacklink
         | IUILayoutTabBookmark
+        | IUILayoutTabCustom
+        | IUILayoutTabEditor
         | IUILayoutTabFiles
         | IUILayoutTabGraph
         | IUILayoutTabOutline
+        | IUILayoutTabSearch
         | IUILayoutTabTag
-        | IUILayoutTabSearch;
+        | IUILayoutWnd;
 
     /**
      * SiYuan panel layout
@@ -1671,7 +1661,6 @@ export namespace Config {
         width?: string;
     }
 
-
     export interface IUILayoutTab {
         /**
          * Whether the tab is active
@@ -1727,7 +1716,6 @@ export namespace Config {
         path: string;
     }
 
-
     /**
      * SiYuan back link tab
      */
@@ -1757,7 +1745,7 @@ export namespace Config {
      * - `pin`: Pinned panel
      * - `local`: The panel of the current document
      */
-    export type TUILayoutTabBacklinkType = "pin" | "local";
+    export type TUILayoutTabBacklinkType = "local" | "pin";
 
     /**
      * SiYuan bookmark tab
@@ -1829,7 +1817,6 @@ export namespace Config {
         instance: "Files";
     }
 
-
     /**
      * SiYuan graph tab
      */
@@ -1855,14 +1842,13 @@ export namespace Config {
         type: TUILayoutTabGraphType;
     }
 
-
     /**
      * (Graph) Tab type
      * - `pin`: Pinned graph
      * - `local`: Graph of the current editor
      * - `global`: Global graph
      */
-    export type TUILayoutTabGraphType = "pin" | "local" | "global";
+    export type TUILayoutTabGraphType = "global" | "local" | "pin";
 
     /**
      * SiYuan outline tab
@@ -1888,13 +1874,12 @@ export namespace Config {
         type: TUILayoutTabOutlineType;
     }
 
-
     /**
      * (Outline) Tab type
      * - `pin`: Pinned outline panel
      * - `local`: The outline panel of the current editor
      */
-    export type TUILayoutTabOutlineType = "pin" | "local";
+    export type TUILayoutTabOutlineType = "local" | "pin";
 
     /**
      * SiYuan tag tab
@@ -2194,7 +2179,6 @@ export namespace Config {
         widgetBlock: boolean;
     }
 
-
     /**
      * Panel content layout direction
      * - `tb`: Top and bottom layout
@@ -2204,7 +2188,7 @@ export namespace Config {
      * - `tb`: Can adjust the size up and down
      * - `lr`: Can adjust the size left and right
      */
-    export type TUILayoutDirection = "tb" | "lr";
+    export type TUILayoutDirection = "lr" | "tb";
 
     /**
      * Layout type
@@ -2215,6 +2199,6 @@ export namespace Config {
      * - `left`: Left panel
      * - `right`: Right panel
      */
-    export type TUILayoutType = "normal" | "center" | "top" | "bottom" | "left" | "right";
+    export type TUILayoutType = "bottom" | "center" | "left" | "normal" | "right" | "top";
 
 }

@@ -1,4 +1,4 @@
-import {
+import type {
     App,
     ILuteNode,
     IObject,
@@ -6,23 +6,24 @@ import {
     IPosition,
     TTurnInto,
     TTurnIntoOne,
-    TTurnIntoOneSub
+    TTurnIntoOneSub,
 } from "./../siyuan";
 
-type TProtyleAction = "cb-get-append" | // 向下滚动加载
-    "cb-get-before" | // 向上滚动加载
-    "cb-get-unchangeid" | // 上下滚动，定位时不修改 blockid
-    "cb-get-hl" | // 高亮
-    "cb-get-focus" | // 光标定位
-    "cb-get-focusfirst" | // 动态定位到第一个块
-    "cb-get-setid" | // 重置 blockid
-    "cb-get-all" | // 获取所有块
-    "cb-get-backlink" | // 悬浮窗为传递型需展示上下文
-    "cb-get-unundo" | // 不需要记录历史
-    "cb-get-scroll" | // 滚动到指定位置
-    "cb-get-context" | // 包含上下文
-    "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
-    "cb-get-history" // 历史渲染
+type TProtyleAction =
+    | "cb-get-all" // 获取所有块
+    | "cb-get-append" // 向下滚动加载
+    | "cb-get-backlink" // 悬浮窗为传递型需展示上下文
+    | "cb-get-before" // 向上滚动加载
+    | "cb-get-context" // 包含上下文
+    | "cb-get-focus" // 光标定位
+    | "cb-get-focusfirst" // 动态定位到第一个块
+    | "cb-get-history" // 历史渲染
+    | "cb-get-hl" // 高亮
+    | "cb-get-html" // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
+    | "cb-get-scroll" // 滚动到指定位置
+    | "cb-get-setid" // 重置 blockid
+    | "cb-get-unchangeid" // 上下滚动，定位时不修改 blockid
+    | "cb-get-unundo"; // 不需要记录历史
 
 interface IToolbarItem {
     /** 唯一标示 */
@@ -35,39 +36,41 @@ interface IToolbarItem {
     hotkey?: string;
     /** 提示位置 */
     tipPosition: string;
-    click?(protyle: Protyle): void;
+    click?: (protyle: Protyle) => void;
 }
 
-export type TEditorMode = "preview" | "wysiwyg"
+export type TEditorMode =
+    | "preview"
+    | "wysiwyg";
 
 export interface IProtyleOption {
     action?: TProtyleAction[];
     mode?: TEditorMode;
-    toolbar?: Array<string | IToolbarItem>;
+    toolbar?: Array<IToolbarItem | string>;
     blockId?: string;
     key?: string;
     scrollAttr?: {
-        rootId: string,
-        startId: string,
-        endId: string,
-        scrollTop: number,
-        focusId?: string,
-        focusStart?: number,
-        focusEnd?: number,
-        zoomInId?: string,
+        rootId: string;
+        startId: string;
+        endId: string;
+        scrollTop: number;
+        focusId?: string;
+        focusStart?: number;
+        focusEnd?: number;
+        zoomInId?: string;
     };
     defId?: string;
     render?: {
-        background?: boolean,
-        title?: boolean,
-        gutter?: boolean,
-        scroll?: boolean,
-        breadcrumb?: boolean,
-        breadcrumbDocName?: boolean,
+        background?: boolean;
+        title?: boolean;
+        gutter?: boolean;
+        scroll?: boolean;
+        breadcrumb?: boolean;
+        breadcrumbDocName?: boolean;
     };
     typewriterMode?: boolean;
 
-    after?(protyle: Protyle): void;
+    after?: (protyle: Protyle) => void;
 }
 
 // REF: https://github.com/siyuan-note/siyuan/blob/dev/app/src/types/protyle.d.ts
@@ -125,24 +128,23 @@ export interface IProtyle {
 }
 
 export class Protyle {
-
     public protyle: IProtyle;
 
-    constructor(app: App, element: HTMLElement, options?: IProtyleOption)
+    constructor(app: App, element: HTMLElement, options?: IProtyleOption);
 
-    isUploading(): boolean
+    isUploading(): boolean;
 
-    destroy(): void
+    destroy(): void;
 
-    resize(): void
+    resize(): void;
 
-    reload(focus: boolean): void
+    reload(focus: boolean): void;
 
     /**
      * @param {boolean} [isBlock=false]
      * @param {boolean} [useProtyleRange=false]
      */
-    insert(html: string, isBlock?: boolean, useProtyleRange?: boolean): void
+    insert(html: string, isBlock?: boolean, useProtyleRange?: boolean): void;
 
     transaction(doOperations: IOperation[], undoOperations?: IOperation[]): void;
 
@@ -150,7 +152,7 @@ export class Protyle {
      * 多个块转换为一个块
      * @param {TTurnIntoOneSub} [subType] type 为 "BlocksMergeSuperBlock" 时必传
      */
-    public turnIntoOneTransaction(selectsElement: Element[], type: TTurnIntoOne, subType?: TTurnIntoOneSub): void
+    public turnIntoOneTransaction(selectsElement: Element[], type: TTurnIntoOne, subType?: TTurnIntoOneSub): void;
 
     /**
      * 多个块转换
@@ -158,20 +160,20 @@ export class Protyle {
      * @param type
      * @param {number} [subType] type 为 "Blocks2Hs" 时必传
      */
-    public turnIntoTransaction(nodeElement: Element, type: TTurnInto, subType?: number): void
+    public turnIntoTransaction(nodeElement: Element, type: TTurnInto, subType?: number): void;
 
-    public updateTransaction(id: string, newHTML: string, html: string): void
+    public updateTransaction(id: string, newHTML: string, html: string): void;
 
-    public updateBatchTransaction(nodeElements: Element[], cb: (e: HTMLElement) => void): void
+    public updateBatchTransaction(nodeElements: Element[], cb: (e: HTMLElement) => void): void;
 
-    public getRange(element: Element): Range
+    public getRange(element: Element): Range;
 
-    public hasClosestBlock(element: Node): false | HTMLElement
+    public hasClosestBlock(element: Node): false | HTMLElement;
 
     /**
      * @param {boolean} [toStart=true]
      */
-    public focusBlock(element: Element, toStart?: boolean): false | Range
+    public focusBlock(element: Element, toStart?: boolean): false | Range;
 }
 
 export class Toolbar {
@@ -180,28 +182,28 @@ export class Toolbar {
     public subElementCloseCB: () => void;
     public range: Range;
 
-    constructor(protyle: IProtyle)
+    constructor(protyle: IProtyle);
 
-    public render(protyle: IProtyle, range: Range, event?: KeyboardEvent)
+    public render(protyle: IProtyle, range: Range, event?: KeyboardEvent);
 
-    public showContent(protyle: IProtyle, range: Range, nodeElement: Element)
+    public showContent(protyle: IProtyle, range: Range, nodeElement: Element);
 
-    public showWidget(protyle: IProtyle, nodeElement: HTMLElement, range: Range)
+    public showWidget(protyle: IProtyle, nodeElement: HTMLElement, range: Range);
 
-    public showTpl(protyle: IProtyle, nodeElement: HTMLElement, range: Range)
+    public showTpl(protyle: IProtyle, nodeElement: HTMLElement, range: Range);
 
-    public showCodeLanguage(protyle: IProtyle, languageElement: HTMLElement)
+    public showCodeLanguage(protyle: IProtyle, languageElement: HTMLElement);
 
-    public showRender(protyle: IProtyle, renderElement: Element, updateElements?: Element[], oldHTML?: string)
+    public showRender(protyle: IProtyle, renderElement: Element, updateElements?: Element[], oldHTML?: string);
 
     public setInlineMark(protyle: IProtyle, type: string, action: "range" | "toolbar", textObj?: {
-        color?: string,
-        type: string
-    })
+        color?: string;
+        type: string;
+    });
 
-    public getCurrentType(range: Range): string[]
+    public getCurrentType(range: Range): string[];
 
-    public showAssets(protyle: IProtyle, position: IPosition, avCB?: (url: string) => void)
+    public showAssets(protyle: IProtyle, position: IPosition, avCB?: (url: string) => void);
 }
 
 export class Lute {

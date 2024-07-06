@@ -1,6 +1,7 @@
 # Changelog
 
-## v1.0.3 2024-06
+
+- Add `eslint` formatting configuration
 
 ## v1.0.2 2024-06-04
 

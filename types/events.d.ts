@@ -1,5 +1,5 @@
-import type {IProtyle} from "./protyle";
-import {EventMenu} from "./../siyuan";
+import type { EventMenu } from "./../siyuan";
+import type { IProtyle } from "./protyle";
 
 export interface IMenuBaseDetail {
     menu: EventMenu;
