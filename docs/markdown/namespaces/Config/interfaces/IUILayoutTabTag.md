@@ -10,6 +10,12 @@ SiYuan tag tab
 
 ## Properties
 
-| Property   | Type    | Description | Defined in                                                                                       |
-| ---------- | ------- | ----------- | ------------------------------------------------------------------------------------------------ |
-| `instance` | `"Tag"` | Object name | [types/config.d.ts:1892](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1892) |
+### instance
+
+> **instance**: `"Tag"`
+
+Object name
+
+#### Defined in
+
+[types/config.d.ts:1892](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1892)

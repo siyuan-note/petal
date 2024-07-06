@@ -22,7 +22,20 @@ The context of the SiYuan plugin
 
 ## Properties
 
-| Property  | Type                    | Defined in                                                                         |
-| --------- | ----------------------- | ---------------------------------------------------------------------------------- |
-| `appId`   | `string`                | [siyuan.d.ts:536](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L536) |
-| `plugins` | [`Plugin`](Plugin.md)[] | [siyuan.d.ts:535](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L535) |
+### appId
+
+> **appId**: `string`
+
+#### Defined in
+
+[siyuan.d.ts:536](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L536)
+
+---
+
+### plugins
+
+> **plugins**: [`Plugin`](Plugin.md)[]
+
+#### Defined in
+
+[siyuan.d.ts:535](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L535)

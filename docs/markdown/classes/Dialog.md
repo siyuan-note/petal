@@ -39,11 +39,37 @@
 
 ## Properties
 
-| Property  | Type          | Defined in                                                                         |
-| --------- | ------------- | ---------------------------------------------------------------------------------- |
-| `data`    | `any`         | [siyuan.d.ts:686](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L686) |
-| `editors` | `object`      | [siyuan.d.ts:685](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L685) |
-| `element` | `HTMLElement` | [siyuan.d.ts:684](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L684) |
+### data
+
+> **data**: `any`
+
+#### Defined in
+
+[siyuan.d.ts:686](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L686)
+
+---
+
+### editors
+
+> **editors**: `object`
+
+#### Index Signature
+
+\[`key`: `string`\]: [`Protyle`](Protyle.md)
+
+#### Defined in
+
+[siyuan.d.ts:685](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L685)
+
+---
+
+### element
+
+> **element**: `HTMLElement`
+
+#### Defined in
+
+[siyuan.d.ts:684](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L684)
 
 ## Methods
 

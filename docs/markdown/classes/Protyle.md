@@ -30,9 +30,13 @@
 
 ## Properties
 
-| Property  | Modifier | Type                                    | Defined in                                                                                       |
-| --------- | -------- | --------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `protyle` | `public` | [`IProtyle`](../interfaces/IProtyle.md) | [types/protyle.d.ts:131](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L131) |
+### protyle
+
+> **protyle**: [`IProtyle`](../interfaces/IProtyle.md)
+
+#### Defined in
+
+[types/protyle.d.ts:131](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L131)
 
 ## Methods
 

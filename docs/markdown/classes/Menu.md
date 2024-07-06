@@ -29,9 +29,13 @@
 
 ## Properties
 
-| Property  | Type          | Defined in                                                                         |
-| --------- | ------------- | ---------------------------------------------------------------------------------- |
-| `element` | `HTMLElement` | [siyuan.d.ts:710](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L710) |
+### element
+
+> **element**: `HTMLElement`
+
+#### Defined in
+
+[siyuan.d.ts:710](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L710)
 
 ## Methods
 

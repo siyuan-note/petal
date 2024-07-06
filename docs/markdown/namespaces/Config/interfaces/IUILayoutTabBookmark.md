@@ -10,6 +10,12 @@ SiYuan bookmark tab
 
 ## Properties
 
-| Property   | Type         | Description | Defined in                                                                                       |
-| ---------- | ------------ | ----------- | ------------------------------------------------------------------------------------------------ |
-| `instance` | `"Bookmark"` | Object name | [types/config.d.ts:1758](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1758) |
+### instance
+
+> **instance**: `"Bookmark"`
+
+Object name
+
+#### Defined in
+
+[types/config.d.ts:1758](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1758)

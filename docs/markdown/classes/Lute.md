@@ -8,13 +8,53 @@
 
 ## Properties
 
-| Property           | Modifier | Type     | Defined in                                                                                       |
-| ------------------ | -------- | -------- | ------------------------------------------------------------------------------------------------ |
-| `Caret`            | `static` | `string` | [types/protyle.d.ts:214](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L214) |
-| `Version`          | `static` | `string` | [types/protyle.d.ts:213](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L213) |
-| `WalkContinue`     | `static` | `number` | [types/protyle.d.ts:212](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L212) |
-| `WalkSkipChildren` | `static` | `number` | [types/protyle.d.ts:211](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L211) |
-| `WalkStop`         | `static` | `number` | [types/protyle.d.ts:210](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L210) |
+### Caret
+
+> `static` **Caret**: `string`
+
+#### Defined in
+
+[types/protyle.d.ts:214](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L214)
+
+---
+
+### Version
+
+> `static` **Version**: `string`
+
+#### Defined in
+
+[types/protyle.d.ts:213](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L213)
+
+---
+
+### WalkContinue
+
+> `static` **WalkContinue**: `number`
+
+#### Defined in
+
+[types/protyle.d.ts:212](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L212)
+
+---
+
+### WalkSkipChildren
+
+> `static` **WalkSkipChildren**: `number`
+
+#### Defined in
+
+[types/protyle.d.ts:211](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L211)
+
+---
+
+### WalkStop
+
+> `static` **WalkStop**: `number`
+
+#### Defined in
+
+[types/protyle.d.ts:210](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L210)
 
 ## Methods
 

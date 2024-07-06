@@ -10,6 +10,10 @@ Artificial Intelligence (AI) related configuration
 
 ## Properties
 
-| Property | Type                    | Defined in                                                                                   |
-| -------- | ----------------------- | -------------------------------------------------------------------------------------------- |
-| `openAI` | [`IOpenAI`](IOpenAI.md) | [types/config.d.ts:97](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L97) |
+### openAI
+
+> **openAI**: [`IOpenAI`](IOpenAI.md)
+
+#### Defined in
+
+[types/config.d.ts:97](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L97)

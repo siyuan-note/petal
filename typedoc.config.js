@@ -40,19 +40,19 @@ const config = {
     parametersFormat: "table",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/display-options#--interfacePropertiesFormat
-    interfacePropertiesFormat: "table",
+    interfacePropertiesFormat: "list",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/display-options#--classPropertiesFormat
-    classPropertiesFormat: "table",
+    classPropertiesFormat: "list",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/display-options#--enumMembersFormat
-    enumMembersFormat: "table",
+    enumMembersFormat: "list",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/display-options#--typeDeclarationFormat
-    typeDeclarationFormat: "table",
+    typeDeclarationFormat: "list",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/display-options#--propertyMembersFormat
-    propertyMembersFormat: "table",
+    propertyMembersFormat: "list",
 
     // REF: https://typedoc-plugin-markdown.org/docs/options/utility-options#--publicpath
     // publicPath: "https://github.com/siyuan-note/petal/tree/main/docs/markdown/",

@@ -8,7 +8,20 @@
 
 ## Properties
 
-| Property  | Type     | Defined in                                                                         |
-| --------- | -------- | ---------------------------------------------------------------------------------- |
-| `custom`  | `string` | [siyuan.d.ts:116](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L116) |
-| `default` | `string` | [siyuan.d.ts:115](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L115) |
+### custom
+
+> **custom**: `string`
+
+#### Defined in
+
+[siyuan.d.ts:116](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L116)
+
+---
+
+### default
+
+> **default**: `string`
+
+#### Defined in
+
+[siyuan.d.ts:115](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L115)

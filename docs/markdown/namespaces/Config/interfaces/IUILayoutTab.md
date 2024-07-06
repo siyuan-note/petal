@@ -8,13 +8,96 @@
 
 ## Properties
 
-| Property   | Type                                                                                                                                                                                                   | Description                 | Defined in                                                                                       |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- | ------------------------------------------------------------------------------------------------ |
-| `active?`  | `boolean`                                                                                                                                                                                              | Whether the tab is active   | [types/config.d.ts:1669](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1669) |
-| `children` | ([`IUILayoutTabAsset`](IUILayoutTabAsset.md) \| [`IUILayoutTabBacklink`](IUILayoutTabBacklink.md) \| [`IUILayoutTabCustom`](IUILayoutTabCustom.md) \| [`IUILayoutTabEditor`](IUILayoutTabEditor.md))[] | Tab content                 | [types/config.d.ts:1673](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1673) |
-| `docIcon?` | `string`                                                                                                                                                                                               | Tab icon                    | [types/config.d.ts:1677](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1677) |
-| `icon?`    | `string`                                                                                                                                                                                               | Icon reference ID           | [types/config.d.ts:1681](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1681) |
-| `instance` | `"Tab"`                                                                                                                                                                                                | Object name                 | [types/config.d.ts:1685](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1685) |
-| `lang?`    | `string`                                                                                                                                                                                               | Localization field key name | [types/config.d.ts:1689](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1689) |
-| `pin?`     | `boolean`                                                                                                                                                                                              | Whether the tab is pinned   | [types/config.d.ts:1693](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1693) |
-| `title?`   | `string`                                                                                                                                                                                               | Tab title                   | [types/config.d.ts:1697](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1697) |
+### active?
+
+> `optional` **active**: `boolean`
+
+Whether the tab is active
+
+#### Defined in
+
+[types/config.d.ts:1669](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1669)
+
+---
+
+### children
+
+> **children**: ([`IUILayoutTabAsset`](IUILayoutTabAsset.md) \| [`IUILayoutTabBacklink`](IUILayoutTabBacklink.md) \| [`IUILayoutTabCustom`](IUILayoutTabCustom.md) \| [`IUILayoutTabEditor`](IUILayoutTabEditor.md))[]
+
+Tab content
+
+#### Defined in
+
+[types/config.d.ts:1673](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1673)
+
+---
+
+### docIcon?
+
+> `optional` **docIcon**: `string`
+
+Tab icon
+
+#### Defined in
+
+[types/config.d.ts:1677](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1677)
+
+---
+
+### icon?
+
+> `optional` **icon**: `string`
+
+Icon reference ID
+
+#### Defined in
+
+[types/config.d.ts:1681](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1681)
+
+---
+
+### instance
+
+> **instance**: `"Tab"`
+
+Object name
+
+#### Defined in
+
+[types/config.d.ts:1685](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1685)
+
+---
+
+### lang?
+
+> `optional` **lang**: `string`
+
+Localization field key name
+
+#### Defined in
+
+[types/config.d.ts:1689](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1689)
+
+---
+
+### pin?
+
+> `optional` **pin**: `boolean`
+
+Whether the tab is pinned
+
+#### Defined in
+
+[types/config.d.ts:1693](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1693)
+
+---
+
+### title?
+
+> `optional` **title**: `string`
+
+Tab title
+
+#### Defined in
+
+[types/config.d.ts:1697](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1697)

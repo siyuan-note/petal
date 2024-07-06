@@ -10,8 +10,30 @@ SiYuan keymap related configuration
 
 ## Properties
 
-| Property  | Type                                  | Defined in                                                                                     |
-| --------- | ------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `editor`  | [`IKeymapEditor`](IKeymapEditor.md)   | [types/config.d.ts:773](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L773) |
-| `general` | [`IKeymapGeneral`](IKeymapGeneral.md) | [types/config.d.ts:774](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L774) |
-| `plugin`  | [`IKeymapPlugin`](IKeymapPlugin.md)   | [types/config.d.ts:775](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L775) |
+### editor
+
+> **editor**: [`IKeymapEditor`](IKeymapEditor.md)
+
+#### Defined in
+
+[types/config.d.ts:773](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L773)
+
+---
+
+### general
+
+> **general**: [`IKeymapGeneral`](IKeymapGeneral.md)
+
+#### Defined in
+
+[types/config.d.ts:774](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L774)
+
+---
+
+### plugin
+
+> **plugin**: [`IKeymapPlugin`](IKeymapPlugin.md)
+
+#### Defined in
+
+[types/config.d.ts:775](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L775)

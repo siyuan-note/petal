@@ -31,18 +31,103 @@
 
 ## Properties
 
-| Property         | Modifier   | Type                                                  | Defined in                                                                         |
-| ---------------- | ---------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `app`            | `public`   | [`App`](App.md)                                       | [siyuan.d.ts:545](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L545) |
-| `commands`       | `public`   | [`ICommandOption`](../interfaces/ICommandOption.md)[] | [siyuan.d.ts:546](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L546) |
-| `data`           | `public`   | `any`                                                 | [siyuan.d.ts:542](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L542) |
-| `displayName`    | `public`   | `string`                                              | [siyuan.d.ts:543](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L543) |
-| `eventBus`       | `public`   | [`EventBus`](EventBus.md)                             | [siyuan.d.ts:540](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L540) |
-| `i18n`           | `public`   | [`I18N`](../interfaces/I18N.md)                       | [siyuan.d.ts:541](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L541) |
-| `name`           | `readonly` | `string`                                              | [siyuan.d.ts:544](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L544) |
-| `protyleOptions` | `public`   | [`IProtyleOption`](../interfaces/IProtyleOption.md)   | [siyuan.d.ts:555](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L555) |
-| `protyleSlash`   | `public`   | `object`[]                                            | [siyuan.d.ts:548](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L548) |
-| `setting`        | `public`   | [`Setting`](Setting.md)                               | [siyuan.d.ts:547](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L547) |
+### app
+
+> **app**: [`App`](App.md)
+
+#### Defined in
+
+[siyuan.d.ts:545](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L545)
+
+---
+
+### commands
+
+> **commands**: [`ICommandOption`](../interfaces/ICommandOption.md)[]
+
+#### Defined in
+
+[siyuan.d.ts:546](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L546)
+
+---
+
+### data
+
+> **data**: `any`
+
+#### Defined in
+
+[siyuan.d.ts:542](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L542)
+
+---
+
+### displayName
+
+> **displayName**: `string`
+
+#### Defined in
+
+[siyuan.d.ts:543](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L543)
+
+---
+
+### eventBus
+
+> **eventBus**: [`EventBus`](EventBus.md)
+
+#### Defined in
+
+[siyuan.d.ts:540](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L540)
+
+---
+
+### i18n
+
+> **i18n**: [`I18N`](../interfaces/I18N.md)
+
+#### Defined in
+
+[siyuan.d.ts:541](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L541)
+
+---
+
+### name
+
+> `readonly` **name**: `string`
+
+#### Defined in
+
+[siyuan.d.ts:544](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L544)
+
+---
+
+### protyleOptions
+
+> **protyleOptions**: [`IProtyleOption`](../interfaces/IProtyleOption.md)
+
+#### Defined in
+
+[siyuan.d.ts:555](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L555)
+
+---
+
+### protyleSlash
+
+> **protyleSlash**: `object`[]
+
+#### Defined in
+
+[siyuan.d.ts:548](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L548)
+
+---
+
+### setting
+
+> **setting**: [`Setting`](Setting.md)
+
+#### Defined in
+
+[siyuan.d.ts:547](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L547)
 
 ## Methods
 
@@ -89,10 +174,13 @@ Must be executed before the synchronous function.
 
 `object`
 
-| Name     | Type                                                | Defined in                                                                         |
-| -------- | --------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `config` | [`IPluginDockTab`](../interfaces/IPluginDockTab.md) | [siyuan.d.ts:627](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L627) |
-| `model`  | [`IDockModel`](../interfaces/IDockModel.md)         | [siyuan.d.ts:627](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L627) |
+##### config
+
+> **config**: [`IPluginDockTab`](../interfaces/IPluginDockTab.md)
+
+##### model
+
+> **model**: [`IDockModel`](../interfaces/IDockModel.md)
 
 #### Defined in
 

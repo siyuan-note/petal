@@ -10,6 +10,12 @@ SiYuan filetree tab
 
 ## Properties
 
-| Property   | Type      | Description | Defined in                                                                                       |
-| ---------- | --------- | ----------- | ------------------------------------------------------------------------------------------------ |
-| `instance` | `"Files"` | Object name | [types/config.d.ts:1818](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1818) |
+### instance
+
+> **instance**: `"Files"`
+
+Object name
+
+#### Defined in
+
+[types/config.d.ts:1818](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L1818)

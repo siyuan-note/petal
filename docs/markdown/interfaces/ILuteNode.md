@@ -8,10 +8,36 @@
 
 ## Properties
 
-| Property                           | Type           | Defined in                                                                         |
-| ---------------------------------- | -------------- | ---------------------------------------------------------------------------------- |
-| `TokensStr`                        | () => `string` | [siyuan.d.ts:304](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L304) |
-| `__internal_object__`              | `object`       | [siyuan.d.ts:305](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L305) |
-| `__internal_object__.HeadingLevel` | `string`       | [siyuan.d.ts:309](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L309) |
-| `__internal_object__.Parent`       | `object`       | [siyuan.d.ts:306](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L306) |
-| `__internal_object__.Parent.Type`  | `number`       | [siyuan.d.ts:307](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L307) |
+### TokensStr()
+
+> **TokensStr**: () => `string`
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[siyuan.d.ts:304](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L304)
+
+---
+
+### \_\_internal\_object\_\_
+
+> **\_\_internal\_object\_\_**: `object`
+
+#### HeadingLevel
+
+> **HeadingLevel**: `string`
+
+#### Parent
+
+> **Parent**: `object`
+
+#### Parent.Type
+
+> **Type**: `number`
+
+#### Defined in
+
+[siyuan.d.ts:305](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L305)

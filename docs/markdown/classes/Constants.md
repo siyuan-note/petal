@@ -18,110 +18,1030 @@
 
 ## Properties
 
-| Property                              | Modifier   | Type                                  | Default value                            | Defined in                                                                                       |
-| ------------------------------------- | ---------- | ------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `ALIAS_CODE_LANGUAGES`                | `readonly` | `string`[]                            | `undefined`                              | [types/constants.ts:544](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L544) |
-| `ANALYTICS_EVT_ON_GET_CONFIG`         | `readonly` | `string`                              | `"siyuan.onGetConfig"`                   | [types/constants.ts:554](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L554) |
-| `ASSETS_ADDRESS`                      | `readonly` | `string`                              | `"https://assets.b3logfile.com/siyuan/"` | [types/constants.ts:11](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L11)   |
-| `BLOCK_HINT_CLOSE_KEYS`               | `readonly` | [`IObject`](../interfaces/IObject.md) | `undefined`                              | [types/constants.ts:541](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L541) |
-| `BLOCK_HINT_KEYS`                     | `readonly` | `string`[]                            | `undefined`                              | [types/constants.ts:540](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L540) |
-| `CB_GET_ALL`                          | `readonly` | `"cb-get-all"`                        | `"cb-get-all"`                           | [types/constants.ts:69](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L69)   |
-| `CB_GET_APPEND`                       | `readonly` | `"cb-get-append"`                     | `"cb-get-append"`                        | [types/constants.ts:62](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L62)   |
-| `CB_GET_BACKLINK`                     | `readonly` | `"cb-get-backlink"`                   | `"cb-get-backlink"`                      | [types/constants.ts:70](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L70)   |
-| `CB_GET_BEFORE`                       | `readonly` | `"cb-get-before"`                     | `"cb-get-before"`                        | [types/constants.ts:63](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L63)   |
-| `CB_GET_CONTEXT`                      | `readonly` | `"cb-get-context"`                    | `"cb-get-context"`                       | [types/constants.ts:73](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L73)   |
-| `CB_GET_FOCUS`                        | `readonly` | `"cb-get-focus"`                      | `"cb-get-focus"`                         | [types/constants.ts:66](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L66)   |
-| `CB_GET_FOCUSFIRST`                   | `readonly` | `"cb-get-focusfirst"`                 | `"cb-get-focusfirst"`                    | [types/constants.ts:67](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L67)   |
-| `CB_GET_HISTORY`                      | `readonly` | `"cb-get-history"`                    | `"cb-get-history"`                       | [types/constants.ts:76](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L76)   |
-| `CB_GET_HL`                           | `readonly` | `"cb-get-hl"`                         | `"cb-get-hl"`                            | [types/constants.ts:65](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L65)   |
-| `CB_GET_HTML`                         | `readonly` | `"cb-get-html"`                       | `"cb-get-html"`                          | [types/constants.ts:75](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L75)   |
-| `CB_GET_ROOTSCROLL`                   | `readonly` | `"cb-get-rootscroll"`                 | `"cb-get-rootscroll"`                    | [types/constants.ts:74](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L74)   |
-| `CB_GET_SCROLL`                       | `readonly` | `"cb-get-scroll"`                     | `"cb-get-scroll"`                        | [types/constants.ts:72](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L72)   |
-| `CB_GET_SETID`                        | `readonly` | `"cb-get-setid"`                      | `"cb-get-setid"`                         | [types/constants.ts:68](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L68)   |
-| `CB_GET_UNCHANGEID`                   | `readonly` | `"cb-get-unchangeid"`                 | `"cb-get-unchangeid"`                    | [types/constants.ts:64](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L64)   |
-| `CB_GET_UNUNDO`                       | `readonly` | `"cb-get-unundo"`                     | `"cb-get-unundo"`                        | [types/constants.ts:71](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L71)   |
-| `CB_MOUNT_REMOVE`                     | `readonly` | `"cb-mount-remove"`                   | `"cb-mount-remove"`                      | [types/constants.ts:61](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L61)   |
-| `CB_MOVE_NOLIST`                      | `readonly` | `"cb-move-nolist"`                    | `"cb-move-nolist"`                       | [types/constants.ts:60](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L60)   |
-| `CUSTOM_REMINDER_WECHAT`              | `readonly` | `string`                              | `"custom-reminder-wechat"`               | [types/constants.ts:47](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L47)   |
-| `CUSTOM_RIFF_DECKS`                   | `readonly` | `string`                              | `"custom-riff-decks"`                    | [types/constants.ts:48](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L48)   |
-| `CUSTOM_SY_FULLWIDTH`                 | `readonly` | `string`                              | `"custom-sy-fullwidth"`                  | [types/constants.ts:46](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L46)   |
-| `CUSTOM_SY_READONLY`                  | `readonly` | `string`                              | `"custom-sy-readonly"`                   | [types/constants.ts:45](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L45)   |
-| `HELP_PATH`                           | `readonly` | `object`                              | `undefined`                              | [types/constants.ts:106](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L106) |
-| `HELP_PATH.en_US`                     | `public`   | `string`                              | `"20210808180117-6v0mkxr"`               | [types/constants.ts:109](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L109) |
-| `HELP_PATH.fr_FR`                     | `public`   | `string`                              | `"20210808180117-6v0mkxr"`               | [types/constants.ts:110](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L110) |
-| `HELP_PATH.zh_CHT`                    | `public`   | `string`                              | `"20211226090932-5lcq56f"`               | [types/constants.ts:108](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L108) |
-| `HELP_PATH.zh_CN`                     | `public`   | `string`                              | `"20210808180117-czj9bvb"`               | [types/constants.ts:107](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L107) |
-| `INLINE_TYPE`                         | `readonly` | `string`[]                            | `undefined`                              | [types/constants.ts:539](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L539) |
-| `KEYCODELIST`                         | `readonly` | `object`                              | `undefined`                              | [types/constants.ts:115](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L115) |
-| `LOCAL_AI`                            | `readonly` | `"local-ai"`                          | `"local-ai"`                             | [types/constants.ts:94](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L94)   |
-| `LOCAL_BAZAAR`                        | `readonly` | `"local-bazaar"`                      | `"local-bazaar"`                         | [types/constants.ts:91](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L91)   |
-| `LOCAL_CODELANG`                      | `readonly` | `"local-codelang"`                    | `"local-codelang"`                       | [types/constants.ts:86](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L86)   |
-| `LOCAL_DAILYNOTEID`                   | `readonly` | `"local-dailynoteid"`                 | `"local-dailynoteid"`                    | [types/constants.ts:84](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L84)   |
-| `LOCAL_DOCINFO`                       | `readonly` | `"local-docinfo"`                     | `"local-docinfo"`                        | [types/constants.ts:83](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L83)   |
-| `LOCAL_EXPORTIMG`                     | `readonly` | `"local-exportimg"`                   | `"local-exportimg"`                      | [types/constants.ts:90](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L90)   |
-| `LOCAL_EXPORTPDF`                     | `readonly` | `"local-exportpdf"`                   | `"local-exportpdf"`                      | [types/constants.ts:88](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L88)   |
-| `LOCAL_EXPORTWORD`                    | `readonly` | `"local-exportword"`                  | `"local-exportword"`                     | [types/constants.ts:89](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L89)   |
-| `LOCAL_FLASHCARD`                     | `readonly` | `"local-flashcard"`                   | `"local-flashcard"`                      | [types/constants.ts:96](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L96)   |
-| `LOCAL_FONTSTYLES`                    | `readonly` | `"local-fontstyles"`                  | `"local-fontstyles"`                     | [types/constants.ts:87](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L87)   |
-| `LOCAL_HISTORYNOTEID`                 | `readonly` | `"local-historynoteid"`               | `"local-historynoteid"`                  | [types/constants.ts:85](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L85)   |
-| `LOCAL_LAYOUTS`                       | `readonly` | `"local-layouts"`                     | `"local-layouts"`                        | [types/constants.ts:93](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L93)   |
-| `LOCAL_PDFTHEME`                      | `readonly` | `"local-pdftheme"`                    | `"local-pdftheme"`                       | [types/constants.ts:92](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L92)   |
-| `LOCAL_PLUGINTOPUNPIN`                | `readonly` | `"local-plugintopunpin"`              | `"local-plugintopunpin"`                 | [types/constants.ts:95](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L95)   |
-| `LOCAL_SEARCHASSET`                   | `readonly` | `"local-searchasset"`                 | `"local-searchasset"`                    | [types/constants.ts:82](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L82)   |
-| `LOCAL_SEARCHDATA`                    | `readonly` | `"local-searchdata"`                  | `"local-searchdata"`                     | [types/constants.ts:80](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L80)   |
-| `LOCAL_SEARCHKEYS`                    | `readonly` | `"local-searchkeys"`                  | `"local-searchkeys"`                     | [types/constants.ts:81](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L81)   |
-| `LOCAL_ZOOM`                          | `readonly` | `"local-zoom"`                        | `"local-zoom"`                           | [types/constants.ts:79](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L79)   |
-| `NODE_ENV`                            | `readonly` | `string`                              | `undefined`                              | [types/constants.ts:7](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L7)     |
-| `PROTYLE_CDN`                         | `readonly` | `string`                              | `"/stage/protyle"`                       | [types/constants.ts:12](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L12)   |
-| `QUICK_DECK_ID`                       | `readonly` | `"20230218211946-2kw8jgx"`            | `"20230218211946-2kw8jgx"`               | [types/constants.ts:113](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L113) |
-| `SERVICE_WORKER_PATH`                 | `readonly` | `string`                              | `"/service-worker.js"`                   | [types/constants.ts:14](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L14)   |
-| `SIYUAN_APPID`                        | `readonly` | `string`                              | `undefined`                              | [types/constants.ts:8](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L8)     |
-| `SIYUAN_ASSETS_AUDIO`                 | `readonly` | `string`[]                            | `undefined`                              | [types/constants.ts:527](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L527) |
-| `SIYUAN_ASSETS_EXTS`                  | `readonly` | `string`[]                            | `undefined`                              | [types/constants.ts:529](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L529) |
-| `SIYUAN_ASSETS_IMAGE`                 | `readonly` | `string`[]                            | `undefined`                              | [types/constants.ts:526](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L526) |
-| `SIYUAN_ASSETS_SEARCH`                | `readonly` | `string`[]                            | `undefined`                              | [types/constants.ts:530](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L530) |
-| `SIYUAN_ASSETS_VIDEO`                 | `readonly` | `string`[]                            | `undefined`                              | [types/constants.ts:528](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L528) |
-| `SIYUAN_AUTO_LAUNCH`                  | `readonly` | `string`                              | `"siyuan-auto-launch"`                   | [types/constants.ts:33](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L33)   |
-| `SIYUAN_CMD`                          | `readonly` | `string`                              | `"siyuan-cmd"`                           | [types/constants.ts:23](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L23)   |
-| `SIYUAN_CONFIG_APPEARANCE_DARK_CODE`  | `readonly` | `string`[]                            | `undefined`                              | [types/constants.ts:533](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L533) |
-| `SIYUAN_CONFIG_APPEARANCE_LIGHT_CODE` | `readonly` | `string`[]                            | `undefined`                              | [types/constants.ts:536](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L536) |
-| `SIYUAN_CONFIG_TRAY`                  | `readonly` | `string`                              | `"siyuan-config-tray"`                   | [types/constants.ts:27](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L27)   |
-| `SIYUAN_DROP_EDITOR`                  | `readonly` | `string`                              | `"application/siyuan-editor"`            | [types/constants.ts:20](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L20)   |
-| `SIYUAN_DROP_FILE`                    | `readonly` | `string`                              | `"application/siyuan-file"`              | [types/constants.ts:17](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L17)   |
-| `SIYUAN_DROP_GUTTER`                  | `readonly` | `string`                              | `"application/siyuan-gutter"`            | [types/constants.ts:18](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L18)   |
-| `SIYUAN_DROP_TAB`                     | `readonly` | `string`                              | `"application/siyuan-tab"`               | [types/constants.ts:19](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L19)   |
-| `SIYUAN_EMPTY_LAYOUT`                 | `readonly` | `Record`\<`string`, `unknown`\>       | `undefined`                              | [types/constants.ts:381](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L381) |
-| `SIYUAN_EVENT`                        | `readonly` | `string`                              | `"siyuan-event"`                         | [types/constants.ts:25](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L25)   |
-| `SIYUAN_EXPORT_NEWWINDOW`             | `readonly` | `string`                              | `"siyuan-export-newwindow"`              | [types/constants.ts:42](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L42)   |
-| `SIYUAN_EXPORT_PDF`                   | `readonly` | `string`                              | `"siyuan-export-pdf"`                    | [types/constants.ts:41](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L41)   |
-| `SIYUAN_GET`                          | `readonly` | `string`                              | `"siyuan-get"`                           | [types/constants.ts:24](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L24)   |
-| `SIYUAN_HOTKEY`                       | `readonly` | `string`                              | `"siyuan-hotkey"`                        | [types/constants.ts:29](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L29)   |
-| `SIYUAN_IMAGE_FILE`                   | `readonly` | `string`                              | `"1f4c4"`                                | [types/constants.ts:521](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L521) |
-| `SIYUAN_IMAGE_FOLDER`                 | `readonly` | `string`                              | `"1f4d1"`                                | [types/constants.ts:523](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L523) |
-| `SIYUAN_IMAGE_NOTE`                   | `readonly` | `string`                              | `"1f5c3"`                                | [types/constants.ts:522](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L522) |
-| `SIYUAN_IMAGE_VIP`                    | `readonly` | `string`                              | `undefined`                              | [types/constants.ts:513](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L513) |
-| `SIYUAN_INIT`                         | `readonly` | `string`                              | `"siyuan-init"`                          | [types/constants.ts:30](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L30)   |
-| `SIYUAN_KEYMAP`                       | `readonly` | [`IKeymap`](../interfaces/IKeymap.md) | `undefined`                              | [types/constants.ts:224](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L224) |
-| `SIYUAN_OPEN_FILE`                    | `readonly` | `string`                              | `"siyuan-open-file"`                     | [types/constants.ts:39](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L39)   |
-| `SIYUAN_OPEN_FOLDER`                  | `readonly` | `string`                              | `"siyuan-open-folder"`                   | [types/constants.ts:38](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L38)   |
-| `SIYUAN_OPEN_URL`                     | `readonly` | `string`                              | `"siyuan-open-url"`                      | [types/constants.ts:36](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L36)   |
-| `SIYUAN_OPEN_WINDOW`                  | `readonly` | `string`                              | `"siyuan-open-window"`                   | [types/constants.ts:37](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L37)   |
-| `SIYUAN_OPEN_WORKSPACE`               | `readonly` | `string`                              | `"siyuan-open-workspace"`                | [types/constants.ts:35](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L35)   |
-| `SIYUAN_QUIT`                         | `readonly` | `string`                              | `"siyuan-quit"`                          | [types/constants.ts:28](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L28)   |
-| `SIYUAN_SAVE_CLOSE`                   | `readonly` | `string`                              | `"siyuan-save-close"`                    | [types/constants.ts:32](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L32)   |
-| `SIYUAN_SEND_WINDOWS`                 | `readonly` | `string`                              | `"siyuan-send-windows"`                  | [types/constants.ts:31](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L31)   |
-| `SIYUAN_VERSION`                      | `readonly` | `string`                              | `undefined`                              | [types/constants.ts:6](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L6)     |
-| `SIZE_EDITOR_WIDTH`                   | `readonly` | `760`                                 | `760`                                    | [types/constants.ts:56](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L56)   |
-| `SIZE_GET_MAX`                        | `readonly` | `102400`                              | `102400`                                 | [types/constants.ts:53](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L53)   |
-| `SIZE_LINK_TEXT_MAX`                  | `readonly` | `number`                              | `24`                                     | [types/constants.ts:51](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L51)   |
-| `SIZE_TITLE`                          | `readonly` | `512`                                 | `512`                                    | [types/constants.ts:55](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L55)   |
-| `SIZE_TOOLBAR_HEIGHT`                 | `readonly` | `number`                              | `undefined`                              | [types/constants.ts:52](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L52)   |
-| `SIZE_UNDO`                           | `readonly` | `64`                                  | `64`                                     | [types/constants.ts:54](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L54)   |
-| `SIZE_ZOOM`                           | `readonly` | `number`[]                            | `undefined`                              | [types/constants.ts:57](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L57)   |
-| `TIMEOUT_COUNT`                       | `readonly` | `1000`                                | `1000`                                   | [types/constants.ts:103](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L103) |
-| `TIMEOUT_DBLCLICK`                    | `readonly` | `190`                                 | `190`                                    | [types/constants.ts:99](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L99)   |
-| `TIMEOUT_INPUT`                       | `readonly` | `256`                                 | `256`                                    | [types/constants.ts:100](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L100) |
-| `TIMEOUT_LOAD`                        | `readonly` | `300`                                 | `300`                                    | [types/constants.ts:101](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L101) |
-| `TIMEOUT_TRANSITION`                  | `readonly` | `300`                                 | `300`                                    | [types/constants.ts:102](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L102) |
-| `UPLOAD_ADDRESS`                      | `readonly` | `string`                              | `"/upload"`                              | [types/constants.ts:13](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L13)   |
-| `ZWSP`                                | `readonly` | `string`                              | "\u200B"                                 | [types/constants.ts:538](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L538) |
+### ALIAS\_CODE\_LANGUAGES
+
+> `readonly` `static` **ALIAS\_CODE\_LANGUAGES**: `string`[]
+
+#### Defined in
+
+[types/constants.ts:544](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L544)
+
+---
+
+### ANALYTICS\_EVT\_ON\_GET\_CONFIG
+
+> `readonly` `static` **ANALYTICS\_EVT\_ON\_GET\_CONFIG**: `string` = `"siyuan.onGetConfig"`
+
+#### Defined in
+
+[types/constants.ts:554](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L554)
+
+---
+
+### ASSETS\_ADDRESS
+
+> `readonly` `static` **ASSETS\_ADDRESS**: `string` = `"https://assets.b3logfile.com/siyuan/"`
+
+#### Defined in
+
+[types/constants.ts:11](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L11)
+
+---
+
+### BLOCK\_HINT\_CLOSE\_KEYS
+
+> `readonly` `static` **BLOCK\_HINT\_CLOSE\_KEYS**: [`IObject`](../interfaces/IObject.md)
+
+#### Defined in
+
+[types/constants.ts:541](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L541)
+
+---
+
+### BLOCK\_HINT\_KEYS
+
+> `readonly` `static` **BLOCK\_HINT\_KEYS**: `string`[]
+
+#### Defined in
+
+[types/constants.ts:540](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L540)
+
+---
+
+### CB\_GET\_ALL
+
+> `readonly` `static` **CB\_GET\_ALL**: `"cb-get-all"` = `"cb-get-all"`
+
+#### Defined in
+
+[types/constants.ts:69](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L69)
+
+---
+
+### CB\_GET\_APPEND
+
+> `readonly` `static` **CB\_GET\_APPEND**: `"cb-get-append"` = `"cb-get-append"`
+
+#### Defined in
+
+[types/constants.ts:62](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L62)
+
+---
+
+### CB\_GET\_BACKLINK
+
+> `readonly` `static` **CB\_GET\_BACKLINK**: `"cb-get-backlink"` = `"cb-get-backlink"`
+
+#### Defined in
+
+[types/constants.ts:70](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L70)
+
+---
+
+### CB\_GET\_BEFORE
+
+> `readonly` `static` **CB\_GET\_BEFORE**: `"cb-get-before"` = `"cb-get-before"`
+
+#### Defined in
+
+[types/constants.ts:63](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L63)
+
+---
+
+### CB\_GET\_CONTEXT
+
+> `readonly` `static` **CB\_GET\_CONTEXT**: `"cb-get-context"` = `"cb-get-context"`
+
+#### Defined in
+
+[types/constants.ts:73](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L73)
+
+---
+
+### CB\_GET\_FOCUS
+
+> `readonly` `static` **CB\_GET\_FOCUS**: `"cb-get-focus"` = `"cb-get-focus"`
+
+#### Defined in
+
+[types/constants.ts:66](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L66)
+
+---
+
+### CB\_GET\_FOCUSFIRST
+
+> `readonly` `static` **CB\_GET\_FOCUSFIRST**: `"cb-get-focusfirst"` = `"cb-get-focusfirst"`
+
+#### Defined in
+
+[types/constants.ts:67](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L67)
+
+---
+
+### CB\_GET\_HISTORY
+
+> `readonly` `static` **CB\_GET\_HISTORY**: `"cb-get-history"` = `"cb-get-history"`
+
+#### Defined in
+
+[types/constants.ts:76](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L76)
+
+---
+
+### CB\_GET\_HL
+
+> `readonly` `static` **CB\_GET\_HL**: `"cb-get-hl"` = `"cb-get-hl"`
+
+#### Defined in
+
+[types/constants.ts:65](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L65)
+
+---
+
+### CB\_GET\_HTML
+
+> `readonly` `static` **CB\_GET\_HTML**: `"cb-get-html"` = `"cb-get-html"`
+
+#### Defined in
+
+[types/constants.ts:75](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L75)
+
+---
+
+### CB\_GET\_ROOTSCROLL
+
+> `readonly` `static` **CB\_GET\_ROOTSCROLL**: `"cb-get-rootscroll"` = `"cb-get-rootscroll"`
+
+#### Defined in
+
+[types/constants.ts:74](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L74)
+
+---
+
+### CB\_GET\_SCROLL
+
+> `readonly` `static` **CB\_GET\_SCROLL**: `"cb-get-scroll"` = `"cb-get-scroll"`
+
+#### Defined in
+
+[types/constants.ts:72](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L72)
+
+---
+
+### CB\_GET\_SETID
+
+> `readonly` `static` **CB\_GET\_SETID**: `"cb-get-setid"` = `"cb-get-setid"`
+
+#### Defined in
+
+[types/constants.ts:68](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L68)
+
+---
+
+### CB\_GET\_UNCHANGEID
+
+> `readonly` `static` **CB\_GET\_UNCHANGEID**: `"cb-get-unchangeid"` = `"cb-get-unchangeid"`
+
+#### Defined in
+
+[types/constants.ts:64](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L64)
+
+---
+
+### CB\_GET\_UNUNDO
+
+> `readonly` `static` **CB\_GET\_UNUNDO**: `"cb-get-unundo"` = `"cb-get-unundo"`
+
+#### Defined in
+
+[types/constants.ts:71](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L71)
+
+---
+
+### CB\_MOUNT\_REMOVE
+
+> `readonly` `static` **CB\_MOUNT\_REMOVE**: `"cb-mount-remove"` = `"cb-mount-remove"`
+
+#### Defined in
+
+[types/constants.ts:61](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L61)
+
+---
+
+### CB\_MOVE\_NOLIST
+
+> `readonly` `static` **CB\_MOVE\_NOLIST**: `"cb-move-nolist"` = `"cb-move-nolist"`
+
+#### Defined in
+
+[types/constants.ts:60](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L60)
+
+---
+
+### CUSTOM\_REMINDER\_WECHAT
+
+> `readonly` `static` **CUSTOM\_REMINDER\_WECHAT**: `string` = `"custom-reminder-wechat"`
+
+#### Defined in
+
+[types/constants.ts:47](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L47)
+
+---
+
+### CUSTOM\_RIFF\_DECKS
+
+> `readonly` `static` **CUSTOM\_RIFF\_DECKS**: `string` = `"custom-riff-decks"`
+
+#### Defined in
+
+[types/constants.ts:48](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L48)
+
+---
+
+### CUSTOM\_SY\_FULLWIDTH
+
+> `readonly` `static` **CUSTOM\_SY\_FULLWIDTH**: `string` = `"custom-sy-fullwidth"`
+
+#### Defined in
+
+[types/constants.ts:46](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L46)
+
+---
+
+### CUSTOM\_SY\_READONLY
+
+> `readonly` `static` **CUSTOM\_SY\_READONLY**: `string` = `"custom-sy-readonly"`
+
+#### Defined in
+
+[types/constants.ts:45](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L45)
+
+---
+
+### HELP\_PATH
+
+> `readonly` `static` **HELP\_PATH**: `object`
+
+#### en\_US
+
+> **en\_US**: `string` = `"20210808180117-6v0mkxr"`
+
+#### fr\_FR
+
+> **fr\_FR**: `string` = `"20210808180117-6v0mkxr"`
+
+#### zh\_CHT
+
+> **zh\_CHT**: `string` = `"20211226090932-5lcq56f"`
+
+#### zh\_CN
+
+> **zh\_CN**: `string` = `"20210808180117-czj9bvb"`
+
+#### Defined in
+
+[types/constants.ts:106](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L106)
+
+---
+
+### INLINE\_TYPE
+
+> `readonly` `static` **INLINE\_TYPE**: `string`[]
+
+#### Defined in
+
+[types/constants.ts:539](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L539)
+
+---
+
+### KEYCODELIST
+
+> `readonly` `static` **KEYCODELIST**: `object`
+
+#### Index Signature
+
+\[`key`: `number`\]: `string`
+
+#### Defined in
+
+[types/constants.ts:115](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L115)
+
+---
+
+### LOCAL\_AI
+
+> `readonly` `static` **LOCAL\_AI**: `"local-ai"` = `"local-ai"`
+
+#### Defined in
+
+[types/constants.ts:94](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L94)
+
+---
+
+### LOCAL\_BAZAAR
+
+> `readonly` `static` **LOCAL\_BAZAAR**: `"local-bazaar"` = `"local-bazaar"`
+
+#### Defined in
+
+[types/constants.ts:91](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L91)
+
+---
+
+### LOCAL\_CODELANG
+
+> `readonly` `static` **LOCAL\_CODELANG**: `"local-codelang"` = `"local-codelang"`
+
+#### Defined in
+
+[types/constants.ts:86](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L86)
+
+---
+
+### LOCAL\_DAILYNOTEID
+
+> `readonly` `static` **LOCAL\_DAILYNOTEID**: `"local-dailynoteid"` = `"local-dailynoteid"`
+
+#### Defined in
+
+[types/constants.ts:84](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L84)
+
+---
+
+### LOCAL\_DOCINFO
+
+> `readonly` `static` **LOCAL\_DOCINFO**: `"local-docinfo"` = `"local-docinfo"`
+
+#### Defined in
+
+[types/constants.ts:83](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L83)
+
+---
+
+### LOCAL\_EXPORTIMG
+
+> `readonly` `static` **LOCAL\_EXPORTIMG**: `"local-exportimg"` = `"local-exportimg"`
+
+#### Defined in
+
+[types/constants.ts:90](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L90)
+
+---
+
+### LOCAL\_EXPORTPDF
+
+> `readonly` `static` **LOCAL\_EXPORTPDF**: `"local-exportpdf"` = `"local-exportpdf"`
+
+#### Defined in
+
+[types/constants.ts:88](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L88)
+
+---
+
+### LOCAL\_EXPORTWORD
+
+> `readonly` `static` **LOCAL\_EXPORTWORD**: `"local-exportword"` = `"local-exportword"`
+
+#### Defined in
+
+[types/constants.ts:89](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L89)
+
+---
+
+### LOCAL\_FLASHCARD
+
+> `readonly` `static` **LOCAL\_FLASHCARD**: `"local-flashcard"` = `"local-flashcard"`
+
+#### Defined in
+
+[types/constants.ts:96](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L96)
+
+---
+
+### LOCAL\_FONTSTYLES
+
+> `readonly` `static` **LOCAL\_FONTSTYLES**: `"local-fontstyles"` = `"local-fontstyles"`
+
+#### Defined in
+
+[types/constants.ts:87](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L87)
+
+---
+
+### LOCAL\_HISTORYNOTEID
+
+> `readonly` `static` **LOCAL\_HISTORYNOTEID**: `"local-historynoteid"` = `"local-historynoteid"`
+
+#### Defined in
+
+[types/constants.ts:85](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L85)
+
+---
+
+### LOCAL\_LAYOUTS
+
+> `readonly` `static` **LOCAL\_LAYOUTS**: `"local-layouts"` = `"local-layouts"`
+
+#### Defined in
+
+[types/constants.ts:93](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L93)
+
+---
+
+### LOCAL\_PDFTHEME
+
+> `readonly` `static` **LOCAL\_PDFTHEME**: `"local-pdftheme"` = `"local-pdftheme"`
+
+#### Defined in
+
+[types/constants.ts:92](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L92)
+
+---
+
+### LOCAL\_PLUGINTOPUNPIN
+
+> `readonly` `static` **LOCAL\_PLUGINTOPUNPIN**: `"local-plugintopunpin"` = `"local-plugintopunpin"`
+
+#### Defined in
+
+[types/constants.ts:95](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L95)
+
+---
+
+### LOCAL\_SEARCHASSET
+
+> `readonly` `static` **LOCAL\_SEARCHASSET**: `"local-searchasset"` = `"local-searchasset"`
+
+#### Defined in
+
+[types/constants.ts:82](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L82)
+
+---
+
+### LOCAL\_SEARCHDATA
+
+> `readonly` `static` **LOCAL\_SEARCHDATA**: `"local-searchdata"` = `"local-searchdata"`
+
+#### Defined in
+
+[types/constants.ts:80](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L80)
+
+---
+
+### LOCAL\_SEARCHKEYS
+
+> `readonly` `static` **LOCAL\_SEARCHKEYS**: `"local-searchkeys"` = `"local-searchkeys"`
+
+#### Defined in
+
+[types/constants.ts:81](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L81)
+
+---
+
+### LOCAL\_ZOOM
+
+> `readonly` `static` **LOCAL\_ZOOM**: `"local-zoom"` = `"local-zoom"`
+
+#### Defined in
+
+[types/constants.ts:79](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L79)
+
+---
+
+### NODE\_ENV
+
+> `readonly` `static` **NODE\_ENV**: `string`
+
+#### Defined in
+
+[types/constants.ts:7](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L7)
+
+---
+
+### PROTYLE\_CDN
+
+> `readonly` `static` **PROTYLE\_CDN**: `string` = `"/stage/protyle"`
+
+#### Defined in
+
+[types/constants.ts:12](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L12)
+
+---
+
+### QUICK\_DECK\_ID
+
+> `readonly` `static` **QUICK\_DECK\_ID**: `"20230218211946-2kw8jgx"` = `"20230218211946-2kw8jgx"`
+
+#### Defined in
+
+[types/constants.ts:113](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L113)
+
+---
+
+### SERVICE\_WORKER\_PATH
+
+> `readonly` `static` **SERVICE\_WORKER\_PATH**: `string` = `"/service-worker.js"`
+
+#### Defined in
+
+[types/constants.ts:14](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L14)
+
+---
+
+### SIYUAN\_APPID
+
+> `readonly` `static` **SIYUAN\_APPID**: `string`
+
+#### Defined in
+
+[types/constants.ts:8](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L8)
+
+---
+
+### SIYUAN\_ASSETS\_AUDIO
+
+> `readonly` `static` **SIYUAN\_ASSETS\_AUDIO**: `string`[]
+
+#### Defined in
+
+[types/constants.ts:527](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L527)
+
+---
+
+### SIYUAN\_ASSETS\_EXTS
+
+> `readonly` `static` **SIYUAN\_ASSETS\_EXTS**: `string`[]
+
+#### Defined in
+
+[types/constants.ts:529](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L529)
+
+---
+
+### SIYUAN\_ASSETS\_IMAGE
+
+> `readonly` `static` **SIYUAN\_ASSETS\_IMAGE**: `string`[]
+
+#### Defined in
+
+[types/constants.ts:526](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L526)
+
+---
+
+### SIYUAN\_ASSETS\_SEARCH
+
+> `readonly` `static` **SIYUAN\_ASSETS\_SEARCH**: `string`[]
+
+#### Defined in
+
+[types/constants.ts:530](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L530)
+
+---
+
+### SIYUAN\_ASSETS\_VIDEO
+
+> `readonly` `static` **SIYUAN\_ASSETS\_VIDEO**: `string`[]
+
+#### Defined in
+
+[types/constants.ts:528](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L528)
+
+---
+
+### SIYUAN\_AUTO\_LAUNCH
+
+> `readonly` `static` **SIYUAN\_AUTO\_LAUNCH**: `string` = `"siyuan-auto-launch"`
+
+#### Defined in
+
+[types/constants.ts:33](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L33)
+
+---
+
+### SIYUAN\_CMD
+
+> `readonly` `static` **SIYUAN\_CMD**: `string` = `"siyuan-cmd"`
+
+#### Defined in
+
+[types/constants.ts:23](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L23)
+
+---
+
+### SIYUAN\_CONFIG\_APPEARANCE\_DARK\_CODE
+
+> `readonly` `static` **SIYUAN\_CONFIG\_APPEARANCE\_DARK\_CODE**: `string`[]
+
+#### Defined in
+
+[types/constants.ts:533](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L533)
+
+---
+
+### SIYUAN\_CONFIG\_APPEARANCE\_LIGHT\_CODE
+
+> `readonly` `static` **SIYUAN\_CONFIG\_APPEARANCE\_LIGHT\_CODE**: `string`[]
+
+#### Defined in
+
+[types/constants.ts:536](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L536)
+
+---
+
+### SIYUAN\_CONFIG\_TRAY
+
+> `readonly` `static` **SIYUAN\_CONFIG\_TRAY**: `string` = `"siyuan-config-tray"`
+
+#### Defined in
+
+[types/constants.ts:27](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L27)
+
+---
+
+### SIYUAN\_DROP\_EDITOR
+
+> `readonly` `static` **SIYUAN\_DROP\_EDITOR**: `string` = `"application/siyuan-editor"`
+
+#### Defined in
+
+[types/constants.ts:20](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L20)
+
+---
+
+### SIYUAN\_DROP\_FILE
+
+> `readonly` `static` **SIYUAN\_DROP\_FILE**: `string` = `"application/siyuan-file"`
+
+#### Defined in
+
+[types/constants.ts:17](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L17)
+
+---
+
+### SIYUAN\_DROP\_GUTTER
+
+> `readonly` `static` **SIYUAN\_DROP\_GUTTER**: `string` = `"application/siyuan-gutter"`
+
+#### Defined in
+
+[types/constants.ts:18](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L18)
+
+---
+
+### SIYUAN\_DROP\_TAB
+
+> `readonly` `static` **SIYUAN\_DROP\_TAB**: `string` = `"application/siyuan-tab"`
+
+#### Defined in
+
+[types/constants.ts:19](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L19)
+
+---
+
+### SIYUAN\_EMPTY\_LAYOUT
+
+> `readonly` `static` **SIYUAN\_EMPTY\_LAYOUT**: `Record`\<`string`, `unknown`\>
+
+#### Defined in
+
+[types/constants.ts:381](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L381)
+
+---
+
+### SIYUAN\_EVENT
+
+> `readonly` `static` **SIYUAN\_EVENT**: `string` = `"siyuan-event"`
+
+#### Defined in
+
+[types/constants.ts:25](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L25)
+
+---
+
+### SIYUAN\_EXPORT\_NEWWINDOW
+
+> `readonly` `static` **SIYUAN\_EXPORT\_NEWWINDOW**: `string` = `"siyuan-export-newwindow"`
+
+#### Defined in
+
+[types/constants.ts:42](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L42)
+
+---
+
+### SIYUAN\_EXPORT\_PDF
+
+> `readonly` `static` **SIYUAN\_EXPORT\_PDF**: `string` = `"siyuan-export-pdf"`
+
+#### Defined in
+
+[types/constants.ts:41](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L41)
+
+---
+
+### SIYUAN\_GET
+
+> `readonly` `static` **SIYUAN\_GET**: `string` = `"siyuan-get"`
+
+#### Defined in
+
+[types/constants.ts:24](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L24)
+
+---
+
+### SIYUAN\_HOTKEY
+
+> `readonly` `static` **SIYUAN\_HOTKEY**: `string` = `"siyuan-hotkey"`
+
+#### Defined in
+
+[types/constants.ts:29](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L29)
+
+---
+
+### SIYUAN\_IMAGE\_FILE
+
+> `readonly` `static` **SIYUAN\_IMAGE\_FILE**: `string` = `"1f4c4"`
+
+#### Defined in
+
+[types/constants.ts:521](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L521)
+
+---
+
+### SIYUAN\_IMAGE\_FOLDER
+
+> `readonly` `static` **SIYUAN\_IMAGE\_FOLDER**: `string` = `"1f4d1"`
+
+#### Defined in
+
+[types/constants.ts:523](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L523)
+
+---
+
+### SIYUAN\_IMAGE\_NOTE
+
+> `readonly` `static` **SIYUAN\_IMAGE\_NOTE**: `string` = `"1f5c3"`
+
+#### Defined in
+
+[types/constants.ts:522](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L522)
+
+---
+
+### SIYUAN\_IMAGE\_VIP
+
+> `readonly` `static` **SIYUAN\_IMAGE\_VIP**: `string`
+
+#### Defined in
+
+[types/constants.ts:513](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L513)
+
+---
+
+### SIYUAN\_INIT
+
+> `readonly` `static` **SIYUAN\_INIT**: `string` = `"siyuan-init"`
+
+#### Defined in
+
+[types/constants.ts:30](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L30)
+
+---
+
+### SIYUAN\_KEYMAP
+
+> `readonly` `static` **SIYUAN\_KEYMAP**: [`IKeymap`](../interfaces/IKeymap.md)
+
+#### Defined in
+
+[types/constants.ts:224](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L224)
+
+---
+
+### SIYUAN\_OPEN\_FILE
+
+> `readonly` `static` **SIYUAN\_OPEN\_FILE**: `string` = `"siyuan-open-file"`
+
+#### Defined in
+
+[types/constants.ts:39](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L39)
+
+---
+
+### SIYUAN\_OPEN\_FOLDER
+
+> `readonly` `static` **SIYUAN\_OPEN\_FOLDER**: `string` = `"siyuan-open-folder"`
+
+#### Defined in
+
+[types/constants.ts:38](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L38)
+
+---
+
+### SIYUAN\_OPEN\_URL
+
+> `readonly` `static` **SIYUAN\_OPEN\_URL**: `string` = `"siyuan-open-url"`
+
+#### Defined in
+
+[types/constants.ts:36](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L36)
+
+---
+
+### SIYUAN\_OPEN\_WINDOW
+
+> `readonly` `static` **SIYUAN\_OPEN\_WINDOW**: `string` = `"siyuan-open-window"`
+
+#### Defined in
+
+[types/constants.ts:37](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L37)
+
+---
+
+### SIYUAN\_OPEN\_WORKSPACE
+
+> `readonly` `static` **SIYUAN\_OPEN\_WORKSPACE**: `string` = `"siyuan-open-workspace"`
+
+#### Defined in
+
+[types/constants.ts:35](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L35)
+
+---
+
+### SIYUAN\_QUIT
+
+> `readonly` `static` **SIYUAN\_QUIT**: `string` = `"siyuan-quit"`
+
+#### Defined in
+
+[types/constants.ts:28](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L28)
+
+---
+
+### SIYUAN\_SAVE\_CLOSE
+
+> `readonly` `static` **SIYUAN\_SAVE\_CLOSE**: `string` = `"siyuan-save-close"`
+
+#### Defined in
+
+[types/constants.ts:32](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L32)
+
+---
+
+### SIYUAN\_SEND\_WINDOWS
+
+> `readonly` `static` **SIYUAN\_SEND\_WINDOWS**: `string` = `"siyuan-send-windows"`
+
+#### Defined in
+
+[types/constants.ts:31](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L31)
+
+---
+
+### SIYUAN\_VERSION
+
+> `readonly` `static` **SIYUAN\_VERSION**: `string`
+
+#### Defined in
+
+[types/constants.ts:6](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L6)
+
+---
+
+### SIZE\_EDITOR\_WIDTH
+
+> `readonly` `static` **SIZE\_EDITOR\_WIDTH**: `760` = `760`
+
+#### Defined in
+
+[types/constants.ts:56](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L56)
+
+---
+
+### SIZE\_GET\_MAX
+
+> `readonly` `static` **SIZE\_GET\_MAX**: `102400` = `102400`
+
+#### Defined in
+
+[types/constants.ts:53](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L53)
+
+---
+
+### SIZE\_LINK\_TEXT\_MAX
+
+> `readonly` `static` **SIZE\_LINK\_TEXT\_MAX**: `number` = `24`
+
+#### Defined in
+
+[types/constants.ts:51](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L51)
+
+---
+
+### SIZE\_TITLE
+
+> `readonly` `static` **SIZE\_TITLE**: `512` = `512`
+
+#### Defined in
+
+[types/constants.ts:55](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L55)
+
+---
+
+### SIZE\_TOOLBAR\_HEIGHT
+
+> `readonly` `static` **SIZE\_TOOLBAR\_HEIGHT**: `number`
+
+#### Defined in
+
+[types/constants.ts:52](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L52)
+
+---
+
+### SIZE\_UNDO
+
+> `readonly` `static` **SIZE\_UNDO**: `64` = `64`
+
+#### Defined in
+
+[types/constants.ts:54](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L54)
+
+---
+
+### SIZE\_ZOOM
+
+> `readonly` `static` **SIZE\_ZOOM**: `number`[]
+
+#### Defined in
+
+[types/constants.ts:57](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L57)
+
+---
+
+### TIMEOUT\_COUNT
+
+> `readonly` `static` **TIMEOUT\_COUNT**: `1000` = `1000`
+
+#### Defined in
+
+[types/constants.ts:103](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L103)
+
+---
+
+### TIMEOUT\_DBLCLICK
+
+> `readonly` `static` **TIMEOUT\_DBLCLICK**: `190` = `190`
+
+#### Defined in
+
+[types/constants.ts:99](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L99)
+
+---
+
+### TIMEOUT\_INPUT
+
+> `readonly` `static` **TIMEOUT\_INPUT**: `256` = `256`
+
+#### Defined in
+
+[types/constants.ts:100](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L100)
+
+---
+
+### TIMEOUT\_LOAD
+
+> `readonly` `static` **TIMEOUT\_LOAD**: `300` = `300`
+
+#### Defined in
+
+[types/constants.ts:101](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L101)
+
+---
+
+### TIMEOUT\_TRANSITION
+
+> `readonly` `static` **TIMEOUT\_TRANSITION**: `300` = `300`
+
+#### Defined in
+
+[types/constants.ts:102](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L102)
+
+---
+
+### UPLOAD\_ADDRESS
+
+> `readonly` `static` **UPLOAD\_ADDRESS**: `string` = `"/upload"`
+
+#### Defined in
+
+[types/constants.ts:13](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L13)
+
+---
+
+### ZWSP
+
+> `readonly` `static` **ZWSP**: `string` = `"\u200B"`
+
+#### Defined in
+
+[types/constants.ts:538](https://github.com/siyuan-note/petal/tree/main/types/constants.ts#L538)

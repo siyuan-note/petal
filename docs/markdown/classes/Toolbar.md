@@ -28,12 +28,47 @@
 
 ## Properties
 
-| Property            | Modifier | Type          | Defined in                                                                                       |
-| ------------------- | -------- | ------------- | ------------------------------------------------------------------------------------------------ |
-| `element`           | `public` | `HTMLElement` | [types/protyle.d.ts:180](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L180) |
-| `range`             | `public` | `Range`       | [types/protyle.d.ts:183](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L183) |
-| `subElement`        | `public` | `HTMLElement` | [types/protyle.d.ts:181](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L181) |
-| `subElementCloseCB` | `public` | () => `void`  | [types/protyle.d.ts:182](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L182) |
+### element
+
+> **element**: `HTMLElement`
+
+#### Defined in
+
+[types/protyle.d.ts:180](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L180)
+
+---
+
+### range
+
+> **range**: `Range`
+
+#### Defined in
+
+[types/protyle.d.ts:183](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L183)
+
+---
+
+### subElement
+
+> **subElement**: `HTMLElement`
+
+#### Defined in
+
+[types/protyle.d.ts:181](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L181)
+
+---
+
+### subElementCloseCB()
+
+> **subElementCloseCB**: () => `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[types/protyle.d.ts:182](https://github.com/siyuan-note/petal/tree/main/types/protyle.d.ts#L182)
 
 ## Methods
 

@@ -10,13 +10,96 @@ d3.js graph configuration
 
 ## Properties
 
-| Property          | Type      | Description                  | Defined in                                                                                     |
-| ----------------- | --------- | ---------------------------- | ---------------------------------------------------------------------------------------------- |
-| `arrow`           | `boolean` | Whether to display the arrow | [types/config.d.ts:680](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L680) |
-| `centerStrength`  | `number`  | Central gravity intensity    | [types/config.d.ts:684](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L684) |
-| `collideRadius`   | `number`  | Repulsion radius             | [types/config.d.ts:688](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L688) |
-| `collideStrength` | `number`  | Repulsion intensity          | [types/config.d.ts:692](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L692) |
-| `lineOpacity`     | `number`  | Line opacity                 | [types/config.d.ts:696](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L696) |
-| `linkDistance`    | `number`  | Link distance                | [types/config.d.ts:700](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L700) |
-| `linkWidth`       | `number`  | Line width                   | [types/config.d.ts:704](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L704) |
-| `nodeSize`        | `number`  | Node size                    | [types/config.d.ts:708](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L708) |
+### arrow
+
+> **arrow**: `boolean`
+
+Whether to display the arrow
+
+#### Defined in
+
+[types/config.d.ts:680](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L680)
+
+---
+
+### centerStrength
+
+> **centerStrength**: `number`
+
+Central gravity intensity
+
+#### Defined in
+
+[types/config.d.ts:684](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L684)
+
+---
+
+### collideRadius
+
+> **collideRadius**: `number`
+
+Repulsion radius
+
+#### Defined in
+
+[types/config.d.ts:688](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L688)
+
+---
+
+### collideStrength
+
+> **collideStrength**: `number`
+
+Repulsion intensity
+
+#### Defined in
+
+[types/config.d.ts:692](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L692)
+
+---
+
+### lineOpacity
+
+> **lineOpacity**: `number`
+
+Line opacity
+
+#### Defined in
+
+[types/config.d.ts:696](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L696)
+
+---
+
+### linkDistance
+
+> **linkDistance**: `number`
+
+Link distance
+
+#### Defined in
+
+[types/config.d.ts:700](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L700)
+
+---
+
+### linkWidth
+
+> **linkWidth**: `number`
+
+Line width
+
+#### Defined in
+
+[types/config.d.ts:704](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L704)
+
+---
+
+### nodeSize
+
+> **nodeSize**: `number`
+
+Node size
+
+#### Defined in
+
+[types/config.d.ts:708](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L708)

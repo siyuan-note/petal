@@ -11,7 +11,7 @@
 The language used by the current user
 
 User interface language
-Same as [IAppearance.lang](../interfaces/IAppearance.md)
+Same as [IAppearance.lang](../interfaces/IAppearance.md#lang)
 
 ## Defined in
 

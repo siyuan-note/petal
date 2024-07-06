@@ -22,9 +22,13 @@
 
 ## Properties
 
-| Property | Modifier | Type                                                    | Defined in                                                                         |
-| -------- | -------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `menus`  | `public` | [`IMenuItemOption`](../interfaces/IMenuItemOption.md)[] | [siyuan.d.ts:729](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L729) |
+### menus
+
+> **menus**: [`IMenuItemOption`](../interfaces/IMenuItemOption.md)[]
+
+#### Defined in
+
+[siyuan.d.ts:729](https://github.com/siyuan-note/petal/tree/main/siyuan.d.ts#L729)
 
 ## Methods
 

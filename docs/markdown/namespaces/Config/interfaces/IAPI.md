@@ -10,6 +10,12 @@ SiYuan API related configuration
 
 ## Properties
 
-| Property | Type     | Description | Defined in                                                                                     |
-| -------- | -------- | ----------- | ---------------------------------------------------------------------------------------------- |
-| `token`  | `string` | API Token   | [types/config.d.ts:168](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L168) |
+### token
+
+> **token**: `string`
+
+API Token
+
+#### Defined in
+
+[types/config.d.ts:168](https://github.com/siyuan-note/petal/tree/main/types/config.d.ts#L168)

@@ -6,6 +6,7 @@
 - Add `cSpell` spelling check configuration
 - Add `typedoc` documentation generation configuration
 - Add documentation
+- Adjust `typedoc-plugin-markdown` configuration
 
 ## v1.0.2 2024-06-04
 
