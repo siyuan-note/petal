@@ -23,8 +23,9 @@
     ],
     "scripts": {
         "prepare": "husky",
-        "check": "run-s check:eslint",
+        "check": "run-s check:eslint check:cspell",
         "check:eslint": "eslint --max-warnings 0 .",
+        "check:cspell": "cspell .",
         "format": "run-s format:eslint",
         "format:eslint": "eslint --fix ."
     },

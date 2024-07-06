@@ -1,3 +1,5 @@
+/* cSpell:disable */
+
 import type { IKeymap, IObject } from "../siyuan";
 
 export abstract class Constants {
@@ -59,11 +61,11 @@ export abstract class Constants {
     public static readonly CB_MOUNT_REMOVE = "cb-mount-remove";
     public static readonly CB_GET_APPEND = "cb-get-append"; // 向下滚动加载
     public static readonly CB_GET_BEFORE = "cb-get-before"; // 向上滚动加载
-    public static readonly CB_GET_UNCHANGEID = "cb-get-unchangeid"; // 上下滚动，定位时不修改 blockid
+    public static readonly CB_GET_UNCHANGEID = "cb-get-unchangeid"; // 上下滚动，定位时不修改 block ID
     public static readonly CB_GET_HL = "cb-get-hl"; // 高亮
     public static readonly CB_GET_FOCUS = "cb-get-focus"; // 光标定位
     public static readonly CB_GET_FOCUSFIRST = "cb-get-focusfirst"; // 动态定位到第一个块
-    public static readonly CB_GET_SETID = "cb-get-setid"; // 重置 blockid
+    public static readonly CB_GET_SETID = "cb-get-setid"; // 重置 block ID
     public static readonly CB_GET_ALL = "cb-get-all"; // 获取所有块
     public static readonly CB_GET_BACKLINK = "cb-get-backlink"; // 悬浮窗为传递型需展示上下文
     public static readonly CB_GET_UNUNDO = "cb-get-unundo"; // 不需要记录历史

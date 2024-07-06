@@ -1,0 +1,60 @@
+$schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/packages/cspell-types/cspell.schema.json
+version: "0.2"
+ignorePaths:
+  - ./package.json
+  - ./pnpm-lock.yaml
+dictionaryDefinitions: []
+dictionaries: []
+words:
+  - AIAPI
+  - antfu
+  - backlink
+  - backlinks
+  - backmention
+  - blockicon
+  - blockref
+  - breadcrumbmore
+  - codelang
+  - dailynoteid
+  - docinfo
+  - doctree
+  - dprint
+  - editorcontent
+  - editortitleicon
+  - exportimg
+  - exportpdf
+  - exportword
+  - fileannotationref
+  - filetree
+  - focusfirst
+  - fontstyles
+  - FSRS
+  - fullwidth
+  - historynoteid
+  - IAPI
+  - katex
+  - Keymap
+  - Mindmap
+  - newwindow
+  - nolist
+  - noneditableblock
+  - Pandoc
+  - pdftheme
+  - plugintopunpin
+  - protyle
+  - rootscroll
+  - searchasset
+  - searchdata
+  - searchkeys
+  - Setext
+  - setid
+  - siyuan
+  - unchangeid
+  - unreviewed
+  - unundo
+  - webdav
+  - wechat
+ignoreWords: []
+ignoreRegExpList:
+  - \d{14}-[0-9a-z]{7}
+import: []

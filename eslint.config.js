@@ -39,6 +39,14 @@ export default antfu({
             ],
         },
     },
+    yaml: {
+        overrides: {
+            "yaml/indent": [
+                "error",
+                2,
+            ],
+        },
+    },
     typescript: {
         overrides: {
             "sort-imports": ["off"],

@@ -1,7 +1,9 @@
+<!-- cSpell:ignore positon -->
+
 # Changelog
 
-
 - Add `eslint` formatting configuration
+- Add `cSpell` spelling check configuration
 
 ## v1.0.2 2024-06-04
 
@@ -71,7 +73,7 @@
 ## 0.8.7 2023-10-24
 
 * [Deprecated `loaded-protyle` use `loaded-protyle-static` instead](https://github.com/siyuan-note/siyuan/issues/9468)
-* [Fix event defail for `loaded-protyle`](https://github.com/siyuan-note/petal/pull/18)
+* [Fix event defined for `loaded-protyle`](https://github.com/siyuan-note/petal/pull/18)
 * [Add plugin event bus `paste`](https://github.com/siyuan-note/siyuan/issues/9452)
 
 ## 0.8.6 2023-10-17

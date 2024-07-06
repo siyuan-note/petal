@@ -125,7 +125,7 @@ export namespace Config {
          * API Provider
          * OpenAI, Azure
          */
-        apiProvider: TOpenAAPIProvider;
+        apiProvider: TOpenAIAPIProvider;
         /**
          * API request proxy address
          */
@@ -156,7 +156,7 @@ export namespace Config {
     /**
      * API Provider
      */
-    export type TOpenAAPIProvider = "Azure" | "OpenAI";
+    export type TOpenAIAPIProvider = "Azure" | "OpenAI";
 
     /**
      * SiYuan API related configuration
@@ -294,7 +294,7 @@ export namespace Config {
         /**
          * Whether to allow to execute javascript in the HTML block
          */
-        allowHTMLBLockScript: boolean;
+        allowHTMLBLockScript: boolean; // cspell:disable-line
 
         /**
          * Markdown configuration

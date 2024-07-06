@@ -21,8 +21,8 @@ type TProtyleAction =
     | "cb-get-hl" // 高亮
     | "cb-get-html" // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
     | "cb-get-scroll" // 滚动到指定位置
-    | "cb-get-setid" // 重置 blockid
-    | "cb-get-unchangeid" // 上下滚动，定位时不修改 blockid
+    | "cb-get-setid" // 重置 block ID
+    | "cb-get-unchangeid" // 上下滚动，定位时不修改 block ID
     | "cb-get-unundo"; // 不需要记录历史
 
 interface IToolbarItem {
@@ -291,7 +291,7 @@ export class Lute {
 
     public SetFootnotes(enable: boolean): void;
 
-    public SetLinkRef(enalbe: boolean): void;
+    public SetLinkRef(enable: boolean): void;
 
     public SetEmojiSite(emojiSite: string): void;
 
