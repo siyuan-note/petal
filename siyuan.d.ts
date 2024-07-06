@@ -139,7 +139,7 @@ export interface IEventBusMap {
     };
     "loaded-protyle-dynamic": {
         protyle: IProtyle,
-        positon: "afterend" | "beforebegin",
+        position: "afterend" | "beforebegin",
     };
     "loaded-protyle-static": {
         protyle: IProtyle,
@@ -236,6 +236,7 @@ export interface ICustomModel extends IModel {
     data: any;
     type: string;
     element: HTMLElement;
+    editors: Protyle[]; // 系统内部处理快捷键等操作需要用到 https://github.com/siyuan-note/siyuan/issues/11072
 
     init(): void;
 
@@ -586,6 +587,7 @@ export class Setting {
 
     addItem(options: {
         title: string,
+        direction?: "column" | "row"
         description?: string,
         actionElement?: HTMLElement,
         createActionElement?(): HTMLElement,
