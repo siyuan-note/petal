@@ -182,6 +182,8 @@ export interface IEventBusMap {
     "open-siyuan-url-plugin": {
         url: string,
     };
+    "opened-notebook": IWebSocketData;
+    "closed-notebook":IWebSocketData;
     "paste": {
         protyle: IProtyle,
         resolve: new <T>(value: T | PromiseLike<T>) => void,

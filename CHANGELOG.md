@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.0.3 2024-06
+## v1.0.3 2024-09
+
+* [Add plugin event bus `opened-notebook` & `closed-notebook`](https://github.com/siyuan-note/siyuan/issues/11974)
 
 ## v1.0.2 2024-06-04
 
