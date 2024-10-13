@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.0.xx 2024.10.xx
+* * [Add plugin function `exitSiYuan`](https://github.com/siyuan-note/petal/pull/33)
+
 ## v1.0.3 2024-09-27
 
 * [Add plugin event bus `opened-notebook` & `closed-notebook`](https://github.com/siyuan-note/siyuan/issues/11974)
