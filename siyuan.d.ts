@@ -460,6 +460,8 @@ export function getFrontend(): "desktop" | "desktop-window" | "mobile" | "browse
 
 export function lockScreen(app: App): void
 
+export function exitSiYuan(): void
+
 export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "android" | "ios";
 
 export function adaptHotkey(hotkey: string): string;

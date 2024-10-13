@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.4 2024-10
+
+* [Add plugin method `exitSiYuan`]https://github.com/siyuan-note/siyuan/pull/12767)
+
 ## v1.0.3 2024-09-27
 
 * [Add plugin event bus `opened-notebook` & `closed-notebook`](https://github.com/siyuan-note/siyuan/issues/11974)
