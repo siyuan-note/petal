@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.0.4 2024-10
+## v1.0.5 2024-11
+
+## v1.0.4 2024-10-15
 
 * [Add plugin method `exitSiYuan`]https://github.com/siyuan-note/siyuan/pull/12767)
 
