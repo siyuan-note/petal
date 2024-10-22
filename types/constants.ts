@@ -1,4 +1,6 @@
-import {IObject, IKeymap} from "../siyuan";
+import {IObject, Config} from "../siyuan";
+
+const altNumber = navigator.platform.toUpperCase().indexOf("MAC") > -1 ? "⌃" : "⌥";
 
 export abstract class Constants {
     public static readonly SIYUAN_VERSION: string;
@@ -39,15 +41,21 @@ export abstract class Constants {
     public static readonly SIYUAN_EXPORT_PDF: string = "siyuan-export-pdf";
     public static readonly SIYUAN_EXPORT_NEWWINDOW: string = "siyuan-export-newwindow";
 
+    public static readonly SIYUAN_CONTEXT_MENU: string = "siyuan-context-menu";
+
     // custom
     public static readonly CUSTOM_SY_READONLY: string = "custom-sy-readonly";
     public static readonly CUSTOM_SY_FULLWIDTH: string = "custom-sy-fullwidth";
+    public static readonly CUSTOM_SY_AV_VIEW: string = "custom-sy-av-view";
     public static readonly CUSTOM_REMINDER_WECHAT: string = "custom-reminder-wechat";
     public static readonly CUSTOM_RIFF_DECKS: string = "custom-riff-decks";
 
     // size
-    public static readonly SIZE_LINK_TEXT_MAX: number = 24;
-    public static readonly SIZE_TOOLBAR_HEIGHT: number;
+    public static readonly SIZE_DATABASE_MAZ_SIZE: number = 102400;
+    public static readonly SIZE_SCROLL_TB: number = 24;
+    public static readonly SIZE_SCROLL_STEP: number = 256;
+    public static readonly SIZE_LINK_TEXT_MAX: number = 64;
+    public static readonly SIZE_TOOLBAR_HEIGHT: number = 32;
     public static readonly SIZE_GET_MAX = 102400;
     public static readonly SIZE_UNDO = 64;
     public static readonly SIZE_TITLE = 512;
@@ -67,20 +75,22 @@ export abstract class Constants {
     public static readonly CB_GET_ALL = "cb-get-all"; // 获取所有块
     public static readonly CB_GET_BACKLINK = "cb-get-backlink"; // 悬浮窗为传递型需展示上下文
     public static readonly CB_GET_UNUNDO = "cb-get-unundo"; // 不需要记录历史
-    public static readonly CB_GET_SCROLL = "cb-get-scroll"; // 滚动到指定位置
+    public static readonly CB_GET_SCROLL = "cb-get-scroll"; // 滚动到指定位置，用于直接打开文档，必有 rootID
     public static readonly CB_GET_CONTEXT = "cb-get-context"; // 包含上下文
-    public static readonly CB_GET_ROOTSCROLL = "cb-get-rootscroll"; // 如果为 rootID 就滚动到指定位置
+    public static readonly CB_GET_ROOTSCROLL = "cb-get-rootscroll"; // 如果为 rootID 就滚动到指定位置，必有 rootID
     public static readonly CB_GET_HTML = "cb-get-html"; // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
     public static readonly CB_GET_HISTORY = "cb-get-history"; // 历史渲染
+    public static readonly CB_GET_OPENNEW = "cb-get-opennew"; // 编辑器只读后新建文件需为临时解锁状态 & https://github.com/siyuan-note/siyuan/issues/12197
 
     // localstorage
     public static readonly LOCAL_ZOOM = "local-zoom";
     public static readonly LOCAL_SEARCHDATA = "local-searchdata";
     public static readonly LOCAL_SEARCHKEYS = "local-searchkeys";
     public static readonly LOCAL_SEARCHASSET = "local-searchasset";
+    public static readonly LOCAL_SEARCHUNREF = "local-searchunref";
     public static readonly LOCAL_DOCINFO = "local-docinfo"; // only mobile
     public static readonly LOCAL_DAILYNOTEID = "local-dailynoteid"; // string
-    public static readonly LOCAL_HISTORYNOTEID = "local-historynoteid"; // string
+    public static readonly LOCAL_HISTORY = "local-history";
     public static readonly LOCAL_CODELANG = "local-codelang"; // string
     public static readonly LOCAL_FONTSTYLES = "local-fontstyles";
     public static readonly LOCAL_EXPORTPDF = "local-exportpdf";
@@ -92,6 +102,69 @@ export abstract class Constants {
     public static readonly LOCAL_AI = "local-ai";
     public static readonly LOCAL_PLUGINTOPUNPIN = "local-plugintopunpin";
     public static readonly LOCAL_FLASHCARD = "local-flashcard";
+    public static readonly LOCAL_FILEPOSITION = "local-fileposition";
+    public static readonly LOCAL_FILESPATHS = "local-filespaths";
+    public static readonly LOCAL_DIALOGPOSITION = "local-dialogposition";
+    public static readonly LOCAL_SESSION_FIRSTLOAD = "local-session-firstload";
+    public static readonly LOCAL_OUTLINE = "local-outline";
+    public static readonly LOCAL_PLUGIN_DOCKS = "local-plugin-docks";
+
+    // dialog
+    public static readonly DIALOG_OPENCARD = "dialog-opencard";
+    public static readonly DIALOG_MAKECARD = "dialog-makecard";
+    public static readonly DIALOG_VIEWCARDS = "dialog-viewcards";
+    public static readonly DIALOG_DIALYNOTE = "dialog-dialynote";
+    public static readonly DIALOG_RECENTDOCS = "dialog-recentdocs";
+    public static readonly DIALOG_SWITCHTAB = "dialog-switchtab";
+    public static readonly DIALOG_SEARCH = "dialog-search";
+    public static readonly DIALOG_REPLACE = "dialog-replace";
+    public static readonly DIALOG_GLOBALSEARCH = "dialog-globalsearch";
+    public static readonly DIALOG_HISTORYCOMPARE = "dialog-historycompare";
+
+    public static readonly DIALOG_ACCESSAUTHCODE = "dialog-accessauthcode"; // 访问鉴权码
+    public static readonly DIALOG_AICUSTOMACTION = "dialog-aicustomaction"; // AI 自定义操作
+    public static readonly DIALOG_AIUPDATECUSTOMACTION = "dialog-aiupdatecustomaction"; // 更新 AI 自定义操作
+    public static readonly DIALOG_BACKGROUNDLINK = "dialog-backgroundlink"; // 题头图-随机
+    public static readonly DIALOG_BACKGROUNDRANDOM = "dialog-backgroundrandom"; // 题头图-链接
+    public static readonly DIALOG_CHANGELOG = "dialog-changelog"; // 更新日志
+    public static readonly DIALOG_COMMANDPANEL = "dialog-commandpanel"; // 插件命令面板
+    public static readonly DIALOG_DEACTIVATEUSER = "dialog-deactivateuser"; // 注销账户
+    public static readonly DIALOG_EMOJIS = "dialog-emojis"; // 文档、笔记本图表
+    public static readonly DIALOG_EXPORTIMAGE = "dialog-exportimage"; // 导出为图片
+    public static readonly DIALOG_EXPORTTEMPLATE = "dialog-exporttemplate"; // 导出为模板
+    public static readonly DIALOG_EXPORTWORD = "dialog-exportword"; // 导出为 word
+    public static readonly DIALOG_HISTORY = "dialog-history"; // 数据历史(Alt + H)
+    public static readonly DIALOG_HISTORYDOC = "dialog-historydoc"; // 文档历史
+    public static readonly DIALOG_MOVEPATHTO = "dialog-movepathto"; // 移动文档
+    public static readonly DIALOG_RENAME = "dialog-rename"; // 重命名
+    public static readonly DIALOG_RENAMEASSETS = "dialog-renameassets"; // 重命名资源文件
+    public static readonly DIALOG_RENAMEBOOKMARK = "dialog-renamebookmark"; // 重命名书签
+    public static readonly DIALOG_RENAMETAG = "dialog-renametag"; // 重命名标签
+    public static readonly DIALOG_REPLACETYPE = "dialog-replacetype"; // 替换 - 替换类型
+    public static readonly DIALOG_SAVECRITERION = "dialog-savecriterion"; // 保存查询条件
+    public static readonly DIALOG_SEARCHTYPE = "dialog-searchtype"; // 搜索 - 类型
+    public static readonly DIALOG_SEARCHASSETSTYPE = "dialog-searchassetstype"; // 搜索资源文件 - 类型
+    public static readonly DIALOG_SETTING = "dialog-setting"; // 设置面板
+    public static readonly DIALOG_SNAPSHOTTAG = "dialog-snapshottag"; // 标记快照
+    public static readonly DIALOG_SNAPSHOTMEMO = "dialog-snapshotmemo"; // 快照备注
+    public static readonly DIALOG_SNIPPETS = "dialog-snippets"; // 代码片段
+    public static readonly DIALOG_SYNCADDCLOUDDIR = "dialog-syncaddclouddir"; // 新建云端同步目录
+    public static readonly DIALOG_SYNCCHOOSEDIR = "dialog-syncchoosedir"; // 选择云端同步目录
+    public static readonly DIALOG_SYNCCHOOSEDIRECTION = "dialog-syncchoosedirection"; // 选择云端同步方向
+    public static readonly DIALOG_TRANSFERBLOCKREF = "dialog-transferblockref"; // 转移引用
+    public static readonly DIALOG_WECHATREMINDER = "dialog-wechatreminder"; // 微信提醒
+    public static readonly DIALOG_PASSWORD = "dialog-password"; // 导入同步密钥
+    public static readonly DIALOG_SETPASSWORD = "dialog-setpassword"; // 设置同步密钥
+    public static readonly DIALOG_BOOTSYNCFAILED = "dialog-bootsyncfailed"; // 启动时同步数据失败
+    public static readonly DIALOG_KERNELFAULT = "dialog-kernelfault"; // 内核退出
+    public static readonly DIALOG_STATEEXCEPTED = "dialog-stateexcepted"; // 状态异常
+    public static readonly DIALOG_ATTR = "dialog-attr"; // 设置块属性
+    public static readonly DIALOG_SETCUSTOMATTR = "dialog-setcustomattr"; // 设置自定义属性
+    public static readonly DIALOG_CREATENOTEBOOK = "dialog-createnotebook"; // 创建笔记本
+    public static readonly DIALOG_NOTEBOOKCONF = "dialog-notebookconf"; // 笔记本设置
+    public static readonly DIALOG_CREATEWORKSPACE = "dialog-createworkspace"; // 创建工作空间
+    public static readonly DIALOG_OPENWORKSPACE = "dialog-openworkspace"; // 打开工作空间
+    public static readonly DIALOG_SAVEWORKSPACE = "dialog-saveworkspace"; // 保存工作空间
 
     // timeout
     public static readonly TIMEOUT_DBLCLICK = 190;
@@ -106,15 +179,22 @@ export abstract class Constants {
         zh_CHT: "20211226090932-5lcq56f",
         en_US: "20210808180117-6v0mkxr",
         fr_FR: "20210808180117-6v0mkxr",
+        es_ES: "20210808180117-6v0mkxr",
+        ja_JP: "20240530133126-axarxgx",
+        it_IT: "20210808180117-6v0mkxr",
+        de_DE: "20210808180117-6v0mkxr",
+        he_IL: "20210808180117-6v0mkxr",
+        ru_RU: "20210808180117-6v0mkxr",
+        pl_PL: "20210808180117-6v0mkxr",
     };
     public static readonly QUICK_DECK_ID = "20230218211946-2kw8jgx";
 
-    public static readonly KEYCODELIST: { [key: number]: string } = {
+    public static KEYCODELIST: { [key: number]: string } = {
         8: "⌫",
         9: "⇥",
         13: "↩",
         16: "⇧",
-        17: "⌘",
+        17: "⌃",
         18: "⌥",
         19: "Pause",
         20: "CapsLock",
@@ -197,6 +277,26 @@ export abstract class Constants {
         121: "F10",
         122: "F11",
         123: "F12",
+        124: "F13",
+        125: "F14",
+        126: "F15",
+        127: "F16",
+        128: "F17",
+        129: "F18",
+        130: "F19",
+        131: "F20",
+        132: "F21",
+        133: "F22",
+        134: "F23",
+        135: "F24",
+        136: "F25",
+        137: "F26",
+        138: "F27",
+        139: "F28",
+        140: "F29",
+        141: "F30",
+        142: "F31",
+        143: "F32",
         144: "NumLock",
         145: "ScrollLock",
         182: "MyComputer",
@@ -213,11 +313,12 @@ export abstract class Constants {
         221: "]",
         222: "'",
     };
+
     // 冲突不使用 "⌘S/Q"
     // "⌘", "⇧", "⌥", "⌃"
-    // "⌘A", "⌘X", "⌘C", "⌘V", "⌘-", "⌘=", "⌘0", "⇧⌘V", "⌘/", "⇧↑", "⇧↓", "⇧→", "⇧←", "⇧⇥", "⌃⇧⇥", "⌃⇥", "⌘⇥", "⇧⌘⇥", "⇧⌘→", "⇧⌘←",
-    // "⌘Home", "⌘End", "⇧↩", "↩", "PageUp", "PageDown", "⌫", "⌦" 不可自定义
-    public static readonly SIYUAN_KEYMAP: IKeymap = {
+    // "⌘A", "⌘X", "⌘C", "⌘V", "⌘-", "⌘=", "⌘0", "⇧⌘V", "⌘/", "⇧↑", "⇧↓", "⇧→", "⇧←", "⇧⇥", "⌃D", "⇧⌘→", "⇧⌘←",
+    // "⌘Home", "⌘End", "⇧↩", "↩", "PageUp", "PageDown", "⌫", "⌦", "Escape" 不可自定义
+    public static readonly SIYUAN_KEYMAP: Config.IKeymap = {
         general: {
             mainMenu: {default: "⌥\\", custom: "⌥\\"},
             commandPanel: {default: "⌥⇧P", custom: "⌥⇧P"},
@@ -233,16 +334,16 @@ export abstract class Constants {
             stickSearch: {default: "⇧⌘F", custom: "⇧⌘F"},
             replace: {default: "⌘R", custom: "⌘R"},
             closeTab: {default: "⌘W", custom: "⌘W"},
-            fileTree: {default: "⌥1", custom: "⌥1"},
-            outline: {default: "⌥2", custom: "⌥2"},
-            bookmark: {default: "⌥3", custom: "⌥3"},
-            tag: {default: "⌥4", custom: "⌥4"},
-            dailyNote: {default: "⌥5", custom: "⌥5"},
-            inbox: {default: "⌥6", custom: "⌥6"},
-            backlinks: {default: "⌥7", custom: "⌥7"},
-            graphView: {default: "⌥8", custom: "⌥8"},
-            globalGraph: {default: "⌥9", custom: "⌥9"},
-            riffCard: {default: "⌥0", custom: "⌥0"},
+            fileTree: {default: altNumber + "1", custom: altNumber + "1"},
+            outline: {default: altNumber + "2", custom: altNumber + "2"},
+            bookmark: {default: altNumber + "3", custom: altNumber + "3"},
+            tag: {default: altNumber + "4", custom: altNumber + "4"},
+            dailyNote: {default: altNumber + "5", custom: altNumber + "5"},
+            inbox: {default: altNumber + "6", custom: altNumber + "6"},
+            backlinks: {default: altNumber + "7", custom: altNumber + "7"},
+            graphView: {default: altNumber + "8", custom: altNumber + "8"},
+            globalGraph: {default: altNumber + "9", custom: altNumber + "9"},
+            riffCard: {default: altNumber + "0", custom: altNumber + "0"},
             config: {default: "⌥P", custom: "⌥P"},
             dataHistory: {default: "⌥H", custom: "⌥H"},
             toggleWin: {default: "⌥M", custom: "⌥M"},
@@ -259,6 +360,8 @@ export abstract class Constants {
             goToTab9: {default: "⌘9", custom: "⌘9"},
             goToTabNext: {default: "⇧⌘]", custom: "⇧⌘]"},
             goToTabPrev: {default: "⇧⌘[", custom: "⇧⌘["},
+            goToEditTabNext: {default: "⌃⇥", custom: "⌃⇥"},
+            goToEditTabPrev: {default: "⌃⇧⇥", custom: "⌃⇧⇥"},
             move: {default: "", custom: ""},
             selectOpen1: {default: "", custom: ""},
             toggleDock: {default: "", custom: ""},
@@ -271,21 +374,16 @@ export abstract class Constants {
             closeUnmodified: {default: "", custom: ""},
             closeLeft: {default: "", custom: ""},
             closeRight: {default: "", custom: ""},
+            tabToWindow: {default: "", custom: ""},
+            addToDatabase: {default: "", custom: ""},
+            unsplit: {default: "", custom: ""},
+            unsplitAll: {default: "", custom: ""},
         },
         editor: {
             general: {
                 duplicate: {default: "⌘D", custom: "⌘D"},
                 expandDown: {default: "⌥⇧↓", custom: "⌥⇧↓"},
                 expandUp: {default: "⌥⇧↑", custom: "⌥⇧↑"},
-                copyPlainText: {default: "", custom: ""},
-                copyID: {default: "", custom: ""},
-                copyProtocolInMd: {default: "", custom: ""},
-                netImg2LocalAsset: {default: "", custom: ""},
-                optimizeTypography: {default: "", custom: ""},
-                hLayout: {default: "", custom: ""},
-                vLayout: {default: "", custom: ""},
-                refPopover: {default: "", custom: ""},
-                copyText: {default: "", custom: ""},
                 expand: {default: "⌘↓", custom: "⌘↓"},
                 collapse: {default: "⌘↑", custom: "⌘↑"},
                 insertBottom: {default: "⌥⌘.", custom: "⌥⌘."},
@@ -319,8 +417,24 @@ export abstract class Constants {
                 insertBefore: {default: "⇧⌘B", custom: "⇧⌘B"},
                 insertAfter: {default: "⇧⌘A", custom: "⇧⌘A"},
                 jumpToParentNext: {default: "⇧⌘N", custom: "⇧⌘N"},
+                jumpToParentPrev: {default: "⇧⌘M", custom: "⇧⌘M"},
+                jumpToParent: {default: "⇧⌘J", custom: "⇧⌘J"},
                 moveToUp: {default: "⇧⌘↑", custom: "⇧⌘↑"},
                 moveToDown: {default: "⇧⌘↓", custom: "⇧⌘↓"},
+                duplicateCompletely: {default: "", custom: ""},
+                copyPlainText: {default: "", custom: ""},
+                copyID: {default: "", custom: ""},
+                copyProtocolInMd: {default: "", custom: ""},
+                netImg2LocalAsset: {default: "", custom: ""},
+                netAssets2LocalAssets: {default: "", custom: ""},
+                optimizeTypography: {default: "", custom: ""},
+                hLayout: {default: "", custom: ""},
+                vLayout: {default: "", custom: ""},
+                refPopover: {default: "", custom: ""},
+                copyText: {default: "", custom: ""},
+                exitFocus: {default: "", custom: ""},
+                ai: {default: "", custom: ""},
+                switchReadonly: {default: "", custom: ""},
             },
             insert: {
                 appearance: {default: "⌥⌘X", custom: "⌥⌘X"},
@@ -340,8 +454,11 @@ export abstract class Constants {
                 "inline-code": {default: "⌘G", custom: "⌘G"},
                 link: {default: "⌘K", custom: "⌘K"},
                 check: {default: "⌘L", custom: "⌘L"},
+                "ordered-list": {default: "", custom: ""},
+                list: {default: "", custom: ""},
                 table: {default: "⌘O", custom: "⌘O"},
                 code: {default: "⇧⌘K", custom: "⇧⌘K"},
+                quote: {default: "", custom: ""},
                 clearInline: {default: "⌘\\", custom: "⌘\\"},
             },
             heading: {
@@ -374,7 +491,7 @@ export abstract class Constants {
         plugin: {},
     };
 
-    public static readonly SIYUAN_EMPTY_LAYOUT: Record<string, unknown> = {
+    public static readonly SIYUAN_EMPTY_LAYOUT: Config.IUiLayout = {
         hideDock: false,
         layout: {
             "direction": "tb",
@@ -405,7 +522,13 @@ export abstract class Constants {
                     "size": "auto",
                     "type": "center",
                     "instance": "Layout",
-                    "children": [{"instance": "Wnd", "children": [{"instance": "Tab", "children": []}]}]
+                    "children": [{
+                        "instance": "Wnd",
+                        "children": [{
+                            "instance": "Tab",
+                            "children": []
+                        }]
+                    }]
                 }, {
                     "direction": "tb",
                     "size": "0px",
@@ -446,13 +569,13 @@ export abstract class Constants {
             data: [
                 [{
                     type: "file",
-                    size: {width: 227, height: 0},
+                    size: {width: 232, height: 0},
                     show: true,
                     icon: "iconFiles",
                     hotkeyLangId: "fileTree",
                 }, {
                     type: "outline",
-                    size: {width: 227, height: 0},
+                    size: {width: 232, height: 0},
                     show: false,
                     icon: "iconAlignCenter",
                     hotkeyLangId: "outline",
@@ -464,13 +587,13 @@ export abstract class Constants {
                     hotkeyLangId: "inbox",
                 }], [{
                     type: "bookmark",
-                    size: {width: 227, height: 0},
+                    size: {width: 232, height: 0},
                     show: false,
                     icon: "iconBookmark",
                     hotkeyLangId: "bookmark",
                 }, {
                     type: "tag",
-                    size: {width: 227, height: 0},
+                    size: {width: 232, height: 0},
                     show: false,
                     icon: "iconTags",
                     hotkeyLangId: "tag",
@@ -503,6 +626,33 @@ export abstract class Constants {
         }
     };
 
+    public static readonly SIYUAN_DEFAULT_REPLACETYPES: Required<Config.IUILayoutTabSearchConfigReplaceTypes> = {
+        "text": true,
+        "imgText": true,
+        "imgTitle": true,
+        "imgSrc": false,
+        "aText": true,
+        "aTitle": true,
+        "aHref": false,
+        "code": false,
+        "em": true,
+        "strong": true,
+        "inlineMath": false,
+        "inlineMemo": true,
+        "blockRef": false,
+        "kbd": true,
+        "mark": true,
+        "s": true,
+        "sub": true,
+        "sup": true,
+        "tag": true,
+        "u": true,
+        "docTitle": true,
+        "codeBlock": false,
+        "mathBlock": false,
+        "htmlBlock": false
+    };
+
     // image
     public static readonly SIYUAN_IMAGE_VIP: string = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
 <path fill="#ffd00f" d="M2.288 12.643l23.487 12.853c0.286 0.153 0.477 0.45 0.477 0.791 0 0.082-0.011 0.161-0.032 0.237l0.001-0.006c-0.119 0.395-0.479 0.678-0.905 0.678-0.004 0-0.009-0-0.013-0h-19.439c-0.958 0-1.766-0.684-1.885-1.595l-1.691-12.956z"></path>
@@ -517,7 +667,7 @@ export abstract class Constants {
 
     // assets
     public static readonly SIYUAN_ASSETS_IMAGE: string[] = [".apng", ".ico", ".cur", ".jpg", ".jpe", ".jpeg", ".jfif", ".pjp", ".pjpeg", ".png", ".gif", ".webp", ".bmp", ".svg", ".avif"];
-    public static readonly SIYUAN_ASSETS_AUDIO: string[] = [".mp3", ".wav", ".ogg", ".m4a"];
+    public static readonly SIYUAN_ASSETS_AUDIO: string[] = [".mp3", ".wav", ".ogg", ".m4a", ".aac"];
     public static readonly SIYUAN_ASSETS_VIDEO: string[] = [".mov", ".weba", ".mkv", ".mp4", ".webm"];
     public static readonly SIYUAN_ASSETS_EXTS: string[] = [".pdf"].concat(Constants.SIYUAN_ASSETS_IMAGE).concat(Constants.SIYUAN_ASSETS_AUDIO).concat(Constants.SIYUAN_ASSETS_VIDEO);
     public static readonly SIYUAN_ASSETS_SEARCH: string[] = [".txt", ".md", ".markdown", ".docx", ".xlsx", ".pptx", ".pdf", ".json", ".log", ".sql", ".html", ".xml", ".java", ".h", ".c",
@@ -557,13 +707,16 @@ export abstract class Constants {
         "lightfair", "magula", "mono-blue", "nnfx-light", "panda-syntax-light", "paraiso-light", "purebasic", "qtcreator-light", "routeros", "school-book",
         "stackoverflow-light", "tokyo-night-light", "vs", "xcode", "default"];
     public static readonly ZWSP: string = "\u200b";
-    public static readonly INLINE_TYPE: string[] = ["block-ref", "kbd", "text", "file-annotation-ref", "a", "strong", "em", "u", "s", "mark", "sup", "sub", "tag", "code", "inline-math", "inline-memo"];
+    public static readonly INLINE_TYPE: string[] = ["block-ref", "kbd", "text", "file-annotation-ref", "a", "strong", "em", "u", "s", "mark", "sup", "sub", "tag", "code", "inline-math", "inline-memo", "clear"];
     public static readonly BLOCK_HINT_KEYS: string[] = ["((", "[[", "（（", "【【"];
-    public static readonly BLOCK_HINT_CLOSE_KEYS: IObject;
+    public static readonly BLOCK_HINT_CLOSE_KEYS: IObject = {"((": "))", "[[": "]]", "（（": "））", "【【": "】】"};
     // common: "bash", "c", "csharp", "cpp", "css", "diff", "go", "xml", "json", "java", "javascript", "kotlin", "less", "lua", "makefile", "markdown", "objectivec", "php", "php-template", "perl", "plaintext", "python", "python-repl", "r", "ruby", "rust", "scss", "sql", "shell", "swift", "ini", "typescript", "vbnet", "yaml", "properties", "1c", "armasm", "avrasm", "actionscript", "ada", "angelscript", "accesslog", "apache", "applescript", "arcade", "arduino", "asciidoc", "aspectj", "abnf", "autohotkey", "autoit", "awk", "basic", "bnf", "dos", "brainfuck", "cal", "cmake", "csp", "cos", "capnproto", "ceylon", "clean", "clojure", "clojure-repl", "coffeescript", "coq", "crystal", "d", "dns", "dart", "delphi", "dts", "django", "dockerfile", "dust", "erb", "elixir", "elm", "erlang", "erlang-repl", "excel", "ebnf", "fsharp", "fix", "flix", "fortran", "gcode", "gams", "gauss", "glsl", "gml", "gherkin", "golo", "gradle", "groovy", "haml", "hsp", "http", "handlebars", "haskell", "haxe", "hy", "irpf90", "isbl", "inform7", "x86asm", "jboss-cli", "julia", "julia-repl", "ldif", "llvm", "lsl", "latex", "lasso", "leaf", "lisp", "livecodeserver", "livescript", "mel", "mipsasm", "matlab", "maxima", "mercury", "axapta", "routeros", "mizar", "mojolicious", "monkey", "moonscript", "n1ql", "nsis", "nestedtext", "nginx", "nim", "nix", "node-repl", "ocaml", "openscad", "ruleslanguage", "oxygene", "pf", "parser3", "pony", "pgsql", "powershell", "processing", "prolog", "protobuf", "puppet", "purebasic", "profile", "q", "qml", "reasonml", "rib", "rsl", "roboconf", "sas", "sml", "sqf", "step21", "scala", "scheme", "scilab", "smali", "smalltalk", "stan", "stata", "stylus", "subunit", "tp", "taggerscript", "tcl", "tap", "thrift", "twig", "vbscript", "vbscript-html", "vhdl", "vala", "verilog", "vim", "wasm", "mathematica", "wren", "xl", "xquery", "zephir", "crmsh", "dsconfig", "graphql",
-    // third: "yul", "solidity", "abap", "hlsl"
+    // third: "yul", "solidity", "abap", "hlsl", "gdscript"
     public static readonly ALIAS_CODE_LANGUAGES: string[] = [
         "js", "ts", "html", "toml", "c#", "bat",
+    ];
+    public static readonly SIYUAN_RENDER_CODE_LANGUAGES: string[] = [
+        "abc", "plantuml", "mermaid", "flowchart", "echarts", "mindmap", "graphviz", "math"
     ];
 
     // Google Analytics 事件

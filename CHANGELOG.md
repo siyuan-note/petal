@@ -2,6 +2,8 @@
 
 ## v1.0.5 2024-11
 
+* [Replace `any` in IProtyle with the corresponding type](https://github.com/siyuan-note/petal/issues/34)
+
 ## v1.0.4 2024-10-15
 
 * [Add plugin method `exitSiYuan`](https://github.com/siyuan-note/siyuan/pull/12767)

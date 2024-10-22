@@ -66,6 +66,11 @@ export namespace Config {
          */
         openHelp: boolean;
         /**
+         * Publishing service
+         * 发布服务
+         */
+        publish: IPublish;
+        /**
          * Whether it is running in read-only mode
          * 全局只读
          */
@@ -265,7 +270,7 @@ export namespace Config {
      * User interface language
      * Same as {@link IAppearance.lang}
      */
-    export type TLang = "en_US" | "es_ES" | "fr_FR" | "zh_CHT" | "zh_CN" | "ja_JP";
+    export type TLang = "en_US" | "es_ES" | "fr_FR" | "zh_CHT" | "zh_CN" | "ja_JP" | "it_IT" | "de_DE" | "he_IL" | "ru_RU" | "pl_PL";
 
     /**
      * SiYuan bazaar related configuration
@@ -286,6 +291,14 @@ export namespace Config {
      */
     interface IMarkdown {
         /**
+         * Whether to enable the inline asterisk
+         */
+        inlineAsterisk: boolean;
+        /**
+         * Whether to enable the inline underscore
+         */
+        inlineUnderscore: boolean;
+        /**
          * Whether to enable the inline superscript
          */
         inlineSup: boolean;
@@ -301,6 +314,10 @@ export namespace Config {
          * Whether to enable the inline math
          */
         inlineMath: boolean;
+        /**
+         * Whether to enable the inline strikethrough
+         */
+        inlineStrikethrough: boolean;
     }
 
     /**
@@ -326,6 +343,10 @@ export namespace Config {
          * The default number of backlinks to mention
          */
         backmentionExpandCount: number;
+        /**
+         * Whether the backlink contains children
+         */
+        backlinkContainChildren: boolean;
         /**
          * The maximum length of the dynamic anchor text for block references
          */
@@ -1033,6 +1054,56 @@ export namespace Config {
     export type TLogLevel = "off" | "trace" | "debug" | "info" | "warn" | "error" | "fatal";
 
     /**
+     * Publishing service
+     */
+    export interface IPublish {
+        /**
+         * Whether to open the publishing service
+         */
+        enable: boolean;
+        /**
+         * The basic authentication settings of publishing service
+         */
+        auth: IPublishAuth;
+        /**
+         * Port on which the publishing service listens
+         */
+        port: number;
+    }
+
+    /**
+     * Publishing service authentication settings
+     */
+    export interface IPublishAuth {
+        /**
+         * Whether to enable basic authentication for publishing services
+         */
+        enable: boolean;
+        /**
+         * List of basic verified accounts
+         */
+        accounts: IPublishAuthAccount[];
+    }
+
+    /**
+     * Basic authentication account
+     */
+    export interface IPublishAuthAccount {
+        /**
+         * Account username
+         */
+        username: string;
+        /**
+         * Account password
+         */
+        password: string;
+        /**
+         * The memo text of the account
+         */
+        memo: string;
+    }
+
+    /**
      * Snapshot repository related configuration
      */
     export interface IRepo {
@@ -1320,6 +1391,10 @@ export namespace Config {
          * Timeout (unit: seconds)
          */
         timeout: number;
+        /**
+         * Concurrent requests.
+         */
+        concurrentReqs: number;
     }
 
     /**
@@ -1342,6 +1417,10 @@ export namespace Config {
          * Timeout (unit: seconds)
          */
         timeout: number;
+        /**
+         * Concurrent requests.
+         */
+        concurrentReqs: number;
         /**
          * Username
          */
@@ -1705,6 +1784,10 @@ export namespace Config {
          * Tab title
          */
         title?: string;
+        /**
+         * Tab recent view time
+         */
+        activeTime?: string;
     }
 
     /**
@@ -1927,7 +2010,7 @@ export namespace Config {
          * - `1`: Group by document
          */
         group: number;
-        hasReplace: any;
+        hasReplace: boolean;
         /**
          * Readable path list
          */
@@ -1963,6 +2046,7 @@ export namespace Config {
         r: string;
         /**
          * Whether to clear the search box after removing the currently used query condition group
+         * 移除后需记录搜索内容 https://github.com/siyuan-note/siyuan/issues/7745
          */
         removed?: boolean;
         replaceTypes: IUILayoutTabSearchConfigReplaceTypes;
@@ -2051,6 +2135,11 @@ export namespace Config {
          * @default true
          */
         inlineMemo?: boolean;
+        /**
+         * Replace block refs
+         * @default false
+         */
+        blockRef?: boolean;
         /**
          * Replace kdb elements
          * @default true

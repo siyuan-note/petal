@@ -1,6 +1,8 @@
+import {Tab} from "./types";
+
 export * from "./types";
 
-import {IProtyle, Lute, Protyle, Toolbar, IProtyleOption, TProtyleAction} from "./types/protyle";
+import {IProtyle, Lute, Protyle, Toolbar, IProtyleOptions, TProtyleAction} from "./types/protyle";
 import {Config} from "./types/config";
 import {IMenuBaseDetail} from "./types/events";
 import {IGetDocInfo, IGetTreeStat} from "./types/response";
@@ -11,12 +13,6 @@ declare global {
 }
 
 export type TEventBus = keyof IEventBusMap
-
-export type TTurnIntoOne = "BlocksMergeSuperBlock" | "Blocks2ULs" | "Blocks2OLs" | "Blocks2TLs" | "Blocks2Blockquote"
-
-export type TTurnIntoOneSub = "row" | "col"
-
-export type TTurnInto = "Blocks2Ps" | "Blocks2Hs"
 
 export type TCardType = "doc" | "notebook" | "all"
 
@@ -77,34 +73,6 @@ export interface Global {
 interface IKeymapItem {
     default: string,
     custom: string
-}
-
-export interface IKeymap {
-    plugin: {
-        [key: string]: {
-            [key: string]: IKeymapItem
-        }
-    }
-    general: {
-        [key: string]: IKeymapItem
-    }
-    editor: {
-        general: {
-            [key: string]: IKeymapItem
-        }
-        insert: {
-            [key: string]: IKeymapItem
-        }
-        heading: {
-            [key: string]: IKeymapItem
-        }
-        list: {
-            [key: string]: IKeymapItem
-        }
-        table: {
-            [key: string]: IKeymapItem
-        }
-    }
 }
 
 export interface IEventBusMap {
@@ -201,40 +169,17 @@ export interface IEventBusMap {
     "mobile-keyboard-hide": void;
 }
 
-export interface IPosition {
-    x: number;
-    y: number;
-    w?: number;
-    h?: number;
-    isLeft?: boolean;
-}
-
-export interface ITab {
-    id: string;
-    headElement: HTMLElement;
-    panelElement: HTMLElement;
-    model: IModel;
-    title: string;
-    icon: string;
-    docIcon: string;
-    updateTitle: (title: string) => void;
-    pin: () => void;
-    unpin: () => void;
-    setDocIcon: (icon: string) => void;
-    close: () => void;
-}
-
 export interface IModel {
     ws: WebSocket;
     app: App;
     reqId: number;
-    parent: ITab | any;
+    parent: Tab | any;
 
     send(cmd: string, param: Record<string, unknown>, process?: boolean): void;
 }
 
 export interface ICustomModel extends IModel {
-    tab: ITab;
+    tab: Tab;
     data: any;
     type: string;
     element: HTMLElement;
@@ -263,16 +208,6 @@ export interface IObject {
 
 export interface I18N {
     [key: string]: any;
-}
-
-export interface ILuteNode {
-    TokensStr: () => string;
-    __internal_object__: {
-        Parent: {
-            Type: number,
-        },
-        HeadingLevel: string,
-    };
 }
 
 export interface ISearchOption {
@@ -366,28 +301,6 @@ export interface ICommandOption {
     dockCallback?: (element: HTMLElement) => void // 焦点在 dock 上时执行的回调
 }
 
-export interface IOperation {
-    action: TOperation; // move， delete 不需要传 data
-    id?: string;
-    isTwoWay?: boolean; // 是否双向关联
-    backRelationKeyID?: string; // 双向关联的目标关联列 ID
-    avID?: string; // av
-    format?: string; // updateAttrViewColNumberFormat 专享
-    keyID?: string; // updateAttrViewCell 专享
-    rowID?: string; // updateAttrViewCell 专享
-    data?: any; // updateAttr 时为  { old: IObject, new: IObject }, updateAttrViewCell 时为 {TAVCol: {content: string}}
-    parentID?: string;
-    previousID?: string;
-    retData?: any;
-    nextID?: string; // insert 专享
-    isDetached?: boolean; // insertAttrViewBlock 专享
-    srcIDs?: string[]; // insertAttrViewBlock 专享
-    name?: string; // addAttrViewCol 专享
-    type?: TAVCol; // addAttrViewCol 专享
-    deckID?: string; // add/removeFlashcards 专享
-    blockIDs?: string[]; // add/removeFlashcards 专享
-}
-
 export interface ICard {
     deckID: string
     cardID: string
@@ -415,7 +328,7 @@ export function openWindow(options: {
     },
     height?: number,
     width?: number,
-    tab?: ITab,
+    tab?: Tab,
     doc?: {
         id: string; // 块 id
     },
@@ -454,7 +367,7 @@ export function openTab(options: {
     keepCursor?: boolean; // 是否跳转到新 tab 上
     removeCurrentTab?: boolean; // 在当前页签打开时需移除原有页签
     afterOpen?: () => void; // 打开后回调
-}): Promise<ITab>
+}): Promise<Tab>
 
 export function getFrontend(): "desktop" | "desktop-window" | "mobile" | "browser-desktop" | "browser-mobile";
 
@@ -494,7 +407,7 @@ export abstract class Plugin {
         id: string,
         callback(protyle: Protyle): void,
     }[];
-    protyleOptions: IProtyleOption;
+    protyleOptions: IProtyleOptions;
 
     constructor(options: {
         app: App,
