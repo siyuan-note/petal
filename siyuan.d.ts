@@ -60,6 +60,12 @@ export type TAVCol =
     | "url"
     | "email"
     | "phone"
+    | "mAsset"
+    | "template"
+    | "created"
+    | "updated"
+    | "checkbox"
+    | "lineNumber"
 
 export interface ISiyuan {
     config: Config.IConf;
