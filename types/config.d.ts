@@ -2021,20 +2021,20 @@ export namespace Config {
          * - `0`: No grouping
          * - `1`: Group by document
          */
-        group: number;
-        hasReplace: boolean;
+        group?: number;
+        hasReplace?: boolean;
         /**
          * Readable path list
          */
-        hPath: string;
+        hPath?: string;
         /**
          * Search in the specified paths
          */
-        idPath: string[];
+        idPath?: string[];
         /**
          * Search content
          */
-        k: string;
+        k?: string;
         /**
          * Search scheme
          * - `0`: Keyword (default)
@@ -2043,7 +2043,7 @@ export namespace Config {
          * - `3`: Regular expression
          * @default 0
          */
-        method: number;
+        method?: number;
         /**
          * Custom name of the query condition group
          */
@@ -2051,17 +2051,17 @@ export namespace Config {
         /**
          * Current page number
          */
-        page: number;
+        page?: number;
         /**
          * Replace content
          */
-        r: string;
+        r?: string;
         /**
          * Whether to clear the search box after removing the currently used query condition group
          * 移除后需记录搜索内容 https://github.com/siyuan-note/siyuan/issues/7745
          */
         removed?: boolean;
-        replaceTypes: IUILayoutTabSearchConfigReplaceTypes;
+        replaceTypes?: IUILayoutTabSearchConfigReplaceTypes;
         /**
          * Search result sorting scheme
          * - `0`: Block type (default)
@@ -2074,8 +2074,8 @@ export namespace Config {
          * - `7`: Descending by relevance
          * @default 0
          */
-        sort: number;
-        types: IUILayoutTabSearchConfigTypes;
+        sort?: number;
+        types?: IUILayoutTabSearchConfigTypes;
     }
 
     /**

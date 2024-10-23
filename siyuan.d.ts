@@ -361,12 +361,12 @@ export abstract class Plugin {
      */
     addTab(options: {
         type: string,
-        beforeDestroy?: (this: Tab) => void,
-        destroy?: (this: Tab) => void,
-        resize?: (this: Tab) => void,
-        update?: (this: Tab) => void,
-        init: (this: Tab) => void,
-    }): () => Tab;
+        beforeDestroy?: (this: Custom) => void,
+        destroy?: (this: Custom) => void,
+        resize?: (this: Custom) => void,
+        update?: (this: Custom) => void,
+        init: (this: Custom) => void,
+    }): () => Custom;
 
     /**
      * Must be executed before the synchronous function.

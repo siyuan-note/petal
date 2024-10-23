@@ -2,7 +2,7 @@
 
 ## v1.0.5 2024-11
 
-* [Add plugin function `getDockByType`](https://github.com/siyuan-note/siyuan/issues/11782)
+* [Add plugin function `getModelByDockType`](https://github.com/siyuan-note/siyuan/issues/11782)
 * [Replace `any` in IProtyle with the corresponding type](https://github.com/siyuan-note/petal/issues/34)
 
 ## v1.0.4 2024-10-15
