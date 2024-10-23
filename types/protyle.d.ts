@@ -1,8 +1,9 @@
 import {
     App, Config, Editor,
     IObject,
-    IOperation, IPosition, IWebSocketData, Menu, Model,
+    IOperation, IPosition, IWebSocketData, Menu,
 } from "./../siyuan";
+import {Model} from "./layout/Model";
 
 type TTurnIntoOne = "BlocksMergeSuperBlock" | "Blocks2ULs" | "Blocks2OLs" | "Blocks2TLs" | "Blocks2Blockquote"
 

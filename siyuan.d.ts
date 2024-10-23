@@ -1,20 +1,41 @@
-import {Tab} from "./types";
+import {
+    IGetDocInfo,
+    IGetTreeStat,
+    IMenuBaseDetail,
+    Config,
+    Custom,
+    Dock,
+    IMenu,
+    IObject,
+    IPosition,
+    ISiyuan,
+    IWebSocketData,
+    IProtyle,
+    Lute,
+    Protyle,
+    Toolbar,
+    IProtyleOptions,
+    TProtyleAction,
+    subMenu,
+    App,
+    Files,
+    Tab,
+} from "./types";
 
 export * from "./types";
-
-import {IProtyle, Lute, Protyle, Toolbar, IProtyleOptions, TProtyleAction} from "./types/protyle";
-import {Config} from "./types/config";
-import {IMenuBaseDetail} from "./types/events";
-import {IGetDocInfo, IGetTreeStat} from "./types/response";
 
 declare global {
     export interface Window extends Global {
     }
 }
 
-export type TEventBus = keyof IEventBusMap
+export type TDock = "file" | "outline" | "inbox" | "bookmark" | "tag" | "graph" | "globalGraph" | "backlink"
 
 export type TCardType = "doc" | "notebook" | "all"
+
+export type TEventBus = keyof IEventBusMap
+
+export type TPluginDockPosition = "LeftTop" | "LeftBottom" | "RightTop" | "RightBottom" | "BottomLeft" | "BottomRight"
 
 export type TOperation =
     "insert"
@@ -48,31 +69,9 @@ export type TOperation =
     | "setAttrViewColCalc"
     | "updateAttrViewColNumberFormat"
 
-export type TAVCol =
-    "text"
-    | "date"
-    | "number"
-    | "relation"
-    | "rollup"
-    | "select"
-    | "block"
-    | "mSelect"
-    | "url"
-    | "email"
-    | "phone"
-
-export interface ISiyuan {
-    config: Config.IConf;
-}
-
 export interface Global {
     Lute: typeof Lute;
     siyuan: ISiyuan;
-}
-
-interface IKeymapItem {
-    default: string,
-    custom: string
 }
 
 export interface IEventBusMap {
@@ -81,7 +80,7 @@ export interface IEventBusMap {
         type: string,   // 1 - 重来；2 - 困难；3 - 良好；4 - 简单；-1 - 显示答案；-2 - 上一个 ；-3 - 跳过
     };
     "click-blockicon": {
-        menu: EventMenu,
+        menu: subMenu,
         protyle: IProtyle,
         blockElements: HTMLElement[],
     };
@@ -90,19 +89,20 @@ export interface IEventBusMap {
         event: MouseEvent,
     };
     "click-editortitleicon": {
-        menu: EventMenu,
+        menu: subMenu,
         protyle: IProtyle,
         data: IGetDocInfo,
     };
     "click-pdf": {
         event: MouseEvent,
     };
+    "closed-notebook": IWebSocketData;
     "destroy-protyle": {
         protyle: IProtyle,
     };
     "input-search": {
         protyle: Protyle,
-        config: ISearchOption,
+        config: Config.IUILayoutTabSearchConfig,
         searchElement: HTMLInputElement,
     };
     "loaded-protyle-dynamic": {
@@ -112,13 +112,14 @@ export interface IEventBusMap {
     "loaded-protyle-static": {
         protyle: IProtyle,
     };
+    "lock-screen": void;
     "switch-protyle": {
         protyle: IProtyle,
     };
     "open-menu-av": IMenuBaseDetail & { selectRowElements: HTMLElement[] };
     "open-menu-blockref": IMenuBaseDetail;
     "open-menu-breadcrumbmore": {
-        menu: EventMenu,
+        menu: subMenu,
         protyle: IProtyle,
         data: IGetTreeStat,
     };
@@ -128,12 +129,12 @@ export interface IEventBusMap {
     "open-menu-link": IMenuBaseDetail;
     "open-menu-tag": IMenuBaseDetail;
     "open-menu-doctree": {
-        menu: EventMenu,
+        menu: subMenu,
         elements: NodeListOf<HTMLElement>,
         type: "doc" | "docs" | "notebook",
     };
     "open-menu-inbox": {
-        menu: EventMenu,
+        menu: subMenu,
         element: HTMLElement,
         ids: string[],
     };
@@ -151,7 +152,6 @@ export interface IEventBusMap {
         url: string,
     };
     "opened-notebook": IWebSocketData;
-    "closed-notebook":IWebSocketData;
     "paste": {
         protyle: IProtyle,
         resolve: new <T>(value: T | PromiseLike<T>) => void,
@@ -164,124 +164,23 @@ export interface IEventBusMap {
     "sync-start": IWebSocketData;
     "sync-end": IWebSocketData;
     "sync-fail": IWebSocketData;
-    "lock-screen": void;
     "mobile-keyboard-show": void;
     "mobile-keyboard-hide": void;
 }
 
-export interface IModel {
-    ws: WebSocket;
-    app: App;
-    reqId: number;
-    parent: Tab | any;
-
-    send(cmd: string, param: Record<string, unknown>, process?: boolean): void;
-}
-
-export interface ICustomModel extends IModel {
-    tab: Tab;
-    data: any;
-    type: string;
-    element: HTMLElement;
-    editors: Protyle[]; // 系统内部处理快捷键等操作需要用到 https://github.com/siyuan-note/siyuan/issues/11072
-
-    init(): void;
-
-    update?(): void;
-
-    resize?(): void;
-
-    beforeDestroy?(): void;
-
-    destroy?(): void;
-}
-
-export interface IDockModel extends Omit<ICustomModel, "beforeDestroy"> {
-}
-
-export interface ITabModel extends ICustomModel {
-}
-
-export interface IObject {
-    [key: string]: string;
-}
-
-export interface I18N {
-    [key: string]: any;
-}
-
-export interface ISearchOption {
-    page?: number;
-    removed?: boolean;  // 移除后需记录搜索内容 https://github.com/siyuan-note/siyuan/issues/7745
-    name?: string;
-    sort?: number;  //  0：按块类型（默认），1：按创建时间升序，2：按创建时间降序，3：按更新时间升序，4：按更新时间降序，5：按内容顺序（仅在按文档分组时），6：按相关度升序，7：按相关度降序
-    group?: number;  // 0：不分组，1：按文档分组
-    hasReplace?: boolean;
-    method?: number; //  0：文本，1：查询语法，2：SQL，3：正则表达式
-    hPath?: string;
-    idPath?: string[];
-    k: string;
-    r?: string;
-    types?: {
-        mathBlock: boolean,
-        table: boolean,
-        blockquote: boolean,
-        superBlock: boolean,
-        paragraph: boolean,
-        document: boolean,
-        heading: boolean,
-        list: boolean,
-        listItem: boolean,
-        codeBlock: boolean,
-        htmlBlock: boolean,
-        embedBlock: boolean,
-        databaseBlock: boolean,
-    };
-}
-
-export interface IWebSocketData {
-    cmd: string;
-    callback?: string;
-    data: any;
-    msg: string;
-    code: number;
-    sid: string;
-}
-
 export interface IPluginDockTab {
-    position: "LeftTop" | "LeftBottom" | "RightTop" | "RightBottom" | "BottomLeft" | "BottomRight";
-    size: {
-        width: number,
-        height: number,
-    };
-    icon: string;
-    hotkey?: string;
-    title: string;
-    index?: number;
-    show?: boolean;
+    position: TPluginDockPosition,
+    size: Config.IUILayoutDockPanelSize,
+    icon: string,
+    hotkey?: string,
+    title: string,
+    index?: number
+    show?: boolean
 }
 
-export interface IMenuItemOption {
-    iconClass?: string;
-    label?: string;
-    click?: (element: HTMLElement, event: MouseEvent) => boolean | void | Promise<boolean | void>;
-    type?: "separator" | "submenu" | "readonly";
-    accelerator?: string;
-    action?: string;
-    id?: string;
-    submenu?: IMenuItemOption[];
-    disabled?: boolean;
-    icon?: string;
-    iconHTML?: string;
-    current?: boolean;
-    bind?: (element: HTMLElement) => void;
-    index?: number;
-    element?: HTMLElement;
-}
-
-export interface ICommandOption {
-    langKey: string // 用于区分不同快捷键的 key
-    langText?: string // 快捷键功能描述文本
+export interface ICommand {
+    langKey: string, // 用于区分不同快捷键的 key, 同时作为 i18n 的字段名
+    langText?: string, // 显示的文本, 指定后不再使用 langKey 对应的 i18n 文本
     /**
      * 目前需使用 MacOS 符号标识，顺序按照 ⌥⇧⌘，入 ⌥⇧⌘A
      * "Ctrl": "⌘",
@@ -294,11 +193,11 @@ export interface ICommandOption {
      */
     hotkey: string,
     customHotkey?: string,
-    callback?: () => void // 其余回调存在时将不会触
+    callback?: () => void   // 其余回调存在时将不会触
     globalCallback?: () => void // 焦点不在应用内时执行的回调
-    fileTreeCallback?: (file: any) => void // 焦点在文档树上时执行的回调
-    editorCallback?: (protyle: any) => void // 焦点在编辑器上时执行的回调
-    dockCallback?: (element: HTMLElement) => void // 焦点在 dock 上时执行的回调
+    fileTreeCallback?: (file: Files) => void // 焦点在文档树上时执行的回调
+    editorCallback?: (protyle: IProtyle) => void     // 焦点在编辑器上时执行的回调
+    dockCallback?: (element: HTMLElement) => void    // 焦点在 dock 上时执行的回调
 }
 
 export interface ICard {
@@ -306,6 +205,10 @@ export interface ICard {
     cardID: string
     blockID: string
     nextDues: IObject
+    lapses: number  // 遗忘次数
+    lastReview: number  // 最后复习时间
+    reps: number  // 复习次数
+    state: number   // 卡片状态 0：新卡
 }
 
 export interface ICardData {
@@ -314,6 +217,10 @@ export interface ICardData {
     unreviewedNewCardCount: number
     unreviewedOldCardCount: number
 }
+
+export function adaptHotkey(hotkey: string): string
+
+export function confirm(title: string, text: string, confirmCallback?: (dialog: Dialog) => void, cancelCallback?: (dialog: Dialog) => void): void;
 
 export function fetchPost(url: string, data?: any, callback?: (response: IWebSocketData) => void, headers?: IObject): void;
 
@@ -351,7 +258,7 @@ export function openTab(options: {
     asset?: {
         path: string,
     };
-    search?: ISearchOption;
+    search?: Config.IUILayoutTabSearchConfig;
     card?: {
         type: TCardType,
         id?: string, //  cardType 为 all 时不传，否则传文档或笔记本 id
@@ -371,15 +278,13 @@ export function openTab(options: {
 
 export function getFrontend(): "desktop" | "desktop-window" | "mobile" | "browser-desktop" | "browser-mobile";
 
+export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "android" | "ios";
+
 export function lockScreen(app: App): void
 
 export function exitSiYuan(): void
 
-export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "android" | "ios";
-
-export function adaptHotkey(hotkey: string): string;
-
-export function confirm(title: string, text: string, confirmCallback?: (dialog: Dialog) => void, cancelCallback?: (dialog: Dialog) => void): void;
+export function getDockByType(type: TDock | string): Dock
 
 /**
  * @param timeout - ms. 0: manual close；-1: always show; 6000: default
@@ -387,19 +292,14 @@ export function confirm(title: string, text: string, confirmCallback?: (dialog: 
  */
 export function showMessage(text: string, timeout?: number, type?: "info" | "error", id?: string): void;
 
-export class App {
-    plugins: Plugin[];
-    appId: string
-}
-
 export abstract class Plugin {
     eventBus: EventBus;
-    i18n: I18N;
+    i18n: IObject;
     data: any;
     displayName: string;
     readonly name: string;
     app: App;
-    commands: ICommandOption[];
+    commands: ICommand[];
     setting: Setting;
     protyleSlash: {
         filter: string[],
@@ -412,7 +312,7 @@ export abstract class Plugin {
     constructor(options: {
         app: App,
         name: string,
-        i18n: I18N,
+        i18n: IObject,
     });
 
     onload(): void;
@@ -454,19 +354,19 @@ export abstract class Plugin {
 
     addIcons(svg: string): void;
 
-    getOpenedTab(): { [key: string]: ICustomModel[] };
+    getOpenedTab(): { [key: string]: Custom[] };
 
     /**
      * Must be executed before the synchronous function.
      */
     addTab(options: {
         type: string,
-        beforeDestroy?: (this: ITabModel) => void,
-        destroy?: (this: ITabModel) => void,
-        resize?: (this: ITabModel) => void,
-        update?: (this: ITabModel) => void,
-        init: (this: ITabModel) => void,
-    }): () => ITabModel;
+        beforeDestroy?: (this: Tab) => void,
+        destroy?: (this: Tab) => void,
+        resize?: (this: Tab) => void,
+        update?: (this: Tab) => void,
+        init: (this: Tab) => void,
+    }): () => Tab;
 
     /**
      * Must be executed before the synchronous function.
@@ -475,13 +375,13 @@ export abstract class Plugin {
         config: IPluginDockTab,
         data: any,
         type: string,
-        destroy?: (this: IDockModel) => void,
-        resize?: (this: IDockModel) => void,
-        update?: (this: IDockModel) => void,
-        init: (this: IDockModel, dock: IDockModel) => void,
-    }): { config: IPluginDockTab, model: IDockModel };
+        destroy?: (this: Dock) => void,
+        resize?: (this: Dock) => void,
+        update?: (this: Dock) => void,
+        init: (this: Dock, dock: Dock) => void,
+    }): { config: IPluginDockTab, model: Dock };
 
-    addCommand(options: ICommandOption): void;
+    addCommand(options: ICommand): void;
 
     addFloatLayer(options: {
         ids: string[],
@@ -561,17 +461,19 @@ export class Dialog {
 }
 
 export class Menu {
-    constructor(id?: string, closeCallback?: () => void);
-
+    private menu;
+    isOpen: boolean;
     element: HTMLElement;
+
+    constructor(id?: string, closeCB?: () => void);
 
     showSubMenu(subMenuElement: HTMLElement): void;
 
-    addItem(options: IMenuItemOption): HTMLElement;
+    addItem(option: IMenu): HTMLElement;
 
-    addSeparator(index?: number): void;
+    addSeparator(index?: number, ignore?: boolean): HTMLElement;
 
-    open(options: { x: number, y: number, h?: number, w?: number, isLeft?: boolean }): void;
+    open(options: IPosition): void;
 
     /**
      * @param {string} [position=all]
@@ -579,14 +481,4 @@ export class Menu {
     fullscreen(position?: "bottom" | "all"): void;
 
     close(): void;
-}
-
-export class EventMenu {
-    public menus: IMenuItemOption[];
-
-    constructor();
-
-    public addSeparator(index?: number): void;
-
-    public addItem(menu: IMenuItemOption): void;
 }

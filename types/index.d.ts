@@ -1,12 +1,38 @@
-import {App, Config, IModel, IWebSocketData, Protyle, TAVCol, TEditorMode, TOperation} from "../siyuan";
+import {Config, Plugin, Protyle, TDock, TEditorMode, TOperation} from "../siyuan";
+import {Model} from "./layout/Model";
+import {Wnd} from "./layout/Wnd";
+import {Tab} from "./layout/Tab";
 
 export * from "./config";
 export * from "./events";
 export * from "./protyle";
 export * from "./response";
 export * from "./constants";
+export * from "./layout/Wnd";
+export * from "./layout/Tab";
+export * from "./layout/Model";
+export * from "./layout/dock/Files";
 
-type TWS = "main" | "filetree" | "protyle"
+type TDockPosition = "Left" | "Right" | "Bottom"
+
+export type TAVCol =
+    "text"
+    | "date"
+    | "number"
+    | "relation"
+    | "rollup"
+    | "select"
+    | "block"
+    | "mSelect"
+    | "url"
+    | "email"
+    | "phone"
+    | "mAsset"
+    | "template"
+    | "created"
+    | "updated"
+    | "checkbox"
+    | "lineNumber"
 
 interface ILayoutOptions {
     direction?: Config.TUILayoutDirection
@@ -14,14 +40,6 @@ interface ILayoutOptions {
     resize?: Config.TUILayoutDirection
     type?: Config.TUILayoutType
     element?: HTMLElement
-}
-
-interface ITab {
-    icon?: string
-    docIcon?: string
-    title?: string
-    panel?: string
-    callback?: (tab: Tab) => void
 }
 
 interface IOperationSrcs {
@@ -64,7 +82,52 @@ export interface IPosition {
     isLeft?: boolean
 }
 
-declare class Layout {
+export interface ISiyuan {
+    config: Config.IConf;
+}
+
+export interface IMenu {
+    checked?: boolean,
+    iconClass?: string,
+    label?: string,
+    click?: (element: HTMLElement, event: MouseEvent) => boolean | void | Promise<boolean | void>
+    type?: "separator" | "submenu" | "readonly" | "empty",
+    accelerator?: string,
+    action?: string,
+    id?: string,
+    submenu?: IMenu[]
+    disabled?: boolean
+    icon?: string
+    iconHTML?: string
+    current?: boolean
+    bind?: (element: HTMLElement) => void
+    index?: number
+    element?: HTMLElement
+    ignore?: boolean
+}
+
+export interface IPosition {
+    x: number,
+    y: number,
+    w?: number,
+    h?: number,
+    isLeft?: boolean
+}
+
+export interface IWebSocketData {
+    cmd: string;
+    callback?: string;
+    data: any;
+    msg: string;
+    code: number;
+    sid: string;
+}
+
+export interface IObject {
+    [key: string]: string;
+}
+
+export declare class Layout {
     element: HTMLElement;
     children?: Array<Layout | Wnd>;
     parent?: Layout;
@@ -81,87 +144,11 @@ declare class Layout {
     addWnd(child: Wnd, id?: string): void;
 }
 
-declare class Wnd {
-    private app;
-    id: string;
-    parent?: Layout;
-    element: HTMLElement;
-    headersElement: HTMLElement;
-    children: Tab[];
-    resize?: Config.TUILayoutDirection;
-
-    constructor(app: App, resize?: Config.TUILayoutDirection, parentType?: Config.TUILayoutType);
-
-    showHeading(): void;
-
-    switchTab(target: HTMLElement, pushBack?: boolean, update?: boolean, resize?: boolean, isSaveLayout?: boolean): void;
-
-    addTab(tab: Tab, keepCursor?: boolean, isSaveLayout?: boolean, activeTime?: string): void;
-
-    private renderTabList;
-    private removeOverCounter;
-    private destroyModel;
-    private removeTabAction;
-
-    removeTab(id: string, closeAll?: boolean, animate?: boolean, isSaveLayout?: boolean): void;
-
-    moveTab(tab: Tab, nextId?: string): void;
-
-    split(direction: Config.TUILayoutDirection): Wnd;
-
-    private remove;
-}
-
-export declare class Tab {
-    parent: Wnd;
-    id: string;
-    headElement: HTMLElement;
-    panelElement: HTMLElement;
-    callback: (tab: Tab) => void;
-    model: Model;
-    title: string;
-    icon: string;
-    docIcon: string;
-
-    constructor(options: ITab);
-
-    updateTitle(title: string): void;
-
-    addModel(model: Model): void;
-
-    pin(): void;
-
-    setDocIcon(icon: string): void;
-
-    unpin(): void;
-
-    close(): void;
-}
-
-export declare class Model {
-    public ws: WebSocket;
-    public reqId: number;
-    public parent: Tab;
-    public app: App;
-
-    constructor(options: {
-        app: App,
-        id: string,
-        type?: TWS,
-        callback?: () => void,
-        msgCallback?: (data: IWebSocketData) => void
-    })
-
-    /**
-     * @param {boolean} [process=false]
-     */
-    public send(cmd: string, param: Record<string, unknown>, process: boolean): void;
-}
-
 export declare class Editor extends Model {
     element: HTMLElement;
     editor: Protyle;
     headElement: HTMLElement;
+
     constructor(options: {
         app: App;
         tab: Tab;
@@ -170,6 +157,88 @@ export declare class Editor extends Model {
         mode?: TEditorMode;
         action?: string[];
     });
+
     private initProtyle;
 }
 
+export declare class Dock {
+    element: HTMLElement;
+    layout: Layout;
+    private position;
+    private app;
+    resizeElement: HTMLElement;
+    pin: boolean;
+    data: {
+        [key in TDock | string]: Model | boolean;
+    };
+    private hideResizeTimeout;
+
+    constructor(options: {
+        app: App;
+        data: {
+            pin: boolean;
+            data: Config.IUILayoutDockTab[][];
+        };
+        position: TDockPosition;
+    });
+
+    togglePin(): void;
+
+    resetDockPosition(show: boolean): void;
+
+    showDock(reset?: boolean): void;
+
+    hideDock(reset?: boolean): void;
+
+    toggleModel(type: string, show?: boolean, close?: boolean, hide?: boolean, isSaveLayout?: boolean): void;
+
+    add(index: number, sourceElement: Element, previousType?: string): void;
+
+    remove(key: string): void;
+
+    setSize(): void;
+
+    private getMaxSize;
+
+    genButton(data: Config.IUILayoutDockTab[], index: number, tabIndex?: number): void;
+}
+
+export declare class Custom extends Model {
+    element: Element;
+    tab: Tab;
+    data: any;
+    type: string;
+    init: (custom: Custom) => void;
+    destroy: () => void;
+    beforeDestroy: () => void;
+    resize: () => void;
+    update: () => void;
+    editors: Protyle[];
+
+    constructor(options: {
+        app: App;
+        type: string;
+        tab: Tab;
+        data: any;
+        destroy?: () => void;
+        beforeDestroy?: () => void;
+        resize?: () => void;
+        update?: () => void;
+        init: (custom: Custom) => void;
+    });
+}
+
+export declare class subMenu {
+    menus: IMenu[];
+
+    constructor();
+
+    addSeparator(index?: number): void;
+
+    addItem(menu: IMenu): void;
+}
+
+export declare class App {
+    plugins: Plugin[];
+    appId: string
+}
