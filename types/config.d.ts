@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TEditorMode} from "./protyle";
+import {TEditorMode, TProtyleAction} from "./protyle";
 import {TDock} from "../siyuan";
 
 export namespace Config {
@@ -1889,7 +1889,7 @@ export namespace Config {
         /**
          * (Editor) Actions to be performed after the tab is loaded
          */
-        action: string;
+        action: TProtyleAction;
         /**
          * (Editor) Block ID
          */
