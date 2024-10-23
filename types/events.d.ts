@@ -1,8 +1,8 @@
 import type {IProtyle} from "./protyle";
-import {EventMenu} from "./../siyuan";
+import {subMenu} from "./../siyuan";
 
 export interface IMenuBaseDetail {
-    menu: EventMenu;
+    menu: subMenu;
     protyle: IProtyle;
     element: HTMLElement;
 }
