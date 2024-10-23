@@ -284,7 +284,7 @@ export function lockScreen(app: App): void
 
 export function exitSiYuan(): void
 
-export function getModelByDockType(type: TDock | string): Model | boolean | null;
+export function getModelByDockType(type: TDock | string): Model | any;
 
 /**
  * @param timeout - ms. 0: manual close；-1: always show; 6000: default
