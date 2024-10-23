@@ -284,6 +284,8 @@ export function lockScreen(app: App): void
 
 export function exitSiYuan(): void
 
+export function getAllEditor(): Protyle[]
+
 export function getModelByDockType(type: TDock | string): Model | any;
 
 /**
