@@ -19,7 +19,7 @@ import {
     subMenu,
     App,
     Files,
-    Tab,
+    Tab, Model,
 } from "./types";
 
 export * from "./types";
@@ -284,7 +284,7 @@ export function lockScreen(app: App): void
 
 export function exitSiYuan(): void
 
-export function getDockByType(type: TDock | string): Dock
+export function getModelByDockType(type: TDock | string): Model | boolean | null;
 
 /**
  * @param timeout - ms. 0: manual close；-1: always show; 6000: default

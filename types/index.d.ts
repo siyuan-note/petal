@@ -1,7 +1,24 @@
-import {Config, Plugin, Protyle, TDock, TEditorMode, TOperation} from "../siyuan";
+import {
+    Config, Dialog,
+    IProtyle,
+    Menu,
+    Plugin,
+    Protyle,
+    TDock,
+    TEditorMode,
+    TOperation,
+    TProtyleAction
+} from "../siyuan";
 import {Model} from "./layout/Model";
 import {Wnd} from "./layout/Wnd";
 import {Tab} from "./layout/Tab";
+import {BlockPanel} from "./block/Panel";
+import {Inbox} from "./layout/dock/Inbox";
+import {MobileOutline} from "./mobile/dock/MobileOutline";
+import {MobileFiles} from "./mobile/dock/MobileFiles";
+import {MobileBookmarks} from "./mobile/dock/MobileBookmarks";
+import {MobileTags} from "./mobile/dock/MobileTags";
+import {MobileBacklinks} from "./mobile/dock/MobileBacklinks";
 
 export * from "./config";
 export * from "./events";
@@ -12,6 +29,13 @@ export * from "./layout/Wnd";
 export * from "./layout/Tab";
 export * from "./layout/Model";
 export * from "./layout/dock/Files";
+export * from "./layout/dock/Inbox";
+export * from "./block/Panel";
+export * from "./mobile/dock/MobileTags";
+export * from "./mobile/dock/MobileOutline";
+export * from "./mobile/dock/MobileBacklinks";
+export * from "./mobile/dock/MobileBookmarks";
+export * from "./mobile/dock/MobileFiles";
 
 type TDockPosition = "Left" | "Right" | "Bottom"
 
@@ -46,6 +70,54 @@ interface IOperationSrcs {
     id: string,
     content?: string,
     isDetached: boolean
+}
+
+interface INotebook {
+    name: string
+    id: string
+    closed: boolean
+    icon: string
+    sort: number
+    dueFlashcardCount?: string;
+    newFlashcardCount?: string;
+    flashcardCount?: string;
+    sortMode: number
+}
+
+interface IEmojiItem {
+    unicode: string,
+    description: string,
+    description_zh_cn: string,
+    description_ja_jp: string,
+    keywords: string
+}
+
+interface IEmoji {
+    id: string,
+    title: string,
+    title_zh_cn: string,
+    title_ja_jp: string,
+    items: IEmojiItem[]
+}
+
+interface IBackStack {
+    id: string,
+    // 仅移动端
+    data?: {
+        startId: string,
+        endId: string
+        path: string
+        notebookId: string
+    },
+    scrollTop?: number,
+    callback?: TProtyleAction[],
+    position?: {
+        start: number,
+        end: number
+    }
+    // 仅桌面端
+    protyle?: IProtyle,
+    zoomId?: string
 }
 
 export interface IOperation {
@@ -83,7 +155,83 @@ export interface IPosition {
 }
 
 export interface ISiyuan {
-    config: Config.IConf;
+    zIndex: number
+    storage?: {
+        [key: string]: any
+    },
+    transactions?: {
+        protyle: IProtyle,
+        doOperations: IOperation[],
+        undoOperations: IOperation[]
+    }[]
+    reqIds: {
+        [key: string]: number
+    },
+    editorIsFullscreen?: boolean,
+    hideBreadcrumb?: boolean,
+    notebooks?: INotebook[],
+    emojis?: IEmoji[],
+    backStack?: IBackStack[],
+    mobile?: {
+        editor?: Protyle
+        popEditor?: Protyle
+        docks?: {
+            outline: MobileOutline | null,
+            file: MobileFiles | null,
+            bookmark: MobileBookmarks | null,
+            tag: MobileTags | null,
+            backlink: MobileBacklinks | null,
+            inbox: Inbox | null,
+        } & { [key: string]: Model | boolean };
+    },
+    user?: {
+        userId: string
+        userName: string
+        userAvatarURL: string
+        userHomeBImgURL: string
+        userIntro: string
+        userNickname: string
+        userSiYuanOneTimePayStatus: number  // 0 未付费；1 已付费
+        userSiYuanProExpireTime: number // -1 终身会员；0 普通用户；> 0 过期时间
+        userSiYuanSubscriptionPlan: number // 0 年付订阅/终生；1 教育优惠；2 订阅试用
+        userSiYuanSubscriptionType: number // 0 年付；1 终生；2 月付
+        userSiYuanSubscriptionStatus: number // -1：未订阅，0：订阅可用，1：订阅封禁，2：订阅过期
+        userToken: string
+        userTitles: {
+            name: string,
+            icon: string,
+            desc: string
+        }[]
+    },
+    dragElement?: HTMLElement,
+    layout?: {
+        layout?: Layout,
+        centerLayout?: Layout,
+        leftDock?: Dock,
+        rightDock?: Dock,
+        bottomDock?: Dock,
+    }
+    config?: Config.IConf;
+    ws: Model,
+    ctrlIsPressed?: boolean,
+    altIsPressed?: boolean,
+    shiftIsPressed?: boolean,
+    coordinates?: {
+        pageX: number,
+        pageY: number,
+        clientX: number,
+        clientY: number,
+        screenX: number,
+        screenY: number,
+    },
+    menus?: Menus
+    languages?: {
+        [key: string]: any;
+    }
+    bookmarkLabel?: string[]
+    blockPanels: BlockPanel[],
+    dialogs: Dialog[],
+    viewer?: Viewer
 }
 
 export interface IMenu {
@@ -125,6 +273,36 @@ export interface IWebSocketData {
 
 export interface IObject {
     [key: string]: string;
+}
+
+declare class Viewer {
+    public destroyed: boolean;
+
+    constructor(element: Element, options: {
+        title: [number, (image: HTMLImageElement, imageData: IObject) => string],
+        button: boolean,
+        initialViewIndex?: number,
+        transition: boolean,
+        hidden: () => void,
+        toolbar: {
+            zoomIn: boolean,
+            zoomOut: boolean,
+            oneToOne: boolean,
+            reset: boolean,
+            prev: boolean,
+            play: boolean,
+            next: boolean,
+            rotateLeft: boolean,
+            rotateRight: boolean,
+            flipHorizontal: boolean,
+            flipVertical: boolean,
+            close: () => void
+        }
+    })
+
+    public destroy(): void
+
+    public show(): void
 }
 
 export declare class Layout {
@@ -241,4 +419,11 @@ export declare class subMenu {
 export declare class App {
     plugins: Plugin[];
     appId: string
+}
+
+export declare class Menus {
+    menu: Menu;
+    constructor(app: App);
+    private getDir;
+    private unselect;
 }
