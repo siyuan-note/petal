@@ -36,6 +36,8 @@ export * from "./mobile/dock/MobileOutline";
 export * from "./mobile/dock/MobileBacklinks";
 export * from "./mobile/dock/MobileBookmarks";
 export * from "./mobile/dock/MobileFiles";
+export * as platformUtils from "./protyle/util/compatibility";
+
 
 type TDockPosition = "Left" | "Right" | "Bottom"
 
