@@ -158,7 +158,7 @@ export interface IEventBusMap {
         textHTML: string,
         textPlain: string,
         siyuanHTML: string,
-        files: FileList | DataTransferItemList;
+        files: FileList | DataTransferItemList | string[]; // 读取本地文件时为 string[]
     }
     "ws-main": IWebSocketData;
     "sync-start": IWebSocketData;

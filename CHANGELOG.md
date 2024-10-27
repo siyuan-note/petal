@@ -2,6 +2,7 @@
 
 ## v1.0.5 2024-11
 
+* [Added reading local files to `on-paste`](https://github.com/siyuan-note/siyuan/issues/12917)
 * [Add plugin function `getAllEditor`](https://github.com/siyuan-note/siyuan/issues/12884)
 * [Add plugin function `getModelByDockType`](https://github.com/siyuan-note/siyuan/issues/11782)
 * [Replace `any` in IProtyle with the corresponding type](https://github.com/siyuan-note/petal/issues/34)
