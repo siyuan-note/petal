@@ -141,6 +141,8 @@ export interface IEventBusMap {
     "open-noneditableblock": {
         protyle: IProtyle,
         toolbar: Toolbar,
+        blockElement: HTMLElement,
+        renderElement: HTMLElement,
     };
     "open-siyuan-url-block": {
         url: string,

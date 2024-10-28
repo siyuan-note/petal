@@ -2,6 +2,7 @@
 
 ## v1.0.5 2024-11
 
+* [Add `renderElement` and `blockElement` for `open-noneditableblock`](https://github.com/siyuan-note/siyuan/issues/12955)
 * [Add plugin util `platformUtils`](https://github.com/siyuan-note/siyuan/issues/12930)
 * [Added reading local files to `on-paste`](https://github.com/siyuan-note/siyuan/issues/12917)
 * [Add plugin function `getAllEditor`](https://github.com/siyuan-note/siyuan/issues/12884)
