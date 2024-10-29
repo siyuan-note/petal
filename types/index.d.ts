@@ -254,6 +254,7 @@ export interface IMenu {
     index?: number
     element?: HTMLElement
     ignore?: boolean
+    waring?: boolean
 }
 
 export interface IPosition {
