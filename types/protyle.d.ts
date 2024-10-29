@@ -541,6 +541,8 @@ export class Lute {
     public BlockDOM2HTML(html: string): string;
 
     public HTML2Md(html: string): string;
+
+    public HTML2BlockDOM(html: string): string;
 }
 
 export class Protyle {
