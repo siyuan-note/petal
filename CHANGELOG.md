@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.0.5 2024-11
+## v1.0.6 2024-11
+
+## v1.0.5 2024-11-05
 
 * [Add `renderElement` and `blockElement` for `open-noneditableblock`](https://github.com/siyuan-note/siyuan/issues/12955)
 * [Add plugin util `platformUtils`](https://github.com/siyuan-note/siyuan/issues/12930)
