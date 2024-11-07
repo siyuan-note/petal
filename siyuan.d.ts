@@ -20,6 +20,7 @@ import {
     App,
     Files,
     Tab, Model,
+    IMenuItem,
 } from "./types";
 
 export * from "./types";
@@ -396,6 +397,8 @@ export abstract class Plugin {
     }): void;
 
     updateCards(options: ICardData): Promise<ICardData> | ICardData;
+
+    updateProtyleToolbar(toolbar: Array<string | IMenuItem>) : Array<string | IMenuItem>;
 }
 
 export class Setting {

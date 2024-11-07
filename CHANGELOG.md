@@ -2,6 +2,8 @@
 
 ## v1.0.6 2024-11
 
+* [Add plugin method `updateProtyleToolbar`](https://github.com/siyuan-note/plugin-sample/issues/24)
+
 ## v1.0.5 2024-11-05
 
 * [Add `renderElement` and `blockElement` for `open-noneditableblock`](https://github.com/siyuan-note/siyuan/issues/12955)
