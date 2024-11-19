@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.0.6 2024-11
+## v1.0.7 2024-11
+
+## v1.0.6 2024-11-19
 
 * [Add plugin method `updateProtyleToolbar`](https://github.com/siyuan-note/plugin-sample/issues/24)
 
