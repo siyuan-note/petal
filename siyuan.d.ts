@@ -281,7 +281,7 @@ export function openTab(options: {
 
 export function getFrontend(): "desktop" | "desktop-window" | "mobile" | "browser-desktop" | "browser-mobile";
 
-export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "android" | "ios";
+export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "android" | "ios" | "harmony";
 
 export function lockScreen(app: App): void
 
@@ -398,7 +398,7 @@ export abstract class Plugin {
 
     updateCards(options: ICardData): Promise<ICardData> | ICardData;
 
-    updateProtyleToolbar(toolbar: Array<string | IMenuItem>) : Array<string | IMenuItem>;
+    updateProtyleToolbar(toolbar: Array<string | IMenuItem>): Array<string | IMenuItem>;
 }
 
 export class Setting {
