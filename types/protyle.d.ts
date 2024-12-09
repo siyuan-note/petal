@@ -602,4 +602,8 @@ export class Protyle {
      * @param {boolean} [toStart=true]
      */
     public focusBlock(element: Element, toStart?: boolean): false | Range
+
+    public disable(): void
+
+    public enable(): void
 }

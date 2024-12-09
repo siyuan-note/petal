@@ -2,6 +2,8 @@
 
 ## v1.0.7 2024-11
 
+* [Add `disable`, `enable` method to Protyle](https://github.com/siyuan-note/siyuan/issues/13391)
+
 ## v1.0.6 2024-11-19
 
 * [Add plugin method `updateProtyleToolbar`](https://github.com/siyuan-note/plugin-sample/issues/24)
