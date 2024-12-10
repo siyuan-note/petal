@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.0.7 2024-11
+## v1.0.7 2024-12-10
 
 * [Support HarmonyOS NEXT system](https://github.com/siyuan-note/siyuan/issues/13184)
 * [Add `disable`, `enable` method to Protyle](https://github.com/siyuan-note/siyuan/issues/13391)
