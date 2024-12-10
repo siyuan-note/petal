@@ -1,5 +1,7 @@
 # Changelog
 
+## v1.0.8 2025-02
+
 ## v1.0.7 2024-12-10
 
 * [Support HarmonyOS NEXT system](https://github.com/siyuan-note/siyuan/issues/13184)
