@@ -606,4 +606,6 @@ export class Protyle {
     public disable(): void
 
     public enable(): void
+
+    public renderAVAttribute(element: HTMLElement, id: string, cb?: (element: HTMLElement) => void): void
 }

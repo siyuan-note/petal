@@ -1,6 +1,9 @@
 # Changelog
 
-## v1.0.8 2025-02
+## v1.0.8 2025-01
+
+* [Add `renderAVAttribute` method to Protyle](https://github.com/siyuan-note/siyuan/pull/13547)
+* [Remove Sentry reporting diagnostic data](https://github.com/siyuan-note/siyuan/issues/13522)
 
 ## v1.0.7 2024-12-10
 
