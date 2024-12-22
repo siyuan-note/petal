@@ -2,6 +2,7 @@
 
 ## v1.0.8 2025-01
 
+* [Add plugin function `getAllModels`](https://github.com/siyuan-note/siyuan/issues/13579)
 * [Add `renderAVAttribute` method to Protyle](https://github.com/siyuan-note/siyuan/pull/13547)
 * [Remove Sentry reporting diagnostic data](https://github.com/siyuan-note/siyuan/issues/13522)
 

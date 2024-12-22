@@ -289,6 +289,20 @@ export function exitSiYuan(): void
 
 export function getAllEditor(): Protyle[]
 
+export function getAllModels(): {
+    editor: [],
+    graph: [],
+    asset: [],
+    outline: [],
+    backlink: [],
+    search: [],
+    inbox: [],
+    files: [],
+    bookmark: [],
+    tag: [],
+    custom: [],
+}
+
 export function getModelByDockType(type: TDock | string): Model | any;
 
 /**
