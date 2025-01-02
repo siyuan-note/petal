@@ -206,6 +206,7 @@ export interface ISiyuan {
         }[]
     },
     dragElement?: HTMLElement,
+    currentDragOverTabHeadersElement?: HTMLElement,
     layout?: {
         layout?: Layout,
         centerLayout?: Layout,
