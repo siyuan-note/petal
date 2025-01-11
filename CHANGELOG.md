@@ -2,6 +2,8 @@
 
 ## v1.0.9 2025-01
 
+* [Add plugin function `openSetting`](https://github.com/siyuan-note/siyuan/pull/13761)
+
 ## v1.0.8 2024-12-24
 
 * [Add plugin function `getAllModels`](https://github.com/siyuan-note/siyuan/issues/13579)
