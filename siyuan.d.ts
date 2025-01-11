@@ -409,7 +409,8 @@ export abstract class Plugin {
         defIds?: string[],
         x?: number,
         y?: number,
-        targetElement?: HTMLElement
+        targetElement?: HTMLElement,
+        originalRefBlockIDs?: IObject,
     }): void;
 
     updateCards(options: ICardData): Promise<ICardData> | ICardData;

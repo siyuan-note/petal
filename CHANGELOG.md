@@ -2,6 +2,7 @@
 
 ## v1.0.9 2025-01
 
+* [Improve list item, super block and blockquote backlink propagation](https://github.com/siyuan-note/siyuan/issues/13776)
 * [Add plugin function `openSetting`](https://github.com/siyuan-note/siyuan/pull/13761)
 
 ## v1.0.8 2024-12-24
