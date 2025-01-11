@@ -303,7 +303,7 @@ export function getAllModels(): {
     custom: [],
 }
 
-export function openSetting(app: App): void
+export function openSetting(app: App): Dialog | undefined;
 
 export function getModelByDockType(type: TDock | string): Model | any;
 
