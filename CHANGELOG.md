@@ -2,6 +2,7 @@
 
 ## v1.0.9 2025-01
 
+* [Backlink count at the doc block title including sub-blocks](https://github.com/siyuan-note/siyuan/issues/13791)
 * [Improve list item, super block and blockquote backlink propagation](https://github.com/siyuan-note/siyuan/issues/13776)
 * [Add plugin function `openSetting`](https://github.com/siyuan-note/siyuan/pull/13761)
 

@@ -148,6 +148,11 @@ export interface IOperation {
     removeDest?: boolean // removeAttrViewCol 专享
 }
 
+export interface IRefDefs {
+    refID: string,
+    defIDs?: string[]
+}
+
 export interface IPosition {
     x: number,
     y: number,

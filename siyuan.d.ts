@@ -20,7 +20,7 @@ import {
     App,
     Files,
     Tab, Model,
-    IMenuItem,
+    IMenuItem, IRefDefs,
 } from "./types";
 
 export * from "./types";
@@ -405,12 +405,12 @@ export abstract class Plugin {
     addCommand(options: ICommand): void;
 
     addFloatLayer(options: {
-        ids: string[],
-        defIds?: string[],
+        refDefs: IRefDefs[],
         x?: number,
         y?: number,
         targetElement?: HTMLElement,
         originalRefBlockIDs?: IObject,
+        isBacklink: boolean,
     }): void;
 
     updateCards(options: ICardData): Promise<ICardData> | ICardData;
