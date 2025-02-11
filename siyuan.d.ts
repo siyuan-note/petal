@@ -326,7 +326,7 @@ export abstract class Plugin {
         filter: string[],
         html: string,
         id: string,
-        callback(protyle: Protyle): void,
+        callback(protyle: Protyle, nodeElement: HTMLElement): void,
     }[];
     protyleOptions: IProtyleOptions;
 
