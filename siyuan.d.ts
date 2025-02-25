@@ -495,7 +495,11 @@ export class Menu {
 
     addItem(option: IMenu): HTMLElement;
 
-    addSeparator(index?: number, ignore?: boolean): HTMLElement;
+    addSeparator(options?: {
+        index?: number,
+        id?: string,
+        ignore?: boolean
+    }): HTMLElement;
 
     open(options: IPosition): void;
 

@@ -420,7 +420,7 @@ export declare class subMenu {
 
     constructor();
 
-    addSeparator(index?: number): void;
+    addSeparator(index?: number, id?: string): void;
 
     addItem(menu: IMenu): void;
 }
@@ -432,7 +432,9 @@ export declare class App {
 
 export declare class Menus {
     menu: Menu;
+
     constructor(app: App);
+
     private getDir;
     private unselect;
 }

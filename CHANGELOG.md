@@ -2,6 +2,7 @@
 
 ## v1.1.0 2025-03
 
+* [Add `data-id` attribute to the buttons](https://github.com/siyuan-note/siyuan/pull/14182)
 * [Upgrade to Graphviz v3.11.0](https://github.com/siyuan-note/siyuan/issues/13852)
 * [Add parameter `nodeElement` to `protyleSlash.callback`](https://github.com/siyuan-note/siyuan/issues/14036)
 
