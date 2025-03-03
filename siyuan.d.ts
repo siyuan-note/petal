@@ -276,6 +276,7 @@ export function openTab(options: {
     position?: "right" | "bottom";
     keepCursor?: boolean; // 是否跳转到新 tab 上
     removeCurrentTab?: boolean; // 在当前页签打开时需移除原有页签
+    openNewTab?: boolean // 使用新页签打开
     afterOpen?: () => void; // 打开后回调
 }): Promise<Tab>
 
