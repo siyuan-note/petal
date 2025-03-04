@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.1.0 2025-03
+## v1.1.1 2025-03
+
+## v1.1.0 2025-03-04
 
 * [Support floating window `Open in New Tab`](https://github.com/siyuan-note/siyuan/issues/11801)
 * [Add `data-id` attribute to the buttons](https://github.com/siyuan-note/siyuan/pull/14182)
