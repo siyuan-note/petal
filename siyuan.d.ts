@@ -309,7 +309,20 @@ export function openSetting(app: App): Dialog | undefined;
 export function getModelByDockType(type: TDock | string): Model | any;
 
 /**
- * @param timeout - ms. 0: manual close；-1: always show; 6000: default
+ * @param {IObject} [options.data] - 块属性值
+ * @param {HTMLElement} [options.nodeElement] - 块元素
+ * @param {"bookmark" | "name" | "alias" | "memo" | "av" | "custom"} [options.focusName="bookmark"] - av 为数据库页签，custom 为自定义页签，其余为内置输入框
+ * @param {IProtyle} [options.protyle] - 有数据库时需要传入 protyle
+ */
+export function openAttributePanel(options: {
+    data?: IObject
+    nodeElement?: HTMLElement,
+    focusName: "bookmark" | "name" | "alias" | "memo" | "av" | "custom",
+    protyle?: IProtyle,
+}): void;
+
+/**
+ * @param {number} [timeout=6000] - ms. 0: manual close；-1: always show;
  * @param {string} [type=info]
  */
 export function showMessage(text: string, timeout?: number, type?: "info" | "error", id?: string): void;
