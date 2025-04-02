@@ -322,6 +322,13 @@ export function openAttributePanel(options: {
 }): void;
 
 /**
+ * 全局命令
+ * @param {string} command - 命令名称 https://github.com/siyuan-note/siyuan/blob/master/app/src/boot/globalEvent/command/global.ts#L71
+ * @param {App} app
+ */
+export function globalCommand(command: string, app: App): void;
+
+/**
  * @param {number} [timeout=6000] - ms. 0: manual close；-1: always show;
  * @param {string} [type=info]
  */
