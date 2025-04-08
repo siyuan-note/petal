@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.1.1 2025-03
+## v1.1.2 2025-05
+
+## v1.1.1 2025-04-08
 
 * [Add plugin function `globalCommand`](https://github.com/siyuan-note/siyuan/issues/14499)
 * [Add plugin function `openAttributePanel`](https://github.com/siyuan-note/siyuan/issues/14276)
