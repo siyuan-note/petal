@@ -2,6 +2,7 @@
 
 ## v1.1.2 2025-05
 
+* [Update plugin `addDock` callback parameter scope](https://github.com/siyuan-note/siyuan/issues/14752)
 * [Add `cb-get-outline` to `TProtyleAction`](https://github.com/siyuan-note/siyuan/issues/14725)
 
 ## v1.1.1 2025-04-08

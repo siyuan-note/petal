@@ -390,6 +390,25 @@ export declare class Dock {
     genButton(data: Config.IUILayoutDockTab[], index: number, tabIndex?: number): void;
 }
 
+export declare class MobileCustom {
+    public element: Element;
+    public data: any;
+    public type: string;
+    public init: (custom: MobileCustom) => void;
+    public destroy: () => void;
+    public update: () => void;
+
+    constructor(options: {
+        element: Element,
+        type: string,
+        data: any,
+        destroy?: () => void,
+        update?: () => void,
+        init: (custom: MobileCustom) => void
+    })
+}
+
+
 export declare class Custom extends Model {
     element: Element;
     tab: Tab;

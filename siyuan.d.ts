@@ -20,7 +20,7 @@ import {
     App,
     Files,
     Tab, Model,
-    IMenuItem, IRefDefs,
+    IMenuItem, IRefDefs, MobileCustom,
 } from "./types";
 
 export * from "./types";
@@ -162,7 +162,7 @@ export interface IEventBusMap {
         textPlain: string,
         siyuanHTML: string,
         files: FileList | DataTransferItemList | string[]; // 读取本地文件时为 string[]
-    }
+    };
     "ws-main": IWebSocketData;
     "sync-start": IWebSocketData;
     "sync-end": IWebSocketData;
@@ -204,14 +204,14 @@ export interface ICommand {
 }
 
 export interface ICard {
-    deckID: string
-    cardID: string
-    blockID: string
-    nextDues: IObject
-    lapses: number  // 遗忘次数
-    lastReview: number  // 最后复习时间
-    reps: number  // 复习次数
-    state: number   // 卡片状态 0：新卡
+    deckID: string;
+    cardID: string;
+    blockID: string;
+    nextDues: IObject;
+    lapses: number;  // 遗忘次数
+    lastReview: number;  // 最后复习时间
+    reps: number;  // 复习次数
+    state: number;   // 卡片状态 0：新卡
 }
 
 export interface ICardData {
@@ -411,17 +411,18 @@ export abstract class Plugin {
     }): () => Custom;
 
     /**
+     * Add Custom to Dock.
      * Must be executed before the synchronous function.
      */
     addDock(options: {
         config: IPluginDockTab,
         data: any,
         type: string,
-        destroy?: (this: Dock) => void,
-        resize?: (this: Dock) => void,
-        update?: (this: Dock) => void,
-        init: (this: Dock, dock: Dock) => void,
-    }): { config: IPluginDockTab, model: Dock };
+        destroy?: (this: Custom | MobileCustom) => void,
+        resize?: (this: Custom | MobileCustom) => void,
+        update?: (this: Custom | MobileCustom) => void,
+        init: (this: Custom | MobileCustom, dock: Custom | MobileCustom) => void,
+    }): { config: IPluginDockTab, model: Custom | MobileCustom };
 
     addCommand(options: ICommand): void;
 
