@@ -2,6 +2,7 @@
 
 ## v1.1.2 2025-07
 
+* [Add plugin function `saveLayout`](https://github.com/siyuan-note/siyuan/issues/15308)
 * [Add config.query to `input-search` event bus](https://github.com/siyuan-note/siyuan/issues/15285)
 * [Update plugin `addDock` callback parameter scope](https://github.com/siyuan-note/siyuan/issues/14752)
 * [Add `cb-get-outline` to `TProtyleAction`](https://github.com/siyuan-note/siyuan/issues/14725)

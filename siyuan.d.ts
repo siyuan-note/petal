@@ -354,6 +354,12 @@ export function openAttributePanel(options: {
 }): void;
 
 /**
+ * 保存布局
+ * @param {function} [cb] - 保存后的回调函数
+ */
+export function saveLayout(cb: () => void): void;
+
+/**
  * 全局命令
  * @param {string} command - 命令名称 https://github.com/siyuan-note/siyuan/blob/master/app/src/boot/globalEvent/command/global.ts#L71
  * @param {App} app
