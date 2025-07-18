@@ -78,8 +78,8 @@ interface IHintData {
     id?: string;
     html: string;
     value: string;
-    filter?: string[]
-    focus?: boolean
+    filter?: string[];
+    focus?: boolean;
 }
 
 export interface IProtyleOptions {
@@ -121,6 +121,10 @@ export interface IProtyleOptions {
     classes?: {
         preview?: string;
     };
+    click?: {
+        /** 点击末尾是否阻止插入新块 */
+        preventInsetEmptyBlock?: boolean
+    }
 
     /** 编辑器异步渲染完成后的回调方法 */
     after?(protyle: Protyle): void;
