@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1.2 2025-07
+## v1.1.2 2025-07-22
 
 * [Add plugin option `IProtyleOptions.click.preventInsetEmptyBlock`](https://github.com/siyuan-note/siyuan/issues/15303)
 * [Add plugin function `saveLayout`](https://github.com/siyuan-note/siyuan/issues/15308)
