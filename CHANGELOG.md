@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.3
+
+* [Add plugin function `IProtyleOptions.handleEmptyContent`](https://github.com/siyuan-note/siyuan/issues/15398)
+
 ## v1.1.2 2025-07-22
 
 * [Add plugin option `IProtyleOptions.click.preventInsetEmptyBlock`](https://github.com/siyuan-note/siyuan/issues/15303)
