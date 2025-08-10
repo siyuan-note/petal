@@ -435,6 +435,7 @@ export abstract class Constants {
                 exitFocus: {default: "", custom: ""},
                 ai: {default: "", custom: ""},
                 switchReadonly: {default: "", custom: ""},
+                switchAdjust: {default: "", custom: ""},
             },
             insert: {
                 appearance: {default: "⌥⌘X", custom: "⌥⌘X"},
@@ -650,7 +651,8 @@ export abstract class Constants {
         "docTitle": true,
         "codeBlock": false,
         "mathBlock": false,
-        "htmlBlock": false
+        "htmlBlock": false,
+        "fileAnnotationRef": false
     };
 
     // image
