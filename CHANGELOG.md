@@ -2,6 +2,7 @@
 
 ## v1.1.3
 
+* [Update Constants](https://github.com/siyuan-note/petal/pull/39)
 * [Add plugin function `IProtyleOptions.handleEmptyContent`](https://github.com/siyuan-note/siyuan/issues/15398)
 
 ## v1.1.2 2025-07-22
