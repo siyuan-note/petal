@@ -372,6 +372,8 @@ export function globalCommand(command: string, app: App): void;
  */
 export function showMessage(text: string, timeout?: number, type?: "info" | "error", id?: string): void;
 
+export function hideMessage(id?: string): void;
+
 export abstract class Plugin {
     eventBus: EventBus;
     i18n: IObject;
