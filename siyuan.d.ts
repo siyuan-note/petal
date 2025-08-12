@@ -149,6 +149,9 @@ export interface IEventBusMap {
     "switch-protyle": {
         protyle: IProtyle,
     };
+    "switch-protyle-mode": {
+        protyle: IProtyle,
+    };
     "open-menu-av": IMenuBaseDetail & { selectRowElements: HTMLElement[] };
     "open-menu-blockref": IMenuBaseDetail;
     "open-menu-breadcrumbmore": {
