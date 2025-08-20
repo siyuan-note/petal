@@ -280,6 +280,7 @@ export function openWindow(options: {
 }): void;
 
 /**
+ * 不支持移动端
  * @param {boolean} [wndActive=true] - 当前活动窗口是否为激活状态
  */
 export function getActiveTab(wndActive?: boolean): Tab;
