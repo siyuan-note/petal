@@ -285,7 +285,10 @@ export function openWindow(options: {
  */
 export function getActiveTab(wndActive?: boolean): Tab;
 
-export function getActiveEditor(): Protyle;
+/**
+ * @param {boolean} [wndActive=true] - 当前活动窗口是否为激活状态
+ */
+export function getActiveEditor(wndActive?: boolean): Protyle;
 
 export function openMobileFileById(app: App, id: string, action?: TProtyleAction[]): void;
 
