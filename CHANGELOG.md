@@ -2,6 +2,7 @@
 
 ## v1.1.3
 
+* [Add plugin function `getActiveEditor`](https://github.com/siyuan-note/siyuan/issues/15641)
 * [Add plugin function `getActiveTab`](https://github.com/siyuan-note/siyuan/issues/15415)
 * [Add plugin event bus `switch-protyle-mode`](https://github.com/siyuan-note/siyuan/issues/15516)
 * [Add plugin function `hideMessage`](https://github.com/siyuan-note/siyuan/issues/15485)

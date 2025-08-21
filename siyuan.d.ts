@@ -285,6 +285,8 @@ export function openWindow(options: {
  */
 export function getActiveTab(wndActive?: boolean): Tab;
 
+export function getActiveEditor(): Protyle;
+
 export function openMobileFileById(app: App, id: string, action?: TProtyleAction[]): void;
 
 export function openTab(options: {
