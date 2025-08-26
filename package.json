@@ -12,7 +12,7 @@
         "README.md",
         "siyuan.d.ts"
     ],
-    "version": "1.1.2",
+    "version": "1.1.3",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/siyuan-note/petal.git"

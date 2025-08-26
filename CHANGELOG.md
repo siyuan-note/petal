@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1.3
+## v1.1.3 2025-08-26
 
 * [Add plugin function `getActiveEditor`](https://github.com/siyuan-note/siyuan/issues/15641)
 * [Add plugin function `getActiveTab`](https://github.com/siyuan-note/siyuan/issues/15415)
