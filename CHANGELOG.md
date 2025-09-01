@@ -2,7 +2,7 @@
 
 ## v1.1.4 
 
-* [Add plugin event bus `code-language-before` and `code-language-change`](https://github.com/siyuan-note/siyuan/pull/15610)
+* [Add plugin event bus `code-language-update` and `code-language-change`](https://github.com/siyuan-note/siyuan/pull/15610)
 
 ## v1.1.3 2025-08-26
 

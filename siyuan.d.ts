@@ -204,7 +204,7 @@ export interface IEventBusMap {
     "sync-fail": IWebSocketData;
     "mobile-keyboard-show": void;
     "mobile-keyboard-hide": void;
-    "code-language-before": { languages: string[] };
+    "code-language-update": { languages: string[] };
     "code-language-change": {
         language: string,
         languageElements: HTMLElement[],
