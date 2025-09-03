@@ -2,6 +2,8 @@
 
 ## v1.1.5
 
+* [Add plugin function `expandDocTree`](https://github.com/siyuan-note/siyuan/issues/15639)
+
 ## v1.1.4 2025-09-02
 
 * [Add plugin event bus `code-language-update` and `code-language-change`](https://github.com/siyuan-note/siyuan/pull/15610)

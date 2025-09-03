@@ -296,6 +296,11 @@ export function getActiveTab(wndActive?: boolean): Tab;
  */
 export function getActiveEditor(wndActive?: boolean): Protyle;
 
+export function expandDocTree(options: {
+    id: string,
+    isSetCurrent?: boolean
+});
+
 export function openMobileFileById(app: App, id: string, action?: TProtyleAction[]): void;
 
 export function openTab(options: {
