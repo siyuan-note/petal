@@ -102,6 +102,8 @@ export interface IProtyleOptions {
     render?: {
         background?: boolean
         title?: boolean
+        titleShowTop?: boolean
+        hideTitleOnZoom?: boolean
         gutter?: boolean
         scroll?: boolean
         breadcrumb?: boolean

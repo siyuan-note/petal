@@ -2,6 +2,7 @@
 
 ## v1.1.5
 
+* [Supplement missing attributes](https://github.com/siyuan-note/petal/issues/40)
 * [Add plugin function `expandDocTree`](https://github.com/siyuan-note/siyuan/issues/15639)
 
 ## v1.1.4 2025-09-02

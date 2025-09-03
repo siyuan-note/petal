@@ -211,7 +211,7 @@ export interface ISiyuan {
         }[]
     },
     dragElement?: HTMLElement,
-    currentDragOverTabHeadersElement?: HTMLElement,
+    currentDragOverTabHeadersElement?: HTMLElement
     layout?: {
         layout?: Layout,
         centerLayout?: Layout,
@@ -240,6 +240,10 @@ export interface ISiyuan {
     blockPanels: BlockPanel[],
     dialogs: Dialog[],
     viewer?: Viewer
+    /**
+     * 是否在发布服务下访问
+     */
+    isPublish?: boolean;
 }
 
 export interface IMenu {
