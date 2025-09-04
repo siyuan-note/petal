@@ -299,7 +299,7 @@ export function getActiveEditor(wndActive?: boolean): Protyle;
 export function expandDocTree(options: {
     id: string,
     isSetCurrent?: boolean
-});
+}): void;
 
 export function openMobileFileById(app: App, id: string, action?: TProtyleAction[]): void;
 
