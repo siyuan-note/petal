@@ -2,6 +2,7 @@
 
 ## v1.1.5
 
+* [Adjust imports to separate type and general](https://github.com/siyuan-note/petal/pull/41)
 * [Supplement missing attributes](https://github.com/siyuan-note/petal/issues/40)
 * [Add plugin function `expandDocTree`](https://github.com/siyuan-note/siyuan/issues/15639)
 

@@ -16,7 +16,6 @@ import type {
 import {
     Config,
     Custom,
-    Dock,
     Lute,
     Protyle,
     Toolbar,
