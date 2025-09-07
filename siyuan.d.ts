@@ -1,26 +1,31 @@
-import {
+import type {
     IGetDocInfo,
     IGetTreeStat,
     IMenuBaseDetail,
-    Config,
-    Custom,
-    Dock,
     IMenu,
     IObject,
     IPosition,
     ISiyuan,
     IWebSocketData,
     IProtyle,
+    IProtyleOptions,
+    TProtyleAction,
+    IMenuItem,
+    IRefDefs,
+} from "./types";
+import {
+    Config,
+    Custom,
+    Dock,
     Lute,
     Protyle,
     Toolbar,
-    IProtyleOptions,
-    TProtyleAction,
     subMenu,
     App,
     Files,
-    Tab, Model,
-    IMenuItem, IRefDefs, MobileCustom,
+    Tab,
+    Model,
+    MobileCustom,
 } from "./types";
 
 export * from "./types";
