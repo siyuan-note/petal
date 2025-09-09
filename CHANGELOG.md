@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1.5
+## v1.1.5 2025-09-09
 
 * [Adjust imports to separate type and general](https://github.com/siyuan-note/petal/pull/41)
 * [Supplement missing attributes](https://github.com/siyuan-note/petal/issues/40)
