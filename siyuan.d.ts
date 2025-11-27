@@ -428,6 +428,8 @@ export abstract class Plugin {
 
     onload(): void;
 
+    onDataChanged(): void
+
     onunload(): void;
 
     uninstall(): void;
