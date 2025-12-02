@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1.6 2025-11
+## v1.1.6 2025-12-02
 
 * [Synchronize config, constants, and protyle](https://github.com/siyuan-note/petal/issues/42)
 * [Improve code block language selection](https://github.com/siyuan-note/siyuan/pull/15966)
