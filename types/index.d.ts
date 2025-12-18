@@ -40,7 +40,24 @@ export * as platformUtils from "./protyle/util/compatibility";
 
 
 type TDockPosition = "Left" | "Right" | "Bottom"
-
+type TAVView = "table" | "gallery" | "kanban"
+type TAVFilterOperator =
+    "="
+    | "!="
+    | ">"
+    | ">="
+    | "<"
+    | "<="
+    | "Contains"
+    | "Does not contains"
+    | "Is empty"
+    | "Is not empty"
+    | "Starts with"
+    | "Ends with"
+    | "Is between"
+    | "Is relative to today"
+    | "Is true"
+    | "Is false"
 export type TAVCol =
     "text"
     | "date"
@@ -61,11 +78,11 @@ export type TAVCol =
     | "lineNumber"
 
 interface ILayoutOptions {
-    direction?: Config.TUILayoutDirection
-    size?: string
-    resize?: Config.TUILayoutDirection
-    type?: Config.TUILayoutType
-    element?: HTMLElement
+    direction?: Config.TUILayoutDirection;
+    size?: string;
+    resize?: Config.TUILayoutDirection;
+    type?: Config.TUILayoutType;
+    element?: HTMLElement;
 }
 
 interface IOperationSrcs {
@@ -75,15 +92,15 @@ interface IOperationSrcs {
 }
 
 interface INotebook {
-    name: string
-    id: string
-    closed: boolean
-    icon: string
-    sort: number
+    name: string;
+    id: string;
+    closed: boolean;
+    icon: string;
+    sort: number;
     dueFlashcardCount?: string;
     newFlashcardCount?: string;
     flashcardCount?: string;
-    sortMode: number
+    sortMode: number;
 }
 
 interface IEmojiItem {
@@ -120,6 +137,230 @@ interface IBackStack {
     // 仅桌面端
     protyle?: IProtyle,
     zoomId?: string
+}
+
+export interface IAV {
+    id: string;
+    name: string;
+    view: IAVTable | IAVGallery;
+    viewID: string;
+    viewType: TAVView;
+    views: IAVView[];
+    isMirror?: boolean;
+}
+
+interface IAVView {
+    name: string;
+    desc: string;
+    id: string;
+    type: TAVView;
+    icon: string;
+    hideAttrViewName: boolean;
+    pageSize: number;
+    showIcon: boolean;
+    wrapField: boolean;
+    groupHidden?: number,  // 0：显示，1：空白隐藏，2：手动隐藏
+    groupFolded?: boolean,
+    filters: IAVFilter[],
+    sorts: IAVSort[],
+    groups: IAVView[]
+    group: IAVGroup
+    groupKey: IAVColumn
+    groupValue: IAVCellValue
+}
+
+interface IAVTable extends IAVView {
+    columns: IAVColumn[],
+    rows: IAVRow[],
+    rowCount: number,
+}
+
+interface IAVGallery extends IAVView {
+    coverFrom: number;    // 0：无，1：内容图，2：资源字段，3：内容块
+    coverFromAssetKeyID?: string;
+    cardSize: number;   // 0：小卡片，1：中卡片，2：大卡片
+    cardAspectRatio: number;
+    displayFieldName: boolean;
+    fitImage: boolean;
+    cards: IAVGalleryItem[],
+    desc: string
+    fields: IAVColumn[]
+    cardCount: number,
+}
+
+interface IAVFilter {
+    column: string,
+    operator: TAVFilterOperator,
+    quantifier?: string,
+    value: IAVCellValue,
+    relativeDate?: IAVRelativeDate
+    relativeDate2?: IAVRelativeDate
+}
+
+interface IAVRelativeDate {
+    count: number;   // 数量
+    unit: number;    // 单位：0: 天、1: 周、2: 月、3: 年
+    direction: number;   // 方向：-1: 前、0: 现在、1: 后
+}
+
+interface IAVGroup {
+    field: string,
+    method?: number //  0: 按值分组、1: 按数字范围分组、2: 按相对日期分组、3: 按天日期分组、4: 按周日期分组、5: 按月日期分组、6: 按年日期分组
+    range?: {
+        numStart: number // 数字范围起始值 0
+        numEnd: number   // 数字范围结束值 1000
+        numStep: number  // 数字范围步长 100
+    }
+    hideEmpty?: boolean
+    order?: number  // 升序: 0(默认), 降序: 1, 手动排序: 2, 按选项排序: 3
+}
+
+interface IAVSort {
+    column: string,
+    order: "ASC" | "DESC"
+}
+
+interface IAVColumn {
+    width: string,
+    icon: string,
+    id: string,
+    name: string,
+    desc: string,
+    wrap: boolean,
+    pin: boolean,
+    hidden: boolean,
+    type: TAVCol,
+    numberFormat: string,
+    template: string,
+    calc: IAVCalc,
+    updated?: {
+        includeTime: boolean
+    }
+    created?: {
+        includeTime: boolean
+    }
+    date?: {
+        autoFillNow: boolean,
+        fillSpecificTime: boolean,
+    }
+    // 选项列表
+    options?: {
+        name: string,
+        color: string,
+        desc?: string,
+    }[],
+    relation?: IAVColumnRelation,
+    rollup?: IAVCellRollupValue
+}
+
+interface IAVRow {
+    id: string,
+    cells: IAVCell[]
+}
+
+interface IAVGalleryItem {
+    coverURL?: string;
+    coverContent?: string;
+    id: string;
+    values: IAVCell[];
+}
+
+interface IAVCell {
+    id: string,
+    color: string,
+    bgColor: string,
+    value: IAVCellValue,
+    valueType: TAVCol,
+}
+
+interface IAVCellValue {
+    keyID?: string,
+    id?: string,
+    blockID?: string // 为 row id
+    type: TAVCol,
+    isDetached?: boolean,
+    text?: {
+        content: string
+    },
+    number?: {
+        content?: number,
+        isNotEmpty: boolean,
+        format?: string,
+        formattedContent?: string
+    },
+    mSelect?: IAVCellSelectValue[]
+    mAsset?: IAVCellAssetValue[]
+    block?: {
+        content: string,
+        id?: string,
+        icon?: string
+    }
+    url?: {
+        content: string
+    }
+    phone?: {
+        content: string
+    }
+    email?: {
+        content: string
+    }
+    template?: {
+        content: string
+    },
+    checkbox?: {
+        checked: boolean,
+        content?: string, // gallery 中显示 https://github.com/siyuan-note/siyuan/issues/15389
+    }
+    relation?: IAVCellRelationValue
+    rollup?: {
+        contents?: IAVCellValue[]
+    }
+    date?: IAVCellDateValue
+    created?: IAVCellDateValue
+    updated?: IAVCellDateValue
+}
+
+interface IAVCellRelationValue {
+    blockIDs: string[];
+    contents?: IAVCellValue[];
+}
+
+interface IAVCellDateValue {
+    content?: number,
+    isNotEmpty?: boolean
+    content2?: number,
+    isNotEmpty2?: boolean
+    hasEndDate?: boolean
+    formattedContent?: string,
+    isNotTime?: boolean // 默认 true
+}
+
+interface IAVCellSelectValue {
+    content: string,
+    color: string
+}
+
+interface IAVCellAssetValue {
+    content: string,
+    name: string,
+    type: "file" | "image"
+}
+
+interface IAVColumnRelation {
+    avID?: string;
+    backKeyID?: string;
+    isTwoWay?: boolean;
+}
+
+interface IAVCellRollupValue {
+    relationKeyID?: string;  // 关联列 ID
+    keyID?: string;
+    calc?: IAVCalc;
+}
+
+interface IAVCalc {
+    operator?: string,
+    result?: IAVCellValue
 }
 
 export interface IOperation {
@@ -450,7 +691,7 @@ export declare class subMenu {
 
 export declare class App {
     plugins: Plugin[];
-    appId: string
+    appId: string;
 }
 
 export declare class Menus {

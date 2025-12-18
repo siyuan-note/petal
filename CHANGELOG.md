@@ -2,6 +2,7 @@
 
 ## v1.1.6 2025-12-02
 
+* [Add method for code blocks, formula blocks, etc](https://github.com/siyuan-note/siyuan/issues/16586)
 * [Synchronize config, constants, and protyle](https://github.com/siyuan-note/petal/issues/42)
 * [Improve code block language selection](https://github.com/siyuan-note/siyuan/pull/15966)
 * [Add onDataChanged method to handle data changes in the plugin](https://github.com/siyuan-note/siyuan/pull/16244)

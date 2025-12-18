@@ -1,7 +1,13 @@
 import {
-    App, Config, Editor,
+    App,
+    Config,
+    Editor,
+    IAV,
     IObject,
-    IOperation, IPosition, IWebSocketData, Menu,
+    IOperation,
+    IPosition,
+    IWebSocketData,
+    Menu,
 } from "./../siyuan";
 import {Model} from "./layout/Model";
 
@@ -288,6 +294,75 @@ export class Protyle {
     public enable(): void
 
     public renderAVAttribute(element: HTMLElement, id: string, cb?: (element: HTMLElement) => void): void
+}
+
+export class ProtyleMethod {
+    /**
+     * @description 使用 graphviz 进行渲染
+     * @param {string} [cdn=Constants.PROTYLE_CDN]
+     */
+    public static graphvizRender(element: Element, cdn: string): void
+
+    /**
+     * @description 为 element 中的代码块进行高亮渲染
+     * @param {string} [cdn=Constants.PROTYLE_CDN]
+     * @param {number} [zoom=1]
+     */
+    public static highlightRender(element: Element, cdn: string, zoom: number): void
+
+    /**
+     * @description 对数学公式进行渲染
+     * @param {string} [cdn=Constants.PROTYLE_CDN]
+     * @param {boolean} [maxWidth=false]
+     */
+    public static mathRender(element: Element, cdn: string, maxWidth: boolean): void;
+
+    /**
+     * @description mermaid.js 渲染，支持流程图/时序图/甘特图渲染等
+     * @param {string} [cdn=Constants.PROTYLE_CDN]
+     */
+    public static mermaidRender(element: Element, cdn: string): void;
+
+    /**
+     * @description flowchart.js 渲染
+     * @param {string} [cdn=Constants.PROTYLE_CDN]
+     */
+    public static flowchartRender(element: Element, cdn: string): void;
+
+    /**
+     * @description 图表渲染
+     * @param {string} [cdn=Constants.PROTYLE_CDN]
+     */
+    public static chartRender(element: Element, cdn: string): void;
+
+    /**
+     * @description 五线谱渲染
+     * @param {string} [cdn=Constants.PROTYLE_CDN]
+     */
+    public static abcRender(element: Element, cdn: string): void;
+
+    /**
+     * @description 脑图渲染
+     * @param {string} [cdn=Constants.PROTYLE_CDN]
+     */
+    public static mindmapRender(element: Element, cdn: string): void;
+
+    /**
+     * @description UML 渲染
+     * @param {string} [cdn=Constants.PROTYLE_CDN]
+     */
+    public static plantumlRender(element: Element, cdn: string): void;
+
+    /**
+     * @description 数据库渲染
+     * @param {boolean} [renderAll=true]
+     */
+    public static avRender(element: Element, protyle: IProtyle, cb?: (data: IAV) => void, renderAll?: boolean, avData?: IAV): Promise<void>;
+
+    /**
+     * @description html 渲染
+     */
+    public static htmlRender(element: Element): void;
 }
 
 interface ILuteNode {
