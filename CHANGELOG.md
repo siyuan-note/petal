@@ -2,6 +2,8 @@
 
 ## v1.1.8 2026
 
+* [Make hotkey optional for plugin commands and toolbar](https://github.com/siyuan-note/siyuan/pull/16676)
+
 ## v1.1.7 2025-12-23
 
 * [Provide plugins rendering interfaces for code blocks, formula blocks, etc](https://github.com/siyuan-note/siyuan/issues/16586)
