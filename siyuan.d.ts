@@ -239,9 +239,9 @@ export interface ICommand {
      * "Delete": "⌦",
      * "Enter": "↩",
      */
-    hotkey: string,
+    hotkey?: string,
     customHotkey?: string,
-    callback?: () => void   // 其余回调存在时将不会触
+    callback?: () => void   // 其余回调存在时将不会触发
     globalCallback?: () => void // 焦点不在应用内时执行的回调
     fileTreeCallback?: (file: Files) => void // 焦点在文档树上时执行的回调
     editorCallback?: (protyle: IProtyle) => void     // 焦点在编辑器上时执行的回调
