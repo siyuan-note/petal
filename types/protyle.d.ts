@@ -802,7 +802,7 @@ interface IHint {
 }
 
 /** @link https://ld246.com/article/1549638745630#options */
-export interface IProtyleOptions {
+interface IProtyleOptions {
     history?: {
         created?: string
         snapshot?: string
@@ -834,9 +834,6 @@ export interface IProtyleOptions {
     _lutePath?: string;
     /** 是否启用打字机模式。默认值: false */
     typewriterMode?: boolean;
-    /** 多语言。默认值: 'zh_CN' */
-    lang?: string;
-    /** @link https://ld246.com/article/1549638745630#options-toolbar */
     toolbar?: Array<string | IMenuItem>;
     /** @link https://ld246.com/article/1549638745630#options-preview */
     preview?: IPreview;

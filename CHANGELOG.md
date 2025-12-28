@@ -3,6 +3,7 @@
 ## v1.1.8 2026
 
 * [Make hotkey optional for plugin commands and toolbar](https://github.com/siyuan-note/siyuan/pull/16676)
+* [Improve IProtyleOptions](https://github.com/siyuan-note/plugin-sample/issues/38)
 
 ## v1.1.7 2025-12-23
 
