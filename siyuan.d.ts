@@ -459,11 +459,11 @@ export abstract class Plugin {
 
     openSetting(): void;
 
-    loadData(storageName: string): Promise<any>;
+    loadData(storageName: string): Promise<any | IWebSocketData>;
 
-    saveData(storageName: string, content: any): Promise<void>;
+    saveData(storageName: string, content: any): Promise<IWebSocketData>;
 
-    removeData(storageName: string): Promise<any>;
+    removeData(storageName: string): Promise<IWebSocketData>;
 
     addIcons(svg: string): void;
 
