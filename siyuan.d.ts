@@ -459,7 +459,7 @@ export abstract class Plugin {
 
     openSetting(): void;
 
-    loadData(storageName: string): Promise<any | IWebSocketData>;
+    loadData(storageName: string): Promise<any>;
 
     saveData(storageName: string, content: any): Promise<IWebSocketData>;
 
