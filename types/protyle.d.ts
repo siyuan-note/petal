@@ -399,6 +399,7 @@ export type TProtyleAction = "cb-get-append" | // 向下滚动加载
     "cb-get-backlink" | // 悬浮窗为传递型需展示上下文
     "cb-get-unundo" | // 不需要记录历史
     "cb-get-scroll" | // 滚动到指定位置，用于直接打开文档，必有 rootID
+    "cb-get-search" | // 使用搜索打开搜索
     "cb-get-context" | // 包含上下文
     "cb-get-rootscroll" | // 如果为 rootID 就滚动到指定位置，必有 rootID
     "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位

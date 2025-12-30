@@ -5,6 +5,7 @@
 * [Make hotkey optional for plugin commands and toolbar](https://github.com/siyuan-note/siyuan/pull/16676)
 * [Improve IProtyleOptions](https://github.com/siyuan-note/plugin-sample/issues/38)
 * [Improve error handling and security for plugin data storage methods](https://github.com/siyuan-note/siyuan/pull/16717)
+* [Update type definitions for TOperation, Constants and TProtyleAction](https://github.com/siyuan-note/petal/pull/46)
 
 ## v1.1.7 2025-12-23
 
