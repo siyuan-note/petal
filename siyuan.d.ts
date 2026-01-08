@@ -200,7 +200,11 @@ export interface IEventBusMap {
         textHTML: string,
         textPlain: string,
         siyuanHTML: string,
-        files: FileList | DataTransferItemList | string[]; // 读取本地文件时为 string[]
+        localFiles: {
+            path: string,
+            size: number
+        }[]
+        files: FileList | DataTransferItemList
     };
     "ws-main": IWebSocketData;
     "sync-start": IWebSocketData;
