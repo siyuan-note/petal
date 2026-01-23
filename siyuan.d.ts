@@ -283,7 +283,13 @@ export function adaptHotkey(hotkey: string): string
 
 export function confirm(title: string, text: string, confirmCallback?: (dialog: Dialog) => void, cancelCallback?: (dialog: Dialog) => void): void;
 
-export function fetchPost(url: string, data?: any, callback?: (response: IWebSocketData) => void, headers?: IObject): void;
+export function fetchPost(
+    url: string,
+    data?: any,
+    cb?: (response: IWebSocketData) => void,
+    headers?: IObject,
+    failCallback?: (response: IWebSocketData) => void
+): void;
 
 export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
 

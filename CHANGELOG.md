@@ -7,6 +7,7 @@
 * [Improve error handling and security for plugin data storage methods](https://github.com/siyuan-note/siyuan/pull/16717)
 * [Update type definitions for TOperation, Constants and TProtyleAction](https://github.com/siyuan-note/petal/pull/46)
 * [Display a confirmation prompt when inserting large assets 256MB](https://github.com/siyuan-note/siyuan/issues/16685)
+* [Update fetchPost parameters](https://github.com/siyuan-note/petal/issues/47)
 
 ## v1.1.7 2025-12-23
 
