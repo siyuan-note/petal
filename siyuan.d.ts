@@ -370,6 +370,8 @@ export function exitSiYuan(): void
 
 export function getAllEditor(): Protyle[]
 
+export function getAllTabs(): Tab[]
+
 export function getAllModels(): {
     editor: [],
     graph: [],

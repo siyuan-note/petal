@@ -2,6 +2,7 @@
 
 ## v1.1.8 2026
 
+* [Add plugin function `getAllTabs`](https://github.com/siyuan-note/siyuan/issues/17140)
 * [Make hotkey optional for plugin commands and toolbar](https://github.com/siyuan-note/siyuan/pull/16676)
 * [Improve IProtyleOptions](https://github.com/siyuan-note/plugin-sample/issues/38)
 * [Improve error handling and security for plugin data storage methods](https://github.com/siyuan-note/siyuan/pull/16717)
