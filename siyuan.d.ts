@@ -388,6 +388,14 @@ export function getAllModels(): {
 
 export function openSetting(app: App): Dialog | undefined;
 
+export function openEmoji(options: {
+    position: IPosition,
+    selectedCB?: (emoji: string) => void,
+    dynamicIconURL?: string
+    hideDynamicIcon?: boolean
+    hideCustomIcon?: boolean
+}): void ;
+
 export function getModelByDockType(type: TDock | string): Model | any;
 
 /**
