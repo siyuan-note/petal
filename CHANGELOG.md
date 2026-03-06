@@ -2,6 +2,7 @@
 
 ## v1.1.8 2026
 
+* [Update plugin util  `platformUtils`](https://github.com/siyuan-note/siyuan/issues/17150)
 * [Add plugin function `openEmoji`](https://github.com/siyuan-note/siyuan/issues/17117)
 * [Add plugin function `getAllTabs`](https://github.com/siyuan-note/siyuan/issues/17140)
 * [Make hotkey optional for plugin commands and toolbar](https://github.com/siyuan-note/siyuan/pull/16676)
