@@ -14,5 +14,5 @@ export declare const isInIOS: () => any;
 export declare const updateHotkeyTip: (hotkey: string) => string;
 export declare const getLocalStorage: (cb: () => void) => void;
 export declare const setStorageVal: (key: string, val: any, cb?: () => void) => void;
-export declare const sendMobileAppNotification: (channel: string, title: string, body: string, delayInSeconds: number) => Promise<number>;
-export declare const cancelMobileAppNotification: (id: number) => void;
+export declare const sendNotification: (channel: string, title: string, body: string, delayInSeconds: number) => Promise<number>;
+export declare const cancelNotification: (id: number) => void;
