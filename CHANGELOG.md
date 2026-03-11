@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.1.8 2026
+## v1.1.9 2026
+
+## v1.1.8 2026-03-11
 
 * [Update plugin util  `platformUtils`](https://github.com/siyuan-note/siyuan/issues/17150)
 * [Add plugin function `openEmoji`](https://github.com/siyuan-note/siyuan/issues/17117)
