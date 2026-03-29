@@ -303,6 +303,7 @@ export function openWindow(options: {
     height?: number,
     width?: number,
     tab?: Tab,
+    alwaysOnTop?: boolean,
     doc?: {
         id: string; // 块 id
     },

@@ -2,6 +2,8 @@
 
 ## v1.1.9 2026
 
+* [Add `alwaysOnTop` parameter to `openWindow` plugin](https://github.com/siyuan-note/siyuan/issues/16080)
+
 ## v1.1.8 2026-03-11
 
 * [Update plugin util  `platformUtils`](https://github.com/siyuan-note/siyuan/issues/17150)
