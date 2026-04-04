@@ -36,6 +36,8 @@ declare global {
 
 export type TDock = "file" | "outline" | "inbox" | "bookmark" | "tag" | "graph" | "globalGraph" | "backlink"
 
+export type TTab = "Outline" | "Graph" | "Backlink" | "Asset" | "Editor" | "Search" | "siyuan-card"
+
 export type TCardType = "doc" | "notebook" | "all"
 
 export type TEventBus = keyof IEventBusMap
@@ -371,7 +373,7 @@ export function exitSiYuan(): void
 
 export function getAllEditor(): Protyle[]
 
-export function getAllTabs(): Tab[]
+export function getAllTabs(type?: TTab | string): Tab[]
 
 export function getAllModels(): {
     editor: [],
