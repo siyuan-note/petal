@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.2.0 2026
+## v1.2.1
+
+## v1.2.0 2026-04-14
 
 * [Add `type` parameter to `getAllTabs` plugin](https://github.com/siyuan-note/siyuan/issues/17354)
 
