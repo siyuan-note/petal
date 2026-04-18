@@ -2,6 +2,8 @@
 
 ## v1.2.1
 
+* [Add doc.mode to openTab for opening in document mode](https://github.com/siyuan-note/siyuan/issues/17523)
+
 ## v1.2.0 2026-04-14
 
 * [Add `type` parameter to `getAllTabs` plugin](https://github.com/siyuan-note/siyuan/issues/17354)

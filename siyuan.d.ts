@@ -12,6 +12,7 @@ import type {
     TProtyleAction,
     IMenuItem,
     IRefDefs,
+    TEditorMode,
 } from "./types";
 import {
     Config,
@@ -335,6 +336,7 @@ export function openTab(options: {
         id: string, // 块 id
         action?: TProtyleAction[],
         zoomIn?: boolean, // 是否缩放
+        mode?: TEditorMode  // 文档打开模式，默认 "wysiwyg"
     };
     pdf?: {
         path: string,
