@@ -294,6 +294,8 @@ export class Protyle {
     public enable(): void
 
     public renderAVAttribute(element: HTMLElement, id: string, cb?: (element: HTMLElement) => void): void
+
+    public switchMode(mode: TEditorMode): void
 }
 
 export class ProtyleMethod {

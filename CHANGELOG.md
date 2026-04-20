@@ -2,6 +2,7 @@
 
 ## v1.2.1
 
+* [Add `switchMode` method to Protyle instance](https://github.com/siyuan-note/siyuan/issues/17552)
 * [Add doc.mode to openTab for opening in document mode](https://github.com/siyuan-note/siyuan/issues/17523)
 
 ## v1.2.0 2026-04-14

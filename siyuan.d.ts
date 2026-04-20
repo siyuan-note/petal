@@ -330,13 +330,16 @@ export function expandDocTree(options: {
 
 export function openMobileFileById(app: App, id: string, action?: TProtyleAction[]): void;
 
+/**
+ * @param {string} [options.doc.mode="wysiwyg"] - 只在首次打开时生效，切换可调用 switchMode 方法
+ */
 export function openTab(options: {
     app: App,
     doc?: {
         id: string, // 块 id
         action?: TProtyleAction[],
         zoomIn?: boolean, // 是否缩放
-        mode?: TEditorMode  // 文档打开模式，默认 "wysiwyg"
+        mode?: TEditorMode
     };
     pdf?: {
         path: string,
