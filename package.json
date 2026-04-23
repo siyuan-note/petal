@@ -36,5 +36,10 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/siyuan-note/petal.git"
+    },
+    "dependencies": {
+        "@dop251/types-goja_nodejs-buffer": "latest",
+        "@dop251/types-goja_nodejs-global": "latest",
+        "@dop251/types-goja_nodejs-url": "latest"
     }
 }

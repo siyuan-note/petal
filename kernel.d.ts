@@ -1,3 +1,7 @@
+/// <reference types="@dop251/types-goja_nodejs-buffer" />
+/// <reference types="@dop251/types-goja_nodejs-global" />
+/// <reference types="@dop251/types-goja_nodejs-url" />
+
 export { };
 
 declare global {
