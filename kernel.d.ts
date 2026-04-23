@@ -13,7 +13,8 @@ declare global {
 /** WebSocket ready-state constants (mirrors browser WebSocket). */
 type TWebSocketReadyState = 0 | 1 | 2 | 3;
 
-type TPath = `/${string}`;
+type TRequestPath = `/${string}`;
+type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
 /** A single directory-entry returned by siyuan.storage.list(). */
 interface IStorageEntry {
@@ -59,7 +60,7 @@ interface IRequestInit {
 
 /** Event object passed to siyuan.event.handler. */
 interface IEventMessage {
-    id: string;
+    id: UUID;
     type: string;
     detail: any;
 }
@@ -219,11 +220,11 @@ interface ISiyuan {
      * @param path - Absolute path starting with `/`.
      * @param init - Optional request options.
      */
-    fetch(path: TPath, init?: IRequestInit): Promise<IFetchResponse>;
+    fetch(path: TRequestPath, init?: IRequestInit): Promise<IFetchResponse>;
     /**
      * Open a WebSocket connection via the kernel.
      * @param path      - Absolute path starting with `/`.
      * @param protocols - Optional sub-protocol(s).
      */
-    socket(path: TPath, protocols?: string | string[]): Promise<IWebSocket>;
+    socket(path: TRequestPath, protocols?: string | string[]): Promise<IWebSocket>;
 }
