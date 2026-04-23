@@ -133,6 +133,7 @@ interface IPlugin {
 interface IPluginLifecycle {
     onload: (() => void | Promise<void>) | null;
     onloaded: (() => void | Promise<void>) | null;
+    onrunning: (() => void | Promise<void>) | null;
     onunload: (() => void | Promise<void>) | null;
 }
 
