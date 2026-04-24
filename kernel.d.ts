@@ -101,12 +101,12 @@ interface IWebSocketMessageEvent {
 /** Browser-compatible WebSocket handle returned by siyuan.socket(). */
 interface IWebSocket {
     readyState: TWebSocketReadyState;
-    onopen: ((event: IWebSocketOpenEvent) => void) | null;
-    onclose: ((event: IWebSocketCloseEvent) => void) | null;
-    onerror: ((event: IWebSocketErrorEvent) => void) | null;
-    onping: ((event: IWebSocketPingEvent) => void) | null;
-    onpong: ((event: IWebSocketPongEvent) => void) | null;
-    onmessage: ((event: IWebSocketMessageEvent) => void) | null;
+    onopen: ((event: IWebSocketOpenEvent) => void | Promise<void>) | null;
+    onclose: ((event: IWebSocketCloseEvent) => void | Promise<void>) | null;
+    onerror: ((event: IWebSocketErrorEvent) => void | Promise<void>) | null;
+    onping: ((event: IWebSocketPingEvent) => void | Promise<void>) | null;
+    onpong: ((event: IWebSocketPongEvent) => void | Promise<void>) | null;
+    onmessage: ((event: IWebSocketMessageEvent) => void | Promise<void>) | null;
     send(data: string | ArrayBuffer): Promise<void>;
     ping(data?: string): Promise<void>;
     pong(data?: string): Promise<void>;
@@ -146,10 +146,9 @@ interface IPluginLifecycle {
 interface IEvent {
     /**
      * Assign a handler to receive all inbound kernel events.
-     * Return `true` (strictly) to signal that the plugin will await a
-     * follow-up event on a specific topic before the kernel proceeds.
+     * If the handler returns a Promise, the kernel awaits its resolution before proceeding.
      */
-    handler: ((event: IEventMessage) => boolean | Promise<boolean>) | null;
+    handler: ((event: IEventMessage) => void | Promise<void>) | null;
     /**
      * Publish an event to the in-process event bus.
      * @param topic - Event topic string.
@@ -187,13 +186,13 @@ interface IRpc {
      * @param fn           - Handler function (may return a Promise).
      * @param descriptions - Optional human-readable descriptions.
      */
-    subscribe(
+    bind(
         name: string,
         fn: (...args: any[]) => any | Promise<any>,
         ...descriptions: string[]
     ): Promise<void>;
     /** Unregister a previously registered RPC method. */
-    unsubscribe(name: string): Promise<void>;
+    unbind(name: string): Promise<void>;
     /**
      * Broadcast a JSON-RPC notification to all connected clients.
      * @param method - Notification method name.
