@@ -201,6 +201,214 @@ interface IRpc {
     broadcast(method: string, params?: any): Promise<void>;
 }
 
+// ── Server request types ─────────────────────────────────────────────────────
+
+/** Serialization format for structured response bodies. */
+type TSerializedType =
+    | 'JSON' | 'JSONP' | 'AsciiJSON' | 'IndentedJSON' | 'PureJSON' | 'SecureJSON'
+    | 'XML' | 'YAML' | 'TOML' | 'ProtoBuf';
+
+/** Basic-auth credentials extracted from the request URL. */
+interface IRequestUser {
+    username: string;
+    password: string;
+}
+
+/** Parsed URL components of an incoming server request. */
+interface IRequestUrl {
+    /** Basic-auth credentials, or null if absent. */
+    user: IRequestUser | null;
+    /** Host header value, e.g. `"127.0.0.1:6806"`. */
+    host: string;
+    /** URL-decoded path, e.g. `"/plugin/private/sample/api/hello/a space"`. */
+    path: string;
+    /** URL-encoded path, e.g. `"/plugin/private/sample/api/hello/a%20space"`. */
+    pathname: string;
+    /** URL-decoded fragment. */
+    fragment: string;
+    /** URL-encoded fragment. */
+    hash: string;
+    /** Raw query string, e.g. `"a=1&b=2"`. */
+    search: string;
+    /** Parsed query parameters, e.g. `{ a: ["1"], b: ["2"] }`. */
+    query: Record<string, string[]>;
+}
+
+/** Uploaded file in a multipart/form-data request. */
+interface IRequestFile {
+    filename: string;
+    headers: Record<string, string[]>;
+    size: number;
+    /** File contents; null if unavailable. */
+    data: IDataObject | null;
+}
+
+/** Parsed form data (application/x-www-form-urlencoded or multipart/form-data). */
+interface IRequestForm {
+    values: Record<string, string[]>;
+    files: Record<string, IRequestFile[]>;
+}
+
+/** Body of an incoming server request. */
+interface IRequestBody {
+    /** Parsed form data, or null for non-form requests. */
+    form: IRequestForm | null;
+    /**
+     * Raw request body.
+     * Null when `form` is non-null or the request has no body.
+     */
+    data: IDataObject | null;
+}
+
+/** HTTP request-line and header fields. */
+interface IRequestContent {
+    /** HTTP method, e.g. `"GET"`. */
+    method: string;
+    /** Full request URI including query string, e.g. `"/plugin/private/sample/api/hello?a=1"`. */
+    uri: string;
+    /** Protocol string, e.g. `"HTTP/1.1"`. */
+    proto: string;
+    protoMajor: number;
+    protoMinor: number;
+    /** Request headers (Cookie and Authorization are stripped). */
+    headers: Record<string, string[]>;
+    cookies: Record<string, string[]>;
+    contentType: string;
+    contentLength: number;
+    referer: string;
+    userAgent: string;
+    body: IRequestBody;
+}
+
+/** Gin routing context for an incoming server request. */
+interface IRequestContext {
+    /** Matched sub-path after the plugin name, e.g. `"/api/hello"`. */
+    path: string;
+    /** Full gin route template, e.g. `"/plugin/private/:name/*path"`. */
+    fullPath: string;
+    clientIp: string;
+    remoteIp: string;
+    remoteAddr: string;
+    /** Named route parameters, e.g. `{ name: ["plugin-sample"], path: ["/api/hello"] }`. */
+    params: Record<string, string[]>;
+}
+
+/** Complete request object passed to server handlers. */
+interface IServerRequest {
+    url: IRequestUrl;
+    request: IRequestContent;
+    context: IRequestContext;
+}
+
+// ── Server response types ─────────────────────────────────────────────────────
+
+/** Structured-data response body; serialized by the kernel using the specified format. */
+interface IResponseSerializedData {
+    type: TSerializedType;
+    data: any;
+}
+
+/**
+ * File response body.
+ * If `name` is set the file is sent as an attachment (`Content-Disposition: attachment`);
+ * otherwise it is served inline.
+ */
+interface IResponseFile {
+    /** Attachment filename; omit to serve the file inline. */
+    name?: string;
+    /** Absolute filesystem path to the file. */
+    path: string;
+}
+
+/** Formatted string response body (Go `fmt.Sprintf`-style template). */
+interface IResponseString {
+    format: string;
+    values?: any[];
+}
+
+/** Raw bytes response body. */
+interface IResponseRawData {
+    contentType: string;
+    data: string | ArrayBuffer;
+}
+
+/** Redirect response body. */
+interface IResponseRedirect {
+    location: string;
+}
+
+/**
+ * Response body — exactly one field should be set.
+ * The kernel dispatches to the appropriate gin writer based on which field is non-null.
+ */
+interface IResponseBody {
+    /** Serialize `data` as JSON / XML / YAML / etc. */
+    data?: IResponseSerializedData | null;
+    /** Send a file from the local filesystem. */
+    file?: IResponseFile | null;
+    /** Send a formatted string. */
+    string?: IResponseString | null;
+    /** Send raw bytes with an explicit Content-Type. */
+    raw?: IResponseRawData | null;
+    /** Issue an HTTP redirect. */
+    redirect?: IResponseRedirect | null;
+}
+
+/** HTTP cookie descriptor returned in a response (mirrors Go `net/http.Cookie`). */
+interface IResponseCookie {
+    Name: string;
+    Value: string;
+    Quoted?: boolean;
+    Path?: string;
+    Domain?: string;
+    /** ISO 8601 date string. */
+    Expires?: string;
+    RawExpires?: string;
+    MaxAge?: number;
+    Secure?: boolean;
+    HttpOnly?: boolean;
+    /** Maps to Go `http.SameSite` constants (0 = default). */
+    SameSite?: number;
+    Partitioned?: boolean;
+    Raw?: string;
+    Unparsed?: string[] | null;
+}
+
+/** Return value from an HTTP request handler. */
+interface IHttpResponse {
+    statusCode: number;
+    headers?: Record<string, string[]>;
+    cookies?: IResponseCookie[];
+    body?: IResponseBody | null;
+}
+
+// ── Server handler interfaces ─────────────────────────────────────────────────
+
+/** Wraps the handler function for one request type. Assign `handler` to register. */
+interface IServerRequestHandler<TRes> {
+    handler: ((request: IServerRequest) => TRes | Promise<TRes>) | null;
+}
+
+/** All handler slots for one access scope. */
+interface IServerScope {
+    /** HTTP request handler. Route: `/plugin/private/<name>/*path`. */
+    readonly http: IServerRequestHandler<IHttpResponse>;
+    /** WebSocket handler (reserved — not yet implemented by the kernel). */
+    readonly ws: IServerRequestHandler<void>;
+    /** Server-Sent Events handler (reserved — not yet implemented by the kernel). */
+    readonly sse: IServerRequestHandler<void>;
+}
+
+/** siyuan.server — Web request handler registry. */
+interface IServer {
+    /**
+     * Private-scope handlers.
+     * Incoming requests at `/plugin/private/<name>/*path` require kernel authentication
+     * and admin role before reaching the handler.
+     */
+    readonly private: IServerScope;
+}
+
 // ── Top-level interface ───────────────────────────────────────────────────────
 
 interface ISiyuan {
@@ -214,6 +422,9 @@ interface ISiyuan {
     readonly storage: IStorage;
     /** JSON-RPC method registry. */
     readonly rpc: IRpc;
+    /** Web request handler registry. */
+    readonly server: IServer;
+
     /**
      * Tunnel an HTTP request through the kernel's REST API.
      * @param path - Absolute path starting with `/`.
