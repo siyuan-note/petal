@@ -14,9 +14,22 @@ declare global {
  * WebSocket connection ready-state values.
  *
  * @remarks Mirrors the browser `WebSocket.readyState` constants:
- * `0` = CONNECTING, `1` = OPEN, `2` = CLOSING, `3` = CLOSED.
+ * - `0`: CONNECTING
+ * - `1`: OPEN
+ * - `2`: CLOSING
+ * - `3`: CLOSED
  */
 export type TWebSocketReadyState = 0 | 1 | 2 | 3;
+
+/**
+ * Server-Sent Events connection ready-state values.
+ *
+ * @remarks Mirrors the browser `EventSource.readyState` constants:
+ * - `0`: CONNECTING
+ * - `1`: OPEN
+ * - `2`: CLOSED
+ */
+export type TEventSourceReadyState = 0 | 1 | 2;
 
 /** An absolute URL path that must start with `/`. */
 export type TRequestPath = `/${string}`;
@@ -172,7 +185,7 @@ export interface IWebSocketPongEvent {
 }
 
 /**
- * Event fired when a WebSocket data frame is received.
+ * Event fired when the WebSocket data frame is received.
  *
  * @see {@link IWebSocket.onmessage}
  */
@@ -182,16 +195,79 @@ export interface IWebSocketMessageEvent {
     data: string | ArrayBuffer;
 }
 
+// ── EventSource ───────────────────────────────────────────────────────────────
+
 /**
- * A kernel-proxied WebSocket connection returned by {@link ISiyuan.socket}.
+ * Event fired when the EventSource connection is established.
  *
- * @remarks The API mirrors the browser `WebSocket` interface. All event
- * callbacks are nullable; assign a function to start receiving events.
- * Every send operation is asynchronous.
+ * @see {@link IEventSource.onopen}
+ */
+export interface IEventSourceOpenEvent {
+    type: 'open';
+}
+
+/**
+ * Event fired when an SSE message is received.
+ *
+ * @remarks The `type` field reflects the SSE `event:` field value;
+ * defaults to `"message"` when the field is absent.
+ *
+ * @see {@link IEventSource.onmessage}
+ */
+export interface IEventSourceMessageEvent {
+    /** Event type; mirrors the SSE `event:` field, defaulting to `"message"`. */
+    type: string;
+    /** UTF-8 decoded SSE `data:` field value. */
+    data: string;
+    /** Value of the SSE `id:` field, or an empty string if absent. */
+    lastEventId: string;
+}
+
+/**
+ * Event fired when the EventSource connection is closed.
+ *
+ * @see {@link IEventSource.onclose}
+ */
+export interface IEventSourceCloseEvent {
+    type: 'close';
+}
+
+/**
+ * Event fired when an EventSource transport error occurs.
+ *
+ * @see {@link IEventSource.onerror}
+ */
+export interface IEventSourceErrorEvent {
+    type: 'error';
+    /** The underlying error. */
+    error: Error;
+}
+
+/**
+ * A kernel-proxied WebSocket connection returned by {@link IClient.socket}.
+ *
+ * @remarks Unlike the browser `WebSocket`, this object is returned
+ * immediately in a disconnected state. Call {@link IWebSocket.open} to
+ * initiate the connection. All event callbacks are nullable; assign a
+ * function to start receiving events. Every send operation is asynchronous.
  */
 export interface IWebSocket {
+    /**
+     * How binary data is returned in {@link IWebSocket.onmessage}.
+     *
+     * @remarks Always `"arraybuffer"`.
+     */
+    readonly binaryType: string;
+    /** Number of bytes currently queued for sending but not yet transmitted. */
+    readonly bufferedAmount: number;
+    /** Negotiated WebSocket extensions, or an empty string if none. */
+    readonly extensions: string;
+    /** Negotiated sub-protocol, or an empty string if none was negotiated. */
+    readonly protocol: string;
     /** Current connection state. See {@link TWebSocketReadyState}. */
     readyState: TWebSocketReadyState;
+    /** The WebSocket server URL (e.g. `"ws://127.0.0.1:6806/ws/…"`). */
+    readonly url: string;
     /** Called when the connection is established. */
     onopen: ((event: IWebSocketOpenEvent) => void | Promise<void>) | null;
     /** Called when the connection is closed. */
@@ -204,6 +280,14 @@ export interface IWebSocket {
     onpong: ((event: IWebSocketPongEvent) => void | Promise<void>) | null;
     /** Called when a data frame is received. */
     onmessage: ((event: IWebSocketMessageEvent) => void | Promise<void>) | null;
+    /**
+     * Initiates the WebSocket connection.
+     *
+     * @remarks The returned `Promise` resolves once the TCP/TLS handshake
+     * succeeds and the HTTP upgrade is confirmed. Calling `open()` more than
+     * once is a no-op — the second call resolves immediately.
+     */
+    open(): Promise<void>;
     /**
      * Sends a text or binary data frame to the remote peer.
      *
@@ -232,6 +316,69 @@ export interface IWebSocket {
 }
 
 // ── Sub-namespaces ────────────────────────────────────────────────────────────
+
+/**
+ * A kernel-proxied Server-Sent Events connection returned by {@link IClient.event}.
+ *
+ * @remarks The object is returned in {@link TEventSourceReadyState | CONNECTING} state
+ * immediately; the kernel starts the SSE subscription in the background and
+ * fires {@link IEventSource.onopen} once the stream is established.
+ * Call {@link IEventSource.close} to cancel the subscription.
+ */
+export interface IEventSource {
+    /** Current connection state. See {@link TEventSourceReadyState}. */
+    readyState: TEventSourceReadyState;
+    /** The original path passed to {@link IClient.event}, e.g. `"/api/…"`. */
+    readonly url: string;
+    /** Called when the connection is established. */
+    onopen: ((event: IEventSourceOpenEvent) => void | Promise<void>) | null;
+    /** Called when a message is received. */
+    onmessage: ((event: IEventSourceMessageEvent) => void | Promise<void>) | null;
+    /** Called when the connection is closed by the server or after {@link IEventSource.close}. */
+    onclose: ((event: IEventSourceCloseEvent) => void | Promise<void>) | null;
+    /** Called when a transport error occurs. */
+    onerror: ((event: IEventSourceErrorEvent) => void | Promise<void>) | null;
+    /** Cancels the subscription and closes the connection. */
+    close(): void;
+}
+
+/**
+ * Network client utilities exposed as `siyuan.client`.
+ *
+ * @remarks Provides HTTP, WebSocket, and Server-Sent Events access, all
+ * tunnelled through the kernel and authenticated with the plugin token.
+ */
+export interface IClient {
+    /**
+     * Tunnels an HTTP request through the kernel's REST API.
+     *
+     * @param path - Absolute path starting with `/`, e.g. `"/api/system/version"`.
+     * @param init - Optional request options (method, headers, body).
+     * @returns A {@link IFetchResponse} with lazy body accessor methods.
+     */
+    fetch(path: TRequestPath, init?: IRequestInit): Promise<IFetchResponse>;
+    /**
+     * Creates a WebSocket connection proxied through the kernel.
+     *
+     * @remarks The returned object is in {@link TWebSocketReadyState | CONNECTING}
+     * state but not yet connected. Call {@link IWebSocket.open} to initiate
+     * the handshake.
+     *
+     * @param path      - Absolute path starting with `/`.
+     * @param protocols - Optional WebSocket sub-protocol(s) to negotiate.
+     * @returns A sealed {@link IWebSocket} handle.
+     */
+    socket(path: TRequestPath, protocols?: string | string[]): Promise<IWebSocket>;
+    /**
+     * Opens a Server-Sent Events stream proxied through the kernel.
+     *
+     * @param path - Absolute path starting with `/`.
+     * @returns A sealed {@link IEventSource} handle.
+     */
+    event(path: TRequestPath): Promise<IEventSource>;
+}
+
+// ── Plugin sub-namespaces ─────────────────────────────────────────────────────
 
 /**
  * Static metadata for the running plugin instance.
@@ -776,7 +923,7 @@ export interface IServerScope {
      *
      * @remarks Reserved — not yet implemented by the kernel.
      */
-    readonly sse: IServerRequestHandler<void>;
+    readonly es: IServerRequestHandler<void>;
 }
 
 /**
@@ -816,23 +963,8 @@ export interface ISiyuan {
     readonly storage: IStorage;
     /** JSON-RPC method registry. */
     readonly rpc: IRpc;
+    /** Network client utilities (HTTP, WebSocket, SSE). */
+    readonly client: IClient;
     /** Web request handler registry. */
     readonly server: IServer;
-
-    /**
-     * Tunnels an HTTP request through the kernel's REST API.
-     *
-     * @param path - Absolute path starting with `/`, e.g. `"/api/system/version"`.
-     * @param init - Optional request options (method, headers, body).
-     * @returns A {@link IFetchResponse} with lazy body accessor methods.
-     */
-    fetch(path: TRequestPath, init?: IRequestInit): Promise<IFetchResponse>;
-    /**
-     * Opens a WebSocket connection proxied through the kernel.
-     *
-     * @param path      - Absolute path starting with `/`.
-     * @param protocols - Optional WebSocket sub-protocol(s) to negotiate.
-     * @returns A {@link IWebSocket} handle with event callbacks and send methods.
-     */
-    socket(path: TRequestPath, protocols?: string | string[]): Promise<IWebSocket>;
 }
