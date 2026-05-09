@@ -15,6 +15,8 @@ export declare const updateHotkeyTip: (hotkey: string) => string;
 export declare const getLocalStorage: (cb: () => void) => void;
 export declare const setStorageVal: (key: string, val: any, cb?: () => void) => void;
 
+export declare const getStorageVal: (key: string) => any;
+
 /**
  * @param {string} [options.timeoutType="defalut"] 仅在 Windows 和 Linux 有效，"default" 表示使用默认的超时机制，"never" 表示通知将一直显示，直到用户手动关闭它。
  * @returns 通知 id
@@ -26,4 +28,5 @@ export declare const sendNotification: (options: {
     channel?: string,
     timeoutType?: "default" | "never"
 }) => Promise<number>;
+
 export declare const cancelNotification: (id: number) => void;

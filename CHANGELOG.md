@@ -2,6 +2,7 @@
 
 ## v1.2.2 2026
 
+* [Improve LocalStorage related APIs](https://github.com/siyuan-note/siyuan/pull/17482)
 * [:art: add kernel type definitions and update package exports](https://github.com/siyuan-note/petal/pull/49)
 
 ## v1.2.1 2026-04-21
