@@ -533,7 +533,7 @@ export interface IRpc {
      * @param method - Notification method name.
      * @param params - Optional notification parameters.
      */
-    broadcast(method: string, params?: any): Promise<void>;
+    broadcast(method: string, params?: any[] | Record<string, any>): Promise<void>;
 }
 
 // ── Server request types ─────────────────────────────────────────────────────
