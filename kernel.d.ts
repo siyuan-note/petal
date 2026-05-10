@@ -265,7 +265,7 @@ export interface IWebSocket {
     /** Negotiated sub-protocol, or an empty string if none was negotiated. */
     readonly protocol: string;
     /** Current connection state. See {@link TWebSocketReadyState}. */
-    readyState: TWebSocketReadyState;
+    readonly readyState: TWebSocketReadyState;
     /** The WebSocket server URL (e.g. `"ws://127.0.0.1:6806/ws/…"`). */
     readonly url: string;
     /** Called when the connection is established. */
@@ -327,7 +327,7 @@ export interface IWebSocket {
  */
 export interface IEventSource {
     /** Current connection state. See {@link TEventSourceReadyState}. */
-    readyState: TEventSourceReadyState;
+    readonly readyState: TEventSourceReadyState;
     /** The original path passed to {@link IClient.event}, e.g. `"/api/…"`. */
     readonly url: string;
     /** Called when the connection is established. */
@@ -533,7 +533,7 @@ export interface IRpc {
      * @param method - Notification method name.
      * @param params - Optional notification parameters.
      */
-    broadcast(method: string, params?: any): Promise<void>;
+    broadcast(method: string, params?: any[] | Record<string, any>): Promise<void>;
 }
 
 // ── Server request types ─────────────────────────────────────────────────────
@@ -879,23 +879,102 @@ export interface IHttpResponse {
 // ── Server handler interfaces ─────────────────────────────────────────────────
 
 /**
+ * Server-side SSE (Server-Sent Events) port provided to
+ * {@link IServerEventSourceRequest.port}.
+ *
+ * @remarks
+ * The kernel opens the SSE response stream before invoking the handler.
+ * Once streaming begins, {@link IEventSourcePort.onopen} fires to signal that
+ * the stream is ready for events. Call {@link IEventSourcePort.send} to push
+ * SSE events to the client and {@link IEventSourcePort.close} to terminate
+ * the stream. The connection stays open until `close()` is called or the
+ * client disconnects.
+ */
+export interface IEventSourcePort {
+    /** Called once when the SSE stream is ready to accept events. */
+    onopen: ((event: IEventSourceOpenEvent) => void | Promise<void>) | null;
+    /** Called when the client disconnects or after {@link IEventSourcePort.close}. */
+    onclose: ((event: IEventSourceCloseEvent) => void | Promise<void>) | null;
+    /**
+     * Pushes one SSE event to the connected client.
+     *
+     * @remarks
+     * `send` is synchronous — no `await` required. It enqueues the event in
+     * the kernel's SSE write buffer; the actual flush is asynchronous.
+     *
+     * @param eventType - Value for the SSE `event:` field (e.g. `"message"`, `"update"`).
+     * @param data - Value for the SSE `data:` field (UTF-8 string).
+     */
+    send(eventType: string, data: string): void;
+    /** Terminates the SSE stream and closes the response. */
+    close(): void;
+}
+
+/**
+ * The request object received by {@link IServerScope.ws | WebSocket server handlers}.
+ *
+ * @remarks
+ * Extends {@link IServerRequest} with a `port` property that mirrors the
+ * {@link IWebSocket} client interface. The kernel upgrades the HTTP connection
+ * to WebSocket before invoking the handler. After the handler returns, the
+ * kernel auto-opens the port's read loop if `port.open()` was not called
+ * explicitly.
+ */
+export interface IServerWebSocketRequest extends IServerRequest {
+    /**
+     * Bidirectional WebSocket port connected to the client.
+     *
+     * @remarks
+     * Assign event callbacks (`onopen`, `onmessage`, `onping`, `onpong`,
+     * `onclose`, `onerror`) before the handler returns. Calling `port.open()`
+     * is optional — the kernel opens the read loop automatically.
+     */
+    readonly port: Omit<IWebSocket, "extensions" | "url">;
+}
+
+/**
+ * The request object received by {@link IServerScope.es | SSE server handlers}.
+ *
+ * @remarks
+ * Extends {@link IServerRequest} with a `port` property for pushing
+ * Server-Sent Events to the client. The kernel opens the SSE response before
+ * the handler is invoked; {@link IEventSourcePort.onopen} fires once streaming
+ * begins.
+ */
+export interface IServerEventSourceRequest extends IServerRequest {
+    /**
+     * Server-side SSE port for pushing events to the connected client.
+     *
+     * @remarks
+     * Assign `onopen` and `onclose` callbacks in the handler body. Call
+     * `port.send(eventType, data)` inside `onopen` to emit SSE events.
+     */
+    readonly port: IEventSourcePort;
+}
+
+/**
  * Handler slot for one request type within a server scope.
  *
- * @remarks The object is sealed by the kernel; only the `handler` property
- * may be reassigned. Set `handler` to `null` to leave the slot empty — the
- * kernel will return `500 Internal Server Error` for any unhandled request.
+ * @remarks
+ * The object is sealed by the kernel; only the `handler` property may be
+ * reassigned. Set `handler` to `null` to leave the slot empty — the kernel
+ * will return `500 Internal Server Error` for any unhandled request.
  *
  * @typeParam TRes - Expected return type of the handler function.
+ * @typeParam TReq - Request object type passed to the handler. Defaults to
+ *   {@link IServerRequest} for the HTTP slot; specialised to
+ *   {@link IServerWebSocketRequest} and {@link IServerEventSourceRequest} for the WS and SSE
+ *   slots respectively.
  */
-export interface IServerRequestHandler<TRes> {
+export interface IServerRequestHandler<TRes, TReq extends IServerRequest = IServerRequest> {
     /**
      * The function invoked for each incoming request of this type.
      *
-     * @remarks The kernel passes the parsed {@link IServerRequest} as the
-     * sole argument and awaits any returned `Promise` before writing the
-     * response.
+     * @remarks
+     * The kernel passes the parsed request as the sole argument and awaits
+     * any returned `Promise` before writing the response.
      */
-    handler: ((request: IServerRequest) => TRes | Promise<TRes>) | null;
+    handler: ((request: TReq) => TRes | Promise<TRes>) | null;
 }
 
 /**
@@ -915,15 +994,23 @@ export interface IServerScope {
     /**
      * WebSocket upgrade handler.
      *
-     * @remarks Reserved — not yet implemented by the kernel.
+     * @remarks
+     * The handler receives an {@link IServerWebSocketRequest} that includes
+     * `request.port`, a bidirectional {@link IWebSocket} connected to the
+     * client. Assign event callbacks before the handler returns; the kernel
+     * auto-opens the port's read loop afterwards.
      */
-    readonly ws: IServerRequestHandler<void>;
+    readonly ws: IServerRequestHandler<void, IServerWebSocketRequest>;
     /**
      * Server-Sent Events handler.
      *
-     * @remarks Reserved — not yet implemented by the kernel.
+     * @remarks
+     * The handler receives an {@link IServerEventSourceRequest} that includes
+     * `request.port`, an {@link IEventSourcePort} for pushing SSE events.
+     * Assign `onopen` / `onclose` callbacks and call `port.send` inside
+     * `onopen`.
      */
-    readonly es: IServerRequestHandler<void>;
+    readonly es: IServerRequestHandler<void, IServerEventSourceRequest>;
 }
 
 /**
