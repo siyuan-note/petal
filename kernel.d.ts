@@ -879,6 +879,23 @@ export interface IHttpResponse {
 // ── Server handler interfaces ─────────────────────────────────────────────────
 
 /**
+ * A single Server-Sent Event (SSE) frame sent from the server to the client.
+ *
+ * Each field corresponds to a line prefix defined by the SSE specification
+ * {@link https://html.spec.whatwg.org/multipage/server-sent-events.html | HTML Standard - 9.2 Server-sent events}.
+ */
+export interface IServerSentEvent {
+    /** `id:` field — sets the event source's last-event-ID, used for reconnection replay. */
+    id?: string;
+    /** `event:` field — custom event type. */
+    event?: string;
+    /** `data:` field — the payload of the event. Multi-line values are joined with `\n`. */
+    data: any;
+    /** `retry:` field — overrides the client's reconnection delay (milliseconds). */
+    retry?: number;
+}
+
+/**
  * Server-side SSE (Server-Sent Events) port provided to
  * {@link IServerEventSourceRequest.port}.
  *
@@ -902,10 +919,9 @@ export interface IEventSourcePort {
      * `send` is synchronous — no `await` required. It enqueues the event in
      * the kernel's SSE write buffer; the actual flush is asynchronous.
      *
-     * @param eventType - Value for the SSE `event:` field (e.g. `"message"`, `"update"`).
-     * @param data - Value for the SSE `data:` field (UTF-8 string).
+     * @param event - The SSE event to send.
      */
-    send(eventType: string, data: string): void;
+    send(event: IServerSentEvent): void;
     /** Terminates the SSE stream and closes the response. */
     close(): void;
 }
