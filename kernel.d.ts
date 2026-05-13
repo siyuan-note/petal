@@ -2,8 +2,6 @@
 /// <reference types="@dop251/types-goja_nodejs-global" />
 /// <reference types="@dop251/types-goja_nodejs-url" />
 
-export { };
-
 declare global {
     const siyuan: ISiyuan;
 }
@@ -126,6 +124,45 @@ export interface IEventMessage {
     /** Event-specific payload; the shape depends on `type`. */
     detail: any;
 }
+
+/**
+ * Published on the runtime event bus after the plugin starts successfully
+ * and enters the running state.
+ */
+export interface IStartEventMessage extends IEventMessage {
+    type: 'start';
+    detail: null;
+}
+
+/**
+ * Published on the runtime event bus at the beginning of a clean plugin
+ * shutdown, before the runtime is torn down.
+ */
+export interface IStopEventMessage extends IEventMessage {
+    type: 'stop';
+    detail: null;
+}
+
+/** File-system event kind emitted by the kernel storage watcher. */
+export type TFsNotifyOperation = 'CREATE' | 'WRITE' | 'RENAME' | 'REMOVE';
+
+/**
+ * Published on the runtime event bus when a watched storage path is
+ * created, written, renamed, or removed.
+ *
+ * Watching is managed via {@link IStorage.watcher}.
+ */
+export interface IFsNotifyEventMessage extends IEventMessage {
+    type: 'fs-notify';
+    detail: {
+        /** The type of file-system change that triggered this event. */
+        operation: TFsNotifyOperation;
+        /** Path relative to the plugin's storage directory. */
+        path: string;
+    }
+}
+
+export type TEventMessage = IStartEventMessage | IStopEventMessage | IFsNotifyEventMessage | IEventMessage;
 
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 
@@ -429,11 +466,10 @@ export interface IEvent {
     /**
      * Inbound kernel event handler.
      *
-     * @remarks Assign a function to receive every kernel broadcast event.
-     * If the function returns a `Promise`, the kernel awaits its resolution
-     * before delivering the next event. Set to `null` to stop receiving events.
+     * @remarks Assign a function to receive every kernel dispatched event.
+     * Set to `null` to stop receiving events.
      */
-    handler: ((event: IEventMessage) => void | Promise<void>) | null;
+    handler: ((event: TEventMessage) => void | Promise<void>) | null;
     /**
      * Publishes an event to the in-process event bus.
      *
@@ -499,6 +535,25 @@ export interface IStorage {
      * @returns An array of {@link IStorageEntry} descriptors.
      */
     list(path: string): Promise<IStorageEntry[]>;
+    readonly watcher: IStorageWatcher;
+}
+
+/**
+ * Controls which storage paths the plugin's file-system watcher monitors.
+ * Changes on watched paths are delivered as {@link IFsNotifyEventMessage}
+ * events on the runtime event bus.
+ */
+export interface IStorageWatcher {
+    /**
+     * Resolves `path` and registers it with the file-system watcher.
+     * @param path - Path relative to the storage directory to start watching.
+     */
+    add(path: string): Promise<void>;
+    /**
+     * Resolves `path` and unregisters it from the file-system watcher.
+     * @param path - Path relative to the storage directory to stop watching.
+     */
+    remove(path: string): Promise<void>;
 }
 
 /**
@@ -879,6 +934,23 @@ export interface IHttpResponse {
 // ── Server handler interfaces ─────────────────────────────────────────────────
 
 /**
+ * A single Server-Sent Event (SSE) frame sent from the server to the client.
+ *
+ * Each field corresponds to a line prefix defined by the SSE specification
+ * {@link https://html.spec.whatwg.org/multipage/server-sent-events.html | HTML Standard - 9.2 Server-sent events}.
+ */
+export interface IServerSentEvent {
+    /** `id:` field — sets the event source's last-event-ID, used for reconnection replay. */
+    id?: string;
+    /** `event:` field — custom event type. */
+    event?: string;
+    /** `data:` field — the payload of the event. Multi-line values are joined with `\n`. */
+    data: any;
+    /** `retry:` field — overrides the client's reconnection delay (milliseconds). */
+    retry?: number;
+}
+
+/**
  * Server-side SSE (Server-Sent Events) port provided to
  * {@link IServerEventSourceRequest.port}.
  *
@@ -902,10 +974,9 @@ export interface IEventSourcePort {
      * `send` is synchronous — no `await` required. It enqueues the event in
      * the kernel's SSE write buffer; the actual flush is asynchronous.
      *
-     * @param eventType - Value for the SSE `event:` field (e.g. `"message"`, `"update"`).
-     * @param data - Value for the SSE `data:` field (UTF-8 string).
+     * @param event - The SSE event to send.
      */
-    send(eventType: string, data: string): void;
+    send(event: IServerSentEvent): void;
     /** Terminates the SSE stream and closes the response. */
     close(): void;
 }
