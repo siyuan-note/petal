@@ -22,6 +22,7 @@ import {MobileBacklinks} from "./mobile/dock/MobileBacklinks";
 
 export * from "./config";
 export * from "./events";
+export * from "./kernel";
 export * from "./protyle";
 export * from "./response";
 export * from "./constants";

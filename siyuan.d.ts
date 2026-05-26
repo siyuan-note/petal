@@ -13,6 +13,7 @@ import type {
     IMenuItem,
     IRefDefs,
     TEditorMode,
+    IKernelPlugin,
 } from "./types";
 import {
     Config,
@@ -27,7 +28,6 @@ import {
     Model,
     MobileCustom,
 } from "./types";
-
 export * from "./types";
 
 declare global {
@@ -443,6 +443,7 @@ export function hideMessage(id?: string): void;
 export abstract class Plugin {
     eventBus: EventBus;
     i18n: IObject;
+    kernel: IKernelPlugin;
     data: any;
     displayName: string;
     readonly name: string;
