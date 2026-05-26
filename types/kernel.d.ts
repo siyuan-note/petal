@@ -42,11 +42,6 @@ export interface IKernelPluginState {
      * 内核插件状态的描述信息
      */
     description: string;
-
-    /**
-     * 当内核插件的状态发生变化时触发的事件处理函数，插件开发者可以通过 `onchange` 来监听状态变化
-     */
-    onchange: ((state: TKernelPluginState) => void) | null;
 }
 
 export interface IKernelPluginRpcCall {

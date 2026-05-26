@@ -14,6 +14,7 @@ import type {
     IRefDefs,
     TEditorMode,
     IKernelPlugin,
+    IKernelPluginState,
 } from "./types";
 import {
     Config,
@@ -230,6 +231,7 @@ export interface IEventBusMap {
         languageElements: HTMLElement[],
         protyle: IProtyle
     };
+    "kernel-plugin-state-change": IKernelPluginState;
 }
 
 export interface IPluginDockTab {
