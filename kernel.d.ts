@@ -446,10 +446,8 @@ export interface IPlugin {
  * advancing to the next lifecycle stage. Unset callbacks (`null`) are skipped.
  */
 export interface IPluginLifecycle {
-    /** Called when the plugin script is first evaluated (before the runtime is fully ready). */
+    /** Called when the plugin script is first evaluated (before the `running` state.). */
     onload: (() => void | Promise<void>) | null;
-    /** Called after the plugin has fully loaded and its runtime is initialized. */
-    onloaded: (() => void | Promise<void>) | null;
     /** Called when the plugin transitions to the `running` state. */
     onrunning: (() => void | Promise<void>) | null;
     /** Called when the plugin is being unloaded (e.g. on shutdown or hot-reload). */
