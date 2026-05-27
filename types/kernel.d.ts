@@ -9,7 +9,7 @@
  * - `5`: stopped 内核插件已停止
  * - `6`: error 内核插件出现不可恢复的错误
  */
-export type TKernelPluginState = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6
+export type TKernelPluginState = -1 | 0 | 1 | 2 | 3 | 4 | 5
 
 export type TJsonRpcId = string | number;
 export type TJsonRpcMethod = string;
