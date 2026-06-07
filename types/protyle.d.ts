@@ -276,7 +276,12 @@ export class Protyle {
      */
     public turnIntoTransaction(nodeElement: Element, type: TTurnInto, subType?: number): void
 
+    /**
+     * @deprecated 将在 3.7.1 版本中移除。请改用 {@link updateTransactionElement}。
+     */
     public updateTransaction(id: string, newHTML: string, html: string): void
+
+    public updateTransactionElement(element: Element, oldHTML: string): void;
 
     public updateBatchTransaction(nodeElements: Element[], cb: (e: HTMLElement) => void): void
 
