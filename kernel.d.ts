@@ -640,9 +640,9 @@ export interface IMcpToolConfig {
     /** Human-readable display name shown in MCP client UIs. */
     title?: string;
     /** Natural-language description of what the tool does, used by AI clients for tool selection. */
-    description?: string;
+    description: string;
     /** JSON Schema describing the tool's input parameters. */
-    inputSchema?: JSONSchema.ObjectSchema;
+    inputSchema: JSONSchema.ObjectSchema;
     /** JSON Schema describing the tool's output. */
     outputSchema?: JSONSchema.Schema;
 }
