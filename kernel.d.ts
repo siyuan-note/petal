@@ -661,12 +661,9 @@ export interface IRegisteredTool extends IMcpToolConfig {
      * A tool registered as `"my-tool"` in plugin `"my-plugin"` becomes
      * `"plugin__my_plugin__my_tool"`.
      *
-     * @example "plugin__<plugin-name>__<tool-name>"
+     * @example "plugin__plugin_name__tool_name"
      */
     name: string;
-
-    /** The handler function invoked when an MCP client calls this tool. */
-    handler: THandler;
 }
 
 // ── Server request types ─────────────────────────────────────────────────────
