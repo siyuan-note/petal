@@ -2,6 +2,7 @@
 /// <reference types="@dop251/types-goja_nodejs-global" />
 /// <reference types="@dop251/types-goja_nodejs-url" />
 
+import type { JSONSchema } from "zod/v4/core";
 declare global {
     const siyuan: ISiyuan;
 }
@@ -555,6 +556,11 @@ export interface IStorageWatcher {
 }
 
 /**
+ * RPC / MCP method handler type.
+ */
+export type THandler = (...args: any[]) => any | Promise<any>;
+
+/**
  * JSON-RPC method registry for the plugin.
  *
  * @remarks Exposed as `siyuan.rpc`. Registered methods are callable by
@@ -566,12 +572,12 @@ export interface IRpc {
      * Registers a named RPC method callable by external clients.
      *
      * @param name         - Unique method name used to dispatch the call.
-     * @param fn           - Handler function; may be async.
+     * @param handler      - Handler function; may be async.
      * @param descriptions - Optional human-readable description strings.
      */
     bind(
         name: string,
-        fn: (...args: any[]) => any | Promise<any>,
+        handler: THandler,
         ...descriptions: string[]
     ): Promise<void>;
     /**
@@ -587,6 +593,77 @@ export interface IRpc {
      * @param params - Optional notification parameters.
      */
     broadcast(method: string, params?: any[] | Record<string, any>): Promise<void>;
+}
+
+/**
+ * MCP (Model Context Protocol) interface exposed to plugins.
+ *
+ * Allows plugins to register and unregister tools that are surfaced to MCP clients
+ * (e.g., AI assistants) through the kernel's built-in MCP server.
+ */
+export interface IMcp {
+    /**
+     * Register a tool with the MCP server.
+     *
+     * The tool name is automatically namespaced to avoid collisions between plugins.
+     * The actual registered name follows the pattern `plugin__<plugin-name>__<tool-name>`.
+     *
+     * @param name - The tool name, local to this plugin (e.g. `"my-tool"`).
+     * @param config - Metadata describing the tool to MCP clients.
+     * @param handler - The function invoked when an MCP client calls the tool.
+     * @returns The registration record, including the fully-qualified tool name.
+     */
+    registerTool(
+        name: string,
+        config: IMcpToolConfig,
+        handler: THandler,
+    ): Promise<IRegisteredTool>;
+
+    /**
+     * Unregister a previously registered tool.
+     *
+     * Uses the same local name passed to {@link registerTool}; the kernel resolves
+     * the fully-qualified name internally.
+     *
+     * @param name - The local tool name used when the tool was registered.
+     */
+    unregisterTool(name: string): Promise<void>;
+}
+
+/**
+ * Metadata describing an MCP tool to clients.
+ *
+ * All fields are optional; omitting them produces a tool with no description or
+ * schema constraints, which is valid but less discoverable.
+ */
+export interface IMcpToolConfig {
+    /** Human-readable display name shown in MCP client UIs. */
+    title?: string;
+    /** Natural-language description of what the tool does, used by AI clients for tool selection. */
+    description: string;
+    /** JSON Schema describing the tool's input parameters. */
+    inputSchema: JSONSchema.ObjectSchema;
+    /** JSON Schema describing the tool's output. */
+    outputSchema?: JSONSchema.Schema;
+}
+
+/**
+ * The registration record returned by {@link IMcp.registerTool}.
+ *
+ * Extends {@link IMcpToolConfig} with the resolved fully-qualified name and the
+ * handler that was registered.
+ */
+export interface IRegisteredTool extends IMcpToolConfig {
+    /**
+     * The fully-qualified tool name as registered with the MCP server.
+     *
+     * The kernel namespaces tool names to prevent collisions between plugins.
+     * A tool registered as `"my-tool"` in plugin `"my-plugin"` becomes
+     * `"plugin__my_plugin__my_tool"`.
+     *
+     * @example "plugin__plugin_name__tool_name"
+     */
+    name: string;
 }
 
 // ── Server request types ─────────────────────────────────────────────────────
@@ -1119,6 +1196,8 @@ export interface ISiyuan {
     readonly storage: IStorage;
     /** JSON-RPC method registry. */
     readonly rpc: IRpc;
+    /** MCP method registry. */
+    readonly mcp: IMcp;
     /** Network client utilities (HTTP, WebSocket, SSE). */
     readonly client: IClient;
     /** Web request handler registry. */
