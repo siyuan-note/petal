@@ -4,7 +4,7 @@
 
 * [Deprecate updateTransaction and replace with updateTransactionElement](https://github.com/siyuan-note/siyuan/issues/17828)
 * [Improve LocalStorage related APIs](https://github.com/siyuan-note/siyuan/pull/17482)
-* [:art: add kernel type definitions and update package exports](https://github.com/siyuan-note/petal/pull/49)
+* [Add kernel type definitions and update package exports](https://github.com/siyuan-note/petal/pull/49)
 * [Add MCP interface and handler types to kernel definitions](https://github.com/siyuan-note/petal/pull/53)
 
 ## v1.2.1 2026-04-21
