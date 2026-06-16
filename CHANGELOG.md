@@ -6,6 +6,8 @@
 * [Improve LocalStorage related APIs](https://github.com/siyuan-note/siyuan/pull/17482)
 * [Add kernel type definitions and update package exports](https://github.com/siyuan-note/petal/pull/49)
 * [Add MCP interface and handler types to kernel definitions](https://github.com/siyuan-note/petal/pull/53)
+* [Add MCP interface and handler types to kernel definitions](https://github.com/siyuan-note/petal/pull/53)
+* [Provides plugin functions for exporting files](https://github.com/siyuan-note/siyuan/issues/15484)
 
 ## v1.2.1 2026-04-21
 

@@ -1,34 +1,23 @@
 import type {
     IGetDocInfo,
     IGetTreeStat,
-    IMenuBaseDetail,
-    IMenu,
-    IObject,
-    IPosition,
-    ISiyuan,
-    IWebSocketData,
-    IProtyle,
-    IProtyleOptions,
-    TProtyleAction,
-    IMenuItem,
-    IRefDefs,
-    TEditorMode,
     IKernelPlugin,
     IKernelPluginState,
+    IMenu,
+    IMenuBaseDetail,
+    IMenuItem,
+    IObject,
+    IPosition,
+    IProtyle,
+    IProtyleOptions,
+    IRefDefs,
+    ISiyuan,
+    IWebSocketData,
+    TEditorMode,
+    TProtyleAction,
 } from "./types";
-import {
-    Config,
-    Custom,
-    Lute,
-    Protyle,
-    Toolbar,
-    subMenu,
-    App,
-    Files,
-    Tab,
-    Model,
-    MobileCustom,
-} from "./types";
+import {App, Config, Custom, Files, Lute, MobileCustom, Model, Protyle, subMenu, Tab, Toolbar,} from "./types";
+
 export * from "./types";
 
 declare global {
@@ -379,6 +368,8 @@ export function lockScreen(app: App): void
 export function exitSiYuan(): void
 
 export function getAllEditor(): Protyle[]
+
+export function saveExportFile(uri: string, msgId?: string): Promise<void>;
 
 export function getAllTabs(type?: TTab | string): Tab[]
 
