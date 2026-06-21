@@ -384,7 +384,7 @@ interface ILuteNode {
 
 type THintSource = "search" | "av" | "hint";
 
-type TTurnIntoOne = "BlocksMergeSuperBlock" | "Blocks2ULs" | "Blocks2OLs" | "Blocks2TLs" | "Blocks2Blockquote"
+type TTurnIntoOne = "BlocksMergeSuperBlock" | "Blocks2ULs" | "Blocks2OLs" | "Blocks2TLs" | "Blocks2Blockquote" | "Blocks2Callout"
 
 type TTurnIntoOneSub = "row" | "col"
 
@@ -411,7 +411,8 @@ export type TProtyleAction = "cb-get-append" | // 向下滚动加载
     "cb-get-rootscroll" | // 如果为 rootID 就滚动到指定位置，必有 rootID
     "cb-get-html" | // 直接渲染，不需要再 /api/block/getDocInfo，否则搜索表格无法定位
     "cb-get-history" | // 历史渲染
-    "cb-get-opennew"  // 编辑器只读后新建文件需为临时解锁状态 & https://github.com/siyuan-note/siyuan/issues/12197
+    "cb-get-opennew" | // 编辑器只读后新建文件需为临时解锁状态 & https://github.com/siyuan-note/siyuan/issues/12197
+    "cb-get-av-no-create"  // 属性视图不自动创建
 
 /** @link https://ld246.com/article/1588412297062 */
 interface ILuteRender {
@@ -597,6 +598,8 @@ export class Lute {
 
     public SetSuperBlock(enable: boolean): void;
 
+    public SetCallout(enable: boolean): void;
+
     public SetTag(enable: boolean): void;
 
     public SetInlineMath(enable: boolean): void;
@@ -643,6 +646,8 @@ export class Lute {
 
     public Md2BlockDOM(html: string): string;
 
+    public Md2BlockDOMWithAutoLink(html: string): string;
+
     public SetProtyleWYSIWYG(wysiwyg: boolean): void;
 
     public MarkdownStr(name: string, md: string): string;
@@ -658,6 +663,14 @@ export class Lute {
     public HTML2BlockDOM(html: string): string;
 
     public SetUnorderedListMarker(marker: string): void;
+
+    public SetDataTask(marker: boolean): void;
+
+    public SetExportNormalizeTaskListMarker(marker: boolean): void;
+
+    public SetArbitraryTaskListItemMarker(marker: boolean): void;
+
+    public SetEnsureListItemParagraph(enable: boolean): void;
 }
 
 declare const webkitAudioContext: {
@@ -716,9 +729,9 @@ interface IUpload {
 
 interface IScrollAttr {
     rootId: string,
-    startId: string,
-    endId: string
-    scrollTop: number,
+    startId?: string,
+    endId?: string
+    scrollTop?: number,
     focusId?: string,
     focusStart?: number
     focusEnd?: number
@@ -877,12 +890,12 @@ export interface IProtyle {
     observerLoad?: ResizeObserver,
     observer?: ResizeObserver,
     app: App,
-    transactionTime: number,
     id: string,
     query?: {
         key: string,
         method: number
         types: Config.IUILayoutTabSearchConfigTypes
+        subTypes: Config.IUILayoutTabSearchConfigSubTypes
     },
     block: {
         id?: string,
@@ -893,7 +906,7 @@ export interface IProtyle {
         showAll?: boolean
         mode?: number
         blockCount?: number
-        action?: string[]
+        action?: TProtyleAction[]
     },
     disabled: boolean,
     selectElement?: HTMLElement,

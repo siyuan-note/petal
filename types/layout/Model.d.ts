@@ -1,6 +1,6 @@
 import {App, IWebSocketData, Tab} from "../../siyuan";
 
-type TWS = "main" | "filetree" | "protyle"
+type TWS = "main" | "filetree" | "protyle" | "backlink" | "bookmark" | "graph" | "outline" | "tag" | "agentChat"
 
 export declare class Model {
     public ws: WebSocket;
