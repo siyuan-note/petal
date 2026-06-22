@@ -14,6 +14,7 @@ import {Wnd} from "./layout/Wnd";
 import {Tab} from "./layout/Tab";
 import {BlockPanel} from "./block/Panel";
 import {Inbox} from "./layout/dock/Inbox";
+import {Files} from "./layout/dock/Files";
 import {MobileOutline} from "./mobile/dock/MobileOutline";
 import {MobileFiles} from "./mobile/dock/MobileFiles";
 import {MobileBookmarks} from "./mobile/dock/MobileBookmarks";
@@ -41,6 +42,9 @@ export * as platformUtils from "./platformUtils";
 
 
 type TDockPosition = "Left" | "Right" | "Bottom"
+type TBazaarType = "templates" | "icons" | "widgets" | "themes" | "plugins"
+type TRecentDocsSort = "viewedAt" | "closedAt" | "openAt" | "updated"
+type TPublishAccessLevel = "public" | "protected" | "hidden" | "private" | "forbidden"
 type TAVView = "table" | "gallery" | "kanban"
 type TAVFilterOperator =
     "="
@@ -87,6 +91,7 @@ interface ILayoutOptions {
 }
 
 interface IOperationSrcs {
+    itemID: string,
     id: string,
     content?: string,
     isDetached: boolean
@@ -176,6 +181,12 @@ interface IAVTable extends IAVView {
     rowCount: number,
 }
 
+interface IAVVirtualData {
+    renderedStart: number;
+    renderedEnd: number;
+    topSpacerHeight: number;
+}
+
 interface IAVGallery extends IAVView {
     coverFrom: number;    // 0：无，1：内容图，2：资源字段，3：内容块
     coverFromAssetKeyID?: string;
@@ -189,13 +200,29 @@ interface IAVGallery extends IAVView {
     cardCount: number,
 }
 
+interface IAVKanban extends IAVView {
+    coverFrom: number;    // 0：无，1：内容图，2：资源字段，3：内容块
+    coverFromAssetKeyID?: string;
+    cardSize: number;   // 0：小卡片，1：中卡片，2：大卡片
+    cardAspectRatio: number;
+    displayFieldName: boolean;
+    fitImage: boolean;
+    cards: IAVGalleryItem[],
+    desc: string
+    fields: IAVColumn[]
+    cardCount: number,
+    fillColBackgroundColor: boolean
+}
+
 interface IAVFilter {
-    column: string,
-    operator: TAVFilterOperator,
-    quantifier?: string,
-    value: IAVCellValue,
-    relativeDate?: IAVRelativeDate
-    relativeDate2?: IAVRelativeDate
+    column?: string,                                  // 叶子节点：字段（列）ID
+    operator?: TAVFilterOperator,                     // 叶子节点：操作符
+    quantifier?: string,                              // 叶子节点：量词
+    value?: IAVCellValue,                             // 叶子节点：过滤值
+    relativeDate?: IAVRelativeDate,                   // 叶子节点：相对时间
+    relativeDate2?: IAVRelativeDate,                  // 叶子节点：第二个相对时间
+    combination?: "and" | "or",                       // 分组节点：子条件组合方式
+    filters?: IAVFilter[],                            // 分组节点：子节点（递归）
 }
 
 interface IAVRelativeDate {
@@ -361,12 +388,14 @@ interface IAVCellRollupValue {
 
 interface IAVCalc {
     operator?: string,
+    template?: string,
     result?: IAVCellValue
 }
 
 export interface IOperation {
     action: TOperation, // move， delete 不需要传 data
     id?: string,
+    context?: IObject,  // focusId, message, ignoreProcess, setRange
     blockID?: string,
     isTwoWay?: boolean, // 是否双向关联
     backRelationKeyID?: string, // 双向关联的目标关联列 ID
@@ -380,14 +409,18 @@ export interface IOperation {
     retData?: any
     nextID?: string // insert 专享
     isDetached?: boolean // insertAttrViewBlock 专享
-    ignoreFillFilter?: boolean // insertAttrViewBlock 专享
     srcIDs?: string[] // removeAttrViewBlock 专享
     srcs?: IOperationSrcs[] // insertAttrViewBlock 专享
+    ignoreDefaultFill?: boolean // insertAttrViewBlock 专享
+    viewID?: string // 多个属性视图操作使用，用于推送时不影响其他视图
     name?: string // addAttrViewCol 专享
     type?: TAVCol // addAttrViewCol 专享
     deckID?: string // add/removeFlashcards 专享
     blockIDs?: string[] // add/removeFlashcards 专享
     removeDest?: boolean // removeAttrViewCol 专享
+    layout?: string // addAttrViewView 专享
+    groupID?: string // insertAttrViewBlock, sortAttrViewRow 专享
+    targetGroupID?: string // sortAttrViewRow 专享
 }
 
 export interface IRefDefs {
@@ -408,11 +441,7 @@ export interface ISiyuan {
     storage?: {
         [key: string]: any
     },
-    transactions?: {
-        protyle: IProtyle,
-        doOperations: IOperation[],
-        undoOperations: IOperation[]
-    }[]
+    closedTabs?: ILayoutJSON[]
     reqIds: {
         [key: string]: number
     },
@@ -422,6 +451,18 @@ export interface ISiyuan {
     emojis?: IEmoji[],
     backStack?: IBackStack[],
     mobile?: {
+        touchRange?: Range
+        size: {
+            isLandscape?: boolean,
+            landscape?: {
+                height1: number,
+                height2: number,    // 键盘弹起时的高度
+            }, // 横屏
+            portrait?: {
+                height1: number,
+                height2: number,
+            }
+        }
         editor?: Protyle
         popEditor?: Protyle
         docks?: {
@@ -440,11 +481,31 @@ export interface ISiyuan {
         userHomeBImgURL: string
         userIntro: string
         userNickname: string
-        userSiYuanOneTimePayStatus: number  // 0 未付费；1 已付费
-        userSiYuanProExpireTime: number // -1 终身会员；0 普通用户；> 0 过期时间
-        userSiYuanSubscriptionPlan: number // 0 年付订阅/终生；1 教育优惠；2 订阅试用
-        userSiYuanSubscriptionType: number // 0 年付；1 终生；2 月付
-        userSiYuanSubscriptionStatus: number // -1：未订阅，0：订阅可用，1：订阅封禁，2：订阅过期
+        /**
+         * 功能特性付费状态
+         * 0 未付费，1 已付费
+         */
+        userSiYuanOneTimePayStatus: number
+        /**
+         * 会员过期时间
+         * -1 终身会员；0 未订阅或订阅已过期；>0 订阅到期时间（时间戳，毫秒）
+         */
+        userSiYuanProExpireTime: number
+        /**
+         * 订阅计划类型
+         * 0 年付订阅/终生；1 教育优惠；2 订阅试用
+         */
+        userSiYuanSubscriptionPlan: number
+        /**
+         * 订阅类型
+         * 0 年付；1 终生；2 月付
+         */
+        userSiYuanSubscriptionType: number
+        /**
+         * 订阅状态
+         * -1 未订阅，0 订阅可用，1 订阅封禁，2 订阅过期（包括付费订阅过期和试用订阅过期）
+         */
+        userSiYuanSubscriptionStatus: number
         userToken: string
         userTitles: {
             name: string,
@@ -453,7 +514,10 @@ export interface ISiyuan {
         }[]
     },
     dragElement?: HTMLElement,
+    dragTitle?: string,
     currentDragOverTabHeadersElement?: HTMLElement
+    touchDragActive?: boolean,
+    touchDragGhost?: HTMLElement | null,
     layout?: {
         layout?: Layout,
         centerLayout?: Layout,
@@ -506,24 +570,64 @@ export interface IMenu {
     index?: number
     element?: HTMLElement
     ignore?: boolean
-    waring?: boolean
+    warning?: boolean
 }
 
-export interface IPosition {
-    x: number,
-    y: number,
-    w?: number,
-    h?: number,
-    isLeft?: boolean
+interface ILayoutJSON extends ILayoutOptions {
+    scrollAttr?: {
+        rootId: string,
+        startId?: string,
+        endId?: string
+        scrollTop?: number,
+        focusId?: string,
+        focusStart?: number
+        focusEnd?: number
+        zoomInId?: string
+    },
+    instance?: string,
+    width?: string,
+    height?: string,
+    title?: string,
+    lang?: string
+    docIcon?: string
+    page?: string
+    path?: string
+    blockId?: string
+    mode?: TEditorMode
+    action?: TProtyleAction
+    icon?: string
+    rootId?: string
+    active?: boolean
+    pin?: boolean
+    isPreview?: boolean
+    customModelData?: any
+    customModelType?: string
+    config?: Config.IUILayoutTabSearchConfig
+    children?: ILayoutJSON[] | ILayoutJSON
+}
+
+export interface IModels {
+    editor: Editor[],
+    graph: Model[],
+    outline: Model[],
+    backlink: Model[],
+    inbox: Inbox[],
+    files: Files[],
+    bookmark: Model[],
+    tag: Model[],
+    asset: Model[],
+    search: Model[],
+    custom: Custom[],
 }
 
 export interface IWebSocketData {
-    cmd: string;
+    cmd?: string;
     callback?: string;
-    data: any;
+    data?: any;
     msg: string;
     code: number;
-    sid: string;
+    sid?: string;
+    context?: any;
 }
 
 export interface IObject {
@@ -588,7 +692,7 @@ export declare class Editor extends Model {
         blockId: string;
         rootId: string;
         mode?: TEditorMode;
-        action?: string[];
+        action?: TProtyleAction[];
     });
 
     private initProtyle;

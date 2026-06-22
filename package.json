@@ -40,6 +40,7 @@
   "dependencies": {
     "@dop251/types-goja_nodejs-buffer": "latest",
     "@dop251/types-goja_nodejs-global": "latest",
-    "@dop251/types-goja_nodejs-url": "latest"
+    "@dop251/types-goja_nodejs-url": "latest",
+    "zod": "latest"
   }
 }

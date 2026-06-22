@@ -1,34 +1,24 @@
 import type {
     IGetDocInfo,
     IGetTreeStat,
-    IMenuBaseDetail,
-    IMenu,
-    IObject,
-    IPosition,
-    ISiyuan,
-    IWebSocketData,
-    IProtyle,
-    IProtyleOptions,
-    TProtyleAction,
-    IMenuItem,
-    IRefDefs,
-    TEditorMode,
     IKernelPlugin,
     IKernelPluginState,
+    IMenu,
+    IMenuBaseDetail,
+    IMenuItem,
+    IModels,
+    IObject,
+    IPosition,
+    IProtyle,
+    IProtyleOptions,
+    IRefDefs,
+    ISiyuan,
+    IWebSocketData,
+    TEditorMode,
+    TProtyleAction,
 } from "./types";
-import {
-    Config,
-    Custom,
-    Lute,
-    Protyle,
-    Toolbar,
-    subMenu,
-    App,
-    Files,
-    Tab,
-    Model,
-    MobileCustom,
-} from "./types";
+import {App, Config, Custom, Files, Lute, MobileCustom, Model, Protyle, subMenu, Tab, Toolbar,} from "./types";
+
 export * from "./types";
 
 declare global {
@@ -36,7 +26,7 @@ declare global {
     }
 }
 
-export type TDock = "file" | "outline" | "inbox" | "bookmark" | "tag" | "graph" | "globalGraph" | "backlink"
+export type TDock = "file" | "outline" | "inbox" | "bookmark" | "tag" | "graph" | "globalGraph" | "backlink" | "agentChat"
 
 export type TTab = "Outline" | "Graph" | "Backlink" | "Asset" | "Editor" | "Search" | "siyuan-card"
 
@@ -380,21 +370,11 @@ export function exitSiYuan(): void
 
 export function getAllEditor(): Protyle[]
 
+export function saveExportFile(uri: string, msgId?: string): Promise<void>;
+
 export function getAllTabs(type?: TTab | string): Tab[]
 
-export function getAllModels(): {
-    editor: [],
-    graph: [],
-    asset: [],
-    outline: [],
-    backlink: [],
-    search: [],
-    inbox: [],
-    files: [],
-    bookmark: [],
-    tag: [],
-    custom: [],
-}
+export function getAllModels(): IModels
 
 export function openSetting(app: App): Dialog | undefined;
 
