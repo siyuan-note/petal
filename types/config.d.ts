@@ -55,9 +55,9 @@ export namespace Config {
          */
         langs: ILang[];
         /**
-         * A list of the IP addresses of the devices on which the kernel resides
+         * A list of the kernel server addresses
          */
-        localIPs: string[];
+        serverAddrs: string[];
         /**
          * Log level
          */
@@ -117,69 +117,89 @@ export namespace Config {
      * Artificial Intelligence (AI) related configuration
      */
     export interface IAI {
-        openAI: IOpenAI;
+        providers: IProvider[];
+        editing: IEditing;
+        agent: IAgent;
+        mcp: IMCP;
+        embedding: IEmbedding;
     }
 
     /**
-     * Open AI related configuration
+     * AI agent global settings
      */
-    export interface IOpenAI {
-        /**
-         * API base URL
-         */
-        apiBaseURL: string;
-        /**
-         * API key
-         */
+    export interface IAgent {
+        modelId: string;
+        sessionTimeout: number;
+        confirmTimeout: number;
+        maxRetries: number;
+        temperature: number;
+        maxCompletionTokens: number;
+        maxToolCallRounds: number;
+    }
+
+    /**
+     * AI in-editor chat scenario behavior settings (mirrors IAgent)
+     */
+    export interface IEditing {
+        modelId: string;
+        maxHistoryMessages: number;
+        temperature: number;
+        maxCompletionTokens: number;
+    }
+
+    /**
+     * Embedding model configuration
+     */
+    export interface IEmbedding {
+        id: string;
+        enabled: boolean;
+        baseURL: string;
         apiKey: string;
-        /**
-         * The maximum number of contexts passed when requesting the API
-         */
-        apiMaxContexts: number;
-        /**
-         * Maximum number of tokens (0 means no limit)
-         */
-        apiMaxTokens: number;
-        /**
-         * The model name called by the API
-         */
-        apiModel: TOpenAIAPIModel;
-        /**
-         * API Provider
-         * OpenAI, Azure
-         */
-        apiProvider: TOpenAAPIProvider;
-        /**
-         * API request proxy address
-         */
-        apiProxy: string;
-        /**
-         * Parameter `temperature` that controls the randomness of the generated text
-         */
-        apiTemperature: number;
-        /**
-         * API request timeout (unit: seconds)
-         */
-        apiTimeout: number;
-        /**
-         * API request additional user agent field
-         */
-        apiUserAgent: string;
-        /**
-         * API version number
-         */
-        apiVersion: string;
+        name: string;
+        timeout: number;
     }
 
     /**
-     * The model name called by the API
+     * AI provider configuration
      */
-    export type TOpenAIAPIModel = "gpt-4" | "gpt-4-32k" | "gpt-3.5-turbo" | "gpt-3.5-turbo-16k";
+    export interface IProvider {
+        id: string;
+        enabled: boolean;
+        displayName?: string;
+        baseURL: string;
+        apiKey: string;
+        requestTimeout: number;
+        models: IModel[];
+    }
 
     /**
-     * API Provider
+     * AI model configuration. Behavior params (maxTokens/temperature/maxContexts)
+     * live on IEditing; Model holds only identity fields.
      */
-    export type TOpenAAPIProvider = "OpenAI" | "Azure";
+    export interface IModel {
+        id: string;
+        enabled: boolean;
+        name: string;
+        displayName?: string;
+    }
+
+    /**
+     * MCP (Model Context Protocol) configuration
+     */
+    export interface IMCP {
+        servers: IMCPServer[];
+    }
+
+    export interface IMCPServer {
+        enabled: boolean;
+        name: string;
+        url: string;
+        type: string;
+        command: string;
+        args?: string[];
+        headers?: Record<string, string>;
+        timeout: number;
+    }
 
     /**
      * SiYuan API related configuration
@@ -210,9 +230,9 @@ export namespace Config {
          */
         codeBlockThemeLight: string;
         /**
-         * List of installed dark themes
+         * Whether to hide toolbar
          */
-        darkThemes: string[];
+        hideToolbar: boolean;
         /**
          * Whether to hide status bar
          */
@@ -224,7 +244,7 @@ export namespace Config {
         /**
          * List of installed icon names
          */
-        icons: string[];
+        icons: { label: string; name: string }[];
         /**
          * The version number of the icon currently in use
          */
@@ -236,7 +256,11 @@ export namespace Config {
         /**
          * List of installed light themes
          */
-        lightThemes: string[];
+        lightThemes: { label: string; name: string }[];
+        /**
+         * List of installed dark themes
+         */
+        darkThemes: { label: string; name: string }[];
         /**
          * The current theme mode
          * - `0`: Light theme
@@ -280,19 +304,27 @@ export namespace Config {
      * Same as {@link IAppearance.lang}
      */
     export type TLang =
-        "en_US"
-        | "ar_SA"
-        | "de_DE"
-        | "es_ES"
-        | "fr_FR"
-        | "he_IL"
-        | "it_IT"
-        | "ja_JP"
-        | "pl_PL"
-        | "pt_BR"
-        | "ru_RU"
-        | "zh_CN"
-        | "zh_CHT";
+        "en"
+        | "ar"
+        | "de"
+        | "es"
+        | "fr"
+        | "he"
+        | "hi"
+        | "id"
+        | "it"
+        | "ja"
+        | "ko"
+        | "pl"
+        | "pt-BR"
+        | "ru"
+        | "sk"
+        | "tr"
+        | "uk"
+        | "th"
+        | "nl"
+        | "zh-CN"
+        | "zh-TW";
 
     /**
      * SiYuan bazaar related configuration
@@ -350,6 +382,11 @@ export namespace Config {
      * SiYuan editor related configuration
      */
     export interface IEditor {
+
+        /**
+         * Whether to allow to execute javascript in the SVG
+         */
+        allowSVGScript: boolean;
 
         /**
          * Whether to allow to execute javascript in the HTML block
@@ -437,9 +474,22 @@ export namespace Config {
          */
         floatWindowMode: number;
         /**
+         * Hover delay of the floating window in milliseconds.
+         * Only takes effect when `floatWindowMode` is `0`.
+         */
+        floatWindowDelay: number;
+        /**
          * The font used in the editor
          */
         fontFamily: string;
+        /**
+         * The font weight used in the editor, 0 means not set
+         */
+        fontWeight: number;
+        /**
+         * Label shown in Settings for the selected editor font (e.g. PostScript name + subfamily). May be empty; falls back to fontFamily in UI when empty.
+         */
+        fontFamilyDisplay: string;
         /**
          * The font size used in the editor
          */
@@ -486,6 +536,10 @@ export namespace Config {
          */
         plantUMLServePath: string;
         /**
+         * Whether to auto-convert pasted URLs to links
+         */
+        pasteURLAutoConvert: boolean;
+        /**
          * Whether to enable read-only mode
          */
         readOnly: boolean;
@@ -497,6 +551,10 @@ export namespace Config {
          * Whether to enable spell checking
          */
         spellcheck: boolean;
+        /**
+         * Support spell check languages
+         */
+        spellcheckLanguages: string[];
         /**
          * Whether to enable virtual references
          */
@@ -545,10 +603,6 @@ export namespace Config {
          */
         blockRefTextRight: string;
         /**
-         * The path of the template file used when exporting to Docx
-         */
-        docxTemplate: string;
-        /**
          * File annotation reference export mode
          * - `0`: File name - page number - anchor text
          * - `1`: Anchor text only
@@ -567,13 +621,29 @@ export namespace Config {
          */
         markdownYFM: boolean;
         /**
+         * Whether to remove the asset ID when exporting to Markdown
+         */
+        removeAssetsID: boolean;
+        /**
          * Whether to export the inline memo
          */
         inlineMemo: boolean;
         /**
+         * Whether to include sub-documents when exporting
+         */
+        includeSubDocs: boolean;
+        /**
+         * Whether to include related documents when exporting
+         */
+        includeRelatedDocs: boolean;
+        /**
          * Pandoc executable file path
          */
         pandocBin: string;
+        /**
+         * Pandoc parameters
+         */
+        pandocParams: string;
         /**
          * Whether the beginning of the paragraph is empty two spaces.
          * Insert two full-width spaces `U+3000` at the beginning of the paragraph.
@@ -610,6 +680,10 @@ export namespace Config {
          */
         allowCreateDeeper: boolean;
         /**
+         * Don't automatically split the screen when opening search, PDF and other tabs
+         */
+        noSplitScreenWhenOpenTab: boolean;
+        /**
          * Whether to automatically locate the currently open document in the document tree
          */
         alwaysSelectOpenedFile: boolean;
@@ -638,6 +712,14 @@ export namespace Config {
          */
         refCreateSavePath: string;
         refCreateSaveBox: string;
+        /**
+         * Shorthand save notebook
+         */
+        shorthandSaveBox: string;
+        /**
+         * Shorthand save path
+         */
+        shorthandSavePath: string;
         docCreateSaveBox: string;
         /**
          * Close the secondary confirmation when deleting a document
@@ -677,6 +759,10 @@ export namespace Config {
          * Whether to create new documents at the top of the document tree
          */
         createDocAtTop: boolean;
+        /**
+         * The maximum number of recent documents listed
+         */
+        recentDocsMaxListCount: number;
     }
 
     /**
@@ -807,6 +893,10 @@ export namespace Config {
          */
         blockquote: boolean;
         /**
+         * Display callout
+         */
+        callout: boolean;
+        /**
          * Display code block
          */
         code: boolean;
@@ -887,6 +977,7 @@ export namespace Config {
         attr: IKey;
         backlinks: IKey;
         collapse: IKey;
+        foldRecursive: IKey;
         copyBlockEmbed: IKey;
         copyBlockRef: IKey;
         copyHPath: IKey;
@@ -1220,6 +1311,10 @@ export namespace Config {
          */
         blockquote: boolean;
         /**
+         * Whether to search callout
+         */
+        callout: boolean;
+        /**
          * Whether to distinguish between uppercase and lowercase letters when searching
          */
         caseSensitive: boolean;
@@ -1239,6 +1334,10 @@ export namespace Config {
          * Whether to search embedded blocks
          */
         embedBlock: boolean;
+        /**
+         * Whether to distinguish between Simplified and Traditional Chinese characters when searching
+         */
+        hanSensitive: boolean;
         /**
          * Whether to search heading blocks
          */
@@ -1412,7 +1511,7 @@ export namespace Config {
          * - `3`: Network storage service using WebDAV protocol
          * - `4`: Local file system
          */
-        provider: number;
+        provider: 0 | 2 | 3 | 4;
         s3: ISyncS3;
         /**
          * The prompt information of the last synchronization
@@ -1591,6 +1690,10 @@ export namespace Config {
          * Whether to enable network serve (whether to allow connections from other devices)
          */
         networkServe: boolean;
+        /**
+         * Whether to enable HTTPS for network serve (TLS encryption)
+         */
+        networkServeTLS: boolean;
         /**
          * The operating system name determined at compile time (obtained using the command `go tool
          * dist list`)
@@ -2124,6 +2227,7 @@ export namespace Config {
          * - `1`: Query syntax
          * - `2`: SQL
          * - `3`: Regular expression
+         * - `4`: Fuzzy search
          * @default 0
          */
         method?: number;
@@ -2159,6 +2263,26 @@ export namespace Config {
          */
         sort?: number;
         types?: IUILayoutTabSearchConfigTypes;
+        subTypes?: IUILayoutTabSearchConfigSubTypes;
+    }
+
+    /**
+     * Search subtype filtering. When all flags within a category (heading or
+     * list) are false, that category is not subtype-filtered (parent type
+     * filter applies as before). When at least one flag is true, only blocks
+     * matching the selected subtypes are returned for that category.
+     */
+    export interface IUILayoutTabSearchConfigSubTypes {
+        h1: boolean;
+        h2: boolean;
+        h3: boolean;
+        h4: boolean;
+        h5: boolean;
+        h6: boolean;
+        // List subtypes — apply to both list and listItem
+        o: boolean;
+        u: boolean;
+        t: boolean;
     }
 
     /**
@@ -2305,6 +2429,11 @@ export namespace Config {
          * @default false
          */
         blockquote: boolean;
+        /**
+         * Search results contain callout blocks
+         * @default false
+         */
+        callout: boolean;
         /**
          * Search results contain code blocks
          * @default false
