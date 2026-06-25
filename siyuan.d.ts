@@ -6,6 +6,7 @@ import type {
     IMenu,
     IMenuBaseDetail,
     IMenuItem,
+    IModels,
     IObject,
     IPosition,
     IProtyle,
@@ -25,7 +26,7 @@ declare global {
     }
 }
 
-export type TDock = "file" | "outline" | "inbox" | "bookmark" | "tag" | "graph" | "globalGraph" | "backlink"
+export type TDock = "file" | "outline" | "inbox" | "bookmark" | "tag" | "graph" | "globalGraph" | "backlink" | "agentChat"
 
 export type TTab = "Outline" | "Graph" | "Backlink" | "Asset" | "Editor" | "Search" | "siyuan-card"
 
@@ -373,19 +374,7 @@ export function saveExportFile(uri: string, msgId?: string): Promise<void>;
 
 export function getAllTabs(type?: TTab | string): Tab[]
 
-export function getAllModels(): {
-    editor: [],
-    graph: [],
-    asset: [],
-    outline: [],
-    backlink: [],
-    search: [],
-    inbox: [],
-    files: [],
-    bookmark: [],
-    tag: [],
-    custom: [],
-}
+export function getAllModels(): IModels
 
 export function openSetting(app: App): Dialog | undefined;
 

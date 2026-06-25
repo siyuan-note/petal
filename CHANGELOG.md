@@ -2,8 +2,7 @@
 
 ## v1.2.2 2026
 
-* [Add plugin function addAgentAction for AI Agent](https://github.com/siyuan-note/siyuan/issues/17797)
-* [Add plugin functions getSecret/getVariable for secrets and variables](https://github.com/siyuan-note/siyuan/issues/17933)
+* [Align with SiYuan's latest type definitions](https://github.com/siyuan-note/petal/pull/54)
 * [Deprecate updateTransaction and replace with updateTransactionElement](https://github.com/siyuan-note/siyuan/issues/17828)
 * [Improve LocalStorage related APIs](https://github.com/siyuan-note/siyuan/pull/17482)
 * [Add kernel type definitions and update package exports](https://github.com/siyuan-note/petal/pull/49)
