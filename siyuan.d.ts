@@ -528,6 +528,24 @@ export abstract class Plugin {
 
     addCommand(options: ICommand): void;
 
+    /**
+     * 按名称取密钥值（来自「设置 → 密钥和变量」的密钥库）。找不到时返回空字符串。
+     * 密钥在内核侧加密存储，此处读到的是运行时明文；仅在本地管理员身份下可用。
+     */
+    getSecret(name: string): string;
+
+    /**
+     * 按名称取变量值（来自「设置 → 密钥和变量」的变量库）。找不到时返回空字符串。
+     * 变量以明文存储，用于非敏感配置。
+     */
+    getVariable(name: string): string;
+
+    addAgentAction(options: {
+        name: string,
+        description: string,
+        handler: (args: Record<string, unknown>, app: App) => Promise<{ result?: string, error?: string }>,
+    }): string;
+
     addFloatLayer(options: {
         refDefs: IRefDefs[],
         x?: number,
