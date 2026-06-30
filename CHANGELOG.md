@@ -1,6 +1,9 @@
 # Changelog
 
-## v1.2.2 2026
+## v1.2.3 2026
+
+
+## v1.2.2 2026-6-30
 
 * [Align with SiYuan's latest type definitions](https://github.com/siyuan-note/petal/pull/54)
 * [Deprecate updateTransaction and replace with updateTransactionElement](https://github.com/siyuan-note/siyuan/issues/17828)
