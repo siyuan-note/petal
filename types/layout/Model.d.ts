@@ -9,15 +9,18 @@ export declare class Model {
     public app: App;
 
     constructor(options: {
-        app: App,
+        app: App
+    })
+
+    connect(options: {
         id: string,
         type?: TWS,
         callback?: () => void,
         msgCallback?: (data: IWebSocketData) => void
-    })
+    }): void;
 
     /**
      * @param {boolean} [process=false]
      */
-    public send(cmd: string, param: Record<string, unknown>, process: boolean): void;
+    public send(cmd: string, param: Record<string, unknown>, process?: boolean): void;
 }

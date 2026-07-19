@@ -4,12 +4,16 @@ export declare class MobileFiles extends Model {
     element: HTMLElement;
     private actionsElement;
     private closeElement;
+    private touchDragState;
     constructor(app: App);
+    private handleMsgCallback;
+    private clearDragIndicators;
     private genSort;
+    private updateItemArrow;
+    private updateDocInfo;
     private genNotebook;
     init(init?: boolean): void;
     private onMove;
-    private onMkdir;
     private onRemove;
     onRename(data: {
         path: string;
@@ -19,13 +23,14 @@ export declare class MobileFiles extends Model {
     private onMount;
     private onLsHTML;
     private onLsSelect;
-    private setCurrent;
-    getLeaf(liElement: Element, notebookId: string): void;
+    setCurrent(target: HTMLElement, isScroll?: boolean): void;
+    getLeaf(liElement: Element, notebookId: string, focusUpdate?: boolean): void;
     selectItem(notebookId: string, filePath: string, data?: {
         files: IFile[];
         box: string;
         path: string;
-    }, setStorage?: boolean): void;
+    }, setStorage?: boolean, isSetCurrent?: boolean): Promise<HTMLElement>;
     private getOpenPaths;
     private genFileHTML;
+    private refreshPublishAccessSwitch;
 }

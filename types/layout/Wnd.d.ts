@@ -24,11 +24,11 @@ export declare class Wnd {
     private destroyModel;
     private removeTabAction;
 
-    removeTab(id: string, closeAll?: boolean, animate?: boolean, isSaveLayout?: boolean): void;
+    removeTab(id: string, isBatchClose?: boolean, animate?: boolean, isSaveLayout?: boolean): void;
 
     moveTab(tab: Tab, nextId?: string): void;
 
-    split(direction: Config.TUILayoutDirection): Wnd;
+    split(direction: Config.TUILayoutDirection, after?: boolean): Wnd;
 
     private remove;
 }

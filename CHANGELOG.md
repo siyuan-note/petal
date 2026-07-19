@@ -2,6 +2,8 @@
 
 ## v1.2.3 2026
 
+* [Extract lite version of protyle](https://github.com/siyuan-note/siyuan/issues/18151)
+* [Sync the latest updates and functional changes from the SiYuan](https://github.com/siyuan-note/petal/issues/55)
 
 ## v1.2.2 2026-6-30
 

@@ -33,6 +33,7 @@ export * from "./layout/Model";
 export * from "./layout/dock/Files";
 export * from "./layout/dock/Inbox";
 export * from "./block/Panel";
+export * from "./util/Tree";
 export * from "./mobile/dock/MobileTags";
 export * from "./mobile/dock/MobileOutline";
 export * from "./mobile/dock/MobileBacklinks";
@@ -46,6 +47,7 @@ type TBazaarType = "templates" | "icons" | "widgets" | "themes" | "plugins"
 type TRecentDocsSort = "viewedAt" | "closedAt" | "openAt" | "updated"
 type TPublishAccessLevel = "public" | "protected" | "hidden" | "private" | "forbidden"
 type TAVView = "table" | "gallery" | "kanban"
+export type TAVAlign = "" | "left" | "center" | "right"
 type TAVFilterOperator =
     "="
     | "!="
@@ -100,6 +102,7 @@ interface IOperationSrcs {
 interface INotebook {
     name: string;
     id: string;
+    boxDocID: string;
     closed: boolean;
     icon: string;
     sort: number;
@@ -107,6 +110,73 @@ interface INotebook {
     newFlashcardCount?: string;
     flashcardCount?: string;
     sortMode: number;
+    encrypted?: boolean;
+}
+
+export interface IFile {
+    icon: string;
+    name1: string;
+    alias: string;
+    memo: string;
+    bookmark: string;
+    path: string;
+    name: string;
+    titleEmpty?: boolean;
+    hMtime: string;
+    hCtime: string;
+    hSize: string;
+    dueFlashcardCount?: string;
+    newFlashcardCount?: string;
+    flashcardCount?: string;
+    id: string;
+    count: number;
+    subFileCount: number;
+}
+
+export interface IBlockTree {
+    box: string,
+    nodeType: string,
+    hPath: string,
+    subType: string,
+    name: string,
+    type: string,
+    depth: number,
+    url?: string,
+    label?: string,
+    id?: string,
+    blocks?: IBlock[],
+    count: number,
+    children?: IBlockTree[]
+}
+
+export interface IBlock {
+    riffCard?: IRiffCard,
+    depth?: number,
+    box?: string;
+    path?: string;
+    hPath?: string;
+    id?: string;
+    rootID?: string;
+    type?: string;
+    content?: string;
+    def?: IBlock;
+    defID?: string
+    defPath?: string
+    refText?: string;
+    name?: string;
+    memo?: string;
+    alias?: string;
+    tag?: string;
+    refs?: IBlock[];
+    children?: IBlock[]
+    length?: number
+    ial: Record<string, string>
+    refCount?: number
+}
+
+export interface IRiffCard {
+    due?: string;
+    reps?: number;
 }
 
 interface IEmojiItem {
@@ -153,6 +223,40 @@ export interface IAV {
     viewType: TAVView;
     views: IAVView[];
     isMirror?: boolean;
+    newItemTemplates?: IAVNewItemTemplate[];
+    defaultTemplateID?: string;
+    target?: IAVRenderTarget;
+}
+
+export interface IAVRenderTarget {
+    status: "visible" | "filtered" | "itemNotFound" | "viewNotFound" | "groupHidden";
+    itemID: string;
+    groupID?: string;
+    index: number;
+    pageSize: number;
+}
+
+export type TAVNewItemTarget = "detached" | "document";
+export type TAVNewItemFieldValueMode = "static" | "currentTime";
+
+export interface IAVNewItemSaveLocation {
+    boxID?: string;
+    pathTemplate: string;
+}
+
+export interface IAVNewItemFieldValue {
+    mode: TAVNewItemFieldValueMode;
+    value?: IAVCellValue;
+}
+
+export interface IAVNewItemTemplate {
+    id: string;
+    name: string;
+    targetType: TAVNewItemTarget;
+    primaryKeyTemplate?: string;
+    fieldValues?: Record<string, IAVNewItemFieldValue>;
+    saveLocation?: IAVNewItemSaveLocation;
+    contentTemplatePath?: string;
 }
 
 interface IAVView {
@@ -250,6 +354,7 @@ interface IAVSort {
 
 interface IAVColumn {
     width: string,
+    align: TAVAlign,
     icon: string,
     id: string,
     name: string,
@@ -395,7 +500,7 @@ interface IAVCalc {
 export interface IOperation {
     action: TOperation, // move， delete 不需要传 data
     id?: string,
-    context?: IObject,  // focusId, message, ignoreProcess, setRange
+    context?: Record<string, string>,  // focusId, message, ignoreProcess, setRange
     blockID?: string,
     isTwoWay?: boolean, // 是否双向关联
     backRelationKeyID?: string, // 双向关联的目标关联列 ID
@@ -631,7 +736,7 @@ export interface IWebSocketData {
 }
 
 export interface IObject {
-    [key: string]: string;
+    [key: string]: string | number | boolean;
 }
 
 declare class Viewer {

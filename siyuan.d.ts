@@ -38,6 +38,8 @@ export type TPluginDockPosition = "LeftTop" | "LeftBottom" | "RightTop" | "Right
 
 export type TOperation =
     "insert"
+    | "restoreCreatedDoc"
+    | "removeCreatedDoc"
     | "update"
     | "delete"
     | "move"
@@ -62,10 +64,12 @@ export type TOperation =
     | "setAttrViewColHidden"
     | "setAttrViewColWrap"
     | "setAttrViewColWidth"
+    | "setAttrViewColAlign"
     | "updateAttrViewColOptions"
     | "removeAttrViewColOption"
     | "updateAttrViewColOption"
     | "setAttrViewName"
+    | "setAttrViewNewItemTemplates"
     | "doUpdateUpdated"
     | "duplicateAttrViewKey"
     | "setAttrViewColIcon"
@@ -260,7 +264,7 @@ export interface ICard {
     deckID: string;
     cardID: string;
     blockID: string;
-    nextDues: IObject;
+    nextDues: Record<string, string>;
     lapses: number;  // 遗忘次数
     lastReview: number;  // 最后复习时间
     reps: number;  // 复习次数
@@ -424,7 +428,7 @@ export function hideMessage(id?: string): void;
 
 export abstract class Plugin {
     eventBus: EventBus;
-    i18n: IObject;
+    i18n: Record<string, string>;
     kernel: IKernelPlugin;
     data: any;
     displayName: string;
@@ -432,6 +436,27 @@ export abstract class Plugin {
     app: App;
     commands: ICommand[];
     setting: Setting;
+    customBlockRenders: {
+        [key: string]: {
+            icon: string,
+            action: Array<"edit" | "more">,
+            genCursor: boolean,
+            render: (options: { app: App, element: Element }) => void
+        }
+    };
+    topBarIcons: Element[];
+    statusBarIcons: Element[];
+    agentActions: string[];
+    models: {
+        [key: string]: (options: { tab: Tab, data: any }) => Custom
+    };
+    docks: {
+        [key: string]: {
+            config: IPluginDockTab,
+            model: (options: { tab: Tab }) => Custom,
+            mobileModel: (element: Element) => MobileCustom
+        }
+    };
     protyleSlash: {
         filter: string[],
         html: string,
@@ -443,10 +468,11 @@ export abstract class Plugin {
     constructor(options: {
         app: App,
         name: string,
-        i18n: IObject,
+        displayName: string,
+        i18n: Record<string, string>,
     });
 
-    onload(): void;
+    onload(): Promise<void> | void;
 
     onDataChanged(): void
 
@@ -481,7 +507,7 @@ export abstract class Plugin {
 
     loadData(storageName: string): Promise<any>;
 
-    saveData(storageName: string, content: any): Promise<IWebSocketData>;
+    saveData(storageName: string, content: any): Promise<any | IWebSocketData>;
 
     removeData(storageName: string): Promise<IWebSocketData>;
 
@@ -494,12 +520,12 @@ export abstract class Plugin {
      */
     addTab(options: {
         type: string,
-        beforeDestroy?: (this: Custom) => void,
-        destroy?: (this: Custom) => void,
-        resize?: (this: Custom) => void,
-        update?: (this: Custom) => void,
-        init: (this: Custom) => void,
-    }): () => Custom;
+        destroy?: () => void,
+        beforeDestroy?: () => void,
+        resize?: () => void,
+        update?: () => void,
+        init: () => void,
+    }): (options: { tab: Tab, data: any }) => Custom;
 
     /**
      * Add Custom to Dock.
@@ -512,8 +538,12 @@ export abstract class Plugin {
         destroy?: (this: Custom | MobileCustom) => void,
         resize?: (this: Custom | MobileCustom) => void,
         update?: (this: Custom | MobileCustom) => void,
-        init: (this: Custom | MobileCustom, dock: Custom | MobileCustom) => void,
-    }): { config: IPluginDockTab, model: Custom | MobileCustom };
+        init: (this: Custom | MobileCustom) => void,
+    }): {
+        config: IPluginDockTab,
+        model: (options: { tab: Tab }) => Custom,
+        mobileModel: (element: Element) => MobileCustom
+    };
 
     addCommand(options: ICommand): void;
 
@@ -544,7 +574,7 @@ export abstract class Plugin {
         isBacklink: boolean,
     }): void;
 
-    updateCards(options: ICardData): Promise<ICardData> | ICardData;
+    updateCards(options: ICardData): Promise<ICardData>;
 
     updateProtyleToolbar(toolbar: Array<string | IMenuItem>): Array<string | IMenuItem>;
 }

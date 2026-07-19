@@ -1,23 +1,25 @@
 import {Protyle} from "../protyle";
-import {App} from "../index";
+import {App, IObject, IRefDefs} from "../index";
 
 export declare class BlockPanel {
     element: HTMLElement;
     targetElement: HTMLElement;
-    nodeIds: string[];
-    defIds: string[];
+    refDefs: IRefDefs[];
     id: string;
     private app;
     x: number;
     y: number;
     private isBacklink;
     editors: Protyle[];
+    private observerResize;
+    private observerLoad;
+    private originalRefBlockIDs;
     constructor(options: {
         app: App;
         targetElement?: HTMLElement;
-        nodeIds?: string[];
-        defIds?: string[];
+        refDefs: IRefDefs[];
         isBacklink: boolean;
+        originalRefBlockIDs?: IObject;
         x?: number;
         y?: number;
     });

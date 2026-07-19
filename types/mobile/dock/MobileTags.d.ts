@@ -4,5 +4,5 @@ export declare class MobileTags {
     private tree;
     private openNodes;
     constructor(app: App);
-    update(): void;
+    update(ignoreMaxListHint?: boolean): void;
 }
