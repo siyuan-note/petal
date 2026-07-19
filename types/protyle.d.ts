@@ -11,6 +11,22 @@ import {
 } from "./../siyuan";
 import {Model} from "./layout/Model";
 
+declare class AVAttributePanel {
+    element: HTMLElement;
+
+    constructor(protyle: IProtyle);
+
+    render(force?: boolean): void;
+
+    refresh(): void;
+
+    hasDatabase(avID: string): boolean;
+
+    expand(): void;
+
+    toggle(): void;
+}
+
 declare class Breadcrumb {
     element: HTMLElement;
 
@@ -137,12 +153,36 @@ declare class Preview {
     private processZHTable;
 }
 
+interface IUndo {
+    undo(protyle: IProtyle): void;
+
+    redo(protyle: IProtyle): void;
+
+    add(doOperations: IOperation[], undoOperations: IOperation[], protyle: IProtyle): void;
+
+    clear(): void;
+
+    renderLocal?(protyle: IProtyle, operations: IOperation[]): void;
+}
+
 interface IOperations {
     doOperations: IOperation[],
     undoOperations: IOperation[]
 }
 
-declare class Undo {
+declare class Undo implements IUndo {
+    undo(protyle: IProtyle): void;
+
+    redo(protyle: IProtyle): void;
+
+    renderLocal(protyle: IProtyle, operations: IOperation[]): void;
+
+    add(doOperations: IOperation[], undoOperations: IOperation[], protyle: IProtyle): void;
+
+    clear(): void;
+}
+
+declare class LocalUndo implements IUndo {
     private hasUndo;
     redoStack: IOperations[];
     undoStack: IOperations[];
@@ -206,29 +246,36 @@ export declare class Toolbar {
     public element: HTMLElement;
     public subElement: HTMLElement;
     public subElementCloseCB: () => void;
+    public subElementResizeCB: () => void;
     public range: Range;
     public toolbarHeight: number;
 
     constructor(protyle: IProtyle)
 
+    public update(protyle: IProtyle): void
+
     public render(protyle: IProtyle, range: Range, event?: KeyboardEvent): void
 
-    public getCurrentType(range: Range): string[]
+    public getCurrentType(range?: Range): string[]
 
     public setInlineMark(protyle: IProtyle, type: string, action: "range" | "toolbar", textObj?: {
         color?: string,
         type: string
-    }): void
+    }): Node[]
 
     public showRender(protyle: IProtyle, renderElement: Element, updateElements?: Element[], oldHTML?: string): void
 
-    public showCodeLanguage(protyle: IProtyle, languageElement: HTMLElement): void
+    public showCodeLanguage(protyle: IProtyle, languageElements: HTMLElement[]): void
+
+    public showMultiSelectMode(protyle: IProtyle, blockElement: HTMLElement): void
 
     public showTpl(protyle: IProtyle, nodeElement: HTMLElement, range: Range): void
 
     public showWidget(protyle: IProtyle, nodeElement: HTMLElement, range: Range): void
 
     public showContent(protyle: IProtyle, range: Range, nodeElement: Element): void
+
+    public isMultiSelectMode(): boolean
 }
 
 export class Protyle {
@@ -236,7 +283,7 @@ export class Protyle {
     public readonly version: string;
     public protyle: IProtyle;
 
-    constructor(app: App, element: HTMLElement, options?: IProtyleOptions)
+    constructor(app: App, element: HTMLElement, options: IProtyleOptions)
 
     /** 聚焦到编辑器 */
     public focus(): void
@@ -252,7 +299,7 @@ export class Protyle {
 
     public resize(): void
 
-    public reload(focus: boolean): void
+    public reload(focus: boolean, updateReadonly?: boolean): void
 
     /**
      * @param {boolean} [isBlock=false]
@@ -497,7 +544,7 @@ interface IBreadcrumb {
 interface ILuteOptions extends IMarkdownConfig {
     emojis: IObject;
     emojiSite: string;
-    headingAnchor: boolean;
+    headingAnchor?: boolean;
     lazyLoadImage?: string;
 }
 
@@ -652,6 +699,8 @@ export class Lute {
 
     public MarkdownStr(name: string, md: string): string;
 
+    public ProtylePreviewStr(name: string, md: string): string;
+
     public GetLinkDest(text: string): string;
 
     public BlockDOM2InlineBlockDOM(html: string): string;
@@ -693,7 +742,7 @@ interface IUpload {
     /** 跨站点访问控制。默认值: false */
     withCredentials?: boolean;
     /** 请求头设置 */
-    headers?: IObject;
+    headers?: Record<string, string>;
     /** 额外请求参数 */
     extraData?: { [key: string]: string | Blob };
     /** 上传字段名。默认值：file[] */
@@ -752,6 +801,8 @@ interface IMenuItem {
     hotkey?: string;
     /** 提示的位置 */
     tipPosition?: string;
+    /** 是否在精简版中显示。默认值：false */
+    showInLite?: boolean;
 
     click?(protyle: Protyle): void;
 }
@@ -824,6 +875,7 @@ interface IHint {
 
 /** @link https://ld246.com/article/1549638745630#options */
 interface IProtyleOptions {
+    databaseAttr?: boolean,
     history?: {
         created?: string
         snapshot?: string
@@ -838,6 +890,7 @@ interface IProtyleOptions {
     mode?: TEditorMode,
     blockId?: string
     rootId?: string
+    notebookId?: string
     originalRefBlockIDs?: IObject
     key?: string
     defIds?: string[]
@@ -875,6 +928,9 @@ interface IProtyleOptions {
 
     /** 编辑器异步渲染完成后的回调方法 */
     after?(protyle: Protyle): void;
+
+    /** 精简版本 */
+    lite?: boolean;
 }
 
 // REF: https://github.com/siyuan-note/siyuan/blob/dev/app/src/types/protyle.d.ts
@@ -909,6 +965,7 @@ export interface IProtyle {
         action?: TProtyleAction[]
     },
     disabled: boolean,
+    lite?: boolean,
     selectElement?: HTMLElement,
     ws?: Model,
     notebookId?: string
@@ -921,6 +978,7 @@ export interface IProtyle {
     breadcrumb?: Breadcrumb,
     title?: Title,
     background?: Background,
+    databaseAttributePanel?: AVAttributePanel,
     contentElement?: HTMLElement,
     options: IProtyleOptions;
     lute?: Lute;
@@ -928,6 +986,6 @@ export interface IProtyle {
     preview?: Preview;
     hint?: Hint;
     upload?: Upload;
-    undo?: Undo;
+    undo?: IUndo;
     wysiwyg?: WYSIWYG
 }
