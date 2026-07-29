@@ -2,6 +2,8 @@
 
 ## v1.2.4 2026
 
+* [Improve strict TypeScript compatibility by removing unused imports and correcting declaration file extensions](https://github.com/siyuan-note/petal/issues/56)
+
 ## v1.2.3 2026-07-21
 
 * [Extract lite version of protyle](https://github.com/siyuan-note/siyuan/issues/18151)

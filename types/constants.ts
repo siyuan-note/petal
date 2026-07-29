@@ -1,4 +1,4 @@
-import type {IObject, Config} from "../siyuan";
+import type {Config} from "../siyuan";
 
 const altNumber = navigator.platform.toUpperCase().indexOf("MAC") > -1 ? "⌃" : "⌥";
 
