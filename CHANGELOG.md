@@ -2,6 +2,7 @@
 
 ## v1.2.4 2026
 
+* [Replace plugin MCP tools and Agent actions with Agent capabilities](https://github.com/siyuan-note/siyuan/issues/18638)
 * [Improve strict TypeScript compatibility by removing unused imports and correcting declaration file extensions](https://github.com/siyuan-note/petal/issues/56)
 
 ## v1.2.3 2026-07-21
@@ -10,7 +11,6 @@
 * [Sync the latest updates and functional changes from the SiYuan](https://github.com/siyuan-note/petal/issues/55)
 
 ## v1.2.2 2026-6-30
-
 * [Align with SiYuan's latest type definitions](https://github.com/siyuan-note/petal/pull/54)
 * [Deprecate updateTransaction and replace with updateTransactionElement](https://github.com/siyuan-note/siyuan/issues/17828)
 * [Improve LocalStorage related APIs](https://github.com/siyuan-note/siyuan/pull/17482)

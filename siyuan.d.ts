@@ -260,6 +260,13 @@ export interface ICommand {
     dockCallback?: (element: HTMLElement) => void    // 焦点在 dock 上时执行的回调
 }
 
+export interface IAgentCapabilityEffects {
+    localRead?: boolean;
+    localWrite?: boolean;
+    dataEgress?: boolean;
+    externalCost?: boolean;
+}
+
 export interface ICard {
     deckID: string;
     cardID: string;
@@ -559,10 +566,19 @@ export abstract class Plugin {
      */
     getVariable(name: string): string;
 
-    addAgentAction(options: {
+    addAgentCapability(options: {
         name: string,
+        title?: string,
         description: string,
-        handler: (args: Record<string, unknown>, app: App) => Promise<{ result?: string, error?: string }>,
+        inputSchema: Record<string, unknown>,
+        outputSchema?: Record<string, unknown>,
+        effects?: IAgentCapabilityEffects,
+        actionEffects?: Record<string, IAgentCapabilityEffects>,
+        handler: (args: Record<string, unknown>, app: App) => Promise<{
+            result?: string;
+            structuredContent?: unknown;
+            error?: string;
+        }>,
     }): string;
 
     addFloatLayer(options: {
