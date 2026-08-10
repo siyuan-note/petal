@@ -2,6 +2,7 @@
 
 ## v1.2.4 2026
 
+* [Add Agent and MCP capability policy type definitions](https://github.com/siyuan-note/siyuan/issues/18638)
 * [Replace plugin MCP tools and Agent actions with Agent capabilities](https://github.com/siyuan-note/siyuan/issues/18638)
 * [Improve strict TypeScript compatibility by removing unused imports and correcting declaration file extensions](https://github.com/siyuan-note/petal/issues/56)
 

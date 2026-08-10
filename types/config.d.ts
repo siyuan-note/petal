@@ -157,6 +157,19 @@ export namespace Config {
         temperature: number;
         maxCompletionTokens: number;
         maxToolCallRounds: number;
+        capabilityPolicy: ICapabilityPolicy;
+        approvalPolicy: {
+            default: "confirm" | "allow";
+            overrides: Record<string, {
+                default: "" | "confirm" | "allow";
+                actions: Record<string, "confirm" | "allow">;
+            }>;
+        };
+    }
+
+    export interface ICapabilityPolicy {
+        default: "allow" | "deny";
+        overrides: Record<string, "allow" | "deny">;
     }
 
     /**
@@ -241,6 +254,7 @@ export namespace Config {
      */
     export interface IMCP {
         servers: IMCPServer[];
+        exposurePolicy: ICapabilityPolicy;
     }
 
     export interface IMCPServer {
