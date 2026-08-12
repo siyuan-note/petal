@@ -3,6 +3,8 @@
 ## v1.2.4 2026
 
 * [Improve document tree menus for multiple and mixed selections](https://github.com/siyuan-note/siyuan/issues/16235)
+* [Add Agent and MCP capability policy type definitions](https://github.com/siyuan-note/siyuan/issues/18638)
+* [Replace plugin MCP tools and Agent actions with Agent capabilities](https://github.com/siyuan-note/siyuan/issues/18638)
 * [Improve strict TypeScript compatibility by removing unused imports and correcting declaration file extensions](https://github.com/siyuan-note/petal/issues/56)
 
 ## v1.2.3 2026-07-21

@@ -555,10 +555,11 @@ export interface IStorageWatcher {
     remove(path: string): Promise<void>;
 }
 
-/**
- * RPC / MCP method handler type.
- */
+/** RPC method handler type. */
 export type THandler = (...args: any[]) => any | Promise<any>;
+
+/** Agent capability handler type. */
+export type TAgentCapabilityHandler = (input: Record<string, any>) => any | Promise<any>;
 
 /**
  * JSON-RPC method registry for the plugin.
@@ -595,73 +596,74 @@ export interface IRpc {
     broadcast(method: string, params?: any[] | Record<string, any>): Promise<void>;
 }
 
-/**
- * MCP (Model Context Protocol) interface exposed to plugins.
- *
- * Allows plugins to register and unregister tools that are surfaced to MCP clients
- * (e.g., AI assistants) through the kernel's built-in MCP server.
- */
-export interface IMcp {
+/** Agent capability registry exposed to plugins as `siyuan.agent`. */
+export interface IAgent {
     /**
-     * Register a tool with the MCP server.
+     * Registers an Agent capability.
      *
-     * The tool name is automatically namespaced to avoid collisions between plugins.
-     * The actual registered name follows the pattern `plugin__<plugin-name>__<tool-name>`.
+     * The capability name is automatically namespaced and suffixed with a stable hash
+     * to avoid collisions between plugins.
      *
-     * @param name - The tool name, local to this plugin (e.g. `"my-tool"`).
-     * @param config - Metadata describing the tool to MCP clients.
-     * @param handler - The function invoked when an MCP client calls the tool.
+     * @param name - The capability name local to this plugin (e.g. `"my-capability"`).
+     * @param config - Metadata, schemas, and declared side effects for the capability.
+     * @param handler - The function invoked when an Agent calls the capability.
      * @returns The registration record, including the fully-qualified tool name.
      */
-    registerTool(
+    registerCapability(
         name: string,
-        config: IMcpToolConfig,
-        handler: THandler,
-    ): Promise<IRegisteredTool>;
+        config: IAgentCapabilityConfig,
+        handler: TAgentCapabilityHandler,
+    ): Promise<IRegisteredCapability>;
 
     /**
-     * Unregister a previously registered tool.
+     * Unregisters a previously registered Agent capability.
      *
-     * Uses the same local name passed to {@link registerTool}; the kernel resolves
+     * Uses the same local name passed to {@link registerCapability}; the kernel resolves
      * the fully-qualified name internally.
      *
-     * @param name - The local tool name used when the tool was registered.
+     * @param name - The local capability name used when the capability was registered.
      */
-    unregisterTool(name: string): Promise<void>;
+    unregisterCapability(name: string): Promise<void>;
 }
 
-/**
- * Metadata describing an MCP tool to clients.
- *
- * All fields are optional; omitting them produces a tool with no description or
- * schema constraints, which is valid but less discoverable.
- */
-export interface IMcpToolConfig {
-    /** Human-readable display name shown in MCP client UIs. */
+/** Side effects declared by an Agent capability or one of its actions. */
+export interface IAgentCapabilityEffects {
+    /** Reads local data. */
+    localRead?: boolean;
+    /** Modifies local data. */
+    localWrite?: boolean;
+    /** Sends data outside the local environment. */
+    dataEgress?: boolean;
+    /** May incur an external cost. */
+    externalCost?: boolean;
+}
+
+/** Metadata, schemas, and side effects describing an Agent capability. */
+export interface IAgentCapabilityConfig {
+    /** Human-readable display name shown in Agent UIs. */
     title?: string;
-    /** Natural-language description of what the tool does, used by AI clients for tool selection. */
+    /** Natural-language description used by the Agent to discover and select the capability. */
     description: string;
-    /** JSON Schema describing the tool's input parameters. */
+    /** JSON Schema describing the capability's input parameters. */
     inputSchema: JSONSchema.ObjectSchema;
-    /** JSON Schema describing the tool's output. */
+    /** JSON Schema describing the capability's output. */
     outputSchema?: JSONSchema.Schema;
+    /** Default side effects for the capability. */
+    effects?: IAgentCapabilityEffects;
+    /** Side effects for individual values of the input `action` property. */
+    actionEffects?: Record<string, IAgentCapabilityEffects>;
 }
 
 /**
- * The registration record returned by {@link IMcp.registerTool}.
- *
- * Extends {@link IMcpToolConfig} with the resolved fully-qualified name and the
- * handler that was registered.
+ * The registration record returned by {@link IAgent.registerCapability}.
  */
-export interface IRegisteredTool extends IMcpToolConfig {
+export interface IRegisteredCapability extends IAgentCapabilityConfig {
+    /** Stable capability identifier used by Agent configuration. */
+    id: string;
     /**
-     * The fully-qualified tool name as registered with the MCP server.
+     * The fully-qualified tool name exposed to the Agent.
      *
-     * The kernel namespaces tool names to prevent collisions between plugins.
-     * A tool registered as `"my-tool"` in plugin `"my-plugin"` becomes
-     * `"plugin__my_plugin__my_tool"`.
-     *
-     * @example "plugin__plugin_name__tool_name"
+     * @example "plugin__plugin_name__capability_name__0123456789ab"
      */
     name: string;
 }
@@ -1196,8 +1198,8 @@ export interface ISiyuan {
     readonly storage: IStorage;
     /** JSON-RPC method registry. */
     readonly rpc: IRpc;
-    /** MCP method registry. */
-    readonly mcp: IMcp;
+    /** Agent capability registry. */
+    readonly agent: IAgent;
     /** Network client utilities (HTTP, WebSocket, SSE). */
     readonly client: IClient;
     /** Web request handler registry. */
