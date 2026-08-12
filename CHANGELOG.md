@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.2.4 2026
+## v1.2.5 2026
+
+## v1.2.4 2026-08-12
 
 * [Improve document tree menus for multiple and mixed selections](https://github.com/siyuan-note/siyuan/issues/16235)
 * [Add Agent and MCP capability policy type definitions](https://github.com/siyuan-note/siyuan/issues/18638)
