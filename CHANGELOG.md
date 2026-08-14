@@ -2,6 +2,8 @@
 
 ## v1.2.5 2026
 
+* [Add Agent chat shortcut definitions](https://github.com/siyuan-note/siyuan/issues/18728)
+
 ## v1.2.4 2026-08-12
 
 * [Improve document tree menus for multiple and mixed selections](https://github.com/siyuan-note/siyuan/issues/16235)
