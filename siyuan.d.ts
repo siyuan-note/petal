@@ -179,6 +179,8 @@ export interface IEventBusMap {
         menu: subMenu,
         elements: NodeListOf<HTMLElement>,
         type: "doc" | "docs" | "notebook" | "notebooks" | "items",
+        items: { id: string, path: string }[],
+        type: "doc" | "docs" | "notebook" | "notebooks" | "items",
         items: { id: string, path: string, notebookId: string }[],
     };
     "open-menu-inbox": {

@@ -236,8 +236,10 @@ export abstract class Constants {
 
     public static readonly MENU_DOC_TREE_MORE = "docTreeMore"; // 侧栏文档树右键菜单
     public static readonly MENU_FROM_DOC_TREE_MORE_NOTEBOOK = "tree-notebook"; // 侧栏文档树右键菜单，单个笔记本
+    public static readonly MENU_FROM_DOC_TREE_MORE_NOTEBOOKS = "tree-notebooks"; // 侧栏文档树右键菜单，多个笔记本
     public static readonly MENU_FROM_DOC_TREE_MORE_DOC = "tree-doc"; // 侧栏文档树右键菜单，单个文档
-    public static readonly MENU_FROM_DOC_TREE_MORE_ITEMS = "tree-items"; // 侧栏文档树右键菜单，多个文档或笔记本
+    public static readonly MENU_FROM_DOC_TREE_MORE_DOCS = "tree-docs"; // 侧栏文档树右键菜单，多个文档
+    public static readonly MENU_FROM_DOC_TREE_MORE_ITEMS = "tree-items"; // 侧栏文档树右键菜单，文档和笔记本混选
     public static readonly MENU_TAG = "tagMenu"; // 侧栏标签菜单
     public static readonly MENU_BOOKMARK = "bookmarkMenu"; // 侧栏书签菜单
     public static readonly MENU_OUTLINE_CONTEXT = "outline-context"; // 大纲标题右键菜单
@@ -456,6 +458,8 @@ export abstract class Constants {
             stickSearch: {default: "⇧⌘F", custom: "⇧⌘F"},
             replace: {default: "⌘R", custom: "⌘R"},
             closeTab: {default: "⌘W", custom: "⌘W"},
+            agentChat: {default: "", custom: ""},
+            agentSend: {default: "⇧⌘↩", custom: "⇧⌘↩"},
             fileTree: {default: altNumber + "1", custom: altNumber + "1"},
             outline: {default: altNumber + "2", custom: altNumber + "2"},
             bookmark: {default: altNumber + "3", custom: altNumber + "3"},

@@ -1227,6 +1227,8 @@ export namespace Config {
         stickSearch: IKey;
         replace: IKey;
         closeTab: IKey;
+        agentChat: IKey;
+        agentSend: IKey;
         fileTree: IKey;
         outline: IKey;
         bookmark: IKey;
