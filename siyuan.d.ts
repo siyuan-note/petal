@@ -178,7 +178,8 @@ export interface IEventBusMap {
     "open-menu-doctree": {
         menu: subMenu,
         elements: NodeListOf<HTMLElement>,
-        type: "doc" | "docs" | "notebook",
+        type: "doc" | "docs" | "notebook" | "notebooks" | "items",
+        items: { id: string, path: string, notebookId: string }[],
     };
     "open-menu-inbox": {
         menu: subMenu,
