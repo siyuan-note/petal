@@ -295,6 +295,10 @@ export namespace Config {
          */
         closeButtonBehavior: number;
         /**
+         * Whether to close tabs by double-clicking
+         */
+        closeTabOnDoubleClick: boolean;
+        /**
          * Dark code block theme
          */
         codeBlockThemeDark: string;
