@@ -131,6 +131,7 @@ export interface IFile {
     id: string;
     count: number;
     subFileCount: number;
+    childrenSortMode?: number | null;
 }
 
 export interface IBlockTree {
