@@ -158,6 +158,9 @@ export namespace Config {
         maxCompletionTokens: number;
         maxToolCallRounds: number;
         capabilityPolicy: ICapabilityPolicy;
+        skills: {
+            userEnabled: string[];
+        };
         approvalPolicy: {
             default: "confirm" | "allow";
             overrides: Record<string, {
