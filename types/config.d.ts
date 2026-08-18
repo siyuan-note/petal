@@ -1906,7 +1906,8 @@ export namespace Config {
         port: string;
         /**
          * The protocol used by the proxy server
-         * - Empty String: Use the system proxy settings
+         * - Empty String: Direct connection
+         * - `system`: Use the system proxy settings
          * - `http`: HTTP
          * - `https`: HTTPS
          * - `socks5`: SOCKS5
@@ -1916,12 +1917,13 @@ export namespace Config {
 
     /**
      * The protocol used by the proxy server
-     * - Empty String: Use the system proxy settings
+     * - Empty String: Direct connection
+     * - `system`: Use the system proxy settings
      * - `http`: HTTP
      * - `https`: HTTPS
      * - `socks5`: SOCKS5
      */
-    export type TSystemNetworkProxyScheme = "" | "http" | "https" | "socks5";
+    export type TSystemNetworkProxyScheme = "" | "system" | "http" | "https" | "socks5";
 
     /**
      * The operating system name determined at compile time (obtained using the command `go tool
