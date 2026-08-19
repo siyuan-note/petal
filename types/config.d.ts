@@ -491,6 +491,10 @@ export namespace Config {
          */
         backmentionExpandCount: number;
         /**
+         * Backlink mention keyword exclusion list (separated by commas `,`)
+         */
+        backlinkMentionExclude: string;
+        /**
          * Whether the backlink contains children
          */
         backlinkContainChildren: boolean;
