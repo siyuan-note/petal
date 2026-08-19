@@ -1,4 +1,5 @@
 import type {
+    IClipboardData,
     IGetDocInfo,
     IGetTreeStat,
     IKernelPlugin,
@@ -204,7 +205,7 @@ export interface IEventBusMap {
     "opened-notebook": IWebSocketData;
     "paste": {
         protyle: IProtyle,
-        resolve: new <T>(value: T | PromiseLike<T>) => void,
+        resolve: (value: IClipboardData | PromiseLike<IClipboardData | undefined> | undefined) => void,
         textHTML: string,
         textPlain: string,
         siyuanHTML: string,

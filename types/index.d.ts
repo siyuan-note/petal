@@ -133,6 +133,19 @@ export interface IFile {
     subFileCount: number;
 }
 
+export interface ILocalFiles {
+    path: string;
+    size: number;
+}
+
+export interface IClipboardData {
+    textHTML?: string;
+    textPlain?: string;
+    siyuanHTML?: string;
+    files?: FileList | DataTransferItemList | File[];
+    localFiles?: ILocalFiles[];
+}
+
 export interface IBlockTree {
     box: string,
     nodeType: string,

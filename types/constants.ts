@@ -459,7 +459,7 @@ export abstract class Constants {
             replace: {default: "⌘R", custom: "⌘R"},
             closeTab: {default: "⌘W", custom: "⌘W"},
             agentChat: {default: "", custom: ""},
-            agentSend: {default: "⇧⌘↩", custom: "⇧⌘↩"},
+            agentSend: {default: "⌘↩", custom: "⌘↩"},
             fileTree: {default: altNumber + "1", custom: altNumber + "1"},
             outline: {default: altNumber + "2", custom: altNumber + "2"},
             bookmark: {default: altNumber + "3", custom: altNumber + "3"},
@@ -609,7 +609,7 @@ export abstract class Constants {
             list: {
                 indent: {default: "⇥", custom: "⇥"},
                 outdent: {default: "⇧⇥", custom: "⇧⇥"},
-                checkToggle: {default: "⌘↩", custom: "⌘↩"},
+                checkToggle: {default: "⇧⌘L", custom: "⇧⌘L"},
             },
             table: {
                 insertRowAbove: {default: "", custom: ""},

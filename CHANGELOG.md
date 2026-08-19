@@ -1,7 +1,8 @@
 # Changelog
 
-## v1.2.5 2026
+## v1.2.5 2026-08-19
 
+* [Correct the `paste.resolve` callback type](https://github.com/siyuan-note/petal/issues/58)
 * [Add Agent chat shortcut definitions](https://github.com/siyuan-note/siyuan/issues/18728)
 
 ## v1.2.4 2026-08-12
