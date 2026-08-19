@@ -1,8 +1,20 @@
 # Changelog
 
+## v1.2.6 2026
+
 ## v1.2.5 2026-08-19
 
-* [Correct the `paste.resolve` callback type](https://github.com/siyuan-note/petal/issues/58)
+* [Fix `paste.resolve` callback type](https://github.com/siyuan-note/petal/issues/58)
+* [Add system network proxy type](https://github.com/siyuan-note/siyuan/issues/18819)
+* [Move double-click tab option to document configuration](https://github.com/siyuan-note/siyuan/issues/18784)
+* [Add double-click tab closing configuration type](https://github.com/siyuan-note/siyuan/issues/18784)
+* [Add child document sort mode type](https://github.com/siyuan-note/siyuan/issues/11688)
+* [Add common menu event types](https://github.com/siyuan-note/siyuan/pull/18780)
+* [Add user skill configuration type](https://github.com/siyuan-note/siyuan/issues/18778)
+* [Add tooltip event types](https://github.com/siyuan-note/siyuan/pull/18162)
+* [Remove dock shortcut from layout type](https://github.com/siyuan-note/siyuan/issues/18765)
+* [Add document tree menu notebook ID type](https://github.com/siyuan-note/siyuan/issues/18759)
+* [Add rerank request format type](https://github.com/siyuan-note/siyuan/issues/18752)
 * [Add Agent chat shortcut definitions](https://github.com/siyuan-note/siyuan/issues/18728)
 
 ## v1.2.4 2026-08-12
