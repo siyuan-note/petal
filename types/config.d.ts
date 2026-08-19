@@ -158,6 +158,9 @@ export namespace Config {
         maxCompletionTokens: number;
         maxToolCallRounds: number;
         capabilityPolicy: ICapabilityPolicy;
+        skills: {
+            userEnabled: string[];
+        };
         approvalPolicy: {
             default: "confirm" | "allow";
             overrides: Record<string, {
@@ -220,6 +223,7 @@ export namespace Config {
         endpoint: string;
         apiKey: string;
         name: string;
+        requestFormat: "cohere" | "dashscope";
         timeout: number;
         candidateCount: number;
     }
@@ -805,6 +809,10 @@ export namespace Config {
          * Whether to open the file in the current tab
          */
         openFilesUseCurrentTab: boolean;
+        /**
+         * Whether to close tabs by double-clicking
+         */
+        closeTabOnDoubleClick: boolean;
         /**
          * The storage path of the new document created using block references
          */
@@ -1898,7 +1906,8 @@ export namespace Config {
         port: string;
         /**
          * The protocol used by the proxy server
-         * - Empty String: Use the system proxy settings
+         * - Empty String: Direct connection
+         * - `system`: Use the system proxy settings
          * - `http`: HTTP
          * - `https`: HTTPS
          * - `socks5`: SOCKS5
@@ -1908,12 +1917,13 @@ export namespace Config {
 
     /**
      * The protocol used by the proxy server
-     * - Empty String: Use the system proxy settings
+     * - Empty String: Direct connection
+     * - `system`: Use the system proxy settings
      * - `http`: HTTP
      * - `https`: HTTPS
      * - `socks5`: SOCKS5
      */
-    export type TSystemNetworkProxyScheme = "" | "http" | "https" | "socks5";
+    export type TSystemNetworkProxyScheme = "" | "system" | "http" | "https" | "socks5";
 
     /**
      * The operating system name determined at compile time (obtained using the command `go tool
@@ -1974,10 +1984,6 @@ export namespace Config {
      * SiYuan dock tab data
      */
     export interface IUILayoutDockTab {
-        /**
-         * Dock tab hotkey
-         */
-        hotkey?: string;
         /**
          * Hotkey description ID
          */
