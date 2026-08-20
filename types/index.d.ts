@@ -171,6 +171,12 @@ export interface IAssetUploadRejection {
     reasons: TAssetUploadRejectionReason[];
 }
 
+export interface IAssetUploadSuccess {
+    index: number;
+    name: string;
+    path: string;
+}
+
 export interface IAssetUploadResult {
     requestId: string;
     status: TAssetUploadStatus;
@@ -180,6 +186,8 @@ export interface IAssetUploadResult {
     acceptedInput?: IAssetUploadInput;
     /** 被前端校验拒绝的文件及其在完整输入中的位置。 */
     rejected?: IAssetUploadRejection[];
+    /** 按 acceptedInput 中的索引记录成功结果，可区分同名文件。 */
+    succFiles?: IAssetUploadSuccess[];
     succMap?: Record<string, string>;
     errFiles?: string[];
     error?: string;
