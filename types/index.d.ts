@@ -143,6 +143,7 @@ export interface ILocalFiles {
 export type TAssetUploadSource = "paste" | "drop" | "file-picker" | "programmatic";
 export type TAssetUploadTarget = "editor" | "av-cell" | "background";
 export type TAssetUploadStatus = "success" | "partial" | "failed" | "canceled";
+export type TAssetUploadRejectionReason = "name-empty" | "size-limit" | "type-not-accepted";
 
 export interface IAssetUploadPosition {
     x: number;
@@ -164,10 +165,21 @@ export type IAssetUploadDecision = {
     action: "cancel";
 };
 
+export interface IAssetUploadRejection {
+    index: number;
+    name: string;
+    reasons: TAssetUploadRejectionReason[];
+}
+
 export interface IAssetUploadResult {
     requestId: string;
     status: TAssetUploadStatus;
+    /** 插件链处理结束后的完整输入。 */
     input: IAssetUploadInput;
+    /** 通过前端校验并实际提交上传的输入。 */
+    acceptedInput?: IAssetUploadInput;
+    /** 被前端校验拒绝的文件及其在完整输入中的位置。 */
+    rejected?: IAssetUploadRejection[];
     succMap?: Record<string, string>;
     errFiles?: string[];
     error?: string;

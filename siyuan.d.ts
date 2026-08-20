@@ -134,7 +134,7 @@ export interface IEventBusMap {
         target: Element,
         tooltipElement: HTMLElement,
     };
-    /** 在事件对象上调用 `preventDefault()` 可立即取消本次上传。 */
+    /** 不得在该事件上调用 `preventDefault()`，取消上传应使用 `respondWith({action: "cancel"})`。 */
     "before-upload-assets": {
         requestId: string,
         protyle: IProtyle,
@@ -142,9 +142,11 @@ export interface IEventBusMap {
         target: TAssetUploadTarget,
         position?: IAssetUploadPosition,
         input: IAssetUploadInput,
-        /** 返回替换后的输入或取消上传，每次事件只允许调用一次。 */
+        /** 插件处理的取消信号，编辑器销毁、插件卸载或处理超时时触发。 */
+        signal: AbortSignal,
+        /** 必须同步调用且每次事件只允许调用一次，异步处理应将 Promise 作为参数传入，默认 120 秒超时。 */
         respondWith(response: IAssetUploadDecision | PromiseLike<IAssetUploadDecision>): void,
-        /** 注册上传结束回调，成功、失败或取消时执行一次。 */
+        /** 必须同步注册，资源目录写入成功、失败或取消时执行一次，不包含正文或属性视图写入。 */
         onComplete(callback: (result: IAssetUploadResult) => void): void,
     };
     "common-menu-closed": {
