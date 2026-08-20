@@ -462,10 +462,24 @@ export namespace Config {
         inlineMark: boolean;
     }
 
+    export type TAssetOpenAction = "follow-tab" | "current" | "right" | "new-window" | "app" | "folder";
+
+    export interface IAssetOpen {
+        click: TAssetOpenAction;
+        ctrlClick: TAssetOpenAction;
+        altClick: TAssetOpenAction;
+        shiftClick: TAssetOpenAction;
+    }
+
     /**
      * SiYuan editor related configuration
      */
     export interface IEditor {
+
+        /**
+         * Asset opening behavior
+         */
+        assetOpen: IAssetOpen;
 
         /**
          * Whether to allow to execute javascript in the SVG

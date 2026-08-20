@@ -206,6 +206,11 @@ export interface IEventBusMap {
         element: HTMLElement,
         ids: string[],
     };
+    "open-asset": {
+        path: string,
+        action: Config.TAssetOpenAction,
+        event?: MouseEvent,
+    };
     "open-noneditableblock": {
         protyle: IProtyle,
         toolbar: Toolbar,
