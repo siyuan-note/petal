@@ -211,6 +211,11 @@ export interface IEventBusMap {
         action: Config.TAssetOpenAction,
         event?: MouseEvent,
     };
+    "open-link": {
+        href: string,
+        originalHref: string,
+        event?: MouseEvent | KeyboardEvent,
+    };
     "open-noneditableblock": {
         protyle: IProtyle,
         toolbar: Toolbar,
