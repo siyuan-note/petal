@@ -1,4 +1,8 @@
 import type {
+    IAssetUploadDecision,
+    IAssetUploadInput,
+    IAssetUploadPosition,
+    IAssetUploadResult,
     IClipboardData,
     IGetDocInfo,
     IGetTreeStat,
@@ -15,6 +19,8 @@ import type {
     IRefDefs,
     ISiyuan,
     IWebSocketData,
+    TAssetUploadSource,
+    TAssetUploadTarget,
     TEditorMode,
     TProtyleAction,
 } from "./types";
@@ -127,6 +133,19 @@ export interface IEventBusMap {
         message: string,
         target: Element,
         tooltipElement: HTMLElement,
+    };
+    /** 在事件对象上调用 `preventDefault()` 可立即取消本次上传。 */
+    "before-upload-assets": {
+        requestId: string,
+        protyle: IProtyle,
+        source: TAssetUploadSource,
+        target: TAssetUploadTarget,
+        position?: IAssetUploadPosition,
+        input: IAssetUploadInput,
+        /** 返回替换后的输入或取消上传，每次事件只允许调用一次。 */
+        respondWith(response: IAssetUploadDecision | PromiseLike<IAssetUploadDecision>): void,
+        /** 注册上传结束回调，成功、失败或取消时执行一次。 */
+        onComplete(callback: (result: IAssetUploadResult) => void): void,
     };
     "common-menu-closed": {
         menu: HTMLElement,

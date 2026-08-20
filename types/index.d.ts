@@ -136,7 +136,41 @@ export interface IFile {
 
 export interface ILocalFiles {
     path: string;
-    size: number;
+    size: number | null;
+    isDir?: boolean;
+}
+
+export type TAssetUploadSource = "paste" | "drop" | "file-picker" | "programmatic";
+export type TAssetUploadTarget = "editor" | "av-cell" | "background";
+export type TAssetUploadStatus = "success" | "partial" | "failed" | "canceled";
+
+export interface IAssetUploadPosition {
+    x: number;
+    y: number;
+}
+
+export type IAssetUploadInput = {
+    kind: "files";
+    files: File[];
+} | {
+    kind: "local-files";
+    files: ILocalFiles[];
+};
+
+export type IAssetUploadDecision = {
+    action: "replace";
+    input: IAssetUploadInput;
+} | {
+    action: "cancel";
+};
+
+export interface IAssetUploadResult {
+    requestId: string;
+    status: TAssetUploadStatus;
+    input: IAssetUploadInput;
+    succMap?: Record<string, string>;
+    errFiles?: string[];
+    error?: string;
 }
 
 export interface IClipboardData {
