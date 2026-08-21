@@ -177,6 +177,12 @@ export interface IAssetUploadSuccess {
     path: string;
 }
 
+export interface IAssetUploadFailure {
+    index: number;
+    name: string;
+    error: string;
+}
+
 export interface IAssetUploadResult {
     requestId: string;
     status: TAssetUploadStatus;
@@ -188,6 +194,8 @@ export interface IAssetUploadResult {
     rejected?: IAssetUploadRejection[];
     /** 按 acceptedInput 中的索引记录成功结果，可区分同名文件。 */
     succFiles?: IAssetUploadSuccess[];
+    /** 按 acceptedInput 中的索引记录失败结果。 */
+    failedFiles?: IAssetUploadFailure[];
     succMap?: Record<string, string>;
     errFiles?: string[];
     error?: string;
