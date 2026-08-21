@@ -462,10 +462,25 @@ export namespace Config {
         inlineMark: boolean;
     }
 
+    export type TAssetOpenAction = "follow-tab" | "current" | "right" | "bottom" | "background" |
+        "new-window" | "app" | "folder";
+
+    export interface IAssetOpen {
+        click: TAssetOpenAction;
+        ctrlClick: TAssetOpenAction;
+        altClick: TAssetOpenAction;
+        shiftClick: TAssetOpenAction;
+    }
+
     /**
      * SiYuan editor related configuration
      */
     export interface IEditor {
+
+        /**
+         * Asset opening behavior
+         */
+        assetOpen: IAssetOpen;
 
         /**
          * Whether to allow to execute javascript in the SVG
@@ -490,6 +505,10 @@ export namespace Config {
          * The default number of backlinks to mention
          */
         backmentionExpandCount: number;
+        /**
+         * Backlink mention keyword exclusion list (separated by commas `,`)
+         */
+        backlinkMentionExclude: string;
         /**
          * Whether the backlink contains children
          */

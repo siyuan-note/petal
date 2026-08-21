@@ -136,7 +136,69 @@ export interface IFile {
 
 export interface ILocalFiles {
     path: string;
-    size: number;
+    size: number | null;
+    isDir?: boolean;
+}
+
+export type TAssetUploadSource = "paste" | "drop" | "file-picker" | "programmatic";
+export type TAssetUploadTarget = "editor" | "av-cell" | "background";
+export type TAssetUploadStatus = "success" | "partial" | "failed" | "canceled";
+export type TAssetUploadRejectionReason = "name-empty" | "size-limit" | "type-not-accepted";
+
+export interface IAssetUploadPosition {
+    x: number;
+    y: number;
+}
+
+export type IAssetUploadInput = {
+    kind: "files";
+    files: File[];
+} | {
+    kind: "local-files";
+    files: ILocalFiles[];
+};
+
+export type IAssetUploadDecision = {
+    action: "replace";
+    input: IAssetUploadInput;
+} | {
+    action: "cancel";
+};
+
+export interface IAssetUploadRejection {
+    index: number;
+    name: string;
+    reasons: TAssetUploadRejectionReason[];
+}
+
+export interface IAssetUploadSuccess {
+    index: number;
+    name: string;
+    path: string;
+}
+
+export interface IAssetUploadFailure {
+    index: number;
+    name: string;
+    error: string;
+}
+
+export interface IAssetUploadResult {
+    requestId: string;
+    status: TAssetUploadStatus;
+    /** 插件链处理结束后的完整输入。 */
+    input: IAssetUploadInput;
+    /** 通过前端校验并实际提交上传的输入。 */
+    acceptedInput?: IAssetUploadInput;
+    /** 被前端校验拒绝的文件及其在完整输入中的位置。 */
+    rejected?: IAssetUploadRejection[];
+    /** 按 acceptedInput 中的索引记录成功结果，可区分同名文件。 */
+    succFiles?: IAssetUploadSuccess[];
+    /** 按 acceptedInput 中的索引记录失败结果。 */
+    failedFiles?: IAssetUploadFailure[];
+    succMap?: Record<string, string>;
+    errFiles?: string[];
+    error?: string;
 }
 
 export interface IClipboardData {

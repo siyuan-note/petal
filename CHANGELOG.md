@@ -2,6 +2,7 @@
 
 ## v1.2.6 2026
 
+* [Add frontend asset upload plugin event types](https://github.com/siyuan-note/siyuan/issues/18878)
 * [Add editor breadcrumb button plugin APIs](https://github.com/siyuan-note/siyuan/issues/18856)
 
 ## v1.2.5 2026-08-19

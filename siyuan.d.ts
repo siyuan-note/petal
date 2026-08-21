@@ -1,4 +1,8 @@
 import type {
+    IAssetUploadDecision,
+    IAssetUploadInput,
+    IAssetUploadPosition,
+    IAssetUploadResult,
     IClipboardData,
     IGetDocInfo,
     IGetTreeStat,
@@ -15,6 +19,8 @@ import type {
     IRefDefs,
     ISiyuan,
     IWebSocketData,
+    TAssetUploadSource,
+    TAssetUploadTarget,
     TEditorMode,
     TProtyleAction,
 } from "./types";
@@ -128,6 +134,21 @@ export interface IEventBusMap {
         target: Element,
         tooltipElement: HTMLElement,
     };
+    /** 不得在该事件上调用 `preventDefault()`，取消上传应使用 `respondWith({action: "cancel"})`。 */
+    "before-upload-assets": {
+        requestId: string,
+        protyle: IProtyle,
+        source: TAssetUploadSource,
+        target: TAssetUploadTarget,
+        position?: IAssetUploadPosition,
+        input: IAssetUploadInput,
+        /** 插件处理的取消信号，编辑器销毁、插件卸载或处理超时时触发。 */
+        signal: AbortSignal,
+        /** 必须同步调用且每次事件只允许调用一次，异步处理应将 Promise 作为参数传入，每个插件默认 120 秒超时。 */
+        respondWith(response: IAssetUploadDecision | PromiseLike<IAssetUploadDecision>): void,
+        /** 必须同步注册，资源目录写入成功、失败或取消时执行一次，不包含正文或属性视图写入。 */
+        onComplete(callback: (result: IAssetUploadResult) => void): void,
+    };
     "common-menu-closed": {
         menu: HTMLElement,
         name: string | null,
@@ -206,6 +227,16 @@ export interface IEventBusMap {
         element: HTMLElement,
         ids: string[],
     };
+    "open-asset": {
+        path: string,
+        action: Config.TAssetOpenAction,
+        event?: MouseEvent,
+    };
+    "open-link": {
+        href: string,
+        originalHref: string,
+        event?: MouseEvent | KeyboardEvent,
+    };
     "open-noneditableblock": {
         protyle: IProtyle,
         toolbar: Toolbar,
@@ -224,6 +255,7 @@ export interface IEventBusMap {
     "opened-notebook": IWebSocketData;
     "paste": {
         protyle: IProtyle,
+        /** 调用 `preventDefault()` 接管粘贴后必须在 120 秒内完成。 */
         resolve: (value: IClipboardData | PromiseLike<IClipboardData | undefined> | undefined) => void,
         textHTML: string,
         textPlain: string,
