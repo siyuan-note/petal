@@ -2,6 +2,8 @@
 
 ## v1.2.6 2026
 
+* [Add editor breadcrumb button plugin APIs](https://github.com/siyuan-note/siyuan/issues/18856)
+
 ## v1.2.5 2026-08-19
 
 * [Fix `paste.resolve` callback type](https://github.com/siyuan-note/petal/issues/58)

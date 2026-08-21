@@ -522,6 +522,15 @@ export abstract class Plugin {
         position?: "right" | "left"
     }): HTMLElement;
 
+    addBreadcrumbButton(options: {
+        id: string,
+        icon: string,
+        title: string,
+        callback: (event: MouseEvent, protyle: IProtyle) => void,
+    }): string;
+
+    removeBreadcrumbButton(id: string): void;
+
     /**
      * Must be executed before the synchronous function.
      * @param {string} [options.position=right]
