@@ -141,7 +141,7 @@ export interface ILocalFiles {
 }
 
 export type TAssetUploadSource = "paste" | "drop" | "file-picker" | "programmatic";
-export type TAssetUploadTarget = "editor" | "av-cell" | "background";
+export type TAssetUploadTarget = "editor" | "av-cell" | "background" | "pdf-annotation";
 export type TAssetUploadStatus = "success" | "partial" | "failed" | "canceled";
 export type TAssetUploadRejectionReason = "name-empty" | "size-limit" | "type-not-accepted";
 
