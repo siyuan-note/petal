@@ -3,6 +3,7 @@ import type {
     IAssetUploadInput,
     IAssetUploadPosition,
     IAssetUploadResult,
+    IBlock,
     IClipboardData,
     IGetDocInfo,
     IGetTreeStat,
@@ -128,6 +129,13 @@ export interface Global {
 export interface IEventBusMap {
     "before-hide-tooltip": {
         tooltipElement: HTMLElement,
+    };
+    /** 在桌面端搜索结果渲染前同步触发，blocks 仅包含当前页结果。 */
+    "before-search-results-render": {
+        protyle: Protyle,
+        config: Config.IUILayoutTabSearchConfig,
+        searchElement: HTMLInputElement,
+        blocks: IBlock[],
     };
     "before-show-tooltip": {
         message: string,
