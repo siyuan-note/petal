@@ -299,6 +299,12 @@ export class Protyle {
 
     public resize(): void
 
+    /** 是否处于全屏状态 */
+    public isFullscreen(): boolean
+
+    /** 进入或退出全屏 */
+    public setFullscreen(enter: boolean): void
+
     public reload(focus: boolean, updateReadonly?: boolean): void
 
     /**
