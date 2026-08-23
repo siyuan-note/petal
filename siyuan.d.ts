@@ -528,6 +528,7 @@ export abstract class Plugin {
     };
     docks: {
         [key: string]: {
+            id: string,
             config: IPluginDockTab,
             model: (options: { tab: Tab }) => Custom,
             mobileModel: (element: Element) => MobileCustom
@@ -619,8 +620,10 @@ export abstract class Plugin {
     /**
      * Add Custom to Dock.
      * Must be executed before the synchronous function.
+     * @param {string} [options.id] - Unique ID within the plugin. Defaults to options.type.
      */
     addDock(options: {
+        id?: string,
         config: IPluginDockTab,
         data: any,
         type: string,
@@ -629,10 +632,13 @@ export abstract class Plugin {
         update?: (this: Custom | MobileCustom) => void,
         init: (this: Custom | MobileCustom) => void,
     }): {
+        id: string,
         config: IPluginDockTab,
         model: (options: { tab: Tab }) => Custom,
         mobileModel: (element: Element) => MobileCustom
     };
+
+    removeDock(id: string): void;
 
     addCommand(options: ICommand): void;
 
