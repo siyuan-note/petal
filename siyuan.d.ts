@@ -77,6 +77,7 @@ export type TOperation =
     | "updateAttrViewColOptions"
     | "removeAttrViewColOption"
     | "updateAttrViewColOption"
+    | "setAttrViewCustomColors"
     | "setAttrViewName"
     | "setAttrViewNewItemTemplates"
     | "doUpdateUpdated"

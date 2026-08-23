@@ -291,6 +291,20 @@ interface IBackStack {
     zoomId?: string
 }
 
+export interface IAVColorTheme {
+    color: string;
+    backgroundColor: string;
+}
+
+export interface IAVColor {
+    light: IAVColorTheme;
+    dark: IAVColorTheme;
+}
+
+export interface IAVCustomColor extends IAVColor {
+    index: number;
+}
+
 export interface IAV {
     id: string;
     name: string;
@@ -301,6 +315,8 @@ export interface IAV {
     isMirror?: boolean;
     newItemTemplates?: IAVNewItemTemplate[];
     defaultTemplateID?: string;
+    customColors?: IAVCustomColor[];
+    usedCustomColorIndexes?: number[];
     target?: IAVRenderTarget;
 }
 
@@ -456,6 +472,7 @@ interface IAVColumn {
     options?: {
         name: string,
         color: string,
+        resolvedColor?: IAVColor,
         desc?: string,
     }[],
     relation?: IAVColumnRelation,
@@ -546,7 +563,8 @@ interface IAVCellDateValue {
 
 interface IAVCellSelectValue {
     content: string,
-    color: string
+    color: string,
+    resolvedColor?: IAVColor
 }
 
 interface IAVCellAssetValue {
