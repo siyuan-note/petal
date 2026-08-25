@@ -554,11 +554,11 @@ export abstract class Plugin {
 
     onDataChanged(): void
 
-    onunload(): void;
+    onunload(): Promise<void> | void;
 
-    uninstall(): void;
+    uninstall(): Promise<void> | void;
 
-    onLayoutReady(): void;
+    onLayoutReady(): Promise<void> | void;
 
     /**
      * Must be executed before the synchronous function.
