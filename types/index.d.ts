@@ -160,6 +160,7 @@ export type IAssetUploadInput = {
 
 export type IAssetUploadDecision = {
     action: "replace";
+    /** 必须保持各项的逻辑顺序；需要逐项回填的上传会按下标关联原资源。 */
     input: IAssetUploadInput;
 } | {
     action: "cancel";
