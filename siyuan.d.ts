@@ -508,10 +508,11 @@ export function hideMessage(id?: string): void;
 /**
  * 前端插件生命周期契约。
  *
- * 同一插件实例的 `onload`、`onLayoutReady`、`onunload` 与 `uninstall` 在拆除截止时间前严格串行，并等待钩子返回的
- * Promise。`onDataChanged` 是同步通知，不在等待契约内。禁用、重载或卸载会在首次收到拆除请求时建立一份共享的 5 秒预算。
- * 等待 `onload`、内核初始化或 `onLayoutReady` 的剩余过程，以及后续的 `onunload` 和仅在从工作空间移除插件时运行的
- * `uninstall`，均使用同一份预算。
+ * 同一插件实例的 `onload`、`onLayoutReady`、`onDataChanged`、`onunload` 与 `uninstall` 在拆除截止时间前严格串行，
+ * 并等待钩子返回的 Promise。`onDataChanged` 仅在插件实例就绪后运行；若插件未覆盖基类实现，数据变更会改为重载整个插件。
+ * 禁用、重载或卸载会在首次收到拆除请求时建立一份共享的 5 秒预算。等待 `onload`、内核初始化、`onLayoutReady` 或已经开始的
+ * `onDataChanged`，以及后续的 `onunload` 和仅在从工作空间移除插件时运行的 `uninstall`，均使用同一份预算。尚未开始的
+ * `onDataChanged` 会在禁用或卸载时丢弃。
  *
  * 截止时间后，JavaScript Promise 无法取消，超时钩子可能继续运行。思源仍会尽力调用每个剩余的拆除钩子一次，但不再等待，
  * 随后拆除宿主管理的资源。这 5 秒只限制思源等待 Promise 的时间，无法中断同步 JavaScript。关闭窗口或退出思源时，
@@ -567,8 +568,8 @@ export abstract class Plugin {
     /** 当前端插件实例启动时运行。 */
     onload(): Promise<void> | void;
 
-    /** 插件数据变更时进行同步通知；思源不会等待运行时返回的 Promise。 */
-    onDataChanged(): void;
+    /** 插件实例就绪后收到数据变更时运行；思源会等待返回的 Promise，未覆盖该方法时则重载整个插件。 */
+    onDataChanged(): Promise<void> | void;
 
     /** 当前端插件实例被禁用、重载或卸载前运行一次。 */
     onunload(): Promise<void> | void;
