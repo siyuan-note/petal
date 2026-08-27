@@ -141,7 +141,7 @@ export interface ILocalFiles {
 }
 
 export type TAssetUploadSource = "paste" | "drop" | "file-picker" | "programmatic";
-export type TAssetUploadTarget = "editor" | "av-cell" | "background";
+export type TAssetUploadTarget = "editor" | "av-cell" | "background" | "pdf-annotation";
 export type TAssetUploadStatus = "success" | "partial" | "failed" | "canceled";
 export type TAssetUploadRejectionReason = "name-empty" | "size-limit" | "type-not-accepted";
 
@@ -160,6 +160,7 @@ export type IAssetUploadInput = {
 
 export type IAssetUploadDecision = {
     action: "replace";
+    /** 必须保持各项的逻辑顺序；需要逐项回填的上传会按下标关联原资源。 */
     input: IAssetUploadInput;
 } | {
     action: "cancel";
@@ -291,6 +292,20 @@ interface IBackStack {
     zoomId?: string
 }
 
+export interface IAVColorTheme {
+    color: string;
+    backgroundColor: string;
+}
+
+export interface IAVColor {
+    light: IAVColorTheme;
+    dark: IAVColorTheme;
+}
+
+export interface IAVCustomColor extends IAVColor {
+    index: number;
+}
+
 export interface IAV {
     id: string;
     name: string;
@@ -301,6 +316,8 @@ export interface IAV {
     isMirror?: boolean;
     newItemTemplates?: IAVNewItemTemplate[];
     defaultTemplateID?: string;
+    customColors?: IAVCustomColor[];
+    usedCustomColorIndexes?: number[];
     target?: IAVRenderTarget;
 }
 
@@ -456,6 +473,7 @@ interface IAVColumn {
     options?: {
         name: string,
         color: string,
+        resolvedColor?: IAVColor,
         desc?: string,
     }[],
     relation?: IAVColumnRelation,
@@ -546,7 +564,8 @@ interface IAVCellDateValue {
 
 interface IAVCellSelectValue {
     content: string,
-    color: string
+    color: string,
+    resolvedColor?: IAVColor
 }
 
 interface IAVCellAssetValue {

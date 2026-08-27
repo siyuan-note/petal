@@ -3,6 +3,7 @@ import type {
     IAssetUploadInput,
     IAssetUploadPosition,
     IAssetUploadResult,
+    IBlock,
     IClipboardData,
     IGetDocInfo,
     IGetTreeStat,
@@ -67,6 +68,7 @@ export type TOperation =
     | "sortAttrViewRow"
     | "sortAttrViewCol"
     | "sortAttrViewKey"
+    | "sortAttrViewBinding"
     | "setAttrViewColPin"
     | "setAttrViewColHidden"
     | "setAttrViewColWrap"
@@ -75,6 +77,7 @@ export type TOperation =
     | "updateAttrViewColOptions"
     | "removeAttrViewColOption"
     | "updateAttrViewColOption"
+    | "setAttrViewCustomColors"
     | "setAttrViewName"
     | "setAttrViewNewItemTemplates"
     | "doUpdateUpdated"
@@ -129,6 +132,13 @@ export interface IEventBusMap {
     "before-hide-tooltip": {
         tooltipElement: HTMLElement,
     };
+    /** 在桌面端搜索结果渲染前同步触发，blocks 仅包含当前页结果。 */
+    "before-search-results-render": {
+        protyle: Protyle,
+        config: Config.IUILayoutTabSearchConfig,
+        searchElement: HTMLInputElement,
+        blocks: IBlock[],
+    };
     "before-show-tooltip": {
         message: string,
         target: Element,
@@ -137,16 +147,28 @@ export interface IEventBusMap {
     /** 不得在该事件上调用 `preventDefault()`，取消上传应使用 `respondWith({action: "cancel"})`。 */
     "before-upload-assets": {
         requestId: string,
-        protyle: IProtyle,
+        /** PDF 标注等无编辑器上传场景不提供该字段。 */
+        protyle?: IProtyle,
         source: TAssetUploadSource,
         target: TAssetUploadTarget,
         position?: IAssetUploadPosition,
+        /** 替换输入必须保持的精确文件数量；各项还须与原输入按下标一一对应。 */
+        requiredFileCount?: number,
+        /** 当前目标支持的输入类型；未提供时支持 files 和 local-files。 */
+        allowedInputKinds?: Array<IAssetUploadInput["kind"]>,
         input: IAssetUploadInput,
-        /** 插件处理的取消信号，编辑器销毁、插件卸载或处理超时时触发。 */
+        /**
+         * 插件处理阶段的取消信号；自定义 upload.handler 执行期间也会在编辑器销毁或超时时触发。
+         * 标准传输开始后不再因编辑器销毁触发。
+         */
         signal: AbortSignal,
-        /** 必须同步调用且每次事件只允许调用一次，异步处理应将 Promise 作为参数传入，每个插件默认 120 秒超时。 */
+        /** 必须同步调用且每次事件只允许调用一次；替换项须保持逻辑顺序，异步处理应传入 Promise，每个插件默认 120 秒超时。 */
         respondWith(response: IAssetUploadDecision | PromiseLike<IAssetUploadDecision>): void,
-        /** 必须同步注册，资源目录写入成功、失败或取消时执行一次，不包含正文或属性视图写入。 */
+        /**
+         * 必须同步注册，经思源前端上传协调层发起的资源写入成功、失败或取消时执行一次。
+         * 注册该回调的插件卸载后不再执行。
+         * 不包含正文或属性视图写入，也不覆盖 HTTP API、CLI、MCP、同步、导入、历史恢复等内核写入。
+         */
         onComplete(callback: (result: IAssetUploadResult) => void): void,
     };
     "common-menu-closed": {
@@ -496,6 +518,19 @@ export function showMessage(text: string, timeout?: number, type?: "info" | "err
 
 export function hideMessage(id?: string): void;
 
+/**
+ * 前端插件生命周期契约。
+ *
+ * 同一插件实例的 `onload`、`onLayoutReady`、`onDataChanged`、`onunload` 与 `uninstall` 在拆除截止时间前严格串行，
+ * 并等待钩子返回的 Promise。`onDataChanged` 仅在插件实例就绪后运行；若插件未覆盖基类实现，数据变更会改为重载整个插件。
+ * 禁用、重载或卸载会在首次收到拆除请求时建立一份共享的 5 秒预算。等待 `onload`、内核初始化、`onLayoutReady` 或已经开始的
+ * `onDataChanged`，以及后续的 `onunload` 和仅在从工作空间移除插件时运行的 `uninstall`，均使用同一份预算。尚未开始的
+ * `onDataChanged` 会在禁用或卸载时丢弃。
+ *
+ * 截止时间后，JavaScript Promise 无法取消，超时钩子可能继续运行。思源仍会尽力调用每个剩余的拆除钩子一次，但不再等待，
+ * 随后拆除宿主管理的资源。这 5 秒只限制思源等待 Promise 的时间，无法中断同步 JavaScript。关闭窗口或退出思源时，
+ * 该操作不会触发前端插件生命周期钩子。
+ */
 export abstract class Plugin {
     eventBus: EventBus;
     i18n: Record<string, string>;
@@ -522,6 +557,7 @@ export abstract class Plugin {
     };
     docks: {
         [key: string]: {
+            id: string,
             config: IPluginDockTab,
             model: (options: { tab: Tab }) => Custom,
             mobileModel: (element: Element) => MobileCustom
@@ -542,27 +578,38 @@ export abstract class Plugin {
         i18n: Record<string, string>,
     });
 
+    /** 当前端插件实例启动时运行。 */
     onload(): Promise<void> | void;
 
-    onDataChanged(): void
+    /** 插件实例就绪后收到数据变更时运行；思源会等待返回的 Promise，未覆盖该方法时则重载整个插件。 */
+    onDataChanged(): Promise<void> | void;
 
-    onunload(): void;
+    /** 当前端插件实例被禁用、重载或卸载前运行一次。 */
+    onunload(): Promise<void> | void;
 
-    uninstall(): void;
+    /**
+     * 仅在从工作空间移除插件时，于 `onunload` 完成或思源停止等待后运行一次。
+     */
+    uninstall(): Promise<void> | void;
 
-    onLayoutReady(): void;
+    /** 布局就绪时，在 `onload` 与内核初始化完成后运行一次。 */
+    onLayoutReady(): Promise<void> | void;
 
     /**
      * Must be executed before the synchronous function.
+     * @param {string} [options.id] - Unique ID within the plugin.
      * @param {string} [options.position=right]
      * @param {string} options.icon - Support svg id or svg tag.
      */
     addTopBar(options: {
+        id?: string,
         icon: string,
         title: string,
         callback: (event: MouseEvent) => void
         position?: "right" | "left"
     }): HTMLElement;
+
+    removeTopBar(id: string): void;
 
     addBreadcrumbButton(options: {
         id: string,
@@ -609,8 +656,10 @@ export abstract class Plugin {
     /**
      * Add Custom to Dock.
      * Must be executed before the synchronous function.
+     * @param {string} [options.id] - Unique ID within the plugin. Defaults to options.type.
      */
     addDock(options: {
+        id?: string,
         config: IPluginDockTab,
         data: any,
         type: string,
@@ -619,10 +668,13 @@ export abstract class Plugin {
         update?: (this: Custom | MobileCustom) => void,
         init: (this: Custom | MobileCustom) => void,
     }): {
+        id: string,
         config: IPluginDockTab,
         model: (options: { tab: Tab }) => Custom,
         mobileModel: (element: Element) => MobileCustom
     };
+
+    removeDock(id: string): void;
 
     addCommand(options: ICommand): void;
 

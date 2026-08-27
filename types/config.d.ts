@@ -596,6 +596,14 @@ export namespace Config {
             displayName: string;
         }>;
         /**
+         * 编辑器等宽字体，按优先级从高到低排列
+         */
+        codeFontFamilies: Array<{
+            family: string;
+            weight: number;
+            displayName: string;
+        }>;
+        /**
          * The font size used in the editor
          */
         fontSize: number;
@@ -800,6 +808,10 @@ export namespace Config {
          * Whether to enable top-level notebook documents
          */
         boxDocEnabled: boolean;
+        /**
+         * Whether to use SVG icons as the default icons for notebooks and documents
+         */
+        useSVGDefaultIcon: boolean;
         /**
          * Whether to close all tabs when starting
          */
