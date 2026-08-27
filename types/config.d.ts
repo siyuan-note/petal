@@ -813,6 +813,10 @@ export namespace Config {
          */
         boxDocEnabled: boolean;
         /**
+         * Whether to use SVG icons as the default icons for notebooks and documents
+         */
+        useSVGDefaultIcon: boolean;
+        /**
          * Whether to close all tabs when starting
          */
         closeTabsOnStart: boolean;
