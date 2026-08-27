@@ -600,10 +600,6 @@ export namespace Config {
          */
         fontSize: number;
         /**
-         * Whether to enable the use of the mouse wheel to adjust the font size of the editor
-         */
-        fontSizeScrollZoom: boolean;
-        /**
          * Whether the editor uses maximum width
          */
         fullWidth: boolean;
@@ -1237,6 +1233,9 @@ export namespace Config {
     export interface IKeymapGeneral extends IKeys {
         mainMenu: IKey;
         commandPanel: IKey;
+        increaseEditorFontSize: IKey;
+        decreaseEditorFontSize: IKey;
+        resetEditorFontSize: IKey;
         editReadonly: IKey;
         syncNow: IKey;
         enterBack: IKey;
