@@ -4,6 +4,7 @@
 
 * [Support asynchronous frontend plugin lifecycle hooks](https://github.com/siyuan-note/siyuan/issues/18979)
 * [Add Protyle fullscreen state APIs](https://github.com/siyuan-note/siyuan/issues/18909)
+* [Add editor font size plugin APIs](https://github.com/siyuan-note/siyuan/issues/18322)
 * [Support multiple editor font family configuration types](https://github.com/siyuan-note/siyuan/issues/16923)
 * [Add frontend asset upload plugin event types](https://github.com/siyuan-note/siyuan/issues/18878)
 * [Add editor breadcrumb button plugin APIs](https://github.com/siyuan-note/siyuan/issues/18856)

@@ -446,6 +446,9 @@ export abstract class Constants {
         general: {
             mainMenu: {default: "⌥\\", custom: "⌥\\"},
             commandPanel: {default: "⌥⇧P", custom: "⌥⇧P"},
+            increaseEditorFontSize: {default: "", custom: ""},
+            decreaseEditorFontSize: {default: "", custom: ""},
+            resetEditorFontSize: {default: "", custom: ""},
             editReadonly: {default: "⇧⌘G", custom: "⇧⌘G"},
             syncNow: {default: "F9", custom: "F9"},
             enterBack: {default: "⌥←", custom: "⌥←"},

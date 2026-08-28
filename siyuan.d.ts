@@ -364,6 +364,16 @@ export function adaptHotkey(hotkey: string): string
 
 export function confirm(title: string, text: string, confirmCallback?: (dialog: Dialog) => void, cancelCallback?: (dialog: Dialog) => void): void;
 
+export type TEditorFontSizeAction = "increase" | "decrease" | "reset";
+
+export interface IEditorFontSizeOptions {
+    notify?: boolean;
+}
+
+export function adjustEditorFontSize(action: TEditorFontSizeAction, options?: IEditorFontSizeOptions): number;
+
+export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOptions): number;
+
 export function fetchPost(
     url: string,
     data?: any,
