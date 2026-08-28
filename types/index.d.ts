@@ -163,6 +163,7 @@ export type IAssetUploadDecision = {
     /** 必须保持各项的逻辑顺序；需要逐项回填的上传会按下标关联原资源。 */
     input: IAssetUploadInput;
 } | {
+    /** 取消当前资源写入；未取得全部资源路径时，HTML 粘贴将停止正文提交。 */
     action: "cancel";
 };
 
@@ -193,9 +194,9 @@ export interface IAssetUploadResult {
     acceptedInput?: IAssetUploadInput;
     /** 被前端校验拒绝的文件及其在完整输入中的位置。 */
     rejected?: IAssetUploadRejection[];
-    /** 按 acceptedInput 中的索引记录成功结果，可区分同名文件。 */
+    /** 按 acceptedInput 中的索引记录明确报告成功的结果，可区分同名文件；需要逐项确认时以该字段为准。 */
     succFiles?: IAssetUploadSuccess[];
-    /** 按 acceptedInput 中的索引记录失败结果。 */
+    /** 按 acceptedInput 中的索引记录明确报告失败的结果；可能不包含未尝试或未逐项报告的项。 */
     failedFiles?: IAssetUploadFailure[];
     succMap?: Record<string, string>;
     errFiles?: string[];

@@ -144,7 +144,7 @@ export interface IEventBusMap {
         target: Element,
         tooltipElement: HTMLElement,
     };
-    /** 不得在该事件上调用 `preventDefault()`，取消上传应使用 `respondWith({action: "cancel"})`。 */
+    /** 不得在该事件上调用 `preventDefault()`，取消上传应使用 `respondWith({action: "cancel"})`；未取得全部资源路径时，HTML 粘贴将停止正文提交。 */
     "before-upload-assets": {
         requestId: string,
         /** PDF 标注等无编辑器上传场景不提供该字段。 */
@@ -167,7 +167,7 @@ export interface IEventBusMap {
         /**
          * 必须同步注册，经思源前端上传协调层发起的资源写入成功、失败或取消时执行一次。
          * 注册该回调的插件卸载后不再执行。
-         * 不包含正文或属性视图写入，也不覆盖 HTTP API、CLI、MCP、同步、导入、历史恢复等内核写入。
+         * 回调结果不表示父级正文或属性视图已完成写入，也不覆盖 HTTP API、CLI、MCP、同步、导入、历史恢复等内核写入。
          */
         onComplete(callback: (result: IAssetUploadResult) => void): void,
     };
