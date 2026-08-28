@@ -2,6 +2,7 @@
 
 ## v1.2.6 2026
 
+* [Add dock panel visibility plugin APIs](https://github.com/siyuan-note/siyuan/issues/18876)
 * [Support asynchronous frontend plugin lifecycle hooks](https://github.com/siyuan-note/siyuan/issues/18979)
 * [Add Protyle fullscreen state APIs](https://github.com/siyuan-note/siyuan/issues/18909)
 * [Add editor font size plugin APIs](https://github.com/siyuan-note/siyuan/issues/18322)

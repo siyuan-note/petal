@@ -485,6 +485,45 @@ export function openEmoji(options: {
 export function getModelByDockType(type: TDock | string): Model | any;
 
 /**
+ * 显示、隐藏或切换左侧停靠栏面板。移动端、独立窗口或布局尚未初始化时调用无操作并返回 false。
+ * @param {boolean} [visible] - 不传时切换显隐，传入时设置显隐
+ * @returns 该组是否有活动工具且未被整体收起；空组返回 false，浮动面板暂时未悬停显示仍返回 true
+ */
+export function toggleLeftDock(visible?: boolean): boolean;
+
+/**
+ * 显示、隐藏或切换右侧停靠栏面板。移动端、独立窗口或布局尚未初始化时调用无操作并返回 false。
+ * @param {boolean} [visible] - 不传时切换显隐，传入时设置显隐
+ * @returns 该组是否有活动工具且未被整体收起；空组返回 false，浮动面板暂时未悬停显示仍返回 true
+ */
+export function toggleRightDock(visible?: boolean): boolean;
+
+/**
+ * 显示、隐藏或切换下侧停靠栏面板。移动端、独立窗口或布局尚未初始化时调用无操作并返回 false。
+ * @param {boolean} [visible] - 不传时切换显隐，传入时设置显隐
+ * @returns 该组是否有活动工具且未被整体收起；空组返回 false，浮动面板暂时未悬停显示仍返回 true
+ */
+export function toggleBottomDock(visible?: boolean): boolean;
+
+/**
+ * 移动端、独立窗口或布局尚未初始化时返回 false。
+ * @returns 左侧组是否有活动工具且未被整体收起；浮动面板暂时未悬停显示仍返回 true
+ */
+export function isLeftDockVisible(): boolean;
+
+/**
+ * 移动端、独立窗口或布局尚未初始化时返回 false。
+ * @returns 右侧组是否有活动工具且未被整体收起；浮动面板暂时未悬停显示仍返回 true
+ */
+export function isRightDockVisible(): boolean;
+
+/**
+ * 移动端、独立窗口或布局尚未初始化时返回 false。
+ * @returns 下侧组是否有活动工具且未被整体收起；浮动面板暂时未悬停显示仍返回 true
+ */
+export function isBottomDockVisible(): boolean;
+
+/**
  * @param {IObject} [options.data] - 块属性值
  * @param {HTMLElement} [options.nodeElement] - 块元素
  * @param {"bookmark" | "name" | "alias" | "memo" | "av" | "custom"} [options.focusName="bookmark"] - av 为数据库页签，custom 为自定义页签，其余为内置输入框

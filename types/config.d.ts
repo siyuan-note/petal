@@ -1300,6 +1300,9 @@ export namespace Config {
         switchLeftDock: IKey;
         switchRightDock: IKey;
         switchBottomDock: IKey;
+        toggleLeftDockPanel: IKey;
+        toggleRightDockPanel: IKey;
+        toggleBottomDockPanel: IKey;
         toggleDock: IKey;
         splitLR: IKey;
         splitMoveR: IKey;
