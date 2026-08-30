@@ -64,6 +64,9 @@ export abstract class Constants {
     public static readonly SIZE_UNDO = 64;
     public static readonly SIZE_TITLE = 512;
     public static readonly SIZE_EDITOR_WIDTH = 760;
+    public static readonly EDITOR_FONT_SIZE_DEFAULT = 16;
+    public static readonly EDITOR_FONT_SIZE_MIN = 9;
+    public static readonly EDITOR_FONT_SIZE_MAX = 72;
     public static readonly SIZE_ZOOM = [
         {
             zoom: 0.67,
