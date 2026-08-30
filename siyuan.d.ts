@@ -580,12 +580,18 @@ export abstract class Plugin {
     app: App;
     commands: ICommand[];
     setting: Setting;
+    /**
+     * 自定义块渲染器。键为插件内部的块类型；块信息使用编码后的插件包名和块类型组成。
+     * 渲染函数只应修改传入的挂载元素，并可返回清理函数，不支持在其中嵌套 Protyle。
+     * setContent 应在渲染函数返回后调用；只读状态或内容中某行移除编辑器光标标记并去除首尾空白后等于 ;;; 时返回 false。
+     */
     customBlockRenders: {
         [key: string]: {
-            icon: string,
-            action: Array<"edit" | "more">,
-            genCursor: boolean,
-            render: (options: { app: App, element: Element }) => void
+            render: (options: {
+                element: HTMLElement,
+                content: string,
+                setContent: (content: string) => boolean,
+            }) => void | (() => void)
         }
     };
     topBarIcons: Element[];
