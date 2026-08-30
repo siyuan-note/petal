@@ -608,6 +608,10 @@ export namespace Config {
          */
         fontSize: number;
         /**
+         * Minimum number of visible lines around the cursor during vertical keyboard navigation
+         */
+        cursorSurroundingLines: number;
+        /**
          * Whether the editor uses maximum width
          */
         fullWidth: boolean;
@@ -1296,6 +1300,9 @@ export namespace Config {
         switchLeftDock: IKey;
         switchRightDock: IKey;
         switchBottomDock: IKey;
+        toggleLeftDockPanel: IKey;
+        toggleRightDockPanel: IKey;
+        toggleBottomDockPanel: IKey;
         toggleDock: IKey;
         splitLR: IKey;
         splitMoveR: IKey;

@@ -144,7 +144,7 @@ export interface IEventBusMap {
         target: Element,
         tooltipElement: HTMLElement,
     };
-    /** 不得在该事件上调用 `preventDefault()`，取消上传应使用 `respondWith({action: "cancel"})`。 */
+    /** 不得在该事件上调用 `preventDefault()`，取消上传应使用 `respondWith({action: "cancel"})`；未取得全部资源路径时，HTML 粘贴将停止正文提交。 */
     "before-upload-assets": {
         requestId: string,
         /** PDF 标注等无编辑器上传场景不提供该字段。 */
@@ -167,7 +167,7 @@ export interface IEventBusMap {
         /**
          * 必须同步注册，经思源前端上传协调层发起的资源写入成功、失败或取消时执行一次。
          * 注册该回调的插件卸载后不再执行。
-         * 不包含正文或属性视图写入，也不覆盖 HTTP API、CLI、MCP、同步、导入、历史恢复等内核写入。
+         * 回调结果不表示父级正文或属性视图已完成写入，也不覆盖 HTTP API、CLI、MCP、同步、导入、历史恢复等内核写入。
          */
         onComplete(callback: (result: IAssetUploadResult) => void): void,
     };
@@ -485,6 +485,45 @@ export function openEmoji(options: {
 export function getModelByDockType(type: TDock | string): Model | any;
 
 /**
+ * 显示、隐藏或切换左侧停靠栏面板。移动端、独立窗口或布局尚未初始化时调用无操作并返回 false。
+ * @param {boolean} [visible] - 不传时切换显隐，传入时设置显隐
+ * @returns 该组是否有活动工具且未被整体收起；空组返回 false，浮动面板暂时未悬停显示仍返回 true
+ */
+export function toggleLeftDock(visible?: boolean): boolean;
+
+/**
+ * 显示、隐藏或切换右侧停靠栏面板。移动端、独立窗口或布局尚未初始化时调用无操作并返回 false。
+ * @param {boolean} [visible] - 不传时切换显隐，传入时设置显隐
+ * @returns 该组是否有活动工具且未被整体收起；空组返回 false，浮动面板暂时未悬停显示仍返回 true
+ */
+export function toggleRightDock(visible?: boolean): boolean;
+
+/**
+ * 显示、隐藏或切换下侧停靠栏面板。移动端、独立窗口或布局尚未初始化时调用无操作并返回 false。
+ * @param {boolean} [visible] - 不传时切换显隐，传入时设置显隐
+ * @returns 该组是否有活动工具且未被整体收起；空组返回 false，浮动面板暂时未悬停显示仍返回 true
+ */
+export function toggleBottomDock(visible?: boolean): boolean;
+
+/**
+ * 移动端、独立窗口或布局尚未初始化时返回 false。
+ * @returns 左侧组是否有活动工具且未被整体收起；浮动面板暂时未悬停显示仍返回 true
+ */
+export function isLeftDockVisible(): boolean;
+
+/**
+ * 移动端、独立窗口或布局尚未初始化时返回 false。
+ * @returns 右侧组是否有活动工具且未被整体收起；浮动面板暂时未悬停显示仍返回 true
+ */
+export function isRightDockVisible(): boolean;
+
+/**
+ * 移动端、独立窗口或布局尚未初始化时返回 false。
+ * @returns 下侧组是否有活动工具且未被整体收起；浮动面板暂时未悬停显示仍返回 true
+ */
+export function isBottomDockVisible(): boolean;
+
+/**
  * @param {IObject} [options.data] - 块属性值
  * @param {HTMLElement} [options.nodeElement] - 块元素
  * @param {"bookmark" | "name" | "alias" | "memo" | "av" | "custom"} [options.focusName="bookmark"] - av 为数据库页签，custom 为自定义页签，其余为内置输入框
@@ -541,12 +580,18 @@ export abstract class Plugin {
     app: App;
     commands: ICommand[];
     setting: Setting;
+    /**
+     * 自定义块渲染器。键为插件内部的块类型；块信息使用编码后的插件包名和块类型组成。
+     * 渲染函数只应修改传入的挂载元素，并可返回清理函数，不支持在其中嵌套 Protyle。
+     * setContent 应在渲染函数返回后调用；只读状态或内容中某行移除编辑器光标标记并去除首尾空白后等于 ;;; 时返回 false。
+     */
     customBlockRenders: {
         [key: string]: {
-            icon: string,
-            action: Array<"edit" | "more">,
-            genCursor: boolean,
-            render: (options: { app: App, element: Element }) => void
+            render: (options: {
+                element: HTMLElement,
+                content: string,
+                setContent: (content: string) => boolean,
+            }) => void | (() => void)
         }
     };
     topBarIcons: Element[];
