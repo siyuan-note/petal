@@ -1,7 +1,9 @@
 # Changelog
 
-## v1.2.6 2026
+## v1.2.6 2026-08-30
 
+* [Support custom block renderer plugin APIs](https://github.com/siyuan-note/siyuan/issues/8418)
+* [Add database display template types](https://github.com/siyuan-note/siyuan/issues/14172)
 * [Add dock panel visibility plugin APIs](https://github.com/siyuan-note/siyuan/issues/18876)
 * [Support asynchronous frontend plugin lifecycle hooks](https://github.com/siyuan-note/siyuan/issues/18979)
 * [Add Protyle fullscreen state APIs](https://github.com/siyuan-note/siyuan/issues/18909)
