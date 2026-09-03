@@ -1142,7 +1142,7 @@ export namespace Config {
         openBy: IKey;
         optimizeTypography: IKey;
         outline: IKey;
-        "edit-mode": IKey;
+        editMode: IKey;
         quickMakeCard: IKey;
         redo: IKey;
         refPopover: IKey;
