@@ -950,17 +950,17 @@ export declare class MobileCustom {
     public element: Element;
     public data: any;
     public type: string;
-    public init: (custom: MobileCustom) => void;
-    public destroy: () => void;
-    public update: () => void;
+    public init: (this: MobileCustom, custom: MobileCustom) => void;
+    public destroy: (this: MobileCustom) => void;
+    public update: (this: MobileCustom) => void;
 
     constructor(options: {
         element: Element,
         type: string,
         data: any,
-        destroy?: () => void,
-        update?: () => void,
-        init: (custom: MobileCustom) => void
+        destroy?: (this: MobileCustom) => void,
+        update?: (this: MobileCustom) => void,
+        init: (this: MobileCustom, custom: MobileCustom) => void
     })
 }
 
@@ -970,11 +970,11 @@ export declare class Custom extends Model {
     tab: Tab;
     data: any;
     type: string;
-    init: (custom: Custom) => void;
-    destroy: () => void;
-    beforeDestroy: () => void;
-    resize: () => void;
-    update: () => void;
+    init: (this: Custom, custom: Custom) => void;
+    destroy: (this: Custom) => void;
+    beforeDestroy: (this: Custom) => void;
+    resize: (this: Custom) => void;
+    update: (this: Custom) => void;
     editors: Protyle[];
 
     constructor(options: {
@@ -982,11 +982,11 @@ export declare class Custom extends Model {
         type: string;
         tab: Tab;
         data: any;
-        destroy?: () => void;
-        beforeDestroy?: () => void;
-        resize?: () => void;
-        update?: () => void;
-        init: (custom: Custom) => void;
+        destroy?: (this: Custom) => void;
+        beforeDestroy?: (this: Custom) => void;
+        resize?: (this: Custom) => void;
+        update?: (this: Custom) => void;
+        init: (this: Custom, custom: Custom) => void;
     });
 }
 

@@ -705,11 +705,11 @@ export abstract class Plugin {
      */
     addTab(options: {
         type: string,
-        destroy?: () => void,
-        beforeDestroy?: () => void,
-        resize?: () => void,
-        update?: () => void,
-        init: () => void,
+        destroy?: (this: Custom) => void,
+        beforeDestroy?: (this: Custom) => void,
+        resize?: (this: Custom) => void,
+        update?: (this: Custom) => void,
+        init: (this: Custom, custom: Custom) => void,
     }): (options: { tab: Tab, data: any }) => Custom;
 
     /**
@@ -723,14 +723,14 @@ export abstract class Plugin {
         data: any,
         type: string,
         destroy?: (this: Custom | MobileCustom) => void,
-        resize?: (this: Custom | MobileCustom) => void,
+        resize?: (this: Custom) => void,
         update?: (this: Custom | MobileCustom) => void,
-        init: (this: Custom | MobileCustom) => void,
+        init: (this: Custom | MobileCustom, custom: Custom | MobileCustom) => void,
     }): {
         id: string,
         config: IPluginDockTab,
-        model: (options: { tab: Tab }) => Custom,
-        mobileModel: (element: Element) => MobileCustom
+        model?: (options: { tab: Tab }) => Custom,
+        mobileModel?: (element: Element) => MobileCustom
     };
 
     removeDock(id: string): void;
