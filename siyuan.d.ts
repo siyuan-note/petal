@@ -738,6 +738,17 @@ export abstract class Plugin {
     addCommand(options: ICommand): void;
 
     /**
+     * 动态添加或更新编辑器工具栏按钮。name 必须是插件内稳定且唯一的自定义标识，不能使用内置工具栏名称或分隔符。
+     * 同名按钮会被更新，并保留用户已经配置的快捷键。
+     */
+    addToolbarItem(item: IMenuItem): void;
+
+    /**
+     * 移除动态注册的编辑器工具栏按钮，并保留其快捷键和入口配置。
+     */
+    removeToolbarItem(name: string): void;
+
+    /**
      * 按名称取密钥值（来自「设置 → 密钥和变量」的密钥库）。找不到时返回空字符串。
      * 密钥在内核侧加密存储，此处读到的是运行时明文；仅在本地管理员身份下可用。
      */

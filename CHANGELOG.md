@@ -3,6 +3,8 @@
 ## v1.2.7 2026
 
 * [Add plugin command execution context](https://github.com/siyuan-note/siyuan/issues/19076)
+* [Add Protyle tracked range APIs](https://github.com/siyuan-note/siyuan/issues/19054)
+* [Add dynamic editor toolbar item plugin APIs](https://github.com/siyuan-note/siyuan/issues/19083)
 
 ## v1.2.6 2026-08-30
 

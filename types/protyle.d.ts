@@ -8,6 +8,7 @@ import {
     IPosition,
     IWebSocketData,
     Menu,
+    Plugin,
 } from "./../siyuan";
 import {Model} from "./layout/Model";
 
@@ -278,6 +279,24 @@ export declare class Toolbar {
     public isMultiSelectMode(): boolean
 }
 
+export interface ITrackedRangeHandle {
+    readonly id: string;
+}
+
+export interface ITrackRangeOptions {
+    /** 用于在插件卸载时自动释放句柄 */
+    owner: Plugin;
+    /** 同一位置插入新内容时，锚点保留在新内容之前还是之后，默认为 before */
+    affinity?: "before" | "after";
+}
+
+export type TTrackedRangeResult = {
+    status: "resolved";
+    range: Range;
+} | {
+    status: "invalid";
+};
+
 export class Protyle {
 
     public readonly version: string;
@@ -339,6 +358,15 @@ export class Protyle {
     public updateBatchTransaction(nodeElements: Element[], cb: (e: HTMLElement) => void): void
 
     public getRange(element: Element): Range
+
+    /** 跟踪当前编辑器单个可编辑源块内的位置或内容；范围无效时抛出 TypeError */
+    public trackRange(range: Range, options: ITrackRangeOptions): ITrackedRangeHandle
+
+    /** 解析跟踪位置，不改变当前选区或焦点 */
+    public resolveTrackedRange(handle: ITrackedRangeHandle): TTrackedRangeResult
+
+    /** 释放跟踪位置；重复调用不会产生副作用 */
+    public releaseTrackedRange(handle: ITrackedRangeHandle): void
 
     public hasClosestBlock(element: Node): false | HTMLElement
 
@@ -949,6 +977,12 @@ export interface IProtyle {
         styleElement: HTMLStyleElement
     }
     getInstance: () => Protyle,
+    /** 跟踪当前编辑器单个可编辑源块内的位置或内容；范围无效时抛出 TypeError */
+    trackRange: (range: Range, options: ITrackRangeOptions) => ITrackedRangeHandle,
+    /** 解析跟踪位置，不改变当前选区或焦点 */
+    resolveTrackedRange: (handle: ITrackedRangeHandle) => TTrackedRangeResult,
+    /** 释放跟踪位置；重复调用不会产生副作用 */
+    releaseTrackedRange: (handle: ITrackedRangeHandle) => void,
     observerLoad?: ResizeObserver,
     observer?: ResizeObserver,
     app: App,
