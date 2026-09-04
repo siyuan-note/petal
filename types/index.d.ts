@@ -319,7 +319,21 @@ export interface IAV {
     defaultTemplateID?: string;
     customColors?: IAVCustomColor[];
     usedCustomColorIndexes?: number[];
+    contextFilter?: IAVContextFilter | null;
+    contextFilterFields?: IAVContextFilterField[];
     target?: IAVRenderTarget;
+}
+
+export interface IAVContextFilter {
+    spec: 1;
+    keyID: string;
+}
+
+export interface IAVContextFilterField {
+    id: string;
+    name: string;
+    icon: string;
+    targetAvID: string;
 }
 
 export interface IAVRenderTarget {
@@ -607,7 +621,7 @@ export interface IOperation {
     backRelationKeyID?: string, // 双向关联的目标关联列 ID
     avID?: string,  // av
     format?: string // updateAttrViewColNumberFormat 专享
-    keyID?: string // updateAttrViewCell 专享
+    keyID?: string // 属性视图字段 ID
     rowID?: string // updateAttrViewCell 专享
     data?: any, // updateAttr 时为  { old: IObject, new: IObject }, updateAttrViewCell 时为 {TAVCol: {content: string}}
     parentID?: string

@@ -93,6 +93,7 @@ export type TOperation =
     | "removeAttrViewView"
     | "setAttrViewViewIcon"
     | "duplicateAttrViewView"
+    | "setAttrViewContextFilter"
     | "sortAttrViewView"
     | "setAttrViewPageSize"
     | "updateAttrViewColRelation"
