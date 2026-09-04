@@ -2,6 +2,8 @@
 
 ## v1.2.7 2026
 
+* [Add plugin command execution context](https://github.com/siyuan-note/siyuan/issues/19076)
+
 ## v1.2.6 2026-08-30
 
 * [Support custom block renderer plugin APIs](https://github.com/siyuan-note/siyuan/issues/8418)
