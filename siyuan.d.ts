@@ -619,8 +619,8 @@ export abstract class Plugin {
         [key: string]: {
             id: string,
             config: IPluginDockTab,
-            model: (options: { tab: Tab }) => Custom,
-            mobileModel: (element: Element) => MobileCustom
+            model?: (options: { tab: Tab }) => Custom,
+            mobileModel?: (element: Element) => MobileCustom
         }
     };
     protyleSlash: {
