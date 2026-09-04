@@ -527,7 +527,12 @@ interface IAVCellValue {
     renderedContent?: string,
     isDetached?: boolean,
     text?: {
-        content: string
+        content: string,
+        rich?: {
+            spec: 1,
+            format: "kramdown",
+            content: string
+        } | null
     },
     number?: {
         content?: number,
