@@ -740,6 +740,8 @@ export class Lute {
 
     public Md2BlockDOMWithAutoLink(html: string): string;
 
+    public InlineMd2BlockDOM(markdown: string): string;
+
     public SetProtyleWYSIWYG(wysiwyg: boolean): void;
 
     public MarkdownStr(name: string, md: string): string;
