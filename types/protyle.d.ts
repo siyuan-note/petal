@@ -385,6 +385,7 @@ export class Protyle {
 }
 
 export class ProtyleMethod {
+    public static tabsRender(element: Element): void;
     /**
      * @description 使用 graphviz 进行渲染
      * @param {string} [cdn=Constants.PROTYLE_CDN]
@@ -680,6 +681,8 @@ export class Lute {
     public SetSuperBlock(enable: boolean): void;
 
     public SetCallout(enable: boolean): void;
+
+    public SetTabs(enable: boolean): void;
 
     public SetTag(enable: boolean): void;
 

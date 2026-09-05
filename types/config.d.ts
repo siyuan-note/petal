@@ -1472,6 +1472,8 @@ export namespace Config {
          * Whether to search callout
          */
         callout: boolean;
+        tabs?: boolean;
+        tabItem?: boolean;
         /**
          * Whether to distinguish between uppercase and lowercase letters when searching
          */
@@ -2647,6 +2649,8 @@ export namespace Config {
          * @default false
          */
         callout: boolean;
+        tabs?: boolean;
+        tabItem?: boolean;
         /**
          * Search results contain code blocks
          * @default false
