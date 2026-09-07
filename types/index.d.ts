@@ -527,7 +527,12 @@ interface IAVCellValue {
     renderedContent?: string,
     isDetached?: boolean,
     text?: {
-        content: string
+        content: string,
+        rich?: {
+            spec: 1,
+            format: "kramdown",
+            content: string
+        } | null
     },
     number?: {
         content?: number,
@@ -856,6 +861,9 @@ export interface IObject {
 
 declare class Viewer {
     public destroyed: boolean;
+    public image: HTMLImageElement;
+    public viewed: boolean;
+    public toolbar: HTMLElement;
 
     constructor(element: Element, options: {
         title: [number, (image: HTMLImageElement, imageData: IObject) => string],
@@ -863,6 +871,9 @@ declare class Viewer {
         initialViewIndex?: number,
         transition: boolean,
         hidden: () => void,
+        ready?: (this: HTMLElement, event: CustomEvent) => void,
+        view?: (this: HTMLElement, event: CustomEvent) => void,
+        viewed?: (this: HTMLElement, event: CustomEvent) => void,
         toolbar: {
             zoomIn: boolean,
             zoomOut: boolean,
@@ -875,6 +886,8 @@ declare class Viewer {
             rotateRight: boolean,
             flipHorizontal: boolean,
             flipVertical: boolean,
+            copy?: () => void,
+            copyFile?: () => void,
             close: () => void
         }
     })

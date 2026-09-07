@@ -43,6 +43,7 @@ export type TCardType = "doc" | "notebook" | "all"
 export type TEventBus = keyof IEventBusMap
 
 export type TPluginDockPosition = "LeftTop" | "LeftBottom" | "RightTop" | "RightBottom" | "BottomLeft" | "BottomRight"
+export type TPluginDataChangeReason = "sync" | "overwrite"
 
 export type TOperation =
     "insert"
@@ -641,8 +642,11 @@ export abstract class Plugin {
     /** 当前端插件实例启动时运行。 */
     onload(): Promise<void> | void;
 
-    /** 插件实例就绪后收到数据变更时运行；思源会等待返回的 Promise，未覆盖该方法时则重载整个插件。 */
-    onDataChanged(): Promise<void> | void;
+    /**
+     * 插件实例就绪后收到数据变更时运行；思源会等待返回的 Promise，未覆盖该方法时则重载整个插件。
+     * @param reason 数据变更来源，sync 为跨设备同步合并，overwrite 为其他前端实例通过文件接口写入
+     */
+    onDataChanged(reason?: TPluginDataChangeReason): Promise<void> | void;
 
     /** 当前端插件实例被禁用、重载或卸载前运行一次。 */
     onunload(): Promise<void> | void;

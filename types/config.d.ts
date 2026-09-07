@@ -271,6 +271,7 @@ export namespace Config {
         args?: string[];
         headers?: Record<string, string>;
         timeout: number;
+        disableStandaloneSSE: boolean;
         trustToolAnnotations: boolean;
     }
 
@@ -288,6 +289,8 @@ export namespace Config {
      * SiYuan appearance related configuration
      */
     export interface IAppearance {
+        /** 全局默认字体，按优先级从高到低排列 */
+        globalFontFamilies: IEditor["fontFamilies"];
         /**
          * Close button behavior
          * - `0`: Exit application
@@ -525,6 +528,10 @@ export namespace Config {
          * The maximum length of the dynamic anchor text for block references
          */
         blockRefDynamicAnchorTextMaxLen: number;
+        /**
+         * Whether to check block references and database bindings before deleting or cutting
+         */
+        checkBlockRef: boolean;
         /**
          * Whether the code block has enabled ligatures
          */
@@ -1467,6 +1474,8 @@ export namespace Config {
          * Whether to search callout
          */
         callout: boolean;
+        tabs?: boolean;
+        tabItem?: boolean;
         /**
          * Whether to distinguish between uppercase and lowercase letters when searching
          */
@@ -1690,6 +1699,10 @@ export namespace Config {
          * Whether to create a conflict document when a conflict occurs during synchronization
          */
         generateConflictDoc: boolean;
+        /**
+         * 当前设备的资源下载模式，0：全部下载，1：按需下载。
+         */
+        assetDownloadMode: 0 | 1;
         /**
          * Synchronization mode
          * - `0`: Not set
@@ -2642,6 +2655,8 @@ export namespace Config {
          * @default false
          */
         callout: boolean;
+        tabs?: boolean;
+        tabItem?: boolean;
         /**
          * Search results contain code blocks
          * @default false

@@ -385,6 +385,7 @@ export class Protyle {
 }
 
 export class ProtyleMethod {
+    public static tabsRender(element: Element): void;
     /**
      * @description 使用 graphviz 进行渲染
      * @param {string} [cdn=Constants.PROTYLE_CDN]
@@ -590,6 +591,9 @@ declare class Viz {
 
 declare class Viewer {
     public destroyed: boolean;
+    public image: HTMLImageElement;
+    public viewed: boolean;
+    public toolbar: HTMLElement;
 
     constructor(element: Element, options: {
         title: [number, (image: HTMLImageElement, imageData: IObject) => string],
@@ -597,6 +601,9 @@ declare class Viewer {
         initialViewIndex?: number,
         transition: boolean,
         hidden: () => void,
+        ready?: (this: HTMLElement, event: CustomEvent) => void,
+        view?: (this: HTMLElement, event: CustomEvent) => void,
+        viewed?: (this: HTMLElement, event: CustomEvent) => void,
         toolbar: {
             zoomIn: boolean,
             zoomOut: boolean,
@@ -609,6 +616,8 @@ declare class Viewer {
             rotateRight: boolean,
             flipHorizontal: boolean,
             flipVertical: boolean,
+            copy?: () => void,
+            copyFile?: () => void,
             close: () => void
         }
     })
@@ -681,6 +690,8 @@ export class Lute {
 
     public SetCallout(enable: boolean): void;
 
+    public SetTabs(enable: boolean): void;
+
     public SetTag(enable: boolean): void;
 
     public SetInlineMath(enable: boolean): void;
@@ -728,6 +739,8 @@ export class Lute {
     public Md2BlockDOM(html: string): string;
 
     public Md2BlockDOMWithAutoLink(html: string): string;
+
+    public InlineMd2BlockDOM(markdown: string): string;
 
     public SetProtyleWYSIWYG(wysiwyg: boolean): void;
 
