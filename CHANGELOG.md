@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.2.7 2026-08
+## v1.2.8 2026
+
+## v1.2.7 2026-09-07
 
 * [Improve synchronization of plugin lifecycle and shortcut key declarations](https://github.com/siyuan-note/petal/issues/59)
 * [Add plugin command execution context](https://github.com/siyuan-note/siyuan/issues/19076)
