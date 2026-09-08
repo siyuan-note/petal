@@ -232,6 +232,7 @@ export namespace Config {
      * AI provider configuration
      */
     export interface IProvider {
+        headers?: Record<string, string>;
         id: string;
         enabled: boolean;
         displayName?: string;
