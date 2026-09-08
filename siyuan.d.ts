@@ -340,6 +340,9 @@ export interface ICommand {
      */
     hotkey?: string,
     customHotkey?: string,
+    hotkeys?: string[], // 默认快捷键列表，优先于 hotkey
+    when?: (context: ICommandContext) => boolean,
+    enabled?: (context: ICommandContext) => boolean,
     execute?: (context: ICommandContext) => void | Promise<void>
     callback?: (context?: ICommandContext) => void   // 其余回调存在时将不会触发
     globalCallback?: (context?: ICommandContext) => void // 焦点不在应用内时执行的回调
