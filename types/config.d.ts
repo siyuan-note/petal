@@ -517,6 +517,8 @@ export namespace Config {
          * Whether the backlink contains children
          */
         backlinkContainChildren: boolean;
+        /** 反链面板是否隐藏传递型纯引用块 */
+        backlinkHideReference: boolean;
         /**
          * Backlink sort mode
          */
