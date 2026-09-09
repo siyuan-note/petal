@@ -40,6 +40,19 @@ export type TTab = "Outline" | "Graph" | "Backlink" | "Asset" | "Editor" | "Sear
 
 export type TCardType = "doc" | "notebook" | "all"
 
+export interface IFlashcardQueryExpression {
+    operator: "matchAll" | "and" | "or" | "not" | "predicate";
+    children?: IFlashcardQueryExpression[];
+    field?: string;
+    comparator?: string;
+    value?: unknown;
+}
+
+export interface IFlashcardQueryAST {
+    version: number;
+    root: IFlashcardQueryExpression;
+}
+
 export type TEventBus = keyof IEventBusMap
 
 export type TPluginDockPosition = "LeftTop" | "LeftBottom" | "RightTop" | "RightBottom" | "BottomLeft" | "BottomRight"
@@ -458,6 +471,10 @@ export function openTab(options: {
         type: TCardType,
         id?: string, //  cardType 为 all 时不传，否则传文档或笔记本 id
         title?: string, //  cardType 为 all 时不传，否则传文档或笔记本名称
+        // 多个卡包取并集并去重；与文档范围、查询条件取交集，不能传空数组
+        reviewSetIDs?: string[];
+        query?: IFlashcardQueryAST;
+        reviewMode?: "normal" | "reinforcement";
     };
     custom?: {
         id: string, // 插件名称+页签类型：plugin.name + tab.type
