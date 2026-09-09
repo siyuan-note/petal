@@ -912,6 +912,8 @@ export namespace Config {
      * Flashcard related configuration
      */
     export interface IFlashCard {
+        /** 默认打开方式，0：弹窗，1：页签，2：右侧分屏，3：新窗口 */
+        openMode: number;
         /**
          * Whether to enable deck card making
          */
