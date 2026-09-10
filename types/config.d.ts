@@ -28,7 +28,6 @@ export namespace Config {
          * Access authorization code
          */
         accessAuthCode: TAccessAuthCode;
-        account: IAccount;
         ai: IAI;
         api: IAPI;
         appearance: IAppearance;
@@ -116,20 +115,6 @@ export namespace Config {
      * Access authorization code
      */
     export type TAccessAuthCode = "" | "*******";
-
-    /**
-     * Account configuration
-     */
-    export interface IAccount {
-        /**
-         * Display the title icon
-         */
-        displayTitle: boolean;
-        /**
-         * Display the VIP icon
-         */
-        displayVIP: boolean;
-    }
 
     /**
      * Artificial Intelligence (AI) related configuration
