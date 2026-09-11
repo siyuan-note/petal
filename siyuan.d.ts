@@ -677,16 +677,22 @@ export abstract class Plugin {
     onLayoutReady(): Promise<void> | void;
 
     /**
-     * Must be executed before the synchronous function.
-     * @param {string} [options.id] - Unique ID within the plugin.
-     * @param {string} [options.position=right]
-     * @param {string} options.icon - Support svg id or svg tag.
+     * 添加顶栏条目，自定义元素与图标共用排序、显隐和移除机制。
+     * @param options.id 插件内唯一标识，重复调用时更新条目；传入不同元素时替换原元素。
+     * @param options.position 默认位于右侧。
+     * @param options.element 自定义元素，仅桌面端主窗口支持；移动端和独立窗口忽略本次调用。
+     * 提供时忽略 icon 和 callback，保留元素的样式、内容和事件绑定，布局及交互由插件负责。
+     * 思源设置 id、data-id（提供 id 时）、data-topbar-entry、data-location 和 aria-label。
+     * 同一元素不能注册到多个 id；不传 id 重复注册同一元素时更新现有条目。
+     * @param options.icon 未提供 element 时必填，支持 SVG ID 或 SVG 标签。
+     * @param options.callback 图标条目的点击回调。
      */
     addTopBar(options: {
         id?: string,
-        icon: string,
+        icon?: string,
+        element?: HTMLElement,
         title: string,
-        callback: (event: MouseEvent) => void
+        callback?: (event: MouseEvent) => void
         position?: "right" | "left"
     }): HTMLElement;
 
