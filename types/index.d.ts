@@ -102,15 +102,17 @@ interface IOperationSrcs {
 interface INotebook {
     name: string;
     id: string;
-    boxDocID: string;
     closed: boolean;
     icon: string;
     sort: number;
-    dueFlashcardCount?: string;
-    newFlashcardCount?: string;
-    flashcardCount?: string;
+    subFileCount: number;
+    dueFlashcardCount?: number;
+    newFlashcardCount?: number;
+    flashcardCount?: number;
     sortMode: number;
     encrypted?: boolean;
+    unlocked?: boolean;
+    state?: "Locked" | "Unlocking" | "Unlocked" | "Locking" | "Error";
 }
 
 export interface IFile {
