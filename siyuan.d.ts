@@ -28,6 +28,8 @@ import type {
 import {App, Config, Custom, Files, Lute, MobileCustom, Model, Protyle, subMenu, Tab, Toolbar,} from "./types";
 
 export * from "./types";
+export * from "./types/api";
+import type {FetchGet, FetchPost, FetchSyncPost} from "./types/api";
 
 declare global {
     export interface Window extends Global {
@@ -403,17 +405,11 @@ export function adjustEditorFontSize(action: TEditorFontSizeAction, options?: IE
 
 export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOptions): number;
 
-export function fetchPost(
-    url: string,
-    data?: any,
-    cb?: (response: IWebSocketData) => void,
-    headers?: IObject,
-    failCallback?: (response: IWebSocketData) => void
-): void;
+export const fetchPost: FetchPost<IWebSocketData>;
 
-export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
+export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 
-export function fetchGet(url: string, callback: (response: IWebSocketData) => void): void;
+export const fetchGet: FetchGet<IWebSocketData | IObject | string>;
 
 export function openWindow(options: {
     position?: {
