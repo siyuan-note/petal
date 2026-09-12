@@ -473,6 +473,8 @@ export function openTab(options: {
         title?: string, //  cardType 为 all 时不传，否则传文档或笔记本名称
         // 多个卡包取并集并去重；与文档范围、查询条件取交集，不能传空数组
         reviewSetIDs?: string[];
+        // 有序卡片 ID，按首次出现去重；与范围、查询取交集，仍受复习资格和额度限制，不能传空数组
+        cardIDs?: string[];
         query?: IFlashcardQueryAST;
         reviewMode?: "normal" | "reinforcement";
     };
