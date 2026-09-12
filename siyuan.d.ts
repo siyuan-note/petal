@@ -647,6 +647,8 @@ export abstract class Plugin {
         filter: string[],
         html: string,
         id: string,
+        /** 是否在精简版中显示。默认值：false */
+        showInLite?: boolean,
         callback(protyle: Protyle, nodeElement: HTMLElement): void,
     }[];
     protyleOptions: IProtyleOptions;
