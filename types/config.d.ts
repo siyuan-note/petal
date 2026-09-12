@@ -28,7 +28,6 @@ export namespace Config {
          * Access authorization code
          */
         accessAuthCode: TAccessAuthCode;
-        account: IAccount;
         ai: IAI;
         api: IAPI;
         appearance: IAppearance;
@@ -116,20 +115,6 @@ export namespace Config {
      * Access authorization code
      */
     export type TAccessAuthCode = "" | "*******";
-
-    /**
-     * Account configuration
-     */
-    export interface IAccount {
-        /**
-         * Display the title icon
-         */
-        displayTitle: boolean;
-        /**
-         * Display the VIP icon
-         */
-        displayVIP: boolean;
-    }
 
     /**
      * Artificial Intelligence (AI) related configuration
@@ -232,6 +217,7 @@ export namespace Config {
      * AI provider configuration
      */
     export interface IProvider {
+        headers?: Record<string, string>;
         id: string;
         enabled: boolean;
         displayName?: string;
@@ -289,6 +275,12 @@ export namespace Config {
      * SiYuan appearance related configuration
      */
     export interface IAppearance {
+        /** 背景渐变，未配置时根据工作空间名称自动配色 */
+        bodyGradient?: {
+            mode: "auto" | "custom" | "off";
+            light: {color: string; opacity: number};
+            dark: {color: string; opacity: number};
+        };
         /** 全局默认字体，按优先级从高到低排列 */
         globalFontFamilies: IEditor["fontFamilies"];
         /**
@@ -516,6 +508,8 @@ export namespace Config {
          * Whether the backlink contains children
          */
         backlinkContainChildren: boolean;
+        /** 反链面板是否隐藏传递型纯引用块 */
+        backlinkHideReference: boolean;
         /**
          * Backlink sort mode
          */
@@ -909,6 +903,8 @@ export namespace Config {
      * Flashcard related configuration
      */
     export interface IFlashCard {
+        /** 默认打开方式，0：弹窗，1：页签，2：右侧分屏，3：新窗口 */
+        openMode: number;
         /**
          * Whether to enable deck card making
          */

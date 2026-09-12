@@ -928,6 +928,7 @@ interface IProtyleOptions {
         snapshot?: string
     },
     backlinkData?: {
+        referenceBlockID?: string,
         blockPaths: IBreadcrumb[],
         dom: string
         expand: boolean

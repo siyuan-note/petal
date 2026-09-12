@@ -40,6 +40,19 @@ export type TTab = "Outline" | "Graph" | "Backlink" | "Asset" | "Editor" | "Sear
 
 export type TCardType = "doc" | "notebook" | "all"
 
+export interface IFlashcardQueryExpression {
+    operator: "matchAll" | "and" | "or" | "not" | "predicate";
+    children?: IFlashcardQueryExpression[];
+    field?: string;
+    comparator?: string;
+    value?: unknown;
+}
+
+export interface IFlashcardQueryAST {
+    version: number;
+    root: IFlashcardQueryExpression;
+}
+
 export type TEventBus = keyof IEventBusMap
 
 export type TPluginDockPosition = "LeftTop" | "LeftBottom" | "RightTop" | "RightBottom" | "BottomLeft" | "BottomRight"
@@ -461,6 +474,12 @@ export function openTab(options: {
         type: TCardType,
         id?: string, //  cardType 为 all 时不传，否则传文档或笔记本 id
         title?: string, //  cardType 为 all 时不传，否则传文档或笔记本名称
+        // 多个卡包取并集并去重；与文档范围、查询条件取交集，不能传空数组
+        reviewSetIDs?: string[];
+        // 有序卡片 ID，按首次出现去重；与范围、查询取交集，仍受复习资格和额度限制，不能传空数组
+        cardIDs?: string[];
+        query?: IFlashcardQueryAST;
+        reviewMode?: "normal" | "reinforcement";
     };
     custom?: {
         id: string, // 插件名称+页签类型：plugin.name + tab.type
@@ -631,6 +650,8 @@ export abstract class Plugin {
         filter: string[],
         html: string,
         id: string,
+        /** 是否在精简版中显示。默认值：false */
+        showInLite?: boolean,
         callback(protyle: Protyle, nodeElement: HTMLElement): void,
     }[];
     protyleOptions: IProtyleOptions;
@@ -663,16 +684,22 @@ export abstract class Plugin {
     onLayoutReady(): Promise<void> | void;
 
     /**
-     * Must be executed before the synchronous function.
-     * @param {string} [options.id] - Unique ID within the plugin.
-     * @param {string} [options.position=right]
-     * @param {string} options.icon - Support svg id or svg tag.
+     * 添加顶栏条目，自定义元素与图标共用排序、显隐和移除机制。
+     * @param options.id 插件内唯一标识，重复调用时更新条目；传入不同元素时替换原元素。
+     * @param options.position 默认位于右侧。
+     * @param options.element 自定义元素，仅桌面端主窗口支持；移动端和独立窗口忽略本次调用。
+     * 提供时忽略 icon 和 callback，保留元素的样式、内容和事件绑定，布局及交互由插件负责。
+     * 思源设置 id、data-id（提供 id 时）、data-topbar-entry、data-location 和 aria-label。
+     * 同一元素不能注册到多个 id；不传 id 重复注册同一元素时更新现有条目。
+     * @param options.icon 未提供 element 时必填，支持 SVG ID 或 SVG 标签。
+     * @param options.callback 图标条目的点击回调。
      */
     addTopBar(options: {
         id?: string,
-        icon: string,
+        icon?: string,
+        element?: HTMLElement,
         title: string,
-        callback: (event: MouseEvent) => void
+        callback?: (event: MouseEvent) => void
         position?: "right" | "left"
     }): HTMLElement;
 
