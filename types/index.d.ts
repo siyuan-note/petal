@@ -214,10 +214,10 @@ export interface IClipboardData {
 }
 
 export interface IBlockTree {
-    box: string,
-    nodeType: string,
-    hPath: string,
-    subType: string,
+    box?: string,
+    nodeType?: string,
+    hPath?: string,
+    subType?: string,
     name: string,
     type: string,
     depth: number,
