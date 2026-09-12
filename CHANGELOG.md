@@ -2,6 +2,8 @@
 
 ## v1.2.8 2026
 
+* [Add single-input dialog API](https://github.com/siyuan-note/siyuan/issues/19373)
+
 ## v1.2.7 2026-09-07
 
 * [Improve synchronization of plugin lifecycle and shortcut key declarations](https://github.com/siyuan-note/petal/issues/59)

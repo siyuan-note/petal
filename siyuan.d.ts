@@ -838,6 +838,29 @@ export class EventBus {
     >(type: K, detail?: D): boolean;
 }
 
+/**
+ * 打开单输入框对话框，支持 Enter 确认和 Escape 关闭。
+ * 确认时不自动关闭，由 onConfirm 处理校验、提交并调用 dialog.destroy()。
+ */
+export function openInputDialog(options: {
+    title: string,
+    value: string,
+    /** 输入框上方的纯文本标签。 */
+    label?: string,
+    /** 默认桌面端 520px，移动端 92vw。 */
+    width?: string,
+    maxLength?: number,
+    type?: "text" | "number",
+    min?: string,
+    max?: string,
+    step?: string,
+    placeholder?: string,
+    /** 输入框下方的 HTML 说明，调用方应确保内容可信。 */
+    description?: string,
+    onConfirm: (value: string, dialog: Dialog) => void,
+    destroyCallback?: (options?: IObject) => void,
+}): Dialog;
+
 export class Dialog {
 
     element: HTMLElement;
