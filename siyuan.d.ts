@@ -62,6 +62,8 @@ export type TPluginDataChangeReason = "sync" | "overwrite"
 
 export type TOperation =
     "insert"
+    | "appendInsert"
+    | "prependInsert"
     | "restoreCreatedDoc"
     | "removeCreatedDoc"
     | "update"

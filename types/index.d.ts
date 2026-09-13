@@ -641,7 +641,7 @@ export interface IOperation {
     ignoreDefaultFill?: boolean // insertAttrViewBlock 专享
     viewID?: string // 多个属性视图操作使用，用于推送时不影响其他视图
     name?: string // addAttrViewCol 专享
-    type?: TAVCol // addAttrViewCol 专享
+    type?: TAVCol | "" // 非属性视图操作返回空字符串
     deckID?: string // add/removeFlashcards 专享
     blockIDs?: string[] // add/removeFlashcards 专享
     removeDest?: boolean // removeAttrViewCol 专享
