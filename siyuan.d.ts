@@ -873,6 +873,8 @@ export function openInputDialog(options: {
     /** 默认桌面端 520px，移动端 92vw。 */
     width?: string,
     maxLength?: number,
+    /** 使用多行文本框，默认使用单行输入框。 */
+    multiline?: boolean,
     type?: "text" | "number",
     min?: string,
     max?: string,
