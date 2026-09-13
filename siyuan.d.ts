@@ -29,6 +29,7 @@ import {App, Config, Custom, Files, Lute, MobileCustom, Model, Protyle, subMenu,
 import type {FetchGet, FetchPost, FetchSyncPost} from "./types/api";
 
 export * from "./types";
+export * from "./types/api";
 
 declare global {
     export interface Window extends Global {
@@ -61,6 +62,8 @@ export type TPluginDataChangeReason = "sync" | "overwrite"
 
 export type TOperation =
     "insert"
+    | "appendInsert"
+    | "prependInsert"
     | "restoreCreatedDoc"
     | "removeCreatedDoc"
     | "update"
@@ -78,6 +81,7 @@ export type TOperation =
     | "addFlashcards"
     | "removeFlashcards"
     | "updateAttrViewCell"
+    | "updateAttrViewCells"
     | "updateAttrViewCol"
     | "updateAttrViewColTemplate"
     | "sortAttrViewRow"
@@ -88,6 +92,7 @@ export type TOperation =
     | "setAttrViewColHidden"
     | "setAttrViewColWrap"
     | "setAttrViewColWidth"
+    | "setAttrViewColsWidth"
     | "setAttrViewColAlign"
     | "updateAttrViewColOptions"
     | "removeAttrViewColOption"
@@ -99,15 +104,20 @@ export type TOperation =
     | "duplicateAttrViewKey"
     | "setAttrViewColIcon"
     | "setAttrViewFilters"
+    | "setAttrViewColRelationFilters"
+    | "setAttrViewColRollupFilters"
     | "setAttrViewSorts"
     | "setAttrViewColCalc"
     | "updateAttrViewColNumberFormat"
+    | "setAttrViewColDateFormat"
     | "replaceAttrViewBlock"
     | "addAttrViewView"
     | "setAttrViewViewName"
     | "removeAttrViewView"
     | "setAttrViewViewIcon"
     | "duplicateAttrViewView"
+    | "duplicateAttrViewRow"
+    | "setAttrViewBlockVisibleViews"
     | "setAttrViewContextFilter"
     | "sortAttrViewView"
     | "setAttrViewPageSize"
@@ -116,9 +126,14 @@ export type TOperation =
     | "updateAttrViewColRollup"
     | "hideAttrViewName"
     | "setAttrViewCardSize"
+    | "setAttrViewCardWidth"
     | "setAttrViewCardAspectRatio"
+    | "setAttrViewCardAspectRatioValue"
+    | "setAttrViewCardLayout"
+    | "setAttrViewColFullRow"
     | "setAttrViewCoverFrom"
     | "setAttrViewCoverFromAssetKeyID"
+    | "setAttrViewCardCoverPosition"
     | "setAttrViewFitImage"
     | "setAttrViewShowIcon"
     | "setAttrViewWrapField"
@@ -134,7 +149,9 @@ export type TOperation =
     | "hideAttrViewGroup"
     | "sortAttrViewGroup"
     | "foldAttrViewGroup"
+    | "foldAttrViewGroups"
     | "setAttrViewDisplayFieldName"
+    | "setAttrViewDisplayEmptyFields"
     | "setAttrViewFillColBackgroundColor"
     | "setAttrViewUpdatedIncludeTime"
     | "setAttrViewCreatedIncludeTime"
@@ -411,7 +428,7 @@ export const fetchPost: FetchPost<IWebSocketData>;
 
 export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 
-export const fetchGet: FetchGet<IWebSocketData | string>;
+export const fetchGet: FetchGet<IWebSocketData | IObject | string>;
 
 export function openWindow(options: {
     position?: {
@@ -605,7 +622,7 @@ export function hideMessage(id?: string): void;
  */
 export abstract class Plugin {
     eventBus: EventBus;
-    i18n: Record<string, string>;
+    i18n: Record<string, import("./types/api").JSONValue>;
     kernel: IKernelPlugin;
     data: any;
     displayName: string;
@@ -655,7 +672,7 @@ export abstract class Plugin {
         app: App,
         name: string,
         displayName: string,
-        i18n: Record<string, string>,
+        i18n: Record<string, import("./types/api").JSONValue>,
     });
 
     /** 当前端插件实例启动时运行。 */
@@ -810,7 +827,7 @@ export abstract class Plugin {
         x?: number,
         y?: number,
         targetElement?: HTMLElement,
-        originalRefBlockIDs?: IObject,
+        originalRefBlockIDs?: Record<string, string>,
         isBacklink: boolean,
     }): void;
 
@@ -874,6 +891,7 @@ export function openInputDialog(options: {
     positionId?: string,
     maxLength?: number,
     type?: "text" | "number" | "password",
+    /** 使用多行文本框，默认使用单行输入框。 */
     multiline?: boolean,
     resize?: "none" | "vertical",
     min?: string,

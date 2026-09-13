@@ -103,15 +103,17 @@ interface IOperationSrcs {
 interface INotebook {
     name: string;
     id: string;
-    boxDocID: string;
     closed: boolean;
     icon: string;
     sort: number;
-    dueFlashcardCount?: string;
-    newFlashcardCount?: string;
-    flashcardCount?: string;
+    subFileCount: number;
+    dueFlashcardCount?: number;
+    newFlashcardCount?: number;
+    flashcardCount?: number;
     sortMode: number;
     encrypted?: boolean;
+    unlocked?: boolean;
+    state?: "Locked" | "Unlocking" | "Unlocked" | "Locking" | "Error";
 }
 
 export interface IFile {
@@ -126,9 +128,9 @@ export interface IFile {
     hMtime: string;
     hCtime: string;
     hSize: string;
-    dueFlashcardCount?: string;
-    newFlashcardCount?: string;
-    flashcardCount?: string;
+    dueFlashcardCount?: number;
+    newFlashcardCount?: number;
+    flashcardCount?: number;
     id: string;
     count: number;
     subFileCount: number;
@@ -213,10 +215,10 @@ export interface IClipboardData {
 }
 
 export interface IBlockTree {
-    box: string,
-    nodeType: string,
-    hPath: string,
-    subType: string,
+    box?: string,
+    nodeType?: string,
+    hPath?: string,
+    subType?: string,
     name: string,
     type: string,
     depth: number,
@@ -629,6 +631,11 @@ export interface IOperation {
     format?: string // updateAttrViewColNumberFormat 专享
     keyID?: string // 属性视图字段 ID
     rowID?: string // updateAttrViewCell 专享
+    cellUpdates?: Array<{
+        keyID: string;
+        rowID: string;
+        data: IAVCellValue;
+    }>; // updateAttrViewCells 专享
     data?: any, // updateAttr 时为  { old: IObject, new: IObject }, updateAttrViewCell 时为 {TAVCol: {content: string}}
     parentID?: string
     previousID?: string
@@ -639,8 +646,9 @@ export interface IOperation {
     srcs?: IOperationSrcs[] // insertAttrViewBlock 专享
     ignoreDefaultFill?: boolean // insertAttrViewBlock 专享
     viewID?: string // 多个属性视图操作使用，用于推送时不影响其他视图
+    viewIDs?: string[]; // setAttrViewColHidden 批量指定数据库视图
     name?: string // addAttrViewCol 专享
-    type?: TAVCol // addAttrViewCol 专享
+    type?: TAVCol | "" // 非属性视图操作返回空字符串
     deckID?: string // add/removeFlashcards 专享
     blockIDs?: string[] // add/removeFlashcards 专享
     removeDest?: boolean // removeAttrViewCol 专享
