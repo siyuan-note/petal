@@ -630,6 +630,11 @@ export interface IOperation {
     format?: string // updateAttrViewColNumberFormat 专享
     keyID?: string // 属性视图字段 ID
     rowID?: string // updateAttrViewCell 专享
+    cellUpdates?: Array<{
+        keyID: string;
+        rowID: string;
+        data: IAVCellValue;
+    }>; // updateAttrViewCells 专享
     data?: any, // updateAttr 时为  { old: IObject, new: IObject }, updateAttrViewCell 时为 {TAVCol: {content: string}}
     parentID?: string
     previousID?: string
@@ -640,6 +645,7 @@ export interface IOperation {
     srcs?: IOperationSrcs[] // insertAttrViewBlock 专享
     ignoreDefaultFill?: boolean // insertAttrViewBlock 专享
     viewID?: string // 多个属性视图操作使用，用于推送时不影响其他视图
+    viewIDs?: string[]; // setAttrViewColHidden 批量指定数据库视图
     name?: string // addAttrViewCol 专享
     type?: TAVCol | "" // 非属性视图操作返回空字符串
     deckID?: string // add/removeFlashcards 专享
