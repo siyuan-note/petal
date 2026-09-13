@@ -19,7 +19,7 @@ export declare class BlockPanel {
         targetElement?: HTMLElement;
         refDefs: IRefDefs[];
         isBacklink: boolean;
-        originalRefBlockIDs?: IObject;
+        originalRefBlockIDs?: Record<string, string>;
         x?: number;
         y?: number;
     });
