@@ -608,7 +608,7 @@ export function hideMessage(id?: string): void;
  */
 export abstract class Plugin {
     eventBus: EventBus;
-    i18n: Record<string, string>;
+    i18n: Record<string, import("./types/api").JSONValue>;
     kernel: IKernelPlugin;
     data: any;
     displayName: string;
@@ -658,7 +658,7 @@ export abstract class Plugin {
         app: App,
         name: string,
         displayName: string,
-        i18n: Record<string, string>,
+        i18n: Record<string, import("./types/api").JSONValue>,
     });
 
     /** 当前端插件实例启动时运行。 */
