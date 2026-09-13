@@ -420,6 +420,46 @@ export type APILegacyPOSTPath =
     "/api/filetree/setPublishAccess" |
     "/api/filetree/setSort" |
     "/api/filetree/upsertIndexes" |
+    "/api/flashcard/activateMigration" |
+    "/api/flashcard/createAdvancedSource" |
+    "/api/flashcard/createBasicSource" |
+    "/api/flashcard/createQuickSources" |
+    "/api/flashcard/deleteInvalidSources" |
+    "/api/flashcard/deleteReviewSet" |
+    "/api/flashcard/finishSession" |
+    "/api/flashcard/getCardHistory" |
+    "/api/flashcard/getEntity" |
+    "/api/flashcard/getMigrationStatus" |
+    "/api/flashcard/getRenderModel" |
+    "/api/flashcard/getSessionQueue" |
+    "/api/flashcard/getSourceHistory" |
+    "/api/flashcard/getStatistics" |
+    "/api/flashcard/getStudyPolicy" |
+    "/api/flashcard/importAnkiPackage" |
+    "/api/flashcard/inspectInvalidSources" |
+    "/api/flashcard/listConflicts" |
+    "/api/flashcard/listEntities" |
+    "/api/flashcard/manageCards" |
+    "/api/flashcard/manageSourceLifecycle" |
+    "/api/flashcard/mutateEntities" |
+    "/api/flashcard/previewAnkiPackage" |
+    "/api/flashcard/previewMigration" |
+    "/api/flashcard/previewReviewSet" |
+    "/api/flashcard/queryCards" |
+    "/api/flashcard/reconcileSource" |
+    "/api/flashcard/resolveConflict" |
+    "/api/flashcard/restoreSourceHistory" |
+    "/api/flashcard/reviewCard" |
+    "/api/flashcard/saveStudyPolicy" |
+    "/api/flashcard/saveTag" |
+    "/api/flashcard/setReviewSetMemberships" |
+    "/api/flashcard/setTagAssignments" |
+    "/api/flashcard/startSession" |
+    "/api/flashcard/summarizeReviewSets" |
+    "/api/flashcard/undoReview" |
+    "/api/flashcard/updateAdvancedSource" |
+    "/api/flashcard/updateBasicDirection" |
+    "/api/flashcard/updateSessionCard" |
     "/api/format/autoSpace" |
     "/api/format/netAssets2LocalAssets" |
     "/api/format/netImg2LocalAssets" |
