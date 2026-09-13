@@ -378,6 +378,12 @@ export type RenameNotebookRequestInput = { "name": string; "notebook": string; }
 
 export type RenameTagRequestInput = { "newLabel": string; "oldLabel": string; };
 
+export type RenderSprigRequestInput = { "template": string; };
+
+export type RenderTemplateData = { "content": string; "docTreePlan"?: TemplatePlan; "path": string; };
+
+export type RenderTemplateRequestInput = { "content"?: string; "id": string; "mode"?: string | null; "path": string; "preview"?: boolean | null; };
+
 export type ReorderData = { "changed": boolean; "notebook"?: string; "parentPath"?: string; };
 
 export type ReorderNotebooksRequestInput = { "position"?: string | null; "sourceIDs"?: Array<string> | null; "targetID"?: string | null; };
@@ -389,6 +395,8 @@ export type RichClipboardPrepared = { "assets": Array<RichClipboardPreparedAsset
 export type RichClipboardPreparedAsset = { "index": number; "path": string; };
 
 export type SQLQueryRequestInput = { "mode"?: string | null; "stmt": string; };
+
+export type SaveTemplateRequestInput = { "databaseMode"?: string; "directory"?: string; "id": string; "name": string; "overwrite": boolean; };
 
 export type SearchBlock = { "alias": string; "box": string; "children": Array<SearchBlock | null> | null; "content": string; "count": number; "created": string; "defID": string; "defPath": string; "depth": number; "fcontent": string; "folded": boolean; "hPath": string; "ial": Record<string, string> | null; "id": string; "markdown": string; "memo": string; "name": string; "number"?: string; "parentID": string; "path": string; "refCount": number; "refText": string; "refs": Array<SearchBlock | null> | null; "riffCard": SearchBlockCard | null; "riffCardID": string; "rootID": string; "sort": number; "subType": string; "tag": string; "type": string; "updated": string; };
 
@@ -461,6 +469,22 @@ export type TagData = { "children": Array<TagData | null> | null; "count": numbe
 export type TailChildBlocksRequestInput = { "id": string; "ids"?: Array<string> | null; "n"?: number | null; "notebook"?: string | null; };
 
 export type TaskListMarkerRequestInput = { "id": string; "marker": string; };
+
+export type TemplateDocumentInfo = { "directory": string; "hasDatabase": boolean; "name": string; };
+
+export type TemplateDocumentRequestInput = { "id": string; };
+
+export type TemplateFileEntry = { "isDir": boolean; "isPackage"?: boolean; "path": string; };
+
+export type TemplateFileRequestInput = { "action"?: string; "content"?: string; "path"?: string; "revision"?: string; "target"?: string; };
+
+export type TemplateFileRevision = { "revision": string; };
+
+export type TemplateFileSource = { "content": string; "path"?: string; "revision": string; };
+
+export type TemplatePlan = { "count": number; "id": string; "nodes": Array<TemplatePlanNode | null> | null; };
+
+export type TemplatePlanNode = { "depth": number; "hPath": string; "id": string; "parentID": string; "title": string; };
 
 export type TransferBlockRefRequestInput = { "fromID": string; "refIDs"?: Array<string> | null; "reloadUI"?: boolean | null; "toID": string; };
 
@@ -936,31 +960,6 @@ export type APILegacyPOSTPath =
     "/api/system/exportTLSCACert" |
     "/api/system/getChangelog" |
     "/api/system/getConf" |
-    "/api/account/checkActivationcode": {
-        request: CheckActivationCodeRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null | null; "msg": string; };
-        body: "json";
-    };
-    "/api/account/deactivate": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/account/login": {
-        request: AccountLoginRequestInput;
-        response: { "code": 0; "data": AccountLoginData | null; "msg": string; } | { "code": -1 | 1 | 10; "data": { "closeTimeout": number; } | null | AccountLoginData | null; "msg": string; };
-        body: "json";
-    };
-    "/api/account/startFreeTrial": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/account/useActivationcode": {
-        request: ActivationCodeRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
     "/api/system/getCustomFonts" |
     "/api/system/getEmojiConf" |
     "/api/system/getMobileWorkspaces" |
@@ -988,29 +987,39 @@ export type APILegacyPOSTPath =
     "/api/system/setUILayout" |
     "/api/system/setWorkspaceDir" |
     "/api/system/uiproc" |
-    "/api/template/docSaveAsTemplate" |
-    "/api/template/getDocSaveAsTemplateInfo" |
-    "/api/template/manage" |
-    "/api/attr/resetBlockAttrs": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/template/render" |
-    "/api/template/renderSprig" |
     "/api/transactions" |
     "/api/transactions/clearHistory" |
-    };
-    "/api/av/searchAttributeViewNonRelationKey": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
     "/api/transactions/redo" |
     "/api/transactions/undo" |
     "/api/transactions/undoState" |
     "/plugin/private/:name/*path";
 
 export interface APIPOSTRoutes {
+    "/api/account/checkActivationcode": {
+        request: CheckActivationCodeRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null | null; "msg": string; };
+        body: "json";
+    };
+    "/api/account/deactivate": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
+    "/api/account/login": {
+        request: AccountLoginRequestInput;
+        response: { "code": 0; "data": AccountLoginData | null; "msg": string; } | { "code": -1 | 1 | 10; "data": { "closeTimeout": number; } | null | AccountLoginData | null; "msg": string; };
+        body: "json";
+    };
+    "/api/account/startFreeTrial": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
+    "/api/account/useActivationcode": {
+        request: ActivationCodeRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
     "/api/archive/unzip": {
         request: UnzipRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -1041,10 +1050,20 @@ export interface APIPOSTRoutes {
         response: { "code": 0; "data": Array<string> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "none";
     };
+    "/api/attr/resetBlockAttrs": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
     "/api/attr/setBlockAttrs": {
         request: SetBlockAttrsRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
+    };
+    "/api/av/searchAttributeViewNonRelationKey": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
     };
     "/api/block/appendBlock": {
         request: AppendBlockRequestInput;
@@ -1316,11 +1335,6 @@ export interface APIPOSTRoutes {
         response: { "code": 0; "data": Array<BlockTransaction | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
     };
-    "/api/bookmark/getBookmark": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": Array<Bookmark | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
     "/api/block/prependBlock": {
         request: PrependBlockRequestInput;
         response: { "code": 0; "data": Array<BlockTransaction | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -1329,6 +1343,51 @@ export interface APIPOSTRoutes {
     "/api/block/prependDailyNoteBlock": {
         request: DailyNoteBlockRequestInput;
         response: { "code": 0; "data": Array<BlockTransaction | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/block/setBlockReminder": {
+        request: BlockReminderRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/block/swapBlockRef": {
+        request: SwapBlockRefRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/block/transferBlockRef": {
+        request: TransferBlockRefRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/block/unfoldBlock": {
+        request: BlockIDRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/block/updateBlock": {
+        request: UpdateBlockRequestInput;
+        response: { "code": 0; "data": Array<BlockTransaction | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/block/updateTaskListItemMarker": {
+        request: TaskListMarkerRequestInput;
+        response: { "code": 0; "data": Array<BlockTransaction | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/bookmark/getBookmark": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": Array<Bookmark | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
+    "/api/bookmark/removeBookmark": {
+        request: RemoveBookmarkRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/bookmark/renameBookmark": {
+        request: RenameBookmarkRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
     };
     "/api/broadcast/getChannelInfo": {
@@ -1432,13 +1491,13 @@ export interface APIPOSTRoutes {
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | -2 | -3 | 403; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
     };
-    "/api/block/setBlockReminder": {
-        request: BlockReminderRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
+    "/api/filetree/getPinnedDocs": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": Array<PinnedDoc>; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
     };
-    "/api/block/swapBlockRef": {
-        request: SwapBlockRefRequestInput;
+    "/api/filetree/updatePinnedDocs": {
+        request: UpdatePinnedDocsRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
     };
@@ -1457,19 +1516,19 @@ export interface APIPOSTRoutes {
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
     };
-    "/api/block/transferBlockRef": {
-        request: TransferBlockRefRequestInput;
+    "/api/history/clearWorkspaceHistory": {
+        request: EmptyRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
+        body: "none";
     };
-    "/api/block/unfoldBlock": {
-        request: BlockIDRequestInput;
+    "/api/history/reindexHistory": {
+        request: EmptyRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
+        body: "none";
     };
-    "/api/block/updateBlock": {
-        request: UpdateBlockRequestInput;
-        response: { "code": 0; "data": Array<BlockTransaction | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+    "/api/history/searchHistory": {
+        request: SearchHistoryRequestInput;
+        response: { "code": 0; "data": SearchHistoryData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
     };
     "/api/inbox/getShorthand": {
@@ -1510,46 +1569,6 @@ export interface APIPOSTRoutes {
     "/api/lute/wpsPresentation2BlockDOM": {
         request: WPSPresentationRequestInput;
         response: { "code": 0; "data": WPSPresentationData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null | WPSPresentationData; "msg": string; };
-        body: "json";
-    };
-    "/api/block/updateTaskListItemMarker": {
-        request: TaskListMarkerRequestInput;
-        response: { "code": 0; "data": Array<BlockTransaction | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/bookmark/removeBookmark": {
-        request: RemoveBookmarkRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/bookmark/renameBookmark": {
-        request: RenameBookmarkRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/filetree/getPinnedDocs": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": Array<PinnedDoc>; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/filetree/updatePinnedDocs": {
-        request: UpdatePinnedDocsRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/history/clearWorkspaceHistory": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/history/reindexHistory": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/history/searchHistory": {
-        request: SearchHistoryRequestInput;
-        response: { "code": 0; "data": SearchHistoryData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
     };
     "/api/notebook/changeMasterPassword": {
@@ -1632,46 +1651,6 @@ export interface APIPOSTRoutes {
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
     };
-    "/api/notification/pushErrMsg": {
-        request: NotificationRequestInput;
-        response: { "code": 0; "data": NotificationData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/notification/pushMsg": {
-        request: NotificationRequestInput;
-        response: { "code": 0; "data": NotificationData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/outline/getDocHeadingNumbers": {
-        request: HeadingNumbersRequestInput;
-        response: { "code": 0; "data": Record<string, string> | null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/outline/getDocOutline": {
-        request: OutlineRequestInput;
-        response: { "code": 0; "data": Array<SearchPath | null> | null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/petal/loadPetals": {
-        request: LoadPetalsRequestInput;
-        response: { "code": 0; "data": Array<Petal | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/petal/setPetalEnabled": {
-        request: SetPetalEnabledRequestInput;
-        response: { "code": 0; "data": Petal | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/petal/setPetalPublishEnabled": {
-        request: SetPetalPublishEnabledRequestInput;
-        response: { "code": 0; "data": Petal | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/query/sql": {
-        request: SQLQueryRequestInput;
-        response: { "code": 0; "data": Array<Record<string, null | string | number | boolean> | null>; "limit": number; "msg": string; "truncated": boolean; } | ({ "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; } & { "limit"?: never; "truncated"?: never; });
-        body: "json";
-    };
     "/api/notebook/renameNotebook": {
         request: RenameNotebookRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -1712,10 +1691,90 @@ export interface APIPOSTRoutes {
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
     };
+    "/api/notification/pushErrMsg": {
+        request: NotificationRequestInput;
+        response: { "code": 0; "data": NotificationData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/notification/pushMsg": {
+        request: NotificationRequestInput;
+        response: { "code": 0; "data": NotificationData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/outline/getDocHeadingNumbers": {
+        request: HeadingNumbersRequestInput;
+        response: { "code": 0; "data": Record<string, string> | null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/outline/getDocOutline": {
+        request: OutlineRequestInput;
+        response: { "code": 0; "data": Array<SearchPath | null> | null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/petal/loadPetals": {
+        request: LoadPetalsRequestInput;
+        response: { "code": 0; "data": Array<Petal | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/petal/setPetalEnabled": {
+        request: SetPetalEnabledRequestInput;
+        response: { "code": 0; "data": Petal | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/petal/setPetalPublishEnabled": {
+        request: SetPetalPublishEnabledRequestInput;
+        response: { "code": 0; "data": Petal | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/query/sql": {
+        request: SQLQueryRequestInput;
+        response: { "code": 0; "data": Array<Record<string, null | string | number | boolean> | null>; "limit": number; "msg": string; "truncated": boolean; } | ({ "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; } & { "limit"?: never; "truncated"?: never; });
+        body: "json";
+    };
     "/api/repo/checkSnapshot": {
         request: EmptyRequestInput;
         response: { "code": 0; "data": CheckSnapshotData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "none";
+    };
+    "/api/repo/createSnapshot": {
+        request: CreateSnapshotRequestInput;
+        response: { "code": 0; "data": CreateSnapshotData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/repo/setSnapshotMemo": {
+        request: SetSnapshotMemoRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/search/searchTag": {
+        request: SearchTagRequestInput;
+        response: { "code": 0; "data": SearchTagData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/setting/addVirtualBlockRefExclude": {
+        request: VirtualBlockRefRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/setting/addVirtualBlockRefInclude": {
+        request: VirtualBlockRefRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/setting/getPandocBin": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": string; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
+    "/api/setting/refreshVirtualBlockRef": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
+    "/api/setting/setEditorReadOnly": {
+        request: EditorReadOnlyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
     };
     "/api/snippet/getSnippet": {
         request: GetSnippetRequestInput;
@@ -1862,51 +1921,6 @@ export interface APIPOSTRoutes {
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
     };
-    "/api/repo/createSnapshot": {
-        request: CreateSnapshotRequestInput;
-        response: { "code": 0; "data": CreateSnapshotData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/repo/setSnapshotMemo": {
-        request: SetSnapshotMemoRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/search/searchTag": {
-        request: SearchTagRequestInput;
-        response: { "code": 0; "data": SearchTagData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/setting/addVirtualBlockRefExclude": {
-        request: VirtualBlockRefRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/setting/addVirtualBlockRefInclude": {
-        request: VirtualBlockRefRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/setting/getPandocBin": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": string; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/setting/refreshVirtualBlockRef": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/setting/setEditorReadOnly": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/system/reloadUI": {
-        request: EditorReadOnlyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
     "/api/system/addMicrosoftDefenderExclusion": {
         request: EmptyRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -1947,6 +1961,11 @@ export interface APIPOSTRoutes {
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "none";
     };
+    "/api/system/reloadUI": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
     "/api/system/setAutoLaunch": {
         request: AutoLaunchRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -1966,41 +1985,6 @@ export interface APIPOSTRoutes {
         request: NetworkProxyInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
-    };
-    "/api/ui/reloadAttributeView": {
-        request: BlockIDRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/ui/reloadFiletree": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/ui/reloadIcon": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/ui/reloadProtyle": {
-        request: BlockIDRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-    };
-    "/api/ui/reloadTag": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/ui/reloadTheme": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-    };
-    "/api/ui/reloadUI": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
     };
     "/api/system/setNetworkServe": {
         request: NetworkServeRequestInput;
@@ -2041,6 +2025,66 @@ export interface APIPOSTRoutes {
         request: RenameTagRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
+    };
+    "/api/template/docSaveAsTemplate": {
+        request: SaveTemplateRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/template/getDocSaveAsTemplateInfo": {
+        request: TemplateDocumentRequestInput;
+        response: { "code": 0; "data": TemplateDocumentInfo; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/template/manage": {
+        request: TemplateFileRequestInput;
+        response: { "code": 0; "data": Array<TemplateFileEntry> | TemplateFileSource | TemplateFileRevision | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "structJSON";
+    };
+    "/api/template/render": {
+        request: RenderTemplateRequestInput;
+        response: { "code": 0; "data": RenderTemplateData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/template/renderSprig": {
+        request: RenderSprigRequestInput;
+        response: { "code": 0; "data": string; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/ui/reloadAttributeView": {
+        request: BlockIDRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/ui/reloadFiletree": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
+    "/api/ui/reloadIcon": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
+    "/api/ui/reloadProtyle": {
+        request: BlockIDRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/ui/reloadTag": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
+    "/api/ui/reloadTheme": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
+    "/api/ui/reloadUI": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
     };
 }
 
