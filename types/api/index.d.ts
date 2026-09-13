@@ -725,7 +725,6 @@ export type APILegacyPOSTPath =
     "/api/snippet/getSnippet" |
     "/api/snippet/removeSnippet" |
     "/api/snippet/setSnippet" |
-    "/api/sqlite/flushTransaction" |
     "/api/storage/batchUpdateRecentDocCloseTime" |
     "/api/storage/getCriteria" |
     "/api/storage/getInlineStyles" |
@@ -1362,6 +1361,11 @@ export interface APIPOSTRoutes {
     "/api/repo/checkSnapshot": {
         request: EmptyRequestInput;
         response: { "code": 0; "data": CheckSnapshotData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
+    "/api/sqlite/flushTransaction": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "none";
     };
     "/api/repo/createSnapshot": {
