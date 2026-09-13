@@ -156,9 +156,9 @@ export type CriterionReplaceTypes = { "aHref": boolean; "aText": boolean; "aTitl
 
 export type CriterionReplaceTypesInput = { "aHref"?: boolean | null; "aText"?: boolean | null; "aTitle"?: boolean | null; "blockRef"?: boolean | null; "code"?: boolean | null; "codeBlock"?: boolean | null; "docTitle"?: boolean | null; "em"?: boolean | null; "fileAnnotationRef"?: boolean | null; "htmlBlock"?: boolean | null; "imgSrc"?: boolean | null; "imgText"?: boolean | null; "imgTitle"?: boolean | null; "inlineMath"?: boolean | null; "inlineMemo"?: boolean | null; "kbd"?: boolean | null; "mark"?: boolean | null; "mathBlock"?: boolean | null; "s"?: boolean | null; "strong"?: boolean | null; "sub"?: boolean | null; "sup"?: boolean | null; "tag"?: boolean | null; "text"?: boolean | null; "u"?: boolean | null; };
 
-export type CriterionTypes = { "audioBlock": boolean; "blockquote": boolean; "callout": boolean; "codeBlock": boolean; "databaseBlock": boolean; "document": boolean; "embedBlock": boolean; "heading": boolean; "htmlBlock": boolean; "iframeBlock": boolean; "list": boolean; "listItem": boolean; "mathBlock": boolean; "paragraph": boolean; "superBlock": boolean; "table": boolean; "videoBlock": boolean; "widgetBlock": boolean; };
+export type CriterionTypes = { "audioBlock": boolean; "blockquote": boolean; "callout": boolean; "codeBlock": boolean; "databaseBlock": boolean; "document": boolean; "embedBlock": boolean; "heading": boolean; "htmlBlock": boolean; "iframeBlock": boolean; "list": boolean; "listItem": boolean; "mathBlock": boolean; "paragraph": boolean; "superBlock": boolean; "tabItem": boolean; "table": boolean; "tabs": boolean; "videoBlock": boolean; "widgetBlock": boolean; };
 
-export type CriterionTypesInput = { "audioBlock"?: boolean | null; "blockquote"?: boolean | null; "callout"?: boolean | null; "codeBlock"?: boolean | null; "databaseBlock"?: boolean | null; "document"?: boolean | null; "embedBlock"?: boolean | null; "heading"?: boolean | null; "htmlBlock"?: boolean | null; "iframeBlock"?: boolean | null; "list"?: boolean | null; "listItem"?: boolean | null; "mathBlock"?: boolean | null; "paragraph"?: boolean | null; "superBlock"?: boolean | null; "table"?: boolean | null; "videoBlock"?: boolean | null; "widgetBlock"?: boolean | null; };
+export type CriterionTypesInput = { "audioBlock"?: boolean | null; "blockquote"?: boolean | null; "callout"?: boolean | null; "codeBlock"?: boolean | null; "databaseBlock"?: boolean | null; "document"?: boolean | null; "embedBlock"?: boolean | null; "heading"?: boolean | null; "htmlBlock"?: boolean | null; "iframeBlock"?: boolean | null; "list"?: boolean | null; "listItem"?: boolean | null; "mathBlock"?: boolean | null; "paragraph"?: boolean | null; "superBlock"?: boolean | null; "tabItem"?: boolean | null; "table"?: boolean | null; "tabs"?: boolean | null; "videoBlock"?: boolean | null; "widgetBlock"?: boolean | null; };
 
 export type DOMData = { "dom": string; };
 
@@ -205,6 +205,32 @@ export type FullBlockInfo = { "box": string; "path": string; "rootChildID": stri
 export type GetSnippetRequestInput = { "enabled": number; "keyword"?: string | null; "type": string; };
 
 export type GetTagRequestInput = { "app"?: string | null; "ignoreMaxListHint"?: boolean | null; "sort"?: number | null; };
+
+export type GlobalGraphConf = { "d3": GraphD3 | null; "dailyNote": boolean; "minRefs": number; "type": GraphTypeFilter | null; };
+
+export type GlobalGraphRequestInput = { "conf": GraphConfigurationFieldsInput; "k"?: string | null; "reqId"?: JSONValue | null; };
+
+export type GlobalGraphResult = { "box": string; "conf": GlobalGraphConf; "links": Array<GraphLink | null> | null; "nodes": Array<GraphNode | null> | null; "reqId": JSONValue; };
+
+export type GraphArrows = { "to": GraphArrowsTo | null; };
+
+export type GraphArrowsTo = { "enabled": boolean; };
+
+export type GraphConfigurationFieldsInput = { "d3"?: GraphD3Input | null; "dailyNote"?: boolean | null; "minRefs"?: number | null; "type"?: GraphTypeFilterInput | null; };
+
+export type GraphCorrelation = { "reqId": JSONValue; };
+
+export type GraphD3 = { "arrow": boolean; "centerStrength": number; "collideRadius": number; "collideStrength": number; "lineOpacity": number; "linkDistance": number; "linkWidth": number; "nodeSize": number; };
+
+export type GraphD3Input = { "arrow"?: boolean | null; "centerStrength"?: number | null; "collideRadius"?: number | null; "collideStrength"?: number | null; "lineOpacity"?: number | null; "linkDistance"?: number | null; "linkWidth"?: number | null; "nodeSize"?: number | null; };
+
+export type GraphLink = { "arrows": GraphArrows | null; "from": string; "ref": boolean; "to": string; };
+
+export type GraphNode = { "box": string; "defs": number; "id": string; "label": string; "path": string; "refs": number; "size": number; "title"?: string; "type": string; };
+
+export type GraphTypeFilter = { "blockquote": boolean; "callout": boolean; "code": boolean; "heading": boolean; "list": boolean; "listItem": boolean; "math": boolean; "paragraph": boolean; "super": boolean; "table": boolean; "tag": boolean; };
+
+export type GraphTypeFilterInput = { "blockquote"?: boolean | null; "callout"?: boolean | null; "code"?: boolean | null; "heading"?: boolean | null; "list"?: boolean | null; "listItem"?: boolean | null; "math"?: boolean | null; "paragraph"?: boolean | null; "super"?: boolean | null; "table"?: boolean | null; "tag"?: boolean | null; };
 
 export type HTMLClipboardPreflight = { "converted": boolean; "dom"?: string; "normalizedHTML"?: string; "useHTML": boolean; };
 
@@ -267,6 +293,12 @@ export type ListNotebooksData = { "boxDocEnabled": boolean; "notebooks": Array<N
 export type ListNotebooksRequestInput = { "flashcard"?: boolean | null; };
 
 export type LoadPetalsRequestInput = { "frontend": string; };
+
+export type LocalGraphConf = { "d3": GraphD3 | null; "dailyNote": boolean; "type": GraphTypeFilter | null; };
+
+export type LocalGraphRequestInput = { "conf"?: GraphConfigurationFieldsInput; "id"?: string | null; "k"?: string | null; "notebook"?: string | null; "reqId"?: JSONValue | null; "type"?: string | null; };
+
+export type LocalGraphResult = { "box": string; "conf": LocalGraphConf; "id": string; "links": Array<GraphLink | null> | null; "nodes": Array<GraphNode | null> | null; "reqId": JSONValue; };
 
 export type LockScreenRequestInput = { "lockScreenMode": number; };
 
@@ -388,6 +420,10 @@ export type ReorderData = { "changed": boolean; "notebook"?: string; "parentPath
 
 export type ReorderNotebooksRequestInput = { "position"?: string | null; "sourceIDs"?: Array<string> | null; "targetID"?: string | null; };
 
+export type ResetGraphData = { "conf": GlobalGraphConf; };
+
+export type ResetLocalGraphData = { "conf": LocalGraphConf; };
+
 export type RichClipboardAssetInput = { "box"?: string; "index": number; "path": string; };
 
 export type RichClipboardPrepared = { "assets": Array<RichClipboardPreparedAsset> | null; "batch": string; "groups": Array<string> | null; };
@@ -419,6 +455,8 @@ export type SearchTagRequestInput = { "k": string; };
 export type SetBlockAttrsRequestInput = { "attrs": Record<string, string | null>; "id": string; };
 
 export type SetCriterionRequestInput = { "criterion": CriterionInput | null; };
+
+export type SetGraphConfRequestInput = { "conf": GraphConfigurationFieldsInput; "type": string; };
 
 export type SetInlineStylesRequestInput = { "app"?: string | null; "av"?: InlineStyleAVInput | null; "builtin"?: InlineStyleBuiltinInput | null; "order"?: InlineStyleOrderInput | null; "styles": Array<InlineStyleInput | null>; "version": number; };
 
@@ -803,11 +841,6 @@ export type APILegacyPOSTPath =
     "/api/flashcard/updateAdvancedSource" |
     "/api/flashcard/updateBasicDirection" |
     "/api/flashcard/updateSessionCard" |
-    "/api/graph/getGraph" |
-    "/api/graph/getLocalGraph" |
-    "/api/graph/resetGraph" |
-    "/api/graph/resetLocalGraph" |
-    "/api/graph/setGraphConf" |
     "/api/history/createAssetHistory" |
     "/api/history/createDocHistory" |
     "/api/history/diffDocVersions" |
@@ -1514,6 +1547,31 @@ export interface APIPOSTRoutes {
     "/api/format/netImg2LocalAssets": {
         request: NetImageAssetsRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/graph/getGraph": {
+        request: GlobalGraphRequestInput;
+        response: { "code": 0; "data": GlobalGraphResult | (GraphCorrelation & { "box"?: never; "conf"?: never; "links"?: never; "nodes"?: never; }); "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null | GlobalGraphResult | (GraphCorrelation & { "box"?: never; "conf"?: never; "links"?: never; "nodes"?: never; }); "msg": string; };
+        body: "json";
+    };
+    "/api/graph/getLocalGraph": {
+        request: LocalGraphRequestInput;
+        response: { "code": 0; "data": LocalGraphResult | (GraphCorrelation & { "box"?: never; "conf"?: never; "id"?: never; "links"?: never; "nodes"?: never; }); "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null | LocalGraphResult | (GraphCorrelation & { "box"?: never; "conf"?: never; "id"?: never; "links"?: never; "nodes"?: never; }); "msg": string; };
+        body: "json";
+    };
+    "/api/graph/resetGraph": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": ResetGraphData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
+    "/api/graph/resetLocalGraph": {
+        request: EmptyRequestInput;
+        response: { "code": 0; "data": ResetLocalGraphData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "none";
+    };
+    "/api/graph/setGraphConf": {
+        request: SetGraphConfRequestInput;
+        response: { "code": 0; "data": GlobalGraphConf | (LocalGraphConf & { "minRefs"?: never; }); "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
     };
     "/api/history/clearWorkspaceHistory": {
