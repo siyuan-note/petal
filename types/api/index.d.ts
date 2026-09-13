@@ -388,6 +388,8 @@ export type RichClipboardPrepared = { "assets": Array<RichClipboardPreparedAsset
 
 export type RichClipboardPreparedAsset = { "index": number; "path": string; };
 
+export type SQLQueryRequestInput = { "mode"?: string | null; "stmt": string; };
+
 export type SearchBlock = { "alias": string; "box": string; "children": Array<SearchBlock | null> | null; "content": string; "count": number; "created": string; "defID": string; "defPath": string; "depth": number; "fcontent": string; "folded": boolean; "hPath": string; "ial": Record<string, string> | null; "id": string; "markdown": string; "memo": string; "name": string; "number"?: string; "parentID": string; "path": string; "refCount": number; "refText": string; "refs": Array<SearchBlock | null> | null; "riffCard": SearchBlockCard | null; "riffCardID": string; "rootID": string; "sort": number; "subType": string; "tag": string; "type": string; "updated": string; };
 
 export type SearchBlockCard = { "due": string; "lapses": number; "lastReview": string; "reps": number; "state": number; };
@@ -812,7 +814,6 @@ export type APILegacyPOSTPath =
     "/api/plugin/listLoadedPlugins" |
     "/api/plugin/rpc" |
     "/api/plugin/rpc/:name" |
-    "/api/query/sql" |
     "/api/ref/getBacklink2" |
     "/api/ref/getBacklinkDoc" |
     "/api/ref/getBackmentionDoc" |
@@ -1664,6 +1665,11 @@ export interface APIPOSTRoutes {
     "/api/petal/setPetalPublishEnabled": {
         request: SetPetalPublishEnabledRequestInput;
         response: { "code": 0; "data": Petal | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+    };
+    "/api/query/sql": {
+        request: SQLQueryRequestInput;
+        response: { "code": 0; "data": Array<Record<string, null | string | number | boolean> | null>; "limit": number; "msg": string; "truncated": boolean; } | ({ "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; } & { "limit"?: never; "truncated"?: never; });
         body: "json";
     };
     "/api/notebook/renameNotebook": {
