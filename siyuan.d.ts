@@ -26,10 +26,10 @@ import type {
     TProtyleAction,
 } from "./types";
 import {App, Config, Custom, Files, Lute, MobileCustom, Model, Protyle, subMenu, Tab, Toolbar,} from "./types";
+import type {FetchGet, FetchPost, FetchSyncPost} from "./types/api";
 
 export * from "./types";
 export * from "./types/api";
-import type {FetchGet, FetchPost, FetchSyncPost} from "./types/api";
 
 declare global {
     export interface Window extends Global {
@@ -794,16 +794,29 @@ export function openInputDialog(options: {
     label?: string,
     /** 默认桌面端 520px，移动端 92vw。 */
     width?: string,
+    positionId?: string,
     maxLength?: number,
+    type?: "text" | "number" | "password",
     /** 使用多行文本框，默认使用单行输入框。 */
     multiline?: boolean,
-    type?: "text" | "number",
+    resize?: "none" | "vertical",
     min?: string,
     max?: string,
     step?: string,
     placeholder?: string,
     /** 输入框下方的 HTML 说明，调用方应确保内容可信。 */
     description?: string,
+    /** 附加控件的可信 HTML，调用方负责绑定交互。 */
+    extraContent?: string,
+    confirmText?: string,
+    actions?: {
+        text: string,
+        position?: "beforeCancel" | "beforeConfirm" | "afterConfirm",
+        danger?: boolean,
+        onClick: (value: string, dialog: Dialog) => void,
+    }[],
+    /** 设置为 false 时，由调用方处理输入框键盘事件。 */
+    bindInput?: boolean,
     onConfirm: (value: string, dialog: Dialog) => void,
     destroyCallback?: (options?: IObject) => void,
 }): Dialog;
