@@ -22,6 +22,7 @@ import {MobileTags} from "./mobile/dock/MobileTags";
 import {MobileBacklinks} from "./mobile/dock/MobileBacklinks";
 
 export * from "./config";
+export * from "./api";
 export * from "./events";
 export * from "./kernel";
 export * from "./protyle";

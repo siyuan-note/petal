@@ -26,6 +26,7 @@ import type {
     TProtyleAction,
 } from "./types";
 import {App, Config, Custom, Files, Lute, MobileCustom, Model, Protyle, subMenu, Tab, Toolbar,} from "./types";
+import type {FetchGet, FetchPost, FetchSyncPost} from "./types/api";
 
 export * from "./types";
 
@@ -406,17 +407,11 @@ export function adjustEditorFontSize(action: TEditorFontSizeAction, options?: IE
 
 export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOptions): number;
 
-export function fetchPost(
-    url: string,
-    data?: any,
-    cb?: (response: IWebSocketData) => void,
-    headers?: IObject,
-    failCallback?: (response: IWebSocketData) => void
-): void;
+export const fetchPost: FetchPost<IWebSocketData>;
 
-export function fetchSyncPost(url: string, data?: any): Promise<IWebSocketData>;
+export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 
-export function fetchGet(url: string, callback: (response: IWebSocketData) => void): void;
+export const fetchGet: FetchGet<IWebSocketData | string>;
 
 export function openWindow(options: {
     position?: {
@@ -876,14 +871,28 @@ export function openInputDialog(options: {
     label?: string,
     /** 默认桌面端 520px，移动端 92vw。 */
     width?: string,
+    positionId?: string,
     maxLength?: number,
-    type?: "text" | "number",
+    type?: "text" | "number" | "password",
+    multiline?: boolean,
+    resize?: "none" | "vertical",
     min?: string,
     max?: string,
     step?: string,
     placeholder?: string,
     /** 输入框下方的 HTML 说明，调用方应确保内容可信。 */
     description?: string,
+    /** 附加控件的可信 HTML，调用方负责绑定交互。 */
+    extraContent?: string,
+    confirmText?: string,
+    actions?: {
+        text: string,
+        position?: "beforeCancel" | "beforeConfirm" | "afterConfirm",
+        danger?: boolean,
+        onClick: (value: string, dialog: Dialog) => void,
+    }[],
+    /** 设置为 false 时，由调用方处理输入框键盘事件。 */
+    bindInput?: boolean,
     onConfirm: (value: string, dialog: Dialog) => void,
     destroyCallback?: (options?: IObject) => void,
 }): Dialog;

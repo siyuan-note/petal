@@ -12,6 +12,16 @@ import {
 } from "./../siyuan";
 import {Model} from "./layout/Model";
 
+declare class Highlight {
+    constructor(...range: Range[]);
+
+    add(range: Range): void;
+
+    clear(): void;
+
+    forEach(callbackfn: (value: Range, key: number) => void): void;
+}
+
 declare class AVAttributePanel {
     element: HTMLElement;
 
