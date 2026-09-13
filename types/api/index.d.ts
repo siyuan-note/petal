@@ -2398,8 +2398,7 @@ export type APILegacyPOSTPath =
     "/api/flashcard/startSession" |
     "/api/flashcard/summarizeReviewSets" |
     "/api/flashcard/undoReview" |
-    "/api/flashcard/updateAdvancedSource" |
-    "/api/flashcard/updateBasicDirection";
+    "/api/flashcard/updateAdvancedSource";
 
 export interface APIPOSTRoutes {
     "/api/account/checkActivationcode": {
