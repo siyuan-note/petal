@@ -1530,7 +1530,7 @@ export type ResetLocalGraphData = { "conf": LocalGraphConf; };
 
 export type ResetRiffCardsRequestInput = { "blockIDs"?: Array<string> | null; "deckID": string; "id": string; "type": string; };
 
-export type ReviewRiffCardRequestInput = { "cardID": string; "deckID": string; "durationMS"?: number | null; "rating": number; "reviewedCards"?: Array<RiffReviewedCardInput> | null; };
+export type ReviewRiffCardRequestInput = { "cardID": string; "deckID": string; "rating": number; "reviewedCards"?: Array<RiffReviewedCardInput> | null; };
 
 export type RichClipboardAssetInput = { "box"?: string; "index": number; "path": string; };
 
@@ -1678,7 +1678,7 @@ export type SetExportRequestInput = { "addTitle"?: boolean | null; "blockEmbedMo
 
 export type SetFiletreeRequestInput = { "allowCreateDeeper"?: boolean | null; "alwaysSelectOpenedFile"?: boolean | null; "boxDocEnabled"?: boolean | null; "closeTabOnDoubleClick"?: boolean | null; "closeTabsOnStart"?: boolean | null; "createDocAtTop"?: boolean | null; "docCreateSaveBox"?: string | null; "docCreateSavePath"?: string | null; "docCreateTemplatePath"?: string | null; "docIconClickExpand"?: boolean | null; "largeFileWarningSize"?: number | null; "maxListCount"?: number | null; "maxOpenTabCount"?: number | null; "noSplitScreenWhenOpenTab"?: boolean | null; "openFilesUseCurrentTab"?: boolean | null; "parentDocClickExpand"?: boolean | null; "recentDocsMaxListCount"?: number | null; "refCreateSaveBox"?: string | null; "refCreateSavePath"?: string | null; "removeDocWithoutConfirm"?: boolean | null; "shorthandSaveBox"?: string | null; "shorthandSavePath"?: string | null; "sort"?: number | null; "tabStartupMode"?: number | null; "useSVGDefaultIcon"?: boolean | null; "useSingleLineSave"?: boolean | null; };
 
-export type SetFlashcardRequestInput = { "blockquote"?: boolean | null; "callout"?: boolean | null; "deck"?: boolean | null; "heading"?: boolean | null; "list"?: boolean | null; "mark"?: boolean | null; "maximumInterval"?: number | null; "newCardLimit"?: number | null; "openMode"?: number | null; "requestRetention"?: number | null; "reviewCardLimit"?: number | null; "reviewMode"?: number | null; "superBlock"?: boolean | null; "weights"?: string | null; };
+export type SetFlashcardRequestInput = { "blockquote"?: boolean | null; "callout"?: boolean | null; "deck"?: boolean | null; "heading"?: boolean | null; "list"?: boolean | null; "mark"?: boolean | null; "maximumInterval"?: number | null; "newCardLimit"?: number | null; "requestRetention"?: number | null; "reviewCardLimit"?: number | null; "reviewMode"?: number | null; "superBlock"?: boolean | null; "weights"?: string | null; };
 
 export type SetGraphConfRequestInput = { "conf": GraphConfigurationFieldsInput; "type": string; };
 
@@ -1814,7 +1814,7 @@ export type SettingExport = { "addTitle": boolean; "blockEmbedMode": number; "bl
 
 export type SettingFileTree = { "allowCreateDeeper": boolean; "alwaysSelectOpenedFile": boolean; "boxDocEnabled": boolean | null; "closeTabOnDoubleClick": boolean; "closeTabsOnStart": boolean; "createDocAtTop": boolean | null; "docCreateSaveBox": string; "docCreateSavePath": string; "docCreateTemplatePath": string; "docIconClickExpand": boolean; "largeFileWarningSize": number; "maxListCount": number; "maxOpenTabCount": number; "noSplitScreenWhenOpenTab": boolean; "openFilesUseCurrentTab": boolean; "parentDocClickExpand": boolean; "recentDocsMaxListCount": number; "refCreateSaveBox": string; "refCreateSavePath": string; "removeDocWithoutConfirm": boolean; "shorthandSaveBox": string; "shorthandSavePath": string; "sort": number; "tabStartupMode": number | null; "useSVGDefaultIcon": boolean | null; "useSingleLineSave": boolean; };
 
-export type SettingFlashcard = { "blockquote": boolean; "callout": boolean; "deck": boolean; "heading": boolean; "list": boolean; "mark": boolean; "maximumInterval": number; "newCardLimit": number; "openMode": number; "requestRetention": number; "reviewCardLimit": number; "reviewMode": number; "superBlock": boolean; "weights": string; };
+export type SettingFlashcard = { "blockquote": boolean; "callout": boolean; "deck": boolean; "heading": boolean; "list": boolean; "mark": boolean; "maximumInterval": number; "newCardLimit": number; "requestRetention": number; "reviewCardLimit": number; "reviewMode": number; "superBlock": boolean; "weights": string; };
 
 export type SettingIconRequestInput = { "icon": string; };
 
@@ -1920,7 +1920,7 @@ export type StorageSetKeysRequestInput = { "app"?: string | null; "keyVals": { [
 
 export type StorageSetRequestInput = { "app"?: string | null; "key": string; "val"?: JSONValue | null; };
 
-export type SwapBlockRefRequestInput = { "defID": string; "includeChildren": boolean; "refID": string; };
+export type SwapBlockRefRequestInput = { "defID": string; "includeChildren": boolean; "originalToEmbed"?: boolean; "refID": string; };
 
 export type SyncAssetDownloadModeData = { "assetDownloadMode": number; };
 
@@ -2375,46 +2375,7 @@ export interface APIGETRoutes {
 }
 
 export type APILegacyPOSTPath =
-    "/api/flashcard/activateMigration" |
-    "/api/flashcard/createAdvancedSource" |
-    "/api/flashcard/createBasicSource" |
-    "/api/flashcard/createQuickSources" |
-    "/api/flashcard/deleteInvalidSources" |
-    "/api/flashcard/deleteReviewSet" |
-    "/api/flashcard/finishSession" |
-    "/api/flashcard/getCardHistory" |
-    "/api/flashcard/getEntity" |
-    "/api/flashcard/getMigrationStatus" |
-    "/api/flashcard/getRenderModel" |
-    "/api/flashcard/getSessionQueue" |
-    "/api/flashcard/getSourceHistory" |
-    "/api/flashcard/getStatistics" |
-    "/api/flashcard/getStudyPolicy" |
-    "/api/flashcard/importAnkiPackage" |
-    "/api/flashcard/inspectInvalidSources" |
-    "/api/flashcard/listConflicts" |
-    "/api/flashcard/listEntities" |
-    "/api/flashcard/manageCards" |
-    "/api/flashcard/manageSourceLifecycle" |
-    "/api/flashcard/mutateEntities" |
-    "/api/flashcard/previewAnkiPackage" |
-    "/api/flashcard/previewMigration" |
-    "/api/flashcard/previewReviewSet" |
-    "/api/flashcard/queryCards" |
-    "/api/flashcard/reconcileSource" |
-    "/api/flashcard/resolveConflict" |
-    "/api/flashcard/restoreSourceHistory" |
-    "/api/flashcard/reviewCard" |
-    "/api/flashcard/saveStudyPolicy" |
-    "/api/flashcard/saveTag" |
-    "/api/flashcard/setReviewSetMemberships" |
-    "/api/flashcard/setTagAssignments" |
-    "/api/flashcard/startSession" |
-    "/api/flashcard/summarizeReviewSets" |
-    "/api/flashcard/undoReview" |
-    "/api/flashcard/updateAdvancedSource" |
-    "/api/flashcard/updateBasicDirection" |
-    "/api/flashcard/updateSessionCard";
+    never;
 
 export interface APIPOSTRoutes {
     "/api/account/checkActivationcode": {
