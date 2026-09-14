@@ -1502,6 +1502,7 @@ export namespace Config {
         callout: boolean;
         tabs?: boolean;
         tabItem?: boolean;
+        customBlock?: boolean;
         /**
          * Whether to distinguish between uppercase and lowercase letters when searching
          */
@@ -2691,6 +2692,7 @@ export namespace Config {
         callout: boolean;
         tabs?: boolean;
         tabItem?: boolean;
+        customBlock?: boolean;
         /**
          * Search results contain code blocks
          * @default false
