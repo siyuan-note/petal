@@ -188,6 +188,14 @@ export interface IEventBusMap {
         element: HTMLElement,
         ids: string[],
     };
+    "open-menu-topbar": {
+        // 在同步事件回调中添加项目，显示于显隐操作之前。
+        menu: subMenu,
+        // 顶栏空白处为 null，否则为注册的顶栏元素。
+        element: Element | null,
+        // 完整可见性配置路径，例如 topBar.barSync；空白处为 null。
+        entryPath: string | null,
+    };
     "open-asset": {
         path: string,
         action: Config.TAssetOpenAction,
