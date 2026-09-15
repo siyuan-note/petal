@@ -2,6 +2,10 @@
 
 Here is the API declaration of SiYuan Plugin System, usages please refer to  [SiYuan plugin sample](https://github.com/siyuan-note/plugin-sample).
 
+## Plugin publishing
+
+Use `Plugin.savePublishData` in the administrator environment to replace a snapshot of explicitly selected public scalar fields. Published pages read that snapshot with `Plugin.loadPublishData`; `loadData` continues to access private storage. Declare fields in `plugin.json` under `publish.data` and obtain the administrator's separate data grant. Declare extra frontend files under `publish.resources`. See [Plugin publishing](https://github.com/siyuan-note/siyuan/blob/master/docs/PLUGIN-PUBLISH.md) for authorization, lifecycle, limits, HTTP contracts, and migration examples.
+
 ## Flashcard review tabs
 
 ```typescript

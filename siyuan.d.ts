@@ -645,6 +645,12 @@ export abstract class Plugin {
 
     loadData(storageName: string): Promise<any>;
 
+    /** 读取已获管理员授权的公开快照，未授权或尚未生成时拒绝 Promise。 */
+    loadPublishData(): Promise<Record<string, string | number | boolean | null>>;
+
+    /** 在管理员环境中完整替换公开快照，仅支持 plugin.json 声明并获授权的标量字段。 */
+    savePublishData(data: Record<string, string | number | boolean | null>): Promise<void>;
+
     saveData(storageName: string, content: any): Promise<any | IWebSocketData>;
 
     removeData(storageName: string): Promise<IWebSocketData>;
