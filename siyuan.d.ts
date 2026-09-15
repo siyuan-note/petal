@@ -626,6 +626,11 @@ export abstract class Plugin {
      * 同一元素不能注册到多个 id；不传 id 重复注册同一元素时更新现有条目。
      * @param options.icon 未提供 element 时必填，支持 SVG ID 或 SVG 标签。
      * @param options.callback 图标条目的点击回调。
+     * @param options.contextMenu 桌面端或桌面浏览器中当前按钮的右键菜单回调，也支持自定义元素。
+     * 其他按钮及顶栏空白处不会调用此回调；必须同步添加菜单项，异步数据应提前准备。
+     * 操作显示在显隐控制之前，宿主在可见操作之后添加分隔线，并移除此组首尾及连续的分隔线。
+     * 更新同一按钮时替换回调，省略此选项则清除回调。
+     * 使用此选项时应移除阻止传播或单独打开菜单的 contextmenu 监听器。
      */
     addTopBar(options: {
         id?: string,
