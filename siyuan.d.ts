@@ -195,14 +195,6 @@ export interface IEventBusMap {
      * 宿主在可见插件项目之后添加分隔线，并移除此组首尾及连续的分隔线。
      * 使用此事件时应移除自行打开菜单或阻止传播的 contextmenu 监听器，宿主不会强制拦截已有监听器。
      */
-    "open-menu-topbar": {
-        // 在同步事件回调中添加项目，显示于显隐操作之前。
-        menu: subMenu,
-        // 顶栏空白处为 null，否则为注册的顶栏元素。
-        element: Element | null,
-        // 完整可见性配置路径，例如 topBar.barSync；空白处为 null。
-        entryPath: string | null,
-    };
     "open-asset": {
         path: string,
         action: Config.TAssetOpenAction,
@@ -639,6 +631,8 @@ export abstract class Plugin {
         id?: string,
         icon?: string,
         element?: HTMLElement,
+        // 桌面端顶栏右键回调，同步添加该按钮的菜单操作；更新时省略则清除回调。
+        contextMenu?: (menu: subMenu) => void,
         title: string,
         callback?: (event: MouseEvent) => void
         position?: "right" | "left"
