@@ -534,6 +534,8 @@ export namespace Config {
          * Backlink sort mode
          */
         backlinkSort: number;
+        /** 文档内引用排序：0 正文顺序，1 锚文本自然升序，2 锚文本自然降序 */
+        backlinkBlockSort: number;
         /**
          * Backmention sort mode
          */
