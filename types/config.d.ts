@@ -241,6 +241,7 @@ export namespace Config {
         enabled: boolean;
         displayName?: string;
         baseURL: string;
+        /** 生成协议：openai、openai-responses 或 anthropic-messages；省略时使用 openai */
         protocol?: string;
         apiKey: string;
         requestTimeout: number;
