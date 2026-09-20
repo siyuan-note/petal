@@ -188,6 +188,13 @@ export interface IEventBusMap {
         element: HTMLElement,
         ids: string[],
     };
+    /**
+     * 桌面端和桌面浏览器顶栏右键菜单事件，支持自定义顶栏元素，不扩展停靠栏或状态栏菜单。
+     * 所有订阅者都会收到事件，插件应按自己的顶栏元素过滤；空白处的 element 和 entryPath 均为 null。
+     * 必须在同步回调中添加项目，异步数据应提前准备；项目显示在内置显隐操作之前。
+     * 宿主在可见插件项目之后添加分隔线，并移除此组首尾及连续的分隔线。
+     * 使用此事件时应移除自行打开菜单或阻止传播的 contextmenu 监听器，宿主不会强制拦截已有监听器。
+     */
     "open-asset": {
         path: string,
         action: Config.TAssetOpenAction,
@@ -388,14 +395,22 @@ export function openTab(options: {
         path: string,
     };
     search?: Config.IUILayoutTabSearchConfig;
+    /**
+     * 打开 v2 闪卡复习会话，兼容仅传 type、id、title 的调用。
+     * 关闭页签会结束会话，恢复布局时按保存的选择新建会话。
+     * 旧版闪卡页签恢复时保留全局、文档或笔记本范围，转换为 v2 会话，不复用旧队列和游标。
+     */
     card?: {
         type: TCardType,
         id?: string, //  cardType 为 all 时不传，否则传文档或笔记本 id
         title?: string, //  cardType 为 all 时不传，否则传文档或笔记本名称
         // 多个卡包取并集并去重；与文档范围、查询条件取交集，不能传空数组
+        // 每张卡保留自身调度预设和每日额度；混合会话采用工作空间队列限制及默认优先级、到期排序。
+        // 不合并各卡包的队列限制或排序设置。
         reviewSetIDs?: string[];
         // 有序卡片 ID，按首次出现去重；与范围、查询取交集，仍受复习资格和额度限制，不能传空数组
         cardIDs?: string[];
+        // 版本 1 查询 AST，与所选卡包及 type/id 范围取交集。
         query?: IFlashcardQueryAST;
         reviewMode?: "normal" | "reinforcement";
     };
@@ -611,11 +626,18 @@ export abstract class Plugin {
      * 同一元素不能注册到多个 id；不传 id 重复注册同一元素时更新现有条目。
      * @param options.icon 未提供 element 时必填，支持 SVG ID 或 SVG 标签。
      * @param options.callback 图标条目的点击回调。
+     * @param options.contextMenu 桌面端或桌面浏览器中当前按钮的右键菜单回调，也支持自定义元素。
+     * 其他按钮及顶栏空白处不会调用此回调；必须同步添加菜单项，异步数据应提前准备。
+     * 操作显示在显隐控制之前，宿主在可见操作之后添加分隔线，并移除此组首尾及连续的分隔线。
+     * 更新同一按钮时替换回调，省略此选项则清除回调。
+     * 使用此选项时应移除阻止传播或单独打开菜单的 contextmenu 监听器。
      */
     addTopBar(options: {
         id?: string,
         icon?: string,
         element?: HTMLElement,
+        // 桌面端顶栏右键回调，同步添加该按钮的菜单操作；更新时省略则清除回调。
+        contextMenu?: (menu: subMenu) => void,
         title: string,
         callback?: (event: MouseEvent) => void
         position?: "right" | "left"
@@ -644,6 +666,21 @@ export abstract class Plugin {
     openSetting(): void;
 
     loadData(storageName: string): Promise<any>;
+
+    /**
+     * 读取已获管理员授权的公开快照，供发布页面使用；未授权或尚未生成时拒绝 Promise。
+     * loadData 仍访问私有存储，读取公开快照失败时不得回退到私有存储。
+     * 权限、生命周期、限制及 HTTP 契约见 https://github.com/siyuan-note/siyuan/blob/master/docs/PLUGIN-PUBLISH.zh-CN.md
+     */
+    loadPublishData(): Promise<Record<string, string | number | boolean | null>>;
+
+    /**
+     * 在管理员环境中完整替换公开快照，仅支持 plugin.json 的 publish.data 声明并获单独授权的标量字段。
+     * 应逐一选择适合公开的字段；值仅支持字符串、数字、布尔值或 null，省略的字段会被移除。
+     * 发布端所需的额外前端文件应在 plugin.json 的 publish.resources 中声明。
+     * 权限、生命周期、限制及 HTTP 契约见 https://github.com/siyuan-note/siyuan/blob/master/docs/PLUGIN-PUBLISH.zh-CN.md
+     */
+    savePublishData(data: Record<string, string | number | boolean | null>): Promise<void>;
 
     saveData(storageName: string, content: any): Promise<any | IWebSocketData>;
 

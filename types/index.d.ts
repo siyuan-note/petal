@@ -46,7 +46,7 @@ type TDockPosition = "Left" | "Right" | "Bottom"
 type TBazaarType = "templates" | "icons" | "widgets" | "themes" | "plugins"
 type TRecentDocsSort = "viewedAt" | "closedAt" | "openAt" | "updated"
 type TPublishAccessLevel = "public" | "protected" | "hidden" | "private" | "forbidden"
-type TAVView = "table" | "gallery" | "kanban"
+type TAVView = "table" | "list" | "gallery" | "kanban";
 export type TAVAlign = "" | "left" | "center" | "right"
 type TAVFilterOperator =
     "="
@@ -388,6 +388,7 @@ interface IAVView {
     groupValue?: IAVCellValue
 }
 
+// 表格和列表视图共用行列结构，布局由 viewType 区分。
 interface IAVTable extends IAVView {
     columns: IAVColumn[],
     rows: IAVRow[],

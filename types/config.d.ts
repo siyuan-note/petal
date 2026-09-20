@@ -147,6 +147,7 @@ export namespace Config {
         mcp: IMCP;
         embedding: IEmbedding;
         rerank: IRerank;
+        decision: IDecision;
     }
 
     /**
@@ -206,6 +207,17 @@ export namespace Config {
     }
 
     /**
+     * 智能体决策模型配置，使用 TypeSafe System One 协议。
+     */
+    export interface IDecision {
+        enabled: boolean;
+        endpoint: string;
+        apiKey: string;
+        name: string;
+        timeout: number;
+    }
+
+    /**
      * Embedding model configuration
      */
     export interface IEmbedding {
@@ -241,6 +253,7 @@ export namespace Config {
         enabled: boolean;
         displayName?: string;
         baseURL: string;
+        /** 生成协议：openai、openai-responses 或 anthropic-messages；省略时使用 openai */
         protocol?: string;
         apiKey: string;
         requestTimeout: number;
@@ -534,6 +547,10 @@ export namespace Config {
          * Backlink sort mode
          */
         backlinkSort: number;
+        /** 0 文档分组，1 全局锚文本自然升序，2 全局锚文本自然降序 */
+        backlinkGlobalSort: number;
+        /** 文档内引用排序：0 正文顺序，1 锚文本自然升序，2 锚文本自然降序 */
+        backlinkBlockSort: number;
         /**
          * Backmention sort mode
          */
@@ -1502,6 +1519,7 @@ export namespace Config {
         callout: boolean;
         tabs?: boolean;
         tabItem?: boolean;
+        customBlock?: boolean;
         /**
          * Whether to distinguish between uppercase and lowercase letters when searching
          */
@@ -1922,6 +1940,7 @@ export namespace Config {
          * - `1`: Manual + Follow the operating system
          */
         lockScreenMode: number;
+        encryptedNotebookFollowSystemLock: boolean;
         /**
          * The name of the current device
          */
@@ -2691,6 +2710,7 @@ export namespace Config {
         callout: boolean;
         tabs?: boolean;
         tabItem?: boolean;
+        customBlock?: boolean;
         /**
          * Search results contain code blocks
          * @default false
