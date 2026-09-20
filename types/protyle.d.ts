@@ -441,7 +441,7 @@ export class ProtyleMethod {
     public static abcRender(element: Element, cdn?: string): void;
 
     /**
-     * @description 脑图渲染
+     * @description 渲染列表脑图；旧 mindmap 代码块仅转换为只读预览，不修改原始数据
      * @param {string} [cdn=Constants.PROTYLE_CDN]
      */
     public static mindmapRender(element: Element, cdn?: string): void;
