@@ -48,6 +48,8 @@ export abstract class Constants {
     public static readonly CUSTOM_SY_READONLY: string = "custom-sy-readonly";
     public static readonly CUSTOM_SY_FULLWIDTH: string = "custom-sy-fullwidth";
     public static readonly CUSTOM_SY_AV_VIEW: string = "custom-sy-av-view";
+    public static readonly CUSTOM_SY_LIST_MINDMAP: string = "custom-sy-list-mindmap";
+    public static readonly CUSTOM_SY_LIST_MINDMAP_DATA: string = "custom-sy-list-mindmap-data";
     public static readonly CUSTOM_REMINDER_WECHAT: string = "custom-reminder-wechat";
     public static readonly CUSTOM_RIFF_DECKS: string = "custom-riff-decks";
 
@@ -884,6 +886,6 @@ export abstract class Constants {
         "js", "ts", "html", "toml", "c#", "bat"
     ];
     public static readonly SIYUAN_RENDER_CODE_LANGUAGES: string[] = [
-        "abc", "plantuml", "mermaid", "flowchart", "echarts", "mindmap", "graphviz", "math"
+        "abc", "plantuml", "mermaid", "flowchart", "echarts", "graphviz", "math"
     ];
 }

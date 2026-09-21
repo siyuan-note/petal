@@ -441,7 +441,7 @@ export class ProtyleMethod {
     public static abcRender(element: Element, cdn?: string): void;
 
     /**
-     * @description 脑图渲染
+     * @description 渲染列表脑图；旧 mindmap 渲染块 DOM 转换为普通代码块，不修改原始数据
      * @param {string} [cdn=Constants.PROTYLE_CDN]
      */
     public static mindmapRender(element: Element, cdn?: string): void;
@@ -648,8 +648,6 @@ export class Lute {
     public static Caret: string;
 
     public static New(): Lute;
-
-    public static EChartsMindmapStr(text: string): string;
 
     public static NewNodeID(): string;
 
