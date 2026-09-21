@@ -7,9 +7,6 @@ import type {
     IClipboardData,
     IGetDocInfo,
     IGetTreeStat,
-    IFlashcardReviewCardDetail,
-    IFlashcardReviewSessionDetail,
-    IFlashcardReviewStateSnapshot,
     IKernelPlugin,
     IKernelPluginState,
     IMenu,
@@ -127,45 +124,6 @@ export interface IEventBusMap {
     "click-flashcard-action": {
         card: ICard,
         type: string,   // 1 - 重来；2 - 困难；3 - 良好；4 - 简单；-1 - 显示答案；-2 - 上一个 ；-3 - 跳过
-    };
-    /** 会话队列加载成功后触发，cardCount 为本次可复习卡片数，可能为 0。 */
-    "flashcard-review-session-started": IFlashcardReviewSessionDetail & { cardCount: number };
-    /** 卡片正面渲染完成后触发，撤销或重新渲染也可能触发。 */
-    "flashcard-review-card-shown": IFlashcardReviewCardDetail & { face: "front" };
-    /** 答案显示后触发。 */
-    "flashcard-review-answer-revealed": IFlashcardReviewSessionDetail & Partial<IFlashcardReviewCardDetail> & {
-        face: "back";
-    };
-    /** 评分请求发送前触发，不表示保存成功；该通知不能取消评分。 */
-    "flashcard-review-rating-submitted": IFlashcardReviewSessionDetail & Partial<IFlashcardReviewCardDetail> & {
-        rating: "again" | "hard" | "good" | "easy";
-        /** 输入、选择或插件答题结果的 JSON 快照；未提供结果时为 undefined。 */
-        answerResult?: import("./types/api").JSONValue;
-    };
-    /** 评分保存成功后触发；强化复习可能不返回 afterState。 */
-    "flashcard-review-rating-completed": IFlashcardReviewSessionDetail & Partial<IFlashcardReviewCardDetail> & {
-        rating: "again" | "hard" | "good" | "easy";
-        eventID: string;
-        beforeState: IFlashcardReviewStateSnapshot;
-        afterState?: IFlashcardReviewStateSnapshot;
-        buriedSiblingIDs: string[] | null;
-        skippedSessionCardIDs: string[] | null;
-        leechTagged: boolean;
-        presetRevisionID: string;
-        schedulerVersion: string;
-    };
-    /** 撤销评分成功后触发，随后重新显示卡片。 */
-    "flashcard-review-undone": IFlashcardReviewCardDetail & {
-        reviewEventID: string;
-        eventID?: string;
-        restoredState?: IFlashcardReviewStateSnapshot;
-        restoredSiblingIDs: string[] | null;
-        restoredSessionCardIDs: string[] | null;
-        leechTagRemoved: boolean;
-    };
-    /** 会话结束状态保存成功后触发。 */
-    "flashcard-review-session-ended": IFlashcardReviewSessionDetail & {
-        status: "completed" | "abandoned";
     };
     "click-blockicon": {
         menu: subMenu,
