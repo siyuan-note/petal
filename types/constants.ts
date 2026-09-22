@@ -631,6 +631,7 @@ export abstract class Constants {
                 indent: {default: "⇥", custom: "⇥"},
                 outdent: {default: "⇧⇥", custom: "⇧⇥"},
                 checkToggle: {default: "⇧⌘L", custom: "⇧⌘L"},
+                taskCompletionToggle: {default: "", custom: ""},
             },
             table: {
                 insertRowAbove: {default: "", custom: ""},
