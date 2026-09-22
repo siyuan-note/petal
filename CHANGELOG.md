@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.2.8 2026
+## v1.2.9 2026
+
+## v1.2.8 2026-09-22
 
 * [Add single-input dialog API](https://github.com/siyuan-note/siyuan/issues/19373)
 * [Support multiline input dialogs and manual snapshot API declarations](https://github.com/siyuan-note/siyuan/issues/19392)
@@ -13,15 +15,15 @@
 * [Add lite mode visibility declarations for plugin slash items](https://github.com/siyuan-note/siyuan/issues/19370)
 * [Add plugin publishing data APIs and search path declarations](https://github.com/siyuan-note/siyuan/issues/18354)
 * [Add tabbed container rendering and inline Markdown conversion declarations](https://github.com/siyuan-note/siyuan/issues/17642)
-* [Add list mind map migration API declarations and clarify legacy read-only rendering](https://github.com/siyuan-note/siyuan/issues/19677)
+* [Add list mind map migration API declarations and remove legacy mind map rendering declarations](https://github.com/siyuan-note/siyuan/issues/19677)
 * [Add mind map custom attribute constants](https://github.com/siyuan-note/siyuan/issues/18831)
 * [Add database rich-text value declarations](https://github.com/siyuan-note/siyuan/issues/11553)
 * [Complete database operation declarations](https://github.com/siyuan-note/siyuan/issues/19432)
 * [Add database list view declarations](https://github.com/siyuan-note/siyuan/issues/17743)
+* [Add database calendar view and row limit declarations](https://github.com/siyuan-note/siyuan/issues/13740)
 * [Add mixed flashcard review tab options](https://github.com/siyuan-note/siyuan/issues/19249)
 * [Add ordered flashcard review selection declarations](https://github.com/siyuan-note/siyuan/issues/19365)
 * [Add the default flashcard opening mode declaration](https://github.com/siyuan-note/siyuan/issues/19189)
-* Synchronize flashcard v2 session, query, and branch API declarations
 * [Add document panel pinning declarations](https://github.com/siyuan-note/siyuan/issues/19401)
 * [Add document tree duplication API declarations](https://github.com/siyuan-note/siyuan/issues/12688)
 * [Add propagated backlink reference visibility declarations](https://github.com/siyuan-note/siyuan/issues/19251)
@@ -44,6 +46,7 @@
 * [Improve MCP Streamable HTTP compatibility declarations](https://github.com/siyuan-note/siyuan/issues/19135)
 * [Add sync provider completion declarations](https://github.com/siyuan-note/siyuan/issues/19636)
 * [Add runtime information API declarations](https://github.com/siyuan-note/siyuan/issues/19675)
+* [Update the OIDC callback response declaration](https://github.com/siyuan-note/siyuan/issues/19688)
 * [Add Serbian language declarations](https://github.com/siyuan-note/siyuan/pull/19470)
 
 ## v1.2.7 2026-09-07
