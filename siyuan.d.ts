@@ -343,6 +343,12 @@ export const fetchPost: FetchPost<IWebSocketData>;
  * 读取 `/api/template/manage` 的模板源码时，可选的 `sourceDocID` 表示导出模板末尾文档属性中的静态来源 ID。
  * 普通 Markdown、目录或未声明有效 ID 的模板不返回该字段；读取不会执行模板或检查源文档是否仍可访问。
  * 打开来源时需按当前工作空间的文档访问规则处理失败；该字段不是预览上下文，也不保证模板与源文档保持同步。
+ * `/api/system/getWorkspaceStorage` 无需参数，要求管理员权限并允许只读模式，统计当前内核工作空间的本地文件大小。
+ * `totalSize` 为普通文件字节数之和，`assetsSize` 是 `data` 的子集，不能重复累加；不含目录分配空间或链接目标。
+ * `directories` 按 data、repo、history、temp、conf、other 排序，`calculatedAt` 为扫描完成的 Unix 毫秒时间。
+ * 扫描不下载资源或解密文件，不返回绝对路径；并发请求共享扫描，完成后不缓存，也不保证扫描期间的快照一致性。
+ * 扫描期间已删除的子文件或子目录不计入；根目录丢失、权限错误等仍返回失败。
+ * 读取失败或扫描超时返回 code=-1、data=null；调用方应保留旧结果的时间标记，并允许用户重试。
  */
 export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 

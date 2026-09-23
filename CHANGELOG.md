@@ -2,6 +2,7 @@
 
 ## v1.2.9 2026
 
+* [Add current workspace storage statistics API declarations](https://github.com/siyuan-note/siyuan/issues/19790)
 * [Add new window layout storage, reading-position, and hyphenated IPC command declarations](https://github.com/siyuan-note/siyuan/issues/10809)
 * [Support directory declarations for plugin publish resources](https://github.com/siyuan-note/siyuan/issues/19766)
 
