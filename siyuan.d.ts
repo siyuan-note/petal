@@ -339,6 +339,11 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
 
 export const fetchPost: FetchPost<IWebSocketData>;
 
+/**
+ * 读取 `/api/template/manage` 的模板源码时，可选的 `sourceDocID` 表示导出模板末尾文档属性中的静态来源 ID。
+ * 普通 Markdown、目录或未声明有效 ID 的模板不返回该字段；读取不会执行模板或检查源文档是否仍可访问。
+ * 打开来源时需按当前工作空间的文档访问规则处理失败；该字段不是预览上下文，也不保证模板与源文档保持同步。
+ */
 export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 
 export const fetchGet: FetchGet<IWebSocketData | IObject | string>;
