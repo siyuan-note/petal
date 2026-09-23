@@ -683,6 +683,8 @@ export abstract class Plugin {
      * 在管理员环境中完整替换公开快照，仅支持 plugin.json 的 publish.data 声明并获单独授权的标量字段。
      * 应逐一选择适合公开的字段；值仅支持字符串、数字、布尔值或 null，省略的字段会被移除。
      * 发布端所需的额外前端文件应在 plugin.json 的 publish.resources 中声明。
+     * 资源支持精确相对文件名及以 / 结尾的递归目录，例如 fonts/，不支持通配符。
+     * 目录声明包含后续新增文件，私有文件应放在公开目录之外；链接、plugin.json 和 kernel.js 不可发布。
      * 权限、生命周期、限制及 HTTP 契约见 https://github.com/siyuan-note/siyuan/blob/master/docs/PLUGIN-PUBLISH.zh-CN.md
      */
     savePublishData(data: Record<string, string | number | boolean | null>): Promise<void>;
