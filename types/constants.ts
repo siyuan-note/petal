@@ -23,6 +23,12 @@ export abstract class Constants {
     public static readonly SIYUAN_CMD: string = "siyuan-cmd";
     public static readonly SIYUAN_GET: string = "siyuan-get";
     public static readonly SIYUAN_EVENT: string = "siyuan-event";
+    public static readonly SIYUAN_WINDOW_WORKSPACE_SAVED = "siyuan-window-workspace-saved";
+
+    public static readonly SIYUAN_WINDOW_WORKSPACE_SET = "siyuan-window-workspace-set";
+    public static readonly SIYUAN_WINDOW_WORKSPACE_FOCUS = "siyuan-window-workspace-focus";
+    public static readonly SIYUAN_WINDOW_WORKSPACE_GET_OPEN = "siyuan-window-workspace-get-open";
+    public static readonly SIYUAN_WINDOW_WORKSPACE_FLUSH_ALL = "siyuan-window-workspace-flush-all";
 
     public static readonly SIYUAN_CONFIG_TRAY: string = "siyuan-config-tray";
     public static readonly SIYUAN_QUIT: string = "siyuan-quit";
@@ -43,6 +49,9 @@ export abstract class Constants {
     public static readonly SIYUAN_CONTEXT_MENU: string = "siyuan-context-menu";
 
     public static readonly SIYUAN_SHOW_WINDOW: string = "siyuan-show-window";
+
+    // 主进程调渲染进程
+    public static readonly SIYUAN_WINDOW_WORKSPACE_FLUSH = "siyuan-window-workspace-flush";
 
     // custom
     public static readonly CUSTOM_SY_READONLY: string = "custom-sy-readonly";
