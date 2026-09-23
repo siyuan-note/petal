@@ -2,6 +2,8 @@
 
 ## v1.2.9 2026
 
+* [Add new window layout storage and reading-position declarations](https://github.com/siyuan-note/siyuan/issues/10809)
+
 ## v1.2.8 2026-09-22
 
 * [Add single-input dialog API](https://github.com/siyuan-note/siyuan/issues/19373)
