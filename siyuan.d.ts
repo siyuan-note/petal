@@ -29,10 +29,18 @@ import type {
     TProtyleAction,
 } from "./types";
 import {App, Config, Custom, Files, Lute, MobileCustom, Model, Protyle, subMenu, Tab, Toolbar,} from "./types";
-import type {FetchGet, FetchPost, FetchSyncPost} from "./types/api";
+import type {FetchGet, FetchPost, FetchSyncPost, JSONValue} from "./types/api";
 
 export * from "./types";
 export * from "./types/api";
+
+/**
+ * `/api/flashcard/setCardEditLater` 只设置当前卡片的编辑待办，不修改排期、暂停、埋藏或同源卡片。
+ * enabled 为 true 时排除正式复习和强化练习，note 可为空，最多 4000 个 Unicode 字符。
+ * enabled 为 false 时清除待办，note 必须为空，返回的 editLater 为 null；其他复习设置仍然保留。
+ * 重试须复用 operationID 及所有参数；expectedRevisionID 可拒绝并发覆盖，changedAt 为毫秒时间戳。
+ */
+export type {SetFlashcardEditLaterRequestInput, FlashcardEditLaterData, FlashcardEditLater} from "./types/api";
 
 declare global {
     export interface Window extends Global {
@@ -50,7 +58,8 @@ export interface IFlashcardQueryExpression {
     children?: IFlashcardQueryExpression[];
     field?: string;
     comparator?: string;
-    value?: unknown;
+    /** editLater 使用 equal 或 notEqual 与布尔值；待编辑卡片可管理，但不能进入学习会话 */
+    value?: JSONValue;
 }
 
 export interface IFlashcardQueryAST {

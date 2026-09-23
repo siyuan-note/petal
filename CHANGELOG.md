@@ -22,6 +22,7 @@
 * [Add ordered flashcard review selection declarations](https://github.com/siyuan-note/siyuan/issues/19365)
 * [Add the default flashcard opening mode declaration](https://github.com/siyuan-note/siyuan/issues/19189)
 * Synchronize flashcard v2 session, query, and branch API declarations
+* Add typed flashcard queries and edit-later API declarations, including notes and scheduling preservation
 * [Add document panel pinning declarations](https://github.com/siyuan-note/siyuan/issues/19401)
 * [Add document tree duplication API declarations](https://github.com/siyuan-note/siyuan/issues/12688)
 * [Add propagated backlink reference visibility declarations](https://github.com/siyuan-note/siyuan/issues/19251)
