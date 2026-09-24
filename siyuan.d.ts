@@ -349,6 +349,9 @@ export const fetchPost: FetchPost<IWebSocketData>;
  * 扫描不下载资源或解密文件，不返回绝对路径；并发请求共享扫描，完成后不缓存，也不保证扫描期间的快照一致性。
  * 扫描期间已删除的子文件或子目录不计入；根目录丢失、权限错误等仍返回失败。
  * 读取失败或扫描超时返回 code=-1、data=null；调用方应保留旧结果的时间标记，并允许用户重试。
+ *
+ * 导出图片或 PDF 预览时，/api/export/exportPreviewHTML 可选 keepJSEmbed: true 保留脚本嵌入占位。
+ * 默认不保留；内核不执行脚本，调用方须遵守安全模式限制并等待异步渲染完成后再导出。
  */
 export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 
