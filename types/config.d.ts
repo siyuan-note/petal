@@ -1286,6 +1286,10 @@ export namespace Config {
         outdent?: IKey;
             prependListItem?: IKey;
             appendListItem?: IKey;
+        /** 在思维导图中添加同级节点，编辑时先保存当前内容。 */
+        mindmapAddSibling?: IKey;
+        /** 在思维导图中添加子节点，编辑时先保存当前内容。 */
+        mindmapAddChild?: IKey;
     }
 
     /**
