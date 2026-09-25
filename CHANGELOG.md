@@ -2,6 +2,7 @@
 
 ## v1.2.9 2026
 
+* [Support cached cloud account queries during startup](https://github.com/siyuan-note/siyuan/issues/19854)
 * [Support encrypted notebook archive, removal, and authenticated recovery API declarations](https://github.com/siyuan-note/siyuan/issues/19850)
 * [Support configurable context menu shortcuts](https://github.com/siyuan-note/siyuan/issues/19849)
 * [Support plugin asset picking with filename matching and paged results](https://github.com/siyuan-note/siyuan/issues/19844)

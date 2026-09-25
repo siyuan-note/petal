@@ -337,6 +337,12 @@ export function adjustEditorFontSize(action: TEditorFontSizeAction, options?: IE
 
 export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOptions): number;
 
+/**
+ * `/api/setting/getCloudUser` 可传入 `cached: true`，仅返回内存中的账户，未登录时返回 null。
+ * 此模式忽略 token，不联网、不等待同步或切换资源来源；缓存结果不代表云端凭据仍然有效。
+ * 省略 cached 或传入 false 时保留账户恢复和令牌刷新行为；非管理员在两种模式下均得到 null。
+ * 客户端可先读取缓存完成初始化，再刷新账户，并通过 setCloudUser 主通道事件接收账户变化。
+ */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**
