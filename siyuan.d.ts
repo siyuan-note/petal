@@ -467,6 +467,26 @@ export function openEmoji(options: {
     hideCustomIcon?: boolean
 }): void ;
 
+export interface IAssetPickerOptions {
+    /** 省略或传入空数组时不限制类型；扩展名可以带点或不带点，匹配时不区分大小写 */
+    exts?: string[];
+    /** 与扩展名和选择器中的普通关键词搜索取交集 */
+    match?: {
+        /** 默认匹配去掉资源 ID 的文件名；path 匹配返回的 assets/ 相对路径 */
+        field?: "name" | "path";
+        /** 前后缀匹配不区分大小写；正则使用 Go 语法，默认区分大小写，可用 (?i) 忽略大小写 */
+        mode: "prefix" | "suffix" | "regex";
+        /** 最多 1024 字节；空字符串不额外筛选，无效正则会使 Promise 拒绝 */
+        value: string;
+    };
+}
+
+/**
+ * 打开原生资源选择界面，无需活动文档或编辑器。选中后返回 assets/ 相对路径，取消时返回 null。
+ * 搜索结果可逐页加载；选择操作不插入文档或修改资源。搜索沿用内核接口的管理员和非只读权限。
+ */
+export function openAssetPicker(options?: IAssetPickerOptions): Promise<{path: string} | null>;
+
 export function getModelByDockType(type: TDock | string): Model | any;
 
 /**

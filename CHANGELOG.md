@@ -2,6 +2,7 @@
 
 ## v1.2.9 2026
 
+* [Support plugin asset picking with filename matching and paged results](https://github.com/siyuan-note/siyuan/issues/19844)
 * [Add mind map node creation shortcut declarations](https://github.com/siyuan-note/siyuan/issues/19793)
 * [Support JavaScript embed placeholders in image and PDF export previews](https://github.com/siyuan-note/siyuan/issues/19825)
 * [Constrain plugin private service file responses to the workspace](https://github.com/siyuan-note/siyuan/security/advisories/GHSA-phmw-4rgv-r4xv)
