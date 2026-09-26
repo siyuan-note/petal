@@ -365,6 +365,16 @@ export const fetchPost: FetchPost<IWebSocketData>;
  * 提交前会重新检查源文件；内容变化需重新导出。重复提交同一归档不会重复移出，未选择的笔记本不受影响。
  * `/api/notebook/importNotebookArchive` 接收 multipart 的 `file`、旧 `password` 和可选密钥备份 `key`。
  * 恢复目标必须关闭同步，且没有加密密钥配置或加密数据；密文全部通过认证后才发布，恢复后仍保持锁定。
+ *
+ * 内置 MCP 服务端 OAuth 与思源连接外部 MCP 的客户端 OAuth 配置相互独立，默认关闭。
+ * `/api/mcp/getOAuth` 返回公开地址、开关和预注册客户端列表，不返回凭证摘要或客户端密钥。
+ * `/api/mcp/setOAuth` 接收 enabled 和不含路径的 HTTPS publicURL；启用需要锁屏密码或 OIDC 登录。
+ * `/api/mcp/addOAuthClient` 接收 name 和精确匹配的 redirectURI，返回客户端 id 及仅显示一次的 secret。
+ * `/api/mcp/removeOAuthClient` 接收 id 删除客户端并撤销授权，或传 all: true 撤销全部授权但保留注册。
+ * 以上接口要求管理员权限，配置和注册变更禁止只读模式。关闭、修改地址或管理员认证配置会撤销已有授权。
+ * OAuth 使用授权码与 PKCE S256，支持 client_secret_basic 和 client_secret_post，不支持动态注册。
+ * 访问令牌最长有效一小时；offline_access 刷新令牌轮换并在授权后三十天过期，重放会撤销同一授权。
+ * OAuth 令牌只用于 /mcp，不能用于上述管理接口或其他内核 API，且不会解锁加密笔记本。
  */
 export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 
