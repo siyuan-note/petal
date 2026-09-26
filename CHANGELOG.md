@@ -2,6 +2,8 @@
 
 ## v1.2.9 2026
 
+* [Support workspace AGENTS.md instruction API declarations](https://github.com/siyuan-note/siyuan/issues/19876)
+
 * [Add built-in MCP server OAuth configuration, client registration, and revocation API declarations](https://github.com/siyuan-note/siyuan/issues/19867)
 
 * [Improve display templates for database relation primary keys](https://github.com/siyuan-note/siyuan/issues/19857)

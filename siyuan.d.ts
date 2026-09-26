@@ -346,6 +346,12 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**
+ * `/api/ai/agent/getInstructions` 返回工作空间 data/ai/AGENTS.md 的 content 和 revision，要求管理员权限。
+ * 缺失文件返回空 content 和 missing 修订，不创建文件；非 UTF-8 文本、超出 32 KiB 或读取失败返回 code=-1。
+ * `/api/ai/agent/setInstructions` 接收 content 和读取时的 revision，要求管理员权限且禁止只读写入。
+ * 内容允许为空；修订冲突返回 code=-1 并保留原文。保存采用原子替换，并按工作空间同步忽略规则通知同步。
+ * 指令在下一轮用户对话生效，同轮工具调用和压缩使用固定快照，且不能覆盖工具权限、审批或访问控制。
+ *
  * 读取 `/api/template/manage` 的模板源码时，可选的 `sourceDocID` 表示导出模板末尾文档属性中的静态来源 ID。
  * 普通 Markdown、目录或未声明有效 ID 的模板不返回该字段；读取不会执行模板或检查源文档是否仍可访问。
  * 打开来源时需按当前工作空间的文档访问规则处理失败；该字段不是预览上下文，也不保证模板与源文档保持同步。
