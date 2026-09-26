@@ -577,6 +577,8 @@ interface IAVCellValue {
     blockID?: string // 为 row id
     type?: TAVCol,
     renderedContent?: string,
+    /** 显示模板已计算，包括空结果；关联内容使用目标主键模板，原始值保持不变，不持久化此标记 */
+    hasRenderTemplate?: boolean,
     isDetached?: boolean,
     text?: {
         content: string,
