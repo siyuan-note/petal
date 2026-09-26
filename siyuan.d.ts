@@ -343,6 +343,10 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 省略 cached 或传入 false 时保留账户恢复和令牌刷新行为；非管理员在两种模式下均得到 null。
  * 客户端可先读取缓存完成初始化，再刷新账户，并通过 setCloudUser 主通道事件接收账户变化。
  */
+/**
+ * `/api/block/getBlockTreeInfos` 的标题结果包含可选的 `headingChildren` 布尔值，表示完整文档同一容器内是否有下辖块。
+ * 空段落也算下辖块，结果不受折叠或分页影响；非标题及旧版内核省略该字段，省略不能视为空标题。
+ */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**

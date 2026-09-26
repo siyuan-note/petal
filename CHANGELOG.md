@@ -2,6 +2,8 @@
 
 ## v1.2.9 2026
 
+* [Expose heading child availability in block tree information](https://github.com/siyuan-note/siyuan/issues/19878)
+
 * [Support workspace AGENTS.md instruction API declarations](https://github.com/siyuan-note/siyuan/issues/19876)
 
 * [Add built-in MCP server OAuth configuration, client registration, and revocation API declarations](https://github.com/siyuan-note/siyuan/issues/19867)
