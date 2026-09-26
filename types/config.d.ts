@@ -1280,10 +1280,16 @@ export namespace Config {
      */
     export interface IKeymapEditorList extends IKeys {
         checkToggle?: IKey;
+        /** 切换任务完成状态，默认未绑定；待办和进行中变为完成，其他状态变为待办。 */
+        taskCompletionToggle?: IKey;
         indent?: IKey;
         outdent?: IKey;
             prependListItem?: IKey;
             appendListItem?: IKey;
+        /** 在思维导图中添加同级节点，编辑时先保存当前内容。 */
+        mindmapAddSibling?: IKey;
+        /** 在思维导图中添加子节点，编辑时先保存当前内容。 */
+        mindmapAddChild?: IKey;
     }
 
     /**
@@ -1306,6 +1312,8 @@ export namespace Config {
      * SiYuan general shortcut keys
      */
     export interface IKeymapGeneral extends IKeys {
+        /** 打开当前焦点的上下文菜单，默认 ⌘/，支持多绑定和解绑。 */
+        openContextMenu?: IKey;
         mainMenu?: IKey;
         commandPanel?: IKey;
         increaseEditorFontSize?: IKey;
@@ -2129,7 +2137,7 @@ export namespace Config {
         ({instance?: "Layout"} & Partial<Pick<IUILayoutLayout, "direction" | "size" | "type" | "resize">>) |
         ({instance: "Wnd"} & Partial<Pick<IUILayoutWnd, "resize" | "width" | "height">>) |
         ({instance: "Tab"} & Partial<Pick<IUILayoutTab, "title" | "lang" | "icon" | "docIcon" | "pin" | "active" | "activeTime">>) |
-        ({instance: "Editor"} & Partial<Pick<IUILayoutTabEditor, "blockId" | "rootId" | "notebookId">>) |
+        ({instance: "Editor"} & Partial<Pick<IUILayoutTabEditor, "blockId" | "rootId" | "notebookId" | "scrollAttr">>) |
         ({instance: "Asset"} & Partial<Pick<IUILayoutTabAsset, "path" | "page">>) |
         ({instance: "Backlink"} & Partial<Pick<IUILayoutTabBacklink, "blockId" | "rootId" | "notebookId" | "type">>) |
         ({instance: "Graph"} & Partial<Pick<IUILayoutTabGraph, "blockId" | "rootId" | "notebookId" | "type">>) |
@@ -2376,6 +2384,10 @@ export namespace Config {
          * (Editor) Document block ID
          */
         rootId: string;
+        /**
+         * 窗口布局独立保存的阅读位置，优先于全局文档阅读位置
+         */
+        scrollAttr?: IScrollAttr;
     }
 
     /**

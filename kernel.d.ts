@@ -875,6 +875,13 @@ export interface IResponseSerializedData {
  * @remarks When `name` is non-empty the kernel sends the file as a
  * downloadable attachment (`Content-Disposition: attachment; filename="<name>"`).
  * When `name` is empty or omitted the file is served inline via `c.File`.
+ *
+ * The path must resolve inside the SiYuan workspace, matching the boundary the
+ * kernel file APIs enforce. Absolute paths inside the workspace and
+ * workspace-relative paths (a leading slash is allowed) are both accepted.
+ * Symbolic links and directory junctions that resolve outside the workspace are
+ * rejected. A path that resolves outside the workspace is answered with `404`,
+ * the same response as a missing file.
  */
 export interface IResponseFile {
     /**
@@ -883,7 +890,13 @@ export interface IResponseFile {
      * @remarks Omit or leave empty to serve the file inline.
      */
     name?: string;
-    /** Absolute filesystem path to the file on the server host. */
+    /**
+     * Path of the file to serve.
+     *
+     * @remarks Must resolve inside the SiYuan workspace, for example
+     * `/data/plugins/<plugin-name>/app/index.html`. A path outside the workspace
+     * is answered with `404`.
+     */
     path: string;
 }
 

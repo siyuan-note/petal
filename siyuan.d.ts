@@ -388,8 +388,35 @@ export function adjustEditorFontSize(action: TEditorFontSizeAction, options?: IE
 
 export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOptions): number;
 
+/**
+ * `/api/setting/getCloudUser` 可传入 `cached: true`，仅返回内存中的账户，未登录时返回 null。
+ * 此模式忽略 token，不联网、不等待同步或切换资源来源；缓存结果不代表云端凭据仍然有效。
+ * 省略 cached 或传入 false 时保留账户恢复和令牌刷新行为；非管理员在两种模式下均得到 null。
+ * 客户端可先读取缓存完成初始化，再刷新账户，并通过 setCloudUser 主通道事件接收账户变化。
+ */
 export const fetchPost: FetchPost<IWebSocketData>;
 
+/**
+ * 读取 `/api/template/manage` 的模板源码时，可选的 `sourceDocID` 表示导出模板末尾文档属性中的静态来源 ID。
+ * 普通 Markdown、目录或未声明有效 ID 的模板不返回该字段；读取不会执行模板或检查源文档是否仍可访问。
+ * 打开来源时需按当前工作空间的文档访问规则处理失败；该字段不是预览上下文，也不保证模板与源文档保持同步。
+ * `/api/system/getWorkspaceStorage` 无需参数，要求管理员权限并允许只读模式，统计当前内核工作空间的本地文件大小。
+ * `totalSize` 为普通文件字节数之和，`assetsSize` 是 `data` 的子集，不能重复累加；不含目录分配空间或链接目标。
+ * `directories` 按 data、repo、history、temp、conf、other 排序，`calculatedAt` 为扫描完成的 Unix 毫秒时间。
+ * 扫描不下载资源或解密文件，不返回绝对路径；并发请求共享扫描，完成后不缓存，也不保证扫描期间的快照一致性。
+ * 扫描期间已删除的子文件或子目录不计入；根目录丢失、权限错误等仍返回失败。
+ * 读取失败或扫描超时返回 code=-1、data=null；调用方应保留旧结果的时间标记，并允许用户重试。
+ *
+ * 导出图片或 PDF 预览时，/api/export/exportPreviewHTML 可选 keepJSEmbed: true 保留脚本嵌入占位。
+ * 默认不保留；内核不执行脚本，调用方须遵守安全模式限制并等待异步渲染完成后再导出。
+ *
+ * 加密笔记本归档接口要求管理员权限；移出和恢复均禁止只读模式。
+ * `/api/notebook/prepareNotebookArchive` 接收已锁定的笔记本 ID，返回归档 ID 和下载路径，不删除源数据。
+ * 下载完成后，必须由用户确认已保存归档，再调用 `/api/notebook/commitNotebookArchive` 并传入 `saved: true`。
+ * 提交前会重新检查源文件；内容变化需重新导出。重复提交同一归档不会重复移出，未选择的笔记本不受影响。
+ * `/api/notebook/importNotebookArchive` 接收 multipart 的 `file`、旧 `password` 和可选密钥备份 `key`。
+ * 恢复目标必须关闭同步，且没有加密密钥配置或加密数据；密文全部通过认证后才发布，恢复后仍保持锁定。
+ */
 export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 
 export const fetchGet: FetchGet<IWebSocketData | IObject | string>;
@@ -503,6 +530,26 @@ export function openEmoji(options: {
     hideDynamicIcon?: boolean
     hideCustomIcon?: boolean
 }): void ;
+
+export interface IAssetPickerOptions {
+    /** 省略或传入空数组时不限制类型；扩展名可以带点或不带点，匹配时不区分大小写 */
+    exts?: string[];
+    /** 与扩展名和选择器中的普通关键词搜索取交集 */
+    match?: {
+        /** 默认匹配去掉资源 ID 的文件名；path 匹配返回的 assets/ 相对路径 */
+        field?: "name" | "path";
+        /** 前后缀匹配不区分大小写；正则使用 Go 语法，默认区分大小写，可用 (?i) 忽略大小写 */
+        mode: "prefix" | "suffix" | "regex";
+        /** 最多 1024 字节；空字符串不额外筛选，无效正则会使 Promise 拒绝 */
+        value: string;
+    };
+}
+
+/**
+ * 打开原生资源选择界面，无需活动文档或编辑器。选中后返回 assets/ 相对路径，取消时返回 null。
+ * 搜索结果可逐页加载；选择操作不插入文档或修改资源。搜索沿用内核接口的管理员和非只读权限。
+ */
+export function openAssetPicker(options?: IAssetPickerOptions): Promise<{path: string} | null>;
 
 export function getModelByDockType(type: TDock | string): Model | any;
 
@@ -729,6 +776,8 @@ export abstract class Plugin {
      * 在管理员环境中完整替换公开快照，仅支持 plugin.json 的 publish.data 声明并获单独授权的标量字段。
      * 应逐一选择适合公开的字段；值仅支持字符串、数字、布尔值或 null，省略的字段会被移除。
      * 发布端所需的额外前端文件应在 plugin.json 的 publish.resources 中声明。
+     * 资源支持精确相对文件名及以 / 结尾的递归目录，例如 fonts/，不支持通配符。
+     * 目录声明包含后续新增文件，私有文件应放在公开目录之外；链接、plugin.json 和 kernel.js 不可发布。
      * 权限、生命周期、限制及 HTTP 契约见 https://github.com/siyuan-note/siyuan/blob/master/docs/PLUGIN-PUBLISH.zh-CN.md
      */
     savePublishData(data: Record<string, string | number | boolean | null>): Promise<void>;

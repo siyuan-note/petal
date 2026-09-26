@@ -946,6 +946,8 @@ interface IProtyleOptions {
     }[],
     action?: TProtyleAction[],
     scrollPosition?: ScrollLogicalPosition,
+    // 恢复指定的阅读位置；提供时优先于工作空间中保存的文档位置。
+    scrollAttr?: IScrollAttr,
     mode?: TEditorMode,
     blockId?: string
     rootId?: string
