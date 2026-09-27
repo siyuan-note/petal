@@ -2,7 +2,7 @@
 
 ## v1.2.9 2026
 
-* [Support local snapshot lookup by full ID in the snapshot listing API](https://github.com/siyuan-note/siyuan/issues/19905)
+* [Support local snapshot lookup by full ID or prefixes of at least seven characters in the snapshot listing API](https://github.com/siyuan-note/siyuan/issues/19905)
 
 * [Support conditional color rules and rendered entry colors in database views](https://github.com/siyuan-note/siyuan/issues/19889)
 

@@ -346,7 +346,8 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
 /**
  * `/api/block/getBlockTreeInfos` 的标题结果包含可选的 `headingChildren` 布尔值，表示完整文档同一容器内是否有下辖块。
  * 空段落也算下辖块，结果不受折叠或分页影响；非标题及旧版内核省略该字段，省略不能视为空标题。
- * `/api/repo/getRepoSnapshots` 可传入可选的 `id`，按完整的 40 位十六进制 ID 查询本地快照。
+ * `/api/repo/getRepoSnapshots` 可传入可选的 `id`，按 7 至 40 位十六进制 ID 前缀查询本地快照。
+ * 前缀匹配多个快照时全部返回，按创建时间降序排列。
  * ID 忽略首尾空白和大小写；page 仍为必填，但按 ID 查询时不参与分页。
  * 省略或留空 ID 保留分页列表；未找到返回空列表，格式错误、损坏或读取失败返回错误。
  * 此接口保留管理员权限要求，返回已有的快照元数据及资源下载状态，不下载或回滚快照。
