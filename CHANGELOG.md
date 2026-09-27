@@ -2,6 +2,8 @@
 
 ## v1.2.9 2026
 
+* [Support single-column sorting in relation candidate queries](https://github.com/siyuan-note/siyuan/issues/19904)
+
 * [Improve plugin storage API documentation for cached reads and missing files](https://github.com/siyuan-note/siyuan/issues/19908)
 
 * [Support local snapshot lookup by full ID or prefixes of at least seven characters in the snapshot listing API](https://github.com/siyuan-note/siyuan/issues/19905)

@@ -344,6 +344,9 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 客户端可先读取缓存完成初始化，再刷新账户，并通过 setCloudUser 主通道事件接收账户变化。
  */
 /**
+ * `/api/av/getAttributeViewRelationCandidates` 支持可选的 sort: {column, order}，order 为 ASC 或 DESC。
+ * 按关联数据库字段的现有规则排序全部候选后分页，仅影响本次查询，不修改视图和 selectedRows 顺序。
+ * 省略 sort 时保留创建时间倒序；不存在的字段或无效方向返回错误。
  * `/api/block/getBlockTreeInfos` 的标题结果包含可选的 `headingChildren` 布尔值，表示完整文档同一容器内是否有下辖块。
  * 空段落也算下辖块，结果不受折叠或分页影响；非标题及旧版内核省略该字段，省略不能视为空标题。
  * `/api/repo/getRepoSnapshots` 可传入可选的 `id`，按 7 至 40 位十六进制 ID 前缀查询本地快照。
