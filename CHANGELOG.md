@@ -2,6 +2,8 @@
 
 ## v1.2.9 2026
 
+* [Support mind map search filters](https://github.com/siyuan-note/siyuan/issues/19948)
+
 * [Support snapshot date range filtering](https://github.com/siyuan-note/siyuan/issues/19943)
 
 * [Document nextID anchoring for move transactions](https://github.com/siyuan-note/siyuan/issues/19936)
