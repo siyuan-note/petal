@@ -362,6 +362,13 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 无仓库密钥时关联为空；缺失历史、格式错误、读取或认证失败返回错误，不冒充无匹配结果。
  * 此接口要求管理员权限，加密笔记本必须解锁，响应持有请求租约；不下载云端内容，不持久化摘要。
  */
+/**
+ * `/api/clipboard/preparePasteAssets` 接收已解锁的加密 notebook 和 assets 引用数组，返回原引用到新引用的映射。
+ * 普通附件复制为独立加密副本，原文件保持不变；同一笔记本内复用已有附件，拒绝跨加密笔记本复制。
+ * 引用仅限工作空间 assets/ 路径，可包含查询参数、片段和 PDF 标注 ID；PDF 标注文件随附件复制。
+ * 整批准备成功后调用方再插入内容；失败返回 code=-1、data=null，并清理本批次新建附件。
+ * 此接口要求管理员权限，禁止只读写入，响应持有加密笔记本请求租约。
+ */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**
