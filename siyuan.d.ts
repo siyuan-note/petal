@@ -355,6 +355,8 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 省略或留空 ID 保留分页列表；未找到返回空列表，格式错误、损坏或读取失败返回错误。
  * 此接口保留管理员权限要求，返回已有的快照元数据及资源下载状态，不下载或回滚快照。
  * includeFiles 默认为 false；传入 true 时必须提供完整 ID，并返回该快照的文件元数据，不读取正文。
+ * 本地快照结果的 tags 包含按名称排序的全部标记，未标记时为空数组；分页与 ID 查询均返回此字段。
+ * `/api/repo/getRepoTagSnapshots` 仍按标记逐行返回，tag 是当前行供上传、移除使用的标记，tags 是全部别名。
  * `/api/history/getDocHistorySnapshots` 接收文档 id、最多 32 个 searchHistory 时间戳 created，以及可选 op。
  * op 默认为 all；每条结果包含 created、historyPath 和 snapshots，按快照创建时间倒序排列。
  * snapshots 的每项包含 id、fileID、tags、memo 和 created；同一快照的多个标记合并到 tags。
