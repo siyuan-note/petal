@@ -1361,6 +1361,7 @@ export namespace Config {
         goToTab9?: IKey;
         goToTabNext?: IKey;
         goToTabPrev?: IKey;
+        switchTab?: IKey;
         goToEditTabNext?: IKey;
         goToEditTabPrev?: IKey;
         recentClosed?: IKey;

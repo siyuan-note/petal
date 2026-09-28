@@ -4,6 +4,8 @@
 
 * [Support automatic text direction for paragraphs and headings](https://github.com/siyuan-note/siyuan/issues/19915)
 
+* [Support the tab switcher menu shortcut and window menu entry point](https://github.com/siyuan-note/siyuan/issues/19914)
+
 * [Support single-column sorting in relation candidate queries](https://github.com/siyuan-note/siyuan/issues/19904)
 
 * [Improve plugin storage API documentation for cached reads and missing files](https://github.com/siyuan-note/siyuan/issues/19908)

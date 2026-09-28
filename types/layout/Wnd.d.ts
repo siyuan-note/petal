@@ -19,7 +19,8 @@ export declare class Wnd {
 
     addTab(tab: Tab, keepCursor?: boolean, isSaveLayout?: boolean, activeTime?: string): void;
 
-    private renderTabList;
+    /** 切换当前分屏的页签列表菜单，默认定位到页签栏的切换按钮；focus 为 true 时启用键盘焦点 */
+    renderTabList(target?: HTMLElement, focus?: boolean): void;
     private removeOverCounter;
     private destroyModel;
     private removeTabAction;
