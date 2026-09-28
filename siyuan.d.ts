@@ -354,6 +354,13 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * ID 忽略首尾空白和大小写；page 仍为必填，但按 ID 查询时不参与分页。
  * 省略或留空 ID 保留分页列表；未找到返回空列表，格式错误、损坏或读取失败返回错误。
  * 此接口保留管理员权限要求，返回已有的快照元数据及资源下载状态，不下载或回滚快照。
+ * includeFiles 默认为 false；传入 true 时必须提供完整 ID，并返回该快照的文件元数据，不读取正文。
+ * `/api/history/getDocHistorySnapshots` 接收文档 id、最多 32 个 searchHistory 时间戳 created，以及可选 op。
+ * op 默认为 all；每条结果包含 created、historyPath 和 snapshots，按快照创建时间倒序排列。
+ * snapshots 的每项包含 id、fileID、tags、memo 和 created；同一快照的多个标记合并到 tags。
+ * 仅匹配本地标记快照中认证解密后完整 .sy 数据相同的文件，不保证资源、数据库或引用内容相同。
+ * 无仓库密钥时关联为空；缺失历史、格式错误、读取或认证失败返回错误，不冒充无匹配结果。
+ * 此接口要求管理员权限，加密笔记本必须解锁，响应持有请求租约；不下载云端内容，不持久化摘要。
  */
 export const fetchPost: FetchPost<IWebSocketData>;
 

@@ -2,6 +2,8 @@
 
 ## v1.2.9 2026
 
+* [Expose file history associations with local tagged snapshots](https://github.com/siyuan-note/siyuan/issues/19916)
+
 * [Support automatic text direction for paragraphs and headings](https://github.com/siyuan-note/siyuan/issues/19915)
 
 * [Support the tab switcher menu shortcut and window menu entry point](https://github.com/siyuan-note/siyuan/issues/19914)
