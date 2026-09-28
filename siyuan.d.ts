@@ -361,6 +361,8 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 仅匹配本地标记快照中认证解密后完整 .sy 数据相同的文件，不保证资源、数据库或引用内容相同。
  * 无仓库密钥时关联为空；缺失历史、格式错误、读取或认证失败返回错误，不冒充无匹配结果。
  * 此接口要求管理员权限，加密笔记本必须解锁，响应持有请求租约；不下载云端内容，不持久化摘要。
+ * `/api/repo/getRepoDocHistory` 的每个文件版本还包含 snapshots，按文件 ID 关联全部本地标记快照。
+ * snapshots 按快照创建时间倒序排列，同一快照的多个标记合并；无关联时为空数组，不读取文件正文。
  */
 /**
  * `/api/clipboard/preparePasteAssets` 接收已解锁的加密 notebook 和 assets 引用数组，返回原引用到新引用的映射。

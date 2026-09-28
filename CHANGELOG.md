@@ -2,6 +2,8 @@
 
 ## v1.2.9 2026
 
+* [Expose all tagged snapshots for each document snapshot version](https://github.com/siyuan-note/siyuan/issues/19916)
+
 * [Support preparing encrypted attachment copies before pasting](https://github.com/siyuan-note/siyuan/issues/19927)
 
 * [Expose file history associations with local tagged snapshots](https://github.com/siyuan-note/siyuan/issues/19916)
