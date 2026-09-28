@@ -2,6 +2,8 @@
 
 ## v1.2.9 2026
 
+* [Document global font inheritance for dynamic icons](https://github.com/siyuan-note/siyuan/issues/19941)
+
 * [Support mind map search filters](https://github.com/siyuan-note/siyuan/issues/19948)
 
 * [Support snapshot date range filtering](https://github.com/siyuan-note/siyuan/issues/19943)
