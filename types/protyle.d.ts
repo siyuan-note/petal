@@ -234,7 +234,8 @@ declare class Hint {
 
     render(protyle: IProtyle): void;
 
-    genLoading(protyle: IProtyle): void;
+    /** 加载阶段可指定候选来源，数据库候选使用当前单元格或主键字段定位 */
+    genLoading(protyle: IProtyle, delay?: number, source?: THintSource): void;
 
     bindUploadEvent(protyle: IProtyle, element: HTMLElement): void;
 
