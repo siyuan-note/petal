@@ -349,6 +349,8 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 省略 sort 时保留创建时间倒序；不存在的字段或无效方向返回错误。
  * `/api/block/getBlockTreeInfos` 的标题结果包含可选的 `headingChildren` 布尔值，表示完整文档同一容器内是否有下辖块。
  * 空段落也算下辖块，结果不受折叠或分页影响；非标题及旧版内核省略该字段，省略不能视为空标题。
+ * `/api/transactions` 的 move 操作支持 nextID，将块移到该同级锚点之前，优先于 previousID 和 parentID。
+ * 移动保留折叠标题下辖块顺序及源块身份，不将整列表自动拆成列表项；公开 moveBlock 接口的参数保持不变。
  * `/api/repo/getRepoSnapshots` 可传入可选的 `id`，按 7 至 40 位十六进制 ID 前缀查询本地快照。
  * 前缀匹配多个快照时全部返回，按创建时间降序排列。
  * ID 忽略首尾空白和大小写；page 仍为必填，但按 ID 查询时不参与分页。

@@ -2,6 +2,8 @@
 
 ## v1.2.9 2026
 
+* [Document nextID anchoring for move transactions](https://github.com/siyuan-note/siyuan/issues/19936)
+
 * [Expose all local tags in snapshot listings](https://github.com/siyuan-note/siyuan/issues/19937)
 
 * [Expose all tagged snapshots for each document snapshot version](https://github.com/siyuan-note/siyuan/issues/19916)
