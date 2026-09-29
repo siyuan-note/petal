@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Limit global font inheritance to dynamic text icons](https://github.com/siyuan-note/siyuan/issues/19941)
+
 * [Document template-calculated dates in database calendar views](https://github.com/siyuan-note/siyuan/issues/19951)
 
 ## v1.2.9 2026-09-29
