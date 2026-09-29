@@ -1,43 +1,27 @@
 # Changelog
 
-## v1.2.9 2026
+## v1.3.0 2026
+
+## v1.2.9 2026-09-29
 
 * [Expose the loading source for database binding candidates](https://github.com/siyuan-note/siyuan/issues/19935)
-
 * [Document global font inheritance for dynamic icons](https://github.com/siyuan-note/siyuan/issues/19941)
-
 * [Support mind map search filters](https://github.com/siyuan-note/siyuan/issues/19948)
-
 * [Support snapshot date range filtering](https://github.com/siyuan-note/siyuan/issues/19943)
-
 * [Document nextID anchoring for move transactions](https://github.com/siyuan-note/siyuan/issues/19936)
-
 * [Expose all local tags in snapshot listings](https://github.com/siyuan-note/siyuan/issues/19937)
-
 * [Expose all tagged snapshots for each document snapshot version](https://github.com/siyuan-note/siyuan/issues/19916)
-
 * [Support preparing encrypted attachment copies before pasting](https://github.com/siyuan-note/siyuan/issues/19927)
-
 * [Expose file history associations with local tagged snapshots](https://github.com/siyuan-note/siyuan/issues/19916)
-
 * [Support automatic text direction for paragraphs and headings](https://github.com/siyuan-note/siyuan/issues/19915)
-
 * [Support the tab switcher menu shortcut and window menu entry point](https://github.com/siyuan-note/siyuan/issues/19914)
-
 * [Support single-column sorting in relation candidate queries](https://github.com/siyuan-note/siyuan/issues/19904)
-
 * [Improve plugin storage API documentation for cached reads and missing files](https://github.com/siyuan-note/siyuan/issues/19908)
-
 * [Support local snapshot lookup by full ID or prefixes of at least seven characters in the snapshot listing API](https://github.com/siyuan-note/siyuan/issues/19905)
-
 * [Support conditional color rules and rendered entry colors in database views](https://github.com/siyuan-note/siyuan/issues/19889)
-
 * [Expose heading child availability in block tree information](https://github.com/siyuan-note/siyuan/issues/19878)
-
 * [Support workspace AGENTS.md instruction API declarations](https://github.com/siyuan-note/siyuan/issues/19876)
-
 * [Add built-in MCP server OAuth configuration, client registration, and revocation API declarations](https://github.com/siyuan-note/siyuan/issues/19867)
-
 * [Improve display templates for database relation primary keys](https://github.com/siyuan-note/siyuan/issues/19857)
 * [Support cached cloud account queries during startup](https://github.com/siyuan-note/siyuan/issues/19854)
 * [Support encrypted notebook archive, removal, and authenticated recovery API declarations](https://github.com/siyuan-note/siyuan/issues/19850)
