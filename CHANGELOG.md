@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document template-calculated dates in database calendar views](https://github.com/siyuan-note/siyuan/issues/19951)
+
 ## v1.2.9 2026-09-29
 
 * [Expose the loading source for database binding candidates](https://github.com/siyuan-note/siyuan/issues/19935)
