@@ -2,6 +2,7 @@
 
 ## v1.2.9 2026
 
+* Synchronize API declarations after merging the latest SiYuan dev changes into the flashcard branch
 * Synchronize flashcard v2 session, query, and branch API declarations
 * Add typed flashcard queries and edit-later API declarations, including notes and scheduling preservation
 * [Improve display templates for database relation primary keys](https://github.com/siyuan-note/siyuan/issues/19857)
