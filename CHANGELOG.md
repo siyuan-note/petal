@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Correct the frontend kernel plugin RPC declarations: `batch` can resolve to a single error response or `undefined`, error responses always carry `error`, and `call` retry and rejection behavior is documented
+
 * Correct kernel plugin private server declarations: add proxy response bodies, accept `Buffer` raw data, fix form parsing, file part, header, status code, cookie, and SSE port documentation, and document request routing and access checks
 
 * Correct kernel plugin runtime declarations: add `siyuan.secrets` and `siyuan.vars`, type `platform`, `i18n`, event topics, and registered capability records, and document lifecycle order, the per-plugin event bus, RPC endpoints, and broadcast recipients
