@@ -2,6 +2,7 @@
 
 ## v1.2.9 2026
 
+* [Support AnkiConnect-compatible flashcard requests and configuration declarations](https://github.com/siyuan-note/siyuan/issues/20008)
 * Synchronize API declarations after merging the latest SiYuan dev changes into the flashcard branch
 * Synchronize flashcard v2 session, query, and branch API declarations
 * Add typed flashcard queries and edit-later API declarations, including notes and scheduling preservation

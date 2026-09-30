@@ -941,6 +941,16 @@ export namespace Config {
      * Flashcard related configuration
      */
     export interface IFlashCard {
+        /**
+         * 是否启用 AnkiConnect 制卡兼容接口，默认关闭
+         * 地址为 /api/flashcard/ankiConnect，兼容协议版本 1 到 6，仅提供制卡相关动作
+         * 默认通过 key、Authorization 请求头或 token 查询参数提供思源 API Token
+         */
+        ankiConnectEnabled: boolean;
+        /** 是否允许可信本机原生客户端独立于访问授权码免密制卡，默认关闭 */
+        ankiConnectLocalWithoutKey: boolean;
+        /** 保存第三方卡片字段的打开的普通笔记本 ID，不支持加密笔记本 */
+        ankiConnectNotebook: string;
         /** 默认打开方式，0：弹窗，1：页签，2：右侧分屏，3：新窗口 */
         openMode: number;
         /**
