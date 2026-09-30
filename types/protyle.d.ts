@@ -3,11 +3,12 @@ import {
     Config,
     Editor,
     IAV,
+    IMenu,
     IObject,
     IOperation,
+    IPopupMenu,
     IPosition,
     IWebSocketData,
-    Menu,
     Plugin,
 } from "./../siyuan";
 import {Model} from "./layout/Model";
@@ -33,7 +34,10 @@ declare class AVAttributePanel {
 
     hasDatabase(avID: string): boolean;
 
-    expand(): void;
+    /**
+     * @param {boolean} [animate=false]
+     */
+    expand(avID?: string, animate?: boolean): void;
 
     toggle(): void;
 }
@@ -45,9 +49,9 @@ declare class Breadcrumb {
 
     toggleExit(hide: boolean): void;
 
-    showMenu(protyle: IProtyle, position: IPosition): void;
+    showMenu(protyle: IProtyle, position: IPosition, restoreKeyboard?: () => void): Promise<void>;
 
-    render(protyle: IProtyle, update?: boolean, nodeElement?: Element | false): void;
+    render(protyle: IProtyle, update?: boolean, nodeElement?: Element | false): Promise<void>;
 
     hide(): void;
 }
@@ -57,13 +61,14 @@ declare class Scroll {
     private parentElement;
     private inputElement;
     lastScrollTop: number;
-    keepLazyLoad: boolean;
+    /** 是否保持动态加载的内容 */
+    keepLoadedContent: boolean;
 
     constructor(protyle: IProtyle);
 
     private setIndex;
 
-    updateIndex(protyle: IProtyle, id: string, cb?: (index: number) => void): void;
+    updateIndex(protyle: IProtyle, id: string, cb?: (index: number) => void): Promise<void>;
 
     update(protyle: IProtyle): void;
 }
@@ -79,7 +84,7 @@ declare class WYSIWYG {
 
     constructor(protyle: IProtyle);
 
-    renderCustom(ial: IObject): void;
+    renderCustom(ial: Record<string, string>): void;
 
     private escapeInline;
     private setEmptyOutline;
@@ -94,15 +99,16 @@ declare class Gutter {
 
     constructor(protyle: IProtyle);
 
-    private isMatchNode;
+    isMatchNode(item: Element): boolean;
+
     private turnsOneInto;
     private turnsIntoOne;
     private turnsInto;
     private showMobileAppearance;
 
-    renderMultipleMenu(protyle: IProtyle, selectsElement: Element[]): Menu;
+    renderMultipleMenu(protyle: IProtyle, selectsElement: Element[]): IPopupMenu;
 
-    renderMenu(protyle: IProtyle, buttonElement: Element): Menu;
+    renderMenu(protyle: IProtyle, buttonElement: Element): IPopupMenu;
 
     private genHeadingTransform;
     private genClick;
@@ -112,7 +118,7 @@ declare class Gutter {
     private genHeights;
     private genCopyTextRef;
 
-    render(protyle: IProtyle, element: Element, wysiwyg: HTMLElement, target?: Element): void;
+    render(protyle: IProtyle, element: Element, target?: Element): void;
 }
 
 declare class Title {
@@ -124,14 +130,17 @@ declare class Title {
 
     private rename;
 
-    setTitle(title: string): void;
+    /**
+     * @param {boolean} [empty=false] - 为 true 时标题编辑区显示为空
+     */
+    setTitle(title: string, empty?: boolean): void;
 
     render(protyle: IProtyle, response: IWebSocketData): boolean;
 }
 
 declare class Background {
     element: HTMLElement;
-    ial: IObject;
+    ial: Record<string, string>;
     private imgElement;
     private iconElement;
     private actionElements;
@@ -142,7 +151,7 @@ declare class Background {
 
     private removeTag;
 
-    render(ial: IObject, rootId: string): void;
+    render(ial: Record<string, string>, rootId: string): void;
 
     private openTag;
     private getTags;
@@ -165,9 +174,9 @@ declare class Preview {
 }
 
 interface IUndo {
-    undo(protyle: IProtyle): void;
+    undo(protyle: IProtyle): void | Promise<void>;
 
-    redo(protyle: IProtyle): void;
+    redo(protyle: IProtyle): void | Promise<void>;
 
     add(doOperations: IOperation[], undoOperations: IOperation[], protyle: IProtyle): void;
 
@@ -182,9 +191,9 @@ interface IOperations {
 }
 
 declare class Undo implements IUndo {
-    undo(protyle: IProtyle): void;
+    undo(protyle: IProtyle): void | Promise<void>;
 
-    redo(protyle: IProtyle): void;
+    redo(protyle: IProtyle): void | Promise<void>;
 
     renderLocal(protyle: IProtyle, operations: IOperation[]): void;
 
@@ -269,16 +278,20 @@ export declare class Toolbar {
 
     public update(protyle: IProtyle): void
 
-    public render(protyle: IProtyle, range: Range, event?: KeyboardEvent): void
+    public render(protyle: IProtyle, range: Range, position?: IPosition & { detail?: number }): void
 
     public getCurrentType(range?: Range): string[]
 
+    /**
+     * @param {boolean} [focusRange=true]
+     */
     public setInlineMark(protyle: IProtyle, type: string, action: "range" | "toolbar", textObj?: {
         color?: string,
         type: string
-    }): Node[]
+    }, focusRange?: boolean, undoContext?: Record<string, string>): Node[] | undefined
 
-    public showRender(protyle: IProtyle, renderElement: Element, updateElements?: Element[], oldHTML?: string): void
+    public showRender(protyle: IProtyle, renderElement: Element, updateElements?: Element[],
+                      oldHTML?: string | Map<string, string>): void
 
     public showCodeLanguage(protyle: IProtyle, languageElements: HTMLElement[]): void
 
@@ -288,7 +301,7 @@ export declare class Toolbar {
 
     public showWidget(protyle: IProtyle, nodeElement: HTMLElement, range: Range): void
 
-    public showContent(protyle: IProtyle, range: Range, nodeElement: Element): void
+    public showContent(protyle: IProtyle, range: Range, nodeElement: Element, pluginMenus?: IMenu[]): void
 
     public isMultiSelectMode(): boolean
 }
@@ -346,6 +359,9 @@ export class Protyle {
      */
     public insert(html: string, isBlock?: boolean, useProtyleRange?: boolean): void
 
+    /** 立即处理尚未提交的输入，并等待该编辑器已排队的事务结束 */
+    public flushPendingTransactions(): Promise<void>
+
     public transaction(doOperations: IOperation[], undoOperations?: IOperation[]): void;
 
     /**
@@ -363,7 +379,7 @@ export class Protyle {
     public turnIntoTransaction(nodeElement: Element, type: TTurnInto, subType?: number): void
 
     /**
-     * @deprecated 将在 3.7.1 版本中移除。请改用 {@link updateTransactionElement}。
+     * @deprecated 请改用 {@link updateTransactionElement}。
      */
     public updateTransaction(id: string, newHTML: string, html: string): void
 
@@ -398,8 +414,28 @@ export class Protyle {
     public switchMode(mode: TEditorMode): void
 }
 
+/** 标签页容器渲染选项 */
+export interface ITabsRenderOptions {
+    readonly?: (tabs?: Element) => boolean;
+    taskReadonly?: (tabs?: Element) => boolean;
+    label?: string;
+    addLabel?: string;
+    select?: (tabs: HTMLElement, id: string) => void;
+    activate?: (item: HTMLElement) => void;
+    rename?: (item: HTMLElement) => void;
+    add?: (tabs: HTMLElement) => void;
+    menu?: (tabs: HTMLElement, item: HTMLElement, anchor: HTMLElement) => void;
+    move?: (source: HTMLElement, target: HTMLElement, after?: boolean) => void;
+    shown?: (item: HTMLElement) => void;
+    task?: (item: HTMLElement) => void;
+    taskMenu?: (item: HTMLElement) => void;
+    taskLabel?: string;
+    endEdit?: () => void;
+    attributes?: { label: string, open: (block: HTMLElement, focus: string) => void };
+}
+
 export class ProtyleMethod {
-    public static tabsRender(element: Element): void;
+    public static tabsRender(element: Element, options?: ITabsRenderOptions): void;
     /**
      * @description 使用 graphviz 进行渲染
      * @param {string} [cdn=Constants.PROTYLE_CDN]
@@ -587,7 +623,8 @@ interface IBreadcrumb {
     name: string,
     type: string,
     subType: string,
-    children: []
+    children: IBreadcrumb[],
+    hasChildren?: boolean
 }
 
 interface ILuteOptions extends IMarkdownConfig {
@@ -707,6 +744,8 @@ export class Lute {
 
     public SetTabs(enable: boolean): void;
 
+    public SetCustomBlock(enable: boolean): void;
+
     public SetTag(enable: boolean): void;
 
     public SetInlineMath(enable: boolean): void;
@@ -714,6 +753,8 @@ export class Lute {
     public SetGFMStrikethrough(enable: boolean): void;
 
     public SetGFMStrikethrough1(enable: boolean): void;
+
+    public SetFullWidthStrikethrough(enable: boolean): void;
 
     public SetMark(enable: boolean): void;
 
@@ -768,6 +809,12 @@ export class Lute {
     public BlockDOM2InlineBlockDOM(html: string): string;
 
     public BlockDOM2HTML(html: string): string;
+
+    public BlockDOM2RichHTML(html: string): string;
+
+    public CancelListRecursively(html: string): string;
+
+    public ConvertListType(html: string, targetType: "u" | "o" | "t"): string;
 
     public HTML2Md(html: string): string;
 
@@ -944,6 +991,8 @@ interface IProtyleOptions {
     },
     backlinkData?: {
         referenceBlockID?: string,
+        id?: string,
+        revision?: string,
         blockPaths: IBreadcrumb[],
         dom: string
         expand: boolean
@@ -1034,6 +1083,8 @@ export interface IProtyle {
         mode?: number
         blockCount?: number
         action?: TProtyleAction[]
+        headingNumbers?: Record<string, string>
+        headingNumberLevels?: Record<string, string>
     },
     disabled: boolean,
     lite?: boolean,
