@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare the kernel plugin sandbox globals `console`, `setTimeout`, `setInterval`, `setImmediate`, their `clear*` functions, `URL`, `URLSearchParams`, and `GoError`, and document that `siyuan.*` promises reject with `GoError`
+
 * Export `Lute`, `Custom`, `Tab`, `Model`, and other classes that the `siyuan` module does not provide at runtime as types only, so value usage such as `new Custom()` or `Lute.New()` from the module import is reported at compile time
 
 * Correct the frontend kernel plugin RPC declarations: `batch` can resolve to a single error response or `undefined`, error responses always carry `error`, and `call` retry and rejection behavior is documented

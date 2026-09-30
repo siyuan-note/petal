@@ -21,7 +21,103 @@ declare global {
         /** Encodes the bytes as unpadded URL-safe Base64; see {@link BufferConstructor.from}. */
         toString(encoding: "base64Url", start?: number, end?: number): string;
     }
+
+    // The declarations below describe other globals of the kernel plugin sandbox. When DOM declarations
+    // are also loaded (e.g. frontend and kernel code share one compilation), timer handles become
+    // numbers and `URL` / `URLSearchParams` use the DOM types, so frontend code keeps compiling.
+    // The sandbox also provides `require`, which is not declared here to avoid conflicts with `@types/node`.
+
+    /**
+     * `console` provided by the sandbox.
+     *
+     * @remarks Output is written to the kernel log with the `[plugin:<name>]` prefix: `log`, `info`,
+     * and `debug` at INFO level, `warn` at WARN level, and `error` at ERROR level.
+     */
+    interface Console {
+        log(...data: any[]): void;
+        info(...data: any[]): void;
+        debug(...data: any[]): void;
+        warn(...data: any[]): void;
+        error(...data: any[]): void;
+    }
+
+    var console: Console;
+
+    /**
+     * Schedules `handler` on the plugin's event loop. String handlers are not supported.
+     *
+     * @returns An opaque handle for {@link clearTimeout}; in the sandbox it is an object, not a number.
+     */
+    function setTimeout(handler: (...args: any[]) => void, timeout?: number, ...args: any[]): TTimeoutHandle;
+
+    /**
+     * Schedules `handler` repeatedly on the plugin's event loop. String handlers are not supported.
+     *
+     * @returns An opaque handle for {@link clearInterval}; in the sandbox it is an object, not a number.
+     */
+    function setInterval(handler: (...args: any[]) => void, timeout?: number, ...args: any[]): TIntervalHandle;
+
+    /**
+     * Runs `handler` on the plugin's event loop as soon as possible.
+     *
+     * @returns An opaque handle for {@link clearImmediate}.
+     */
+    function setImmediate(handler: (...args: any[]) => void, ...args: any[]): TImmediateHandle;
+
+    function clearTimeout(handle: TTimeoutHandle | null | undefined): void;
+
+    function clearInterval(handle: TIntervalHandle | null | undefined): void;
+
+    function clearImmediate(handle: TImmediateHandle | null | undefined): void;
+
+    /** WHATWG `URL` implemented by goja_nodejs. */
+    var URL: typeof globalThis extends { onmessage: any; URL: infer T } ? T : typeof import("url").URL;
+
+    /** WHATWG `URLSearchParams` implemented by goja_nodejs. */
+    var URLSearchParams: typeof globalThis extends { onmessage: any; URLSearchParams: infer T }
+        ? T
+        : typeof import("url").URLSearchParams;
+
+    /**
+     * Error type used by the kernel to reject `siyuan.*` promises and to throw from synchronous APIs.
+     *
+     * @remarks `message` is the kernel's Go error text. Errors created by the kernel also carry the
+     * wrapped Go error in `value`.
+     */
+    interface GoError extends Error {
+        value?: unknown;
+    }
+
+    var GoError: {
+        new(message?: string): GoError;
+        (message?: string): GoError;
+        readonly prototype: GoError;
+    };
 }
+
+/** Opaque object returned by the sandbox `setTimeout`. */
+export interface ITimeoutHandle {
+    readonly __timeoutHandle: never;
+}
+
+/** Opaque object returned by the sandbox `setInterval`. */
+export interface IIntervalHandle {
+    readonly __intervalHandle: never;
+}
+
+/** Opaque object returned by the sandbox `setImmediate`. */
+export interface IImmediateHandle {
+    readonly __immediateHandle: never;
+}
+
+/** Timer handle type: {@link ITimeoutHandle}, or `number` when DOM declarations are also loaded. */
+export type TTimeoutHandle = typeof globalThis extends { onmessage: any } ? number : ITimeoutHandle;
+
+/** Interval handle type: {@link IIntervalHandle}, or `number` when DOM declarations are also loaded. */
+export type TIntervalHandle = typeof globalThis extends { onmessage: any } ? number : IIntervalHandle;
+
+/** Immediate handle type: {@link IImmediateHandle}, or `number` when DOM declarations are also loaded. */
+export type TImmediateHandle = typeof globalThis extends { onmessage: any } ? number : IImmediateHandle;
 
 // ── Primitives ────────────────────────────────────────────────────────────────
 
@@ -1345,6 +1441,9 @@ export interface IServer {
  *
  * @remarks Available as the global constant `siyuan`. All async operations
  * return `Promise`s resolved on the plugin's JavaScript runtime event loop.
+ * They reject with a {@link GoError} whose `message` is the kernel's error text;
+ * invalid arguments are also reported as rejections rather than synchronous throws.
+ * {@link IEventSourcePort.send} is the only method that throws synchronously.
  */
 export interface ISiyuan {
     /** Static metadata about this plugin instance. */
