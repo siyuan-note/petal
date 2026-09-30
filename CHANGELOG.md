@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Synchronize `Constants` with SiYuan, including RFC 5646 help document language keys and default dock shortcuts
+
 * Fix strict type checking errors in shortcut key declarations
 
 * Fix the unresolved `IScrollAttr` reference in editor tab layout declarations
