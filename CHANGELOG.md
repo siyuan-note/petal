@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Correct kernel plugin runtime declarations: add `siyuan.secrets` and `siyuan.vars`, type `platform`, `i18n`, event topics, and registered capability records, and document lifecycle order, the per-plugin event bus, RPC endpoints, and broadcast recipients
+
 * Correct kernel plugin client, logger, and storage declarations: synchronous `siyuan.logger` methods, `text`/`binary` WebSocket message events and `wasClean`, WebSocket and EventSource lifecycle documentation, fetch response fields, the `data/storage/petal/<name>/` storage directory, and the `base64Url` Buffer encoding
 
 * Correct plugin declarations: rename `agentActions` to `agentCapabilities`, allow undefined results from top bar, status bar, tab, and dock registration, type `EventBus` as an interface, fix `paste`, `code-language-update`, and `open-menu-av` event details, and correct command callback and `open-asset` documentation

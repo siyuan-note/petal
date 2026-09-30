@@ -136,7 +136,7 @@ export interface IRequestInit {
 export interface IEventMessage {
     /** Unique event identifier. */
     id: UUID;
-    /** Event type name, e.g. `"ws"`. */
+    /** Event type name, e.g. `"start"` or `"fs-notify"`. */
     type: string;
     /** Event-specific payload; the shape depends on `type`. */
     detail: any;
@@ -478,10 +478,13 @@ export interface IPlugin {
     readonly version: string;
     /** Human-readable display name shown in the plugin marketplace. */
     readonly displayName: string;
-    /** Backend platform identifier, e.g. `"windows"`, `"linux"`, `"darwin"`. */
-    readonly platform: string;
-    /** Localization strings loaded from the plugin's `i18n/` directory. */
-    readonly i18n: Record<string, any>;
+    /**
+     * Backend platform identifier: the operating system on desktop (`"windows"`, `"linux"`, `"darwin"`),
+     * otherwise the container (`"docker"`, `"android"`, `"ios"`, `"harmony"`).
+     */
+    readonly platform: "windows" | "linux" | "darwin" | "docker" | "android" | "ios" | "harmony" | (string & {});
+    /** Localization strings loaded from the plugin's `i18n/` directory, or `null` if none were loaded. */
+    readonly i18n: Record<string, any> | null;
     /** Kernel lifecycle hooks for this plugin. */
     readonly lifecycle: IPluginLifecycle;
 }
@@ -491,38 +494,56 @@ export interface IPlugin {
  *
  * @remarks Exposed as `siyuan.plugin.lifecycle`. Assign a function to any
  * property to subscribe; the kernel awaits any returned `Promise` before
- * advancing to the next lifecycle stage. Unset callbacks (`null`) are skipped.
+ * advancing to the next lifecycle stage, with no timeout, so a `Promise` that
+ * never settles blocks starting or stopping the plugin. Errors thrown by a hook
+ * are logged and do not abort the transition. Unset callbacks (`null`) are
+ * skipped, but the kernel logs an error for them.
  */
 export interface IPluginLifecycle {
-    /** Called when the plugin script is first evaluated (before the `running` state.). */
+    /**
+     * Called after the top-level code of `kernel.js` finishes, while the plugin is still
+     * `loading`; RPC and private server requests are rejected until it becomes `running`.
+     */
     onload: (() => void | Promise<void>) | null;
-    /** Called when the plugin transitions to the `running` state. */
+    /**
+     * Called after the plugin enters the `running` state; the `start` event is published
+     * after this hook settles.
+     */
     onrunning: (() => void | Promise<void>) | null;
-    /** Called when the plugin is being unloaded (e.g. on shutdown or hot-reload). */
+    /**
+     * Called when a running plugin is stopped (e.g. disabled, reloaded, or on a normal kernel
+     * shutdown), after the `stop` event and while the plugin is `stopping`.
+     */
     onunload: (() => void | Promise<void>) | null;
 }
 
 /**
  * Kernel event bridge.
  *
- * @remarks Exposed as `siyuan.event`. Allows the plugin to receive kernel
- * broadcast events and publish events to the in-process bus.
+ * @remarks Exposed as `siyuan.event`. Each plugin has its own in-process bus;
+ * events never reach other plugins or the frontend.
  */
 export interface IEvent {
     /**
-     * Inbound kernel event handler.
+     * Inbound event handler.
      *
-     * @remarks Assign a function to receive every kernel dispatched event.
+     * @remarks Receives the kernel's `start`, `stop`, and `fs-notify` events, plus any payload
+     * emitted to the `"runtime"` topic as-is. It is called with `this` set to `siyuan.event`;
+     * a returned `Promise` is not awaited and errors thrown by the handler are not reported.
      * Set to `null` to stop receiving events.
      */
     handler: ((event: TEventMessage) => void | Promise<void>) | null;
     /**
-     * Publishes an event to the in-process event bus.
+     * Publishes a payload to this plugin's in-process event bus.
+     *
+     * @remarks Only the `"runtime"` topic is delivered, asynchronously, to {@link IEvent.handler};
+     * the `"plugin"` topic is only written to the debug log, and other topics have no subscribers.
+     * Rejects if `topic` is empty or `event` is omitted.
      *
      * @param topic - Event topic string used to route the event to subscribers.
-     * @param event - Arbitrary serializable payload.
+     * @param event - Payload to publish.
      */
-    emit(topic: string, event: IEventMessage): Promise<void>;
+    emit(topic: "runtime" | "plugin" | (string & {}), event: unknown): Promise<void>;
 }
 
 /**
@@ -630,13 +651,22 @@ export type TAgentCapabilityHandler = (input: Record<string, any>) => any | Prom
 /**
  * JSON-RPC method registry for the plugin.
  *
- * @remarks Exposed as `siyuan.rpc`. Registered methods are callable by
- * external clients via `GET /api/plugin/rpc`, `POST /api/plugin/rpc`, or
- * the WebSocket endpoint `GET /ws/plugin/rpc`.
+ * @remarks Exposed as `siyuan.rpc`. Registered methods are called with JSON-RPC 2.0 via
+ * `POST /api/plugin/rpc/<plugin>` (or `POST /api/plugin/rpc?name=<plugin>`) and over the
+ * WebSocket endpoint `GET /ws/plugin/rpc/<plugin>`; `GET /api/plugin/rpc` only reports
+ * loaded plugins and their methods. Calling requires an authenticated administrator, is
+ * blocked in read-only mode, and returns error `-32001` or `-32002` unless the plugin is
+ * loaded and running.
+ *
+ * An array `params` is spread into handler arguments, an object is passed as the single
+ * argument, and a missing or `null` value passes no arguments. A handler that throws or
+ * rejects produces error `-32603`.
  */
 export interface IRpc {
     /**
      * Registers a named RPC method callable by external clients.
+     *
+     * @remarks Binding an existing name replaces the previous handler.
      *
      * @param name         - Unique method name used to dispatch the call.
      * @param handler      - Handler function; may be async.
@@ -654,7 +684,10 @@ export interface IRpc {
      */
     unbind(name: string): Promise<void>;
     /**
-     * Broadcasts a JSON-RPC notification to all connected clients.
+     * Sends a JSON-RPC notification to every client connected to this plugin's RPC WebSocket.
+     *
+     * @remarks HTTP callers and private server WebSocket ports do not receive it. Resolves after
+     * all writes finish.
      *
      * @param method - Notification method name.
      * @param params - Optional notification parameters.
@@ -722,8 +755,10 @@ export interface IAgentCapabilityConfig {
 
 /**
  * The registration record returned by {@link IAgent.registerCapability}.
+ *
+ * @remarks Every field is present, even when the corresponding setting was omitted.
  */
-export interface IRegisteredCapability extends IAgentCapabilityConfig {
+export interface IRegisteredCapability {
     /** Stable capability identifier used by Agent configuration. */
     id: string;
     /**
@@ -732,6 +767,18 @@ export interface IRegisteredCapability extends IAgentCapabilityConfig {
      * @example "plugin__plugin_name__capability_name__0123456789ab"
      */
     name: string;
+    /** Display name, or an empty string when not provided. */
+    title: string;
+    /** Trimmed description. */
+    description: string;
+    /** JSON Schema describing the capability's input parameters. */
+    inputSchema: JSONSchema.ObjectSchema;
+    /** JSON Schema describing the capability's output, or `null` when not provided. */
+    outputSchema: JSONSchema.Schema | null;
+    /** Default side effects, or `null` when not provided. */
+    effects: IAgentCapabilityEffects | null;
+    /** Per-action side effects; `null` or empty when not provided. */
+    actionEffects: Record<string, IAgentCapabilityEffects> | null;
 }
 
 // ── Server request types ─────────────────────────────────────────────────────
@@ -1283,4 +1330,22 @@ export interface ISiyuan {
     readonly client: IClient;
     /** Web request handler registry. */
     readonly server: IServer;
+    /** Resolves `{{secrets.NAME}}` placeholders from the workspace secret store. */
+    readonly secrets: ITemplateResolver;
+    /** Resolves `{{vars.NAME}}` placeholders from the workspace variable store. */
+    readonly vars: ITemplateResolver;
+}
+
+/**
+ * Placeholder resolver exposed as `siyuan.secrets` and `siyuan.vars`.
+ *
+ * @remarks Names cannot be listed; only placeholders in the given template are replaced.
+ */
+export interface ITemplateResolver {
+    /**
+     * Replaces the placeholders in `template` synchronously.
+     *
+     * @returns The resolved string, or an empty string if `template` is not a string.
+     */
+    resolve(template: string): string;
 }
