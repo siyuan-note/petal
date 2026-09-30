@@ -44,10 +44,11 @@ export * as platformUtils from "./platformUtils";
 
 type TDockPosition = "Left" | "Right" | "Bottom"
 type TBazaarType = "templates" | "icons" | "widgets" | "themes" | "plugins"
-type TRecentDocsSort = "viewedAt" | "closedAt" | "openAt" | "updated"
+type TRecentDocsSort = "viewedAt" | "closedAt" | "openAt" | "created" | "updated"
 type TPublishAccessLevel = "public" | "protected" | "hidden" | "private" | "forbidden"
 type TAVView = "table" | "list" | "gallery" | "kanban" | "calendar";
 export type TAVAlign = "" | "left" | "center" | "right"
+type TAVDateFormat = "" | "full" | "month-day-year" | "day-month-year" | "year-month-day"
 type TAVFilterOperator =
     "="
     | "!="
@@ -57,6 +58,8 @@ type TAVFilterOperator =
     | "<="
     | "Contains"
     | "Does not contains"
+    | "Contains any item"
+    | "Does not contain any item"
     | "Is empty"
     | "Is not empty"
     | "Starts with"
@@ -210,14 +213,18 @@ export interface IClipboardData {
     siyuanHTML?: string;
     files?: FileList | DataTransferItemList | File[];
     localFiles?: ILocalFiles[];
+    preserveSourceFormat?: boolean;
 }
 
 export interface IBlockTree {
     box?: string,
+    revision?: string,
+    number?: string,
     nodeType?: string,
     hPath?: string,
     subType?: string,
     name: string,
+    nameIsHTML?: boolean,
     type: string,
     depth: number,
     url?: string,
@@ -238,6 +245,7 @@ export interface IBlock {
     rootID?: string;
     type?: string;
     content?: string;
+    number?: string;
     def?: IBlock;
     defID?: string
     defPath?: string
@@ -282,6 +290,7 @@ interface IBackStack {
         endId: string
         path: string
         notebookId: string
+        rootID: string
     },
     scrollTop?: number,
     callback?: TProtyleAction[],
@@ -306,6 +315,7 @@ export interface IAVColor {
 
 export interface IAVCustomColor extends IAVColor {
     index: number;
+    hidden?: boolean;
 }
 
 export interface IAV {
@@ -319,6 +329,7 @@ export interface IAV {
     newItemTemplates?: IAVNewItemTemplate[];
     defaultTemplateID?: string;
     customColors?: IAVCustomColor[];
+    colorOrder?: string[];
     usedCustomColorIndexes?: number[];
     contextFilter?: IAVContextFilter | null;
     contextFilterFields?: IAVContextFilterField[];
@@ -338,10 +349,11 @@ export interface IAVContextFilterField {
 }
 
 export interface IAVRenderTarget {
-    status: "visible" | "filtered" | "itemNotFound" | "viewNotFound" | "groupHidden";
+    status: "visible" | "filtered" | "itemNotFound" | "groupHidden";
     itemID: string;
     groupID?: string;
     index: number;
+    offset: number;
     pageSize: number;
 }
 
@@ -472,14 +484,20 @@ interface IAVVirtualData {
     renderedStart: number;
     renderedEnd: number;
     topSpacerHeight: number;
+    rowOffset?: number;
+    locate?: boolean;
 }
 
 interface IAVGallery extends IAVView {
     coverFrom: number;    // 0：无，1：内容图，2：资源字段，3：内容块
     coverFromAssetKeyID?: string;
     cardSize: number;   // 0：小卡片，1：中卡片，2：大卡片
+    cardWidth: number;
+    cardLayout: number;   // 0：列表，1：紧凑
     cardAspectRatio: number;
+    cardAspectRatioValue: number;
     displayFieldName: boolean;
+    displayEmptyFields: boolean;
     fitImage: boolean;
     cards: IAVGalleryItem[],
     desc?: string
@@ -491,8 +509,12 @@ interface IAVKanban extends IAVView {
     coverFrom: number;    // 0：无，1：内容图，2：资源字段，3：内容块
     coverFromAssetKeyID?: string;
     cardSize: number;   // 0：小卡片，1：中卡片，2：大卡片
+    cardWidth: number;
+    cardLayout: number;   // 0：列表，1：紧凑
     cardAspectRatio: number;
+    cardAspectRatioValue: number;
     displayFieldName: boolean;
+    displayEmptyFields: boolean;
     fitImage: boolean;
     cards: IAVGalleryItem[],
     desc?: string
@@ -509,6 +531,7 @@ interface IAVFilter {
     value?: IAVCellValue,                             // 叶子节点：过滤值
     relativeDate?: IAVRelativeDate,                   // 叶子节点：相对时间
     relativeDate2?: IAVRelativeDate,                  // 叶子节点：第二个相对时间
+    dateEndpoint?: "start" | "end",                   // 叶子节点：日期端点，默认为开始时间
     combination?: "and" | "or",                       // 分组节点：子条件组合方式
     filters?: IAVFilter[],                            // 分组节点：子节点（递归）
 }
@@ -535,7 +558,8 @@ interface IAVGroup {
 interface IAVSort {
     column: string,
     valueSource?: "stored" | "rendered",             // 值来源，默认为存储值
-    order: "ASC" | "DESC" | ""
+    order: "ASC" | "DESC" | "",
+    dateEndpoint?: "start" | "end"
 }
 
 interface IAVColumn {
@@ -550,8 +574,10 @@ interface IAVColumn {
     wrap?: boolean,
     pin?: boolean,
     hidden?: boolean,
+    fullRow?: boolean,
     type?: TAVCol,
     numberFormat?: string,
+    dateFormat?: TAVDateFormat,
     template?: string,
     renderTemplate?: string,
     calc?: IAVCalc,
@@ -586,8 +612,15 @@ interface IAVGalleryItem {
     conditionalColors?: IAVItemConditionalColors;
     coverURL?: string;
     coverContent?: string;
+    coverPosition?: IAVCardCoverPosition;
     id: string;
     values: IAVCell[];
+}
+
+interface IAVCardCoverPosition {
+    image: string;
+    x: number;
+    y: number;
 }
 
 interface IAVCell {
@@ -627,7 +660,8 @@ interface IAVCellValue {
         content: string,
         id?: string,
         /** 游离条目可独立设置图标；绑定条目与目标块共享图标，无图标的普通块在绑定时继承条目图标。 */
-        icon?: string
+        icon?: string,
+        refSubtype?: "s" | "d"
     }
     url?: {
         content: string
@@ -685,12 +719,14 @@ interface IAVColumnRelation {
     avID?: string;
     backKeyID?: string;
     isTwoWay?: boolean;
+    candidateFilters?: IAVFilter[];
 }
 
 interface IAVCellRollupValue {
     relationKeyID?: string;  // 关联列 ID
     keyID?: string;
     calc?: IAVCalc;
+    filters?: IAVFilter[];
 }
 
 interface IAVCalc {
@@ -703,7 +739,10 @@ export type IOperation = Exclude<import("./api").TransactionOperationRequest, {a
 
 export interface IRefDefs {
     refID: string,
-    defIDs?: string[]
+    defIDs?: string[],
+    avItemID?: string,
+    avViewID?: string,
+    avGroupID?: string,
 }
 
 export interface IPosition {
@@ -711,11 +750,22 @@ export interface IPosition {
     y: number,
     w?: number,
     h?: number,
-    isLeft?: boolean
+    isLeft?: boolean,
+    target?: HTMLElement
+}
+
+interface ITabDragData {
+    title?: string;
+    icon?: string;
+    docIcon?: string;
+    pin: boolean;
+    focus: boolean;
+    unupdate: boolean;
 }
 
 export interface ISiyuan {
     zIndex: number
+    isReady?: boolean
     storage?: {
         [key: string]: any
     },
@@ -792,6 +842,7 @@ export interface ISiyuan {
         }[]
     },
     dragElement?: HTMLElement,
+    dragTab?: ITabDragData,
     dragTitle?: string,
     currentDragOverTabHeadersElement?: HTMLElement
     touchDragActive?: boolean,
@@ -838,8 +889,10 @@ export interface IMenu {
     type?: "separator" | "submenu" | "readonly" | "empty",
     accelerator?: string,
     action?: string,
+    actionLabel?: string,
     id?: string,
     submenu?: IMenu[]
+    loadSubmenu?: () => Promise<IMenu[]>
     disabled?: boolean
     icon?: string
     iconHTML?: string
@@ -871,10 +924,12 @@ interface ILayoutJSON extends ILayoutOptions {
     page?: string
     path?: string
     blockId?: string
+    notebookId?: string
     mode?: TEditorMode
     action?: TProtyleAction
     icon?: string
     rootId?: string
+    databaseRowId?: string
     active?: boolean
     pin?: boolean
     isPreview?: boolean
