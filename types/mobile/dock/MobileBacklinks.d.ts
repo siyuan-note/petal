@@ -1,10 +1,11 @@
 import { App } from "../../index";
-export declare class MobileBacklinks {
+import { Model } from "../../layout/Model";
+import { Tree } from "../../util/Tree";
+export declare class MobileBacklinks extends Model {
     element: HTMLElement;
-    private tree;
-    private notebookId;
-    private mTree;
-    beforeLen: number;
-    constructor(app: App);
+    tree: Tree;
+    notebookId: string;
+    mTree: Tree;
+    constructor(app: App, element: HTMLElement);
     update(): void;
 }

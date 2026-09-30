@@ -9,12 +9,16 @@ export declare class Tree {
         data: IBlockTree[];
         blockExtHTML?: string;
         topExtHTML?: string;
+        titleTooltipPosition?: string;
+        blockDraggable?: boolean;
         click?(element: HTMLElement, event: MouseEvent): void;
         ctrlClick?(element: HTMLElement, event: MouseEvent): void;
         altClick?(element: HTMLElement, event: MouseEvent): void;
         shiftClick?(element: HTMLElement): void;
         toggleClick?(element: HTMLElement): void;
         rightClick?(element: HTMLElement, event: MouseEvent): void;
+        dragStart?(element: HTMLElement, event: DragEvent): boolean;
+        dragEnd?(element: HTMLElement, event: DragEvent): boolean;
     });
 
     updateData(data: IBlockTree[]): void;

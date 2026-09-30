@@ -12,14 +12,15 @@ export declare class MobileOutline extends Model {
         app: App;
         blockId: string;
         isPreview: boolean;
+        element: HTMLElement;
     });
     private bindSort;
     private clearDragIndicators;
     private handleMsgCallback;
-    setCurrent(nodeElement: HTMLElement): void;
+    setCurrent(nodeElement: HTMLElement): Promise<void>;
     setCurrentByPreview(nodeElement: Element): void;
     private setCurrentById;
-    update(data: IWebSocketData, callbackId?: string): void;
+    update(data: IWebSocketData): void;
     saveExpendIds(): void;
     private setFilter;
     private getHeadingLevel;

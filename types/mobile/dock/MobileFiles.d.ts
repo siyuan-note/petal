@@ -5,7 +5,7 @@ export declare class MobileFiles extends Model {
     private actionsElement;
     private closeElement;
     private touchDragState;
-    constructor(app: App);
+    constructor(app: App, filesElement: HTMLElement);
     private handleMsgCallback;
     private clearDragIndicators;
     private genSort;
@@ -29,6 +29,7 @@ export declare class MobileFiles extends Model {
         files: IFile[];
         box: string;
         path: string;
+        effectiveSortMode?: number;
     }, setStorage?: boolean, isSetCurrent?: boolean): Promise<HTMLElement>;
     private getOpenPaths;
     private genFileHTML;

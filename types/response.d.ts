@@ -1,6 +1,7 @@
 import {IObject} from "../siyuan";
 
 export interface IGetDocInfo {
+    attrViews: { id: string; name: string }[] | null;
     ial: IObject;
     icon: string;
     id: string;
@@ -12,6 +13,7 @@ export interface IGetDocInfo {
 }
 
 export interface IGetTreeStat {
+    blockCount: number;
     imageCount: number;
     linkCount: number;
     refCount: number;
