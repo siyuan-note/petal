@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Correct plugin declarations: rename `agentActions` to `agentCapabilities`, allow undefined results from top bar, status bar, tab, and dock registration, type `EventBus` as an interface, fix `paste`, `code-language-update`, and `open-menu-av` event details, and correct command callback and `open-asset` documentation
+
 * Correct exported API signatures: asynchronous `lockScreen`, `exitSiYuan`, and `expandDocTree`, `showMessage` and `globalCommand` return values, possibly undefined tabs and editors, `saveExportFile` results, and missing `confirm`, `openEmoji`, `openInputDialog`, `Dialog`, `Menu`, and `Setting` options and members
 
 * Correct mobile dock constructors, `platformUtils` signatures, block tree options, and document and tree statistics response declarations

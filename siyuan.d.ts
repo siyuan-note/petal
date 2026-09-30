@@ -9,6 +9,7 @@ import type {
     IGetTreeStat,
     IKernelPlugin,
     IKernelPluginState,
+    ILocalFiles,
     IMenu,
     IMenuBaseDetail,
     IMenuItem,
@@ -165,7 +166,11 @@ export interface IEventBusMap {
     "switch-protyle-mode": {
         protyle: IProtyle,
     };
-    "open-menu-av": IMenuBaseDetail & { selectRowElements: HTMLElement[] };
+    "open-menu-av": IMenuBaseDetail & {
+        selectRowElements: HTMLElement[],
+        selectRowIds: string[],
+        selectRowPoints: { itemID: string, groupID: string }[],
+    };
     "open-menu-blockref": IMenuBaseDetail;
     "open-menu-breadcrumbmore": {
         menu: subMenu,
@@ -188,13 +193,7 @@ export interface IEventBusMap {
         element: HTMLElement,
         ids: string[],
     };
-    /**
-     * 桌面端和桌面浏览器顶栏右键菜单事件，支持自定义顶栏元素，不扩展停靠栏或状态栏菜单。
-     * 所有订阅者都会收到事件，插件应按自己的顶栏元素过滤；空白处的 element 和 entryPath 均为 null。
-     * 必须在同步回调中添加项目，异步数据应提前准备；项目显示在内置显隐操作之前。
-     * 宿主在可见插件项目之后添加分隔线，并移除此组首尾及连续的分隔线。
-     * 使用此事件时应移除自行打开菜单或阻止传播的 contextmenu 监听器，宿主不会强制拦截已有监听器。
-     */
+    /** 打开资源文件前按插件顺序触发；调用 `preventDefault()` 会取消默认打开方式，后续插件不再收到该事件。 */
     "open-asset": {
         path: string,
         action: Config.TAssetOpenAction,
@@ -228,11 +227,10 @@ export interface IEventBusMap {
         textHTML: string,
         textPlain: string,
         siyuanHTML: string,
-        localFiles: {
-            path: string,
-            size: number
-        }[]
-        files: FileList | DataTransferItemList
+        /** 粘贴本地文件路径时提供，此时 textHTML、textPlain 和 siyuanHTML 为空字符串且没有 files。 */
+        localFiles?: ILocalFiles[],
+        /** 其他粘贴场景提供，此时没有 localFiles。 */
+        files?: FileList | DataTransferItemList,
     };
     "ws-main": IWebSocketData;
     "sync-start": IWebSocketData;
@@ -240,7 +238,17 @@ export interface IEventBusMap {
     "sync-fail": IWebSocketData;
     "mobile-keyboard-show": void;
     "mobile-keyboard-hide": void;
-    "code-language-update": { languages: string[], type: "init" | "match", listElement: HTMLElement, value: string };
+    /** 可替换 detail.languages 来调整候选语言列表；init 为打开列表时触发，match 为输入筛选时触发。 */
+    "code-language-update": {
+        languages: string[],
+        type: "init",
+        listElement: HTMLElement,
+    } | {
+        languages: string[],
+        type: "match",
+        listElement: HTMLElement,
+        value: string,
+    };
     "code-language-change": {
         language: string,
         languageElements: HTMLElement[],
@@ -287,8 +295,16 @@ export interface ICommand {
     hotkeys?: string[], // 默认快捷键列表，优先于 hotkey
     when?: (context: ICommandContext) => boolean,
     enabled?: (context: ICommandContext) => boolean,
+    /**
+     * 设置后，命令被任一方式触发时都改为执行此函数；命令能否被某种方式触发仍取决于下列回调是否存在。
+     * 未设置其他回调时，可通过快捷键和命令面板触发。
+     */
     execute?: (context: ICommandContext) => void | Promise<void>
-    callback?: (context?: ICommandContext) => void   // 其余回调存在时将不会触发
+    /**
+     * 快捷键触发时，存在 globalCallback、fileTreeCallback、editorCallback 或 dockCallback 则不会执行；
+     * 在命令面板中优先于其他回调执行。
+     */
+    callback?: (context?: ICommandContext) => void
     globalCallback?: (context?: ICommandContext) => void // 焦点不在应用内时执行的回调
     fileTreeCallback?: (
         file: Files,
@@ -710,7 +726,7 @@ export abstract class Plugin {
     };
     topBarIcons: Element[];
     statusBarIcons: Element[];
-    agentActions: string[];
+    agentCapabilities: Array<{ id: string, generation: number }>;
     models: {
         [key: string]: (options: { tab: Tab, data: any }) => Custom
     };
@@ -774,6 +790,7 @@ export abstract class Plugin {
      * 操作显示在显隐控制之前，宿主在可见操作之后添加分隔线，并移除此组首尾及连续的分隔线。
      * 更新同一按钮时替换回调，省略此选项则清除回调。
      * 使用此选项时应移除阻止传播或单独打开菜单的 contextmenu 监听器。
+     * @returns 条目元素；插件已卸载、在移动端或独立窗口中传入 element、icon 无效，或 element 已注册到其他 id 时返回 undefined。
      */
     addTopBar(options: {
         id?: string,
@@ -784,7 +801,7 @@ export abstract class Plugin {
         title: string,
         callback?: (event: MouseEvent) => void
         position?: "right" | "left"
-    }): HTMLElement;
+    }): HTMLElement | undefined;
 
     removeTopBar(id: string): void;
 
@@ -799,12 +816,13 @@ export abstract class Plugin {
 
     /**
      * Must be executed before the synchronous function.
+     * 移动端不支持状态栏，调用无效并返回 undefined。
      * @param {string} [options.position=right]
      */
     addStatusBar(options: {
         element: HTMLElement,
         position?: "right" | "left",
-    }): HTMLElement;
+    }): HTMLElement | undefined;
 
     openSetting(): void;
 
@@ -866,6 +884,7 @@ export abstract class Plugin {
 
     /**
      * Must be executed before the synchronous function.
+     * @returns 页签模型工厂；移动端不支持自定义页签，插件已卸载时也返回 undefined。
      */
     addTab(options: {
         type: string,
@@ -874,12 +893,13 @@ export abstract class Plugin {
         resize?: (this: Custom) => void,
         update?: (this: Custom) => void,
         init: (this: Custom, custom: Custom) => void,
-    }): (options: { tab: Tab, data: any }) => Custom;
+    }): ((options: { tab: Tab, data: any }) => Custom) | undefined;
 
     /**
      * Add Custom to Dock.
      * Must be executed before the synchronous function.
      * @param {string} [options.id] - Unique ID within the plugin. Defaults to options.type.
+     * @returns 插件已卸载时返回 undefined。
      */
     addDock(options: {
         id?: string,
@@ -895,7 +915,7 @@ export abstract class Plugin {
         config: IPluginDockTab,
         model?: (options: { tab: Tab }) => Custom,
         mobileModel?: (element: Element) => MobileCustom
-    };
+    } | undefined;
 
     removeDock(id: string): void;
 
@@ -984,7 +1004,8 @@ export class Setting {
     close(): void;
 }
 
-export class EventBus {
+/** 插件事件总线，通过 `plugin.eventBus` 访问；`siyuan` 模块在运行时不导出该类，不能直接实例化。 */
+export interface EventBus {
     on<
         K extends TEventBus,
         D = IEventBusMap[K],
