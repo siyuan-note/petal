@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Support image tooltip text display](https://github.com/siyuan-note/siyuan/issues/19979)
+
 * [Support image file name display](https://github.com/siyuan-note/siyuan/issues/19978)
 
 * [Support image metadata matching in asset picking](https://github.com/siyuan-note/siyuan/issues/19976)
