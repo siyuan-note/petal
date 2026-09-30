@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TEditorMode, TProtyleAction} from "./protyle";
+import {IScrollAttr, TEditorMode, TProtyleAction} from "./protyle";
 import {TDock} from "../siyuan";
 
 export namespace Config {
