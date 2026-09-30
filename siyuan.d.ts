@@ -325,7 +325,15 @@ export interface ICardData {
 
 export function adaptHotkey(hotkey: string): string
 
-export function confirm(title: string, text: string, confirmCallback?: (dialog: Dialog) => void, cancelCallback?: (dialog: Dialog) => void): void;
+/**
+ * title 和 text 均为空时不打开对话框，直接以无参数形式调用 confirmCallback。
+ * @param {boolean} [isDelete=false] - 为 true 时确认按钮使用删除样式和删除文案
+ * @param extraAction - 在按钮区额外添加的操作按钮
+ * @param confirmLabel - 确认按钮文字，优先于 isDelete 的默认文案
+ */
+export function confirm(title: string, text: string, confirmCallback?: (dialog?: Dialog) => void,
+                        cancelCallback?: (dialog: Dialog) => void, isDelete?: boolean,
+                        extraAction?: { label: string, callback: () => void }, confirmLabel?: string): void;
 
 export type TEditorFontSizeAction = "increase" | "decrease" | "reset";
 
@@ -436,25 +444,36 @@ export function openWindow(options: {
 }): void;
 
 /**
- * 不支持移动端
+ * 不支持移动端，移动端未导出此函数
  * @param {boolean} [wndActive=true] - 当前活动窗口是否为激活状态
+ * @returns 没有找到页签时返回 undefined
  */
-export function getActiveTab(wndActive?: boolean): Tab;
+export function getActiveTab(wndActive?: boolean): Tab | undefined;
 
 /**
  * @param {boolean} [wndActive=true] - 当前活动窗口是否为激活状态
+ * @returns 没有找到编辑器时返回 undefined
  */
-export function getActiveEditor(wndActive?: boolean): Protyle;
+export function getActiveEditor(wndActive?: boolean): Protyle | undefined;
 
 export function expandDocTree(options: {
     id: string,
     isSetCurrent?: boolean
-}): void;
-
-export function openMobileFileById(app: App, id: string, action?: TProtyleAction[]): void;
+}): Promise<void>;
 
 /**
+ * 仅移动端可用
+ * @param {TProtyleAction[]} [action=[Constants.CB_GET_HL]]
+ * @param {boolean} [forceReload=false] - 文档已打开时是否仍重新加载
+ */
+export function openMobileFileById(app: App, id: string, action?: TProtyleAction[], scrollPosition?: ScrollLogicalPosition,
+                                   notebookId?: string, afterOpen?: (protyle: IProtyle) => void,
+                                   forceReload?: boolean): void;
+
+/**
+ * 移动端为空操作，直接返回 undefined 而非 Promise。
  * @param {string} [options.doc.mode="wysiwyg"] - 只在首次打开时生效，切换可调用 switchMode 方法
+ * @returns 打开或切换到的页签；未产生页签时为 undefined
  */
 export function openTab(options: {
     app: App,
@@ -501,26 +520,42 @@ export function openTab(options: {
     position?: "right" | "bottom";
     keepCursor?: boolean; // 是否跳转到新 tab 上
     removeCurrentTab?: boolean; // 在当前页签打开时需移除原有页签
-    openNewTab?: boolean // 使用新页签打开
-    afterOpen?: () => void; // 打开后回调
-}): Promise<Tab>
+    openNewTab?: boolean // 使用新页签打开，仅对 custom 生效
+    afterOpen?: (model?: Model) => void; // 打开后回调，参数为页签内的模型
+}): Promise<Tab | undefined> | undefined
 
 export function getFrontend(): "desktop" | "desktop-window" | "mobile" | "browser-desktop" | "browser-mobile";
 
 export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "android" | "ios" | "harmony";
 
-export function lockScreen(app: App): void
+/**
+ * 只读模式或发布服务下不执行。
+ * @param app - 已不再使用，仅为兼容旧调用保留
+ */
+export function lockScreen(app?: App): Promise<void>
 
-export function exitSiYuan(): void
+/**
+ * @param {boolean} [setCurrentWorkspace=true] - 是否将当前工作空间设为下次启动时打开的工作空间
+ */
+export function exitSiYuan(setCurrentWorkspace?: boolean): Promise<void>
 
 export function getAllEditor(): Protyle[]
 
-export function saveExportFile(uri: string, msgId?: string): Promise<void>;
+export function saveExportFile(uri: string, msgId?: string): Promise<{
+    status: "success" | "canceled" | "error",
+    name?: string,
+    message?: string,
+}>;
 
+/** 不支持移动端，移动端未导出此函数 */
 export function getAllTabs(type?: TTab | string): Tab[]
 
+/** 不支持移动端，移动端未导出此函数 */
 export function getAllModels(): IModels
 
+/**
+ * 在当前窗口打开设置对话框并返回该对话框，不受独立设置窗口偏好影响；移动端打开主菜单并返回 undefined
+ */
 export function openSetting(app: App): Dialog | undefined;
 
 export function openEmoji(options: {
@@ -529,6 +564,8 @@ export function openEmoji(options: {
     dynamicIconURL?: string
     hideDynamicIcon?: boolean
     hideCustomIcon?: boolean
+    /** 选择需要绑定块的动态图标时使用的目标块 ID */
+    targetID?: string
 }): void ;
 
 export interface IAssetPickerOptions {
@@ -616,14 +653,17 @@ export function saveLayout(cb: () => void): void;
  * 全局命令
  * @param {string} command - 命令名称 https://github.com/siyuan-note/siyuan/blob/master/app/src/boot/globalEvent/command/global.ts#L71
  * @param {App} app
+ * @param {Range} [range] - 需要选区的命令使用的范围
+ * @returns 命令是否已处理
  */
-export function globalCommand(command: string, app: App): void;
+export function globalCommand(command: string, app: App, range?: Range): boolean;
 
 /**
  * @param {number} [timeout=6000] - ms. 0: manual close；-1: always show;
  * @param {string} [type=info]
+ * @returns 消息 id，可传给 hideMessage；未显示消息（如 text 为空）时为 undefined
  */
-export function showMessage(text: string, timeout?: number, type?: "info" | "error", id?: string): void;
+export function showMessage(text: string, timeout?: number, type?: "info" | "error", id?: string): string | undefined;
 
 export function hideMessage(id?: string): void;
 
@@ -914,6 +954,9 @@ export abstract class Plugin {
 }
 
 export class Setting {
+    /** 最近一次打开时创建的对话框；首次打开前为 undefined，使用独立窗口时在窗口创建对话框前和窗口关闭后也为 undefined */
+    dialog?: Dialog;
+
     constructor(options: {
         height?: string,
         width?: string,
@@ -976,7 +1019,7 @@ export function openInputDialog(options: {
     width?: string,
     positionId?: string,
     maxLength?: number,
-    type?: "text" | "number" | "password",
+    type?: "text" | "number" | "password" | "date",
     /** 使用多行文本框，默认使用单行输入框。 */
     multiline?: boolean,
     resize?: "none" | "vertical",
@@ -986,6 +1029,8 @@ export function openInputDialog(options: {
     placeholder?: string,
     /** 输入框下方的 HTML 说明，调用方应确保内容可信。 */
     description?: string,
+    /** 显示在输入框上方的可信 HTML，调用方负责绑定交互。 */
+    prefixContent?: string,
     /** 附加控件的可信 HTML，调用方负责绑定交互。 */
     extraContent?: string,
     confirmText?: string,
@@ -1018,12 +1063,20 @@ export class Dialog {
         disableClose?: boolean,
         hideCloseIcon?: boolean,
         disableAnimation?: boolean,
-        resizeCallback?: (type: string) => void
+        resizeCallback?: (type: string) => void,
+        /** 追加到 .b3-dialog__container 上的类名 */
+        containerClassName?: string,
     });
+
+    /** 窗口尺寸变化时调用；对话框未被手动调整宽度时以 "l" 调用 resizeCallback */
+    resize(): void;
 
     destroy(options?: IObject): void;
 
-    bindInput(inputElement: HTMLInputElement | HTMLTextAreaElement, enterEvent?: () => void): void;
+    /**
+     * @param {boolean} [bindEnter=true] - 为 false 时按 Enter 不调用 enterEvent
+     */
+    bindInput(inputElement: HTMLInputElement | HTMLTextAreaElement, enterEvent?: () => void, bindEnter?: boolean): void;
 }
 
 export class Menu {
@@ -1031,17 +1084,24 @@ export class Menu {
     isOpen: boolean;
     element: HTMLElement;
 
-    constructor(id?: string, closeCB?: () => void);
+    /**
+     * @param {boolean} [independent=false] - 是否创建独立的菜单元素，而不是复用共享的 `window.siyuan.menus.menu`
+     */
+    constructor(id?: string, closeCB?: () => void, independent?: boolean);
 
     showSubMenu(subMenuElement: HTMLElement): void;
 
-    addItem(option: IMenu): HTMLElement;
+    /** 菜单已打开时不添加并返回 undefined */
+    addItem(option: IMenu): HTMLElement | undefined;
 
+    /** ignore 为 true 或菜单已打开时不添加并返回 undefined */
     addSeparator(options?: {
         index?: number,
         id?: string,
         ignore?: boolean
-    }): HTMLElement;
+    }): HTMLElement | undefined;
+    /** @deprecated 请改用对象参数 */
+    addSeparator(index?: number, ignore?: boolean): HTMLElement | undefined;
 
     open(options: IPosition): void;
 

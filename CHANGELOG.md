@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Correct exported API signatures: asynchronous `lockScreen`, `exitSiYuan`, and `expandDocTree`, `showMessage` and `globalCommand` return values, possibly undefined tabs and editors, `saveExportFile` results, and missing `confirm`, `openEmoji`, `openInputDialog`, `Dialog`, `Menu`, and `Setting` options and members
+
 * Correct mobile dock constructors, `platformUtils` signatures, block tree options, and document and tree statistics response declarations
 
 * Correct editor declarations: add `Protyle.flushPendingTransactions` and `ProtyleMethod.tabsRender` options, rename `Scroll.keepLazyLoad` to `keepLoadedContent`, fix `Gutter.render`, toolbar, breadcrumb, undo, and `IBreadcrumb.children` signatures, and add missing Lute methods
