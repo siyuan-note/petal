@@ -588,6 +588,8 @@ export namespace Config {
          * Whether to display the network image mark
          */
         displayNetImgMark: boolean;
+        /** 全局显示图片文件名，默认关闭，不写入文档属性 */
+        displayImgName: boolean;
         /**
          * Default state of database attributes
          * - `0`: Expanded

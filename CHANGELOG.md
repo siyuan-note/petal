@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Support image file name display](https://github.com/siyuan-note/siyuan/issues/19978)
+
 * [Support image metadata matching in asset picking](https://github.com/siyuan-note/siyuan/issues/19976)
 
 * [Document automatic list item direction and marker placement](https://github.com/siyuan-note/siyuan/issues/19915)
