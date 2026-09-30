@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Support image metadata matching in asset picking](https://github.com/siyuan-note/siyuan/issues/19976)
+
 * [Document automatic list item direction and marker placement](https://github.com/siyuan-note/siyuan/issues/19915)
 
 * [Limit global font inheritance to dynamic text icons](https://github.com/siyuan-note/siyuan/issues/19941)

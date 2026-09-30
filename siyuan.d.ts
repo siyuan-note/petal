@@ -548,6 +548,7 @@ export interface IAssetPickerOptions {
 /**
  * 打开原生资源选择界面，无需活动文档或编辑器。选中后返回 assets/ 相对路径，取消时返回 null。
  * 搜索结果可逐页加载；选择操作不插入文档或修改资源。搜索沿用内核接口的管理员和非只读权限。
+ * 关键词匹配文件名、路径以及普通笔记本中图片的标题、提示文本和已有 OCR 文本，不搜索加密笔记本。
  */
 export function openAssetPicker(options?: IAssetPickerOptions): Promise<{path: string} | null>;
 
