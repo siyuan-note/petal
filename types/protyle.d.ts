@@ -246,6 +246,9 @@ declare class Hint {
     private genSearchHTML;
     private genEmojiHTML;
 
+    /** 直接插入命令会清理候选来源和触发位置；updateRange 为 false 时使用已保存的正文选区 */
+    fillCommand(value: string, protyle: IProtyle, updateRange?: boolean): void;
+
     fill(value: string, protyle: IProtyle, updateRange?: boolean, refIsS?: boolean): void;
 
     select(event: KeyboardEvent, protyle: IProtyle): boolean;
