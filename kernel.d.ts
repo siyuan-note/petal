@@ -5,6 +5,22 @@
 import type { JSONSchema } from "zod/v4/core";
 declare global {
     const siyuan: ISiyuan;
+
+    /**
+     * The goja_nodejs `Buffer` bundled with the kernel names the URL-safe Base64 codec `"base64Url"`.
+     *
+     * @remarks The referenced Buffer declarations list Node's `"base64url"`, which the kernel does not
+     * support: `buf.toString("base64url")` throws `Unknown encoding`, and `Buffer.from(text, "base64url")`
+     * silently decodes `text` as UTF-8. Use `"base64Url"` instead.
+     */
+    interface BufferConstructor {
+        from(string: string, encoding: "base64Url"): Buffer<ArrayBuffer>;
+    }
+
+    interface Buffer<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
+        /** Encodes the bytes as unpadded URL-safe Base64; see {@link BufferConstructor.from}. */
+        toString(encoding: "base64Url", start?: number, end?: number): string;
+    }
 }
 
 // ── Primitives ────────────────────────────────────────────────────────────────
@@ -90,13 +106,13 @@ export interface IDataObject {
  * as text, JSON, or raw bytes.
  */
 export interface IFetchResponse extends IDataObject {
-    /** The final URL after any redirects. */
+    /** The path passed to {@link IClient.fetch}; redirects are not reflected. */
     url: string;
     /** `true` when `status` is in the range 200–299. */
     ok: boolean;
     /** HTTP status code, e.g. `200`. */
     status: number;
-    /** HTTP status text, e.g. `"OK"`. */
+    /** HTTP status line text including the code, e.g. `"200 OK"`. */
     statusText: string;
     /** Response headers as a flat string-to-string map. */
     headers: Record<string, string>;
@@ -158,7 +174,7 @@ export interface IFsNotifyEventMessage extends IEventMessage {
     detail: {
         /** The type of file-system change that triggered this event. */
         operation: TFsNotifyOperation;
-        /** Path relative to the plugin's storage directory. */
+        /** Path relative to the plugin's storage directory, using the platform's path separator. */
         path: string;
     }
 }
@@ -187,6 +203,8 @@ export interface IWebSocketCloseEvent {
     code: number;
     /** Human-readable reason string supplied by the closing peer. */
     reason: string;
+    /** `true` if no outgoing data was still buffered when the connection closed. */
+    wasClean: boolean;
 }
 
 /**
@@ -225,13 +243,19 @@ export interface IWebSocketPongEvent {
 /**
  * Event fired when the WebSocket data frame is received.
  *
+ * @remarks `type` distinguishes text frames from binary frames.
+ *
  * @see {@link IWebSocket.onmessage}
  */
-export interface IWebSocketMessageEvent {
-    type: 'message';
-    /** Payload: `string` for text frames, `ArrayBuffer` for binary frames. */
-    data: string | ArrayBuffer;
-}
+export type IWebSocketMessageEvent = {
+    type: 'text';
+    /** Payload of a text frame. */
+    data: string;
+} | {
+    type: 'binary';
+    /** Payload of a binary frame. */
+    data: ArrayBuffer;
+};
 
 // ── EventSource ───────────────────────────────────────────────────────────────
 
@@ -298,7 +322,7 @@ export interface IWebSocket {
     readonly binaryType: string;
     /** Number of bytes currently queued for sending but not yet transmitted. */
     readonly bufferedAmount: number;
-    /** Negotiated WebSocket extensions, or an empty string if none. */
+    /** Always an empty string; negotiated extensions are not reported. */
     readonly extensions: string;
     /** Negotiated sub-protocol, or an empty string if none was negotiated. */
     readonly protocol: string;
@@ -308,9 +332,19 @@ export interface IWebSocket {
     readonly url: string;
     /** Called when the connection is established. */
     onopen: ((event: IWebSocketOpenEvent) => void | Promise<void>) | null;
-    /** Called when the connection is closed. */
+    /**
+     * Called only when the remote peer sends a Close frame, after {@link IWebSocket.onerror}.
+     *
+     * @remarks Not called for a local {@link IWebSocket.close} or an abrupt disconnect.
+     * `readyState` is `2` during the callback and `3` afterwards.
+     */
     onclose: ((event: IWebSocketCloseEvent) => void | Promise<void>) | null;
-    /** Called when a transport error occurs. */
+    /**
+     * Called when a connection attempt fails and whenever the connection terminates,
+     * including clean closes and a local {@link IWebSocket.close}.
+     *
+     * @remarks `error.message` is the kernel's close or transport error text.
+     */
     onerror: ((event: IWebSocketErrorEvent) => void | Promise<void>) | null;
     /** Called when a ping control frame is received. */
     onping: ((event: IWebSocketPingEvent) => void | Promise<void>) | null;
@@ -321,9 +355,11 @@ export interface IWebSocket {
     /**
      * Initiates the WebSocket connection.
      *
-     * @remarks The returned `Promise` resolves once the TCP/TLS handshake
-     * succeeds and the HTTP upgrade is confirmed. Calling `open()` more than
-     * once is a no-op — the second call resolves immediately.
+     * @remarks The returned `Promise` resolves once the upgrade to the local kernel
+     * succeeds, before {@link IWebSocket.onopen} runs. While a connection attempt is
+     * pending, further calls share its result; once open, calls resolve immediately.
+     * After a failed attempt or {@link IWebSocket.close}, calls reject and the handle
+     * cannot be reopened.
      */
     open(): Promise<void>;
     /**
@@ -345,10 +381,11 @@ export interface IWebSocket {
      */
     pong(data?: string): Promise<void>;
     /**
-     * Initiates a graceful close handshake.
+     * Sends a Close frame and closes the connection immediately without waiting
+     * for the peer's reply.
      *
-     * @param code   - WebSocket close code (default `1000` — normal closure).
-     * @param reason - Optional human-readable reason string (max 123 bytes).
+     * @param code   - WebSocket close code (default `1000` — normal closure); codes below `1000` become `1000`.
+     * @param reason - Optional human-readable reason string, truncated to 123 bytes.
      */
     close(code?: number, reason?: string): Promise<void>;
 }
@@ -360,7 +397,14 @@ export interface IWebSocket {
  *
  * @remarks The object is returned in {@link TEventSourceReadyState | CONNECTING} state
  * immediately; the kernel starts the SSE subscription in the background and
- * fires {@link IEventSource.onopen} once the stream is established.
+ * fires {@link IEventSource.onopen} when the first event arrives, not when the
+ * response headers are received.
+ *
+ * After a stream read error the kernel fires {@link IEventSource.onclose}, reconnects with
+ * exponential backoff, and fires `onopen` again on the next event. Connection failures,
+ * including non-200 responses, are retried the same way; {@link IEventSource.onerror} fires
+ * only after retries give up (about 15 minutes by default). If the server ends the stream
+ * cleanly, neither `onclose` nor `onerror` fires and `readyState` becomes `2`.
  * Call {@link IEventSource.close} to cancel the subscription.
  */
 export interface IEventSource {
@@ -368,13 +412,13 @@ export interface IEventSource {
     readonly readyState: TEventSourceReadyState;
     /** The original path passed to {@link IClient.event}, e.g. `"/api/…"`. */
     readonly url: string;
-    /** Called when the connection is established. */
+    /** Called when the first event arrives after connecting or reconnecting. */
     onopen: ((event: IEventSourceOpenEvent) => void | Promise<void>) | null;
     /** Called when a message is received. */
     onmessage: ((event: IEventSourceMessageEvent) => void | Promise<void>) | null;
-    /** Called when the connection is closed by the server or after {@link IEventSource.close}. */
+    /** Called when reading the stream fails, before the kernel reconnects. */
     onclose: ((event: IEventSourceCloseEvent) => void | Promise<void>) | null;
-    /** Called when a transport error occurs. */
+    /** Called when the subscription ends with an error after retries give up. */
     onerror: ((event: IEventSourceErrorEvent) => void | Promise<void>) | null;
     /** Cancels the subscription and closes the connection. */
     close(): void;
@@ -389,6 +433,9 @@ export interface IEventSource {
 export interface IClient {
     /**
      * Tunnels an HTTP request through the kernel's REST API.
+     *
+     * @remarks The request is always sent to the local kernel (`http://127.0.0.1:<port><path>`)
+     * and rejects after a 60-second timeout.
      *
      * @param path - Absolute path starting with `/`, e.g. `"/api/system/version"`.
      * @param init - Optional request options (method, headers, body).
@@ -483,33 +530,42 @@ export interface IEvent {
  *
  * @remarks Exposed as `siyuan.logger`. Level semantics mirror the browser
  * `console` API (`trace` < `debug` < `info` < `warn` < `error`). Output is
- * written to the kernel log file and prefixed with the plugin name.
+ * written to the kernel log file; each line is prefixed with `[plugin:<name>]`.
+ *
+ * Every method is synchronous and returns `undefined`. Arguments are joined with
+ * spaces: strings as-is, objects serialized as JSON, other values converted with
+ * `String()`. Each call is written asynchronously, so consecutive calls may appear
+ * out of order in the log.
  */
 export interface ILogger {
     /** Emits a `TRACE`-level log entry. */
-    readonly trace: (...args: any[]) => Promise<void>;
+    readonly trace: (...args: any[]) => void;
     /** Emits a `DEBUG`-level log entry. */
-    readonly debug: (...args: any[]) => Promise<void>;
+    readonly debug: (...args: any[]) => void;
     /** Emits an `INFO`-level log entry. */
-    readonly info: (...args: any[]) => Promise<void>;
+    readonly info: (...args: any[]) => void;
     /** Emits a `WARN`-level log entry. */
-    readonly warn: (...args: any[]) => Promise<void>;
+    readonly warn: (...args: any[]) => void;
     /** Emits an `ERROR`-level log entry. */
-    readonly error: (...args: any[]) => Promise<void>;
+    readonly error: (...args: any[]) => void;
 }
 
 /**
  * Scoped file storage for the plugin.
  *
- * @remarks Exposed as `siyuan.storage`. All paths are relative to the
- * plugin's data directory at `data/plugins/<name>/`. Forward slashes are
- * accepted on all platforms.
+ * @remarks Exposed as `siyuan.storage`. All paths are resolved against the
+ * plugin's private storage directory `<workspace>/data/storage/petal/<name>/`,
+ * which is created when the plugin starts and is shared with the frontend
+ * plugin's `loadData`/`saveData`. A leading `/` is treated as relative to that
+ * directory, and a path that escapes it rejects with
+ * `siyuan.storage: path traversal not allowed`. Forward slashes are accepted on
+ * all platforms.
  */
 export interface IStorage {
     /**
      * Reads a file and returns a lazy data accessor.
      *
-     * @param path - Path relative to the plugin data directory.
+     * @param path - Path relative to the plugin storage directory.
      * @returns A {@link IDataObject} wrapping the file contents.
      * @throws Rejects if the file does not exist.
      */
@@ -517,20 +573,26 @@ export interface IStorage {
     /**
      * Creates or overwrites a file with the provided UTF-8 string content.
      *
-     * @param path    - Path relative to the plugin data directory.
+     * @remarks Missing parent directories are created. Rejects when the kernel is
+     * in read-only mode.
+     *
+     * @param path    - Path relative to the plugin storage directory.
      * @param content - UTF-8 encoded content to write.
      */
     put(path: string, content: string): Promise<void>;
     /**
      * Deletes a file or recursively removes a directory tree.
      *
-     * @param path - Path relative to the plugin data directory.
+     * @remarks Resolves when the path does not exist. Rejects when the kernel is in
+     * read-only mode or when `path` resolves to the storage directory itself.
+     *
+     * @param path - Path relative to the plugin storage directory.
      */
     remove(path: string): Promise<void>;
     /**
      * Lists the entries in a directory.
      *
-     * @param path - Path relative to the plugin data directory.
+     * @param path - Path relative to the plugin storage directory.
      * @returns An array of {@link IStorageEntry} descriptors.
      */
     list(path: string): Promise<IStorageEntry[]>;
@@ -545,11 +607,15 @@ export interface IStorage {
 export interface IStorageWatcher {
     /**
      * Resolves `path` and registers it with the file-system watcher.
+     *
+     * @remarks Rejects on mobile, where the plugin file watcher is not supported.
      * @param path - Path relative to the storage directory to start watching.
      */
     add(path: string): Promise<void>;
     /**
      * Resolves `path` and unregisters it from the file-system watcher.
+     *
+     * @remarks Rejects on mobile, or if no path has been added yet.
      * @param path - Path relative to the storage directory to stop watching.
      */
     remove(path: string): Promise<void>;
