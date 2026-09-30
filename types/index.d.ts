@@ -1,7 +1,7 @@
 import {
     Config, Dialog,
     IProtyle,
-    Menu,
+    IScrollAttr,
     Plugin,
     Protyle,
     TDock,
@@ -1020,9 +1020,15 @@ export declare class Layout {
 
     constructor(options?: ILayoutOptions);
 
-    addLayout(child: Layout, id?: string): void;
+    /**
+     * @param {boolean} [after=true] - 指定 id 时插入到该子项之后或之前；未指定 id 时始终追加到末尾
+     */
+    addLayout(child: Layout, id?: string, after?: boolean): void;
 
-    addWnd(child: Wnd, id?: string): void;
+    /**
+     * @param {boolean} [after=true] - 指定 id 时插入到该子项之后或之前；未指定 id 时始终追加到末尾
+     */
+    addWnd(child: Wnd, id?: string, after?: boolean): void;
 }
 
 export declare class Editor extends Model {
@@ -1035,22 +1041,27 @@ export declare class Editor extends Model {
         tab: Tab;
         blockId: string;
         rootId: string;
+        notebookId?: string;
         mode?: TEditorMode;
         action?: TProtyleAction[];
+        afterInitProtyle?: (editor: Protyle) => void;
+        scrollPosition?: ScrollLogicalPosition;
+        scrollAttr?: IScrollAttr;
     });
 
     private initProtyle;
 }
 
 export declare class Dock {
-    element: HTMLElement;
+    /** 停靠栏的两组按钮容器 */
+    elements: HTMLElement[];
     layout: Layout;
     private position;
     private app;
     resizeElement: HTMLElement;
     pin: boolean;
     data: {
-        [key in TDock | string]: Model | boolean;
+        [key in TDock | string]?: Model | boolean;
     };
     private hideResizeTimeout;
 
@@ -1065,15 +1076,18 @@ export declare class Dock {
 
     togglePin(): void;
 
-    resetDockPosition(show: boolean): void;
+    private resetDockPosition;
 
     showDock(reset?: boolean): void;
 
-    hideDock(reset?: boolean): void;
+    hideDock(reset?: boolean, preferredSize?: number): void;
 
-    toggleModel(type: string, show?: boolean, close?: boolean, hide?: boolean, isSaveLayout?: boolean): void;
+    toggleModel(type: TDock | string, show?: boolean, close?: boolean, removeDock?: boolean, isSaveLayout?: boolean,
+                restorePanel?: boolean): void;
 
-    add(index: number, sourceElement: Element, previousType?: string): void;
+    add(index: number, sourceElement: Element, previousType?: string, options?: {
+        syncEntryOrders?: boolean,
+    }): void;
 
     remove(key: string): void;
 
@@ -1081,7 +1095,7 @@ export declare class Dock {
 
     private getMaxSize;
 
-    genButton(data: Config.IUILayoutDockTab[], index: number, tabIndex?: number): void;
+    genButton(data: Array<Config.IUILayoutDockTab & { entryId?: string }>, index: number, tabIndex?: number): void;
 }
 
 export declare class MobileCustom {
@@ -1143,8 +1157,42 @@ export declare class App {
     appId: string;
 }
 
+/**
+ * 思源内置的弹出菜单实现，`window.siyuan.menus.menu` 即为其共享实例；插件 `Menu` 封装的也是该对象。
+ * 它不是插件 `Menu`，没有 `open`、`close`、`isOpen` 和 `addSeparator`。
+ */
+export interface IPopupMenu {
+    element: HTMLElement;
+    /** 记录当前菜单的数据 */
+    data: any;
+    removeCB: () => void;
+
+    showSubMenu(subMenuElement: HTMLElement): void;
+
+    addItem(option: IMenu): HTMLElement;
+
+    append(element?: HTMLElement, index?: number): void;
+
+    popup(options: IPosition): void;
+
+    resetPosition(): void;
+
+    remove(isKeyEvent?: boolean): void;
+
+    /**
+     * @param {string} [position=all]
+     */
+    fullscreen(position?: "bottom" | "all", restoreKeyboard?: () => void, options?: {
+        preserveKeyboard?: boolean,
+    }): void;
+
+    closeSheet(): void;
+
+    setSheetDragPreview(active: boolean): void;
+}
+
 export declare class Menus {
-    menu: Menu;
+    menu: IPopupMenu;
 
     constructor(app: App);
 

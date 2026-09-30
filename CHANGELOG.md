@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Correct layout declarations: `window.siyuan.menus.menu` is the built-in popup menu, `Dock` exposes `elements`, and `Layout`, `Editor`, `Dock`, `Wnd`, and `Files` method parameters match SiYuan
+
 * Synchronize block, database, menu, and layout data declarations with SiYuan, removing the obsolete `viewNotFound` database render target status
 
 * Synchronize `Constants` with SiYuan, including RFC 5646 help document language keys and default dock shortcuts

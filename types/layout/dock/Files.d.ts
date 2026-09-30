@@ -35,6 +35,7 @@ export declare class Files extends Model {
         files: IFile[];
         box: string;
         path: string;
+        effectiveSortMode?: number;
     }, setStorage?: boolean, isSetCurrent?: boolean): Promise<HTMLElement>;
     private getOpenPaths;
     private genDocAriaLabel;
