@@ -31,6 +31,50 @@ import type {FetchGet, FetchPost, FetchSyncPost} from "./types/api";
 
 export * from "./types";
 export * from "./types/api";
+/**
+ * 以下类只描述运行时对象的形状，`siyuan` 模块在运行时不导出它们，因此只能作为类型使用。
+ * 需要实例时请通过已有对象获取，例如 `window.Lute`、`plugin.app`、`window.siyuan.layout`。
+ */
+export type {
+    App,
+    AVAttributePanel,
+    Background,
+    BlockPanel,
+    Breadcrumb,
+    Custom,
+    Dock,
+    Editor,
+    Files,
+    Gutter,
+    Highlight,
+    Hint,
+    Inbox,
+    Layout,
+    LocalUndo,
+    Lute,
+    Menus,
+    MobileBacklinks,
+    MobileBookmarks,
+    MobileCustom,
+    MobileFiles,
+    MobileOutline,
+    MobileTags,
+    Model,
+    Preview,
+    Scroll,
+    subMenu,
+    Tab,
+    Title,
+    Toolbar,
+    Tree,
+    Undo,
+    Upload,
+    Viewer,
+    Viz,
+    webkitAudioContext,
+    Wnd,
+    WYSIWYG,
+} from "./types";
 
 declare global {
     export interface Window extends Global {
