@@ -919,6 +919,12 @@ export class Setting {
         width?: string,
         destroyCallback?: () => void,
         confirmCallback?: () => void,
+        /**
+         * 桌面客户端使用独立原生窗口，默认 false，浏览器和移动端仍使用原有设置界面。
+         * 不重复加载插件；回调在插件所属窗口执行，原生窗口关闭或插件卸载时触发一次销毁回调。
+         * 控件会迁入独立窗口，应使用元素引用操作控件，避免依赖所属窗口的 document 查询或样式。
+         */
+        openInWindow?: boolean,
     });
 
     addItem(options: {
@@ -930,6 +936,9 @@ export class Setting {
     }): void;
 
     open(name: string): void;
+
+    /** 关闭设置并释放控件；独立窗口尚未创建时也会取消打开请求 */
+    close(): void;
 }
 
 export class EventBus {
