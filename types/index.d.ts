@@ -361,11 +361,14 @@ export interface IAVNewItemFieldValue {
 export interface IAVNewItemTemplate {
     id: string;
     name: string;
+    /** 游离条目和文档条目均支持预设图标。 */
+    icon?: string;
     targetType: TAVNewItemTarget;
     primaryKeyTemplate?: string;
     fieldValues?: Record<string, IAVNewItemFieldValue>;
     saveLocation?: IAVNewItemSaveLocation;
     contentTemplatePath?: string;
+    hideInFileTree?: boolean;
 }
 
 /** 单字段条件颜色规则按顺序匹配，默认背景同样占据优先级。 */
@@ -621,6 +624,7 @@ interface IAVCellValue {
     block?: {
         content: string,
         id?: string,
+        /** 游离条目可独立设置图标；绑定条目与目标块共享图标，无图标的普通块在绑定时继承条目图标。 */
         icon?: string
     }
     url?: {

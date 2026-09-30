@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document database entry icon presets and binding inheritance](https://github.com/siyuan-note/siyuan/issues/19953)
+
 * [Support image tooltip text display](https://github.com/siyuan-note/siyuan/issues/19979)
 
 * [Support image file name display](https://github.com/siyuan-note/siyuan/issues/19978)
