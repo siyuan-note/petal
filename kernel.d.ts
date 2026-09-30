@@ -843,14 +843,14 @@ export interface IRequestFile {
     /**
      * File contents as a lazy {@link IDataObject}.
      *
-     * @remarks `null` if the file could not be read during request parsing.
+     * @remarks If a file part cannot be read, the kernel answers the request with `400`
+     * before invoking the handler.
      */
-    data: IDataObject | null;
+    data: IDataObject;
 }
 
 /**
- * Parsed form data from an `application/x-www-form-urlencoded` or
- * `multipart/form-data` request.
+ * Parsed form data from a `multipart/form-data` request.
  */
 export interface IRequestForm {
     /**
@@ -867,22 +867,23 @@ export interface IRequestForm {
 /**
  * Body of an incoming server request.
  *
- * @remarks Exactly one of `form` or `data` is non-null:
- * `form` is set for `application/x-www-form-urlencoded` and
- * `multipart/form-data`; `data` is set for all other content types and is
- * `null` when the request carries no body.
+ * @remarks Exactly one of `form` or `data` is non-null: `form` is set only for
+ * `multipart/form-data`; `data` is set for all other requests and yields empty
+ * content when the request carries no body. For
+ * `application/x-www-form-urlencoded` requests the body is consumed while parsing,
+ * so `form` is `null`, `data` is empty, and the fields are not available.
  */
 export interface IRequestBody {
     /**
      * Parsed form data.
      *
-     * @remarks `null` for non-form requests.
+     * @remarks `null` for requests other than `multipart/form-data`.
      */
     form: IRequestForm | null;
     /**
      * Raw request body as a lazy {@link IDataObject}.
      *
-     * @remarks `null` when `form` is non-null or the request carries no body.
+     * @remarks `null` only when `form` is non-null.
      */
     data: IDataObject | null;
 }
@@ -1037,7 +1038,7 @@ export interface IResponseRawData {
     /** MIME type for the `Content-Type` response header, e.g. `"image/png"`. */
     contentType: string;
     /** Raw response body bytes. */
-    data: string | ArrayBuffer;
+    data: string | ArrayBuffer | Buffer;
 }
 
 /**
@@ -1052,10 +1053,27 @@ export interface IResponseRedirect {
 }
 
 /**
+ * A response body streamed from another HTTP server.
+ *
+ * @remarks The kernel requests `url` through an SSRF-safe dialer (30-second dial timeout,
+ * up to 10 redirects), then streams back the upstream status, headers, and body.
+ * Hop-by-hop and `Set-Cookie` headers are dropped in both directions. Invalid options are
+ * answered with `400`, and a failed upstream request with `502`.
+ */
+export interface IResponseProxy {
+    /** Absolute `http:` or `https:` URL to request. */
+    url: string;
+    /** `"GET"` or `"HEAD"`; defaults to the incoming request method, and other methods are rejected. */
+    method?: string;
+    /** Request headers forwarded to the target. */
+    headers?: Record<string, string[]>;
+}
+
+/**
  * The body of an HTTP response returned by a server handler.
  *
  * @remarks Set exactly one field; the kernel inspects `data`, `file`,
- * `string`, `raw`, and `redirect` in that order and uses the first
+ * `string`, `raw`, `redirect`, and `proxy` in that order and uses the first
  * non-null value. Returning an empty object (all fields absent or null)
  * results in a status-only response via `c.Status`.
  */
@@ -1070,6 +1088,8 @@ export interface IResponseBody {
     raw?: IResponseRawData | null;
     /** HTTP redirect. */
     redirect?: IResponseRedirect | null;
+    /** Response streamed from another HTTP server. */
+    proxy?: IResponseProxy | null;
 }
 
 /**
@@ -1094,7 +1114,7 @@ export interface IResponseCookie {
     Expires?: string;
     /** Raw, unparsed `Expires` attribute string (informational). */
     RawExpires?: string;
-    /** `Max-Age` in seconds. `0` deletes the cookie; negative values are not sent. */
+    /** `Max-Age` in seconds. `0` omits the attribute; negative values delete the cookie (`Max-Age=0`). */
     MaxAge?: number;
     /** Restricts the cookie to HTTPS connections. */
     Secure?: boolean;
@@ -1104,9 +1124,9 @@ export interface IResponseCookie {
      * `SameSite` cookie policy.
      *
      * @remarks Maps to Go `http.SameSite` constants:
-     * `0` = default (browser-defined), `1` = None, `2` = Lax, `3` = Strict.
+     * `0` = unset and `1` = default (both omit the attribute), `2` = Lax, `3` = Strict, `4` = None.
      */
-    SameSite?: number;
+    SameSite?: 0 | 1 | 2 | 3 | 4;
     /** Sets the `Partitioned` (CHIPS) cookie attribute. */
     Partitioned?: boolean;
     /** Raw `Set-Cookie` line as sent by the server (informational). */
@@ -1119,13 +1139,19 @@ export interface IResponseCookie {
  * The return value expected from an HTTP server handler.
  */
 export interface IHttpResponse {
-    /** HTTP status code to send, e.g. `200`, `404`. */
+    /**
+     * HTTP status code to send, e.g. `200`, `404`.
+     *
+     * @remarks Ignored for `file` bodies, where the file server decides the status, and for
+     * `proxy` bodies, which use the upstream status.
+     */
     statusCode: number;
     /**
      * Additional response headers.
      *
-     * @remarks Each header name maps to an array of values to support
-     * multi-value headers such as `Link` or repeated `Set-Cookie` entries.
+     * @remarks Each header name maps to an array of values, but the values are applied in
+     * order and each one replaces the previous, so only the last value is sent. Use `cookies`
+     * to send several `Set-Cookie` headers.
      */
     headers?: Record<string, string[]>;
     /** Cookies to attach to the response via `Set-Cookie` headers. */
@@ -1175,7 +1201,8 @@ export interface IEventSourcePort {
      *
      * @remarks
      * `send` is synchronous — no `await` required. It enqueues the event in
-     * the kernel's SSE write buffer; the actual flush is asynchronous.
+     * the kernel's SSE write buffer; the actual flush is asynchronous. It throws if
+     * `event` is not an object or `event.data` is `undefined`.
      *
      * @param event - The SSE event to send.
      */
@@ -1221,7 +1248,7 @@ export interface IServerEventSourceRequest extends IServerRequest {
      *
      * @remarks
      * Assign `onopen` and `onclose` callbacks in the handler body. Call
-     * `port.send(eventType, data)` inside `onopen` to emit SSE events.
+     * `port.send({ event, data })` inside `onopen` to emit SSE events.
      */
     readonly port: IEventSourcePort;
 }
@@ -1232,7 +1259,11 @@ export interface IServerEventSourceRequest extends IServerRequest {
  * @remarks
  * The object is sealed by the kernel; only the `handler` property may be
  * reassigned. Set `handler` to `null` to leave the slot empty — the kernel
- * will return `500 Internal Server Error` for any unhandled request.
+ * will return `500 Internal Server Error` for any unhandled HTTP request, and
+ * closes an unhandled WebSocket right after the upgrade.
+ *
+ * WebSocket upgrade requests are routed to `ws`, requests whose `Accept` header is
+ * exactly `text/event-stream` to `es`, and all other requests to `http`.
  *
  * @typeParam TRes - Expected return type of the handler function.
  * @typeParam TReq - Request object type passed to the handler. Defaults to
@@ -1299,8 +1330,10 @@ export interface IServer {
      * Private-scope handler group.
      *
      * @remarks Routes under `/plugin/private/<name>/*path` require kernel
-     * authentication and admin role before the request reaches the handler.
-     * The `<name>` segment must match the running plugin's `name`.
+     * authentication and admin role before the request reaches the handler, and
+     * are rejected in read-only mode; WebSocket upgrades must also pass the session
+     * Origin check. The `<name>` segment must match the running plugin's `name`:
+     * an unknown plugin is answered with `404`, and a plugin that is not running with `503`.
      */
     readonly private: IServerScope;
 }
