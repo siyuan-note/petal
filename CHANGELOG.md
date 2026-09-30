@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Fix strict type checking errors in shortcut key declarations
+
 * Fix the unresolved `IScrollAttr` reference in editor tab layout declarations
 
 * Synchronize `window.siyuan.config` declarations with SiYuan, removing the obsolete `ai.vision` and `system.isInsider` fields

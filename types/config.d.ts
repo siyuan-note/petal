@@ -1304,7 +1304,7 @@ export namespace Config {
      * SiYuan shortcut keys
      */
     export interface IKeys {
-        [key: string]: IKey;
+        [key: string]: IKey | undefined;
     }
 
     /**
