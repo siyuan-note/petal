@@ -539,6 +539,8 @@ interface IAVSort {
 }
 
 interface IAVColumn {
+    /** 属性面板可见性；空值沿用全局设置，不影响数据库各视图的字段显隐 */
+    attributePanelVisibility?: "" | "always" | "hide-empty" | "hide",
     width?: string,
     align?: TAVAlign,
     icon?: string,
