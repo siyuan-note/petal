@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Expose the desktop settings window mode preference](https://github.com/siyuan-note/siyuan/issues/20002)
+
 * [Support opt-in native settings windows and synchronize settings across windows](https://github.com/siyuan-note/siyuan/issues/20002)
 
 * [Expose direct insertion without residual hint context](https://github.com/siyuan-note/siyuan/issues/19996)
