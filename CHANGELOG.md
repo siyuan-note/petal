@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare the Web Crypto API available as `siyuan.crypto` in the kernel plugin sandbox
+
 * [Expose selectable local OCR providers and model imports](https://github.com/siyuan-note/siyuan/issues/19984)
 
 * [Expose the desktop settings window mode preference](https://github.com/siyuan-note/siyuan/issues/20002)
