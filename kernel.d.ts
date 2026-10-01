@@ -163,10 +163,12 @@ export interface IStorageEntry {
 }
 
 /**
- * A lazy data accessor returned by {@link IStorage.get} and {@link IFetchResponse}.
+ * A lazy data accessor returned by {@link IStorage.get} and {@link IFetchResponse}, and used for
+ * private server request bodies and uploaded files.
  *
- * @remarks Each method decodes the same underlying byte slice; call at most
- * once per method per instance.
+ * @remarks Every method reads the same bytes and can be called any number of times. `buffer()` and
+ * `arrayBuffer()` return views over those bytes without copying, so writes through them change what
+ * later calls on the same object return; copy the bytes before modifying them.
  */
 export interface IDataObject {
     /**
@@ -178,7 +180,7 @@ export interface IDataObject {
     /**
      * Parses the data as JSON.
      *
-     * @returns The parsed value.
+     * @returns The parsed value; rejects when the data is not valid JSON.
      */
     json(): Promise<any>;
     /**
@@ -850,6 +852,28 @@ export interface IAgentCapabilityConfig {
 }
 
 /**
+ * JSON Schema echoed by {@link IRegisteredCapability}.
+ *
+ * @remarks The value wraps the schema parsed by the kernel. `JSON.stringify(schema)` returns the schema
+ * exactly as registered, so use `JSON.parse(JSON.stringify(schema))` to obtain a plain
+ * {@link JSONSchema.Schema}. Reading keywords directly only exposes the members below: unset keywords
+ * read as `""`, `[]`, or `{}` instead of `undefined`, other keywords such as `description` or
+ * `additionalProperties` read as `undefined`, and entries of `properties` omit keywords such as
+ * `minLength`. When the kernel cannot parse the schema, for example because a property's `type` is an
+ * array, every member except `type` reads as empty.
+ */
+export interface IRegisteredCapabilitySchema {
+    type: string;
+    properties: Record<string, unknown>;
+    required: string[];
+    oneOf: IRegisteredCapabilitySchema[];
+    anyOf: IRegisteredCapabilitySchema[];
+    allOf: IRegisteredCapabilitySchema[];
+    $ref: string;
+    $defs: Record<string, IRegisteredCapabilitySchema>;
+}
+
+/**
  * The registration record returned by {@link IAgent.registerCapability}.
  *
  * @remarks Every field is present, even when the corresponding setting was omitted.
@@ -867,14 +891,14 @@ export interface IRegisteredCapability {
     title: string;
     /** Trimmed description. */
     description: string;
-    /** JSON Schema describing the capability's input parameters. */
-    inputSchema: JSONSchema.ObjectSchema;
-    /** JSON Schema describing the capability's output, or `null` when not provided. */
-    outputSchema: JSONSchema.Schema | null;
-    /** Default side effects, or `null` when not provided. */
-    effects: IAgentCapabilityEffects | null;
-    /** Per-action side effects; `null` or empty when not provided. */
-    actionEffects: Record<string, IAgentCapabilityEffects> | null;
+    /** Input schema; its `type` is always `"object"` because registration requires an object root. */
+    inputSchema: IRegisteredCapabilitySchema;
+    /** Output schema, or `null` when not provided. */
+    outputSchema: IRegisteredCapabilitySchema | null;
+    /** Default side effects with every flag present, or `null` when not provided. */
+    effects: Required<IAgentCapabilityEffects> | null;
+    /** Per-action side effects with every flag present; an empty object when not provided. */
+    actionEffects: Record<string, Required<IAgentCapabilityEffects>>;
 }
 
 // ── Server request types ─────────────────────────────────────────────────────
