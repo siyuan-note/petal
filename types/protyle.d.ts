@@ -453,8 +453,9 @@ export class ProtyleMethod {
      * @description 对数学公式进行渲染
      * @param {string} [cdn=Constants.PROTYLE_CDN]
      * @param {boolean} [maxWidth=false]
+     * @returns 渲染完成后兑现的 Promise，maxWidth 为 true 时还会等待公式宽度适配；没有待渲染的公式时返回 undefined
      */
-    public static mathRender(element: Element, cdn?: string, maxWidth?: boolean): void;
+    public static mathRender(element: Element, cdn?: string, maxWidth?: boolean): Promise<void> | void;
 
     /**
      * @description mermaid.js 渲染，支持流程图/时序图/甘特图渲染等

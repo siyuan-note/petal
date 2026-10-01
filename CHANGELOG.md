@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Restrict `openAttributePanel` attribute values to strings, declare the promise returned by `ProtyleMethod.mathRender`, and document `openWindow` behavior on mobile and in browsers
+
 * Correct kernel plugin data accessor and capability record declarations: `IDataObject` methods can be called repeatedly and `buffer()`/`arrayBuffer()` share memory with later reads, and registered capability records expose schema wrappers, always-present effect flags, and an empty `actionEffects` object when omitted
 
 * Declare the kernel plugin sandbox globals `console`, `setTimeout`, `setInterval`, `setImmediate`, their `clear*` functions, `URL`, `URLSearchParams`, and `GoError`, and document that `siyuan.*` promises reject with `GoError`

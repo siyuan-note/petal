@@ -489,6 +489,10 @@ export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 
 export const fetchGet: FetchGet<IWebSocketData | IObject | string>;
 
+/**
+ * 在新窗口中打开文档或页签，同时传入 doc 和 tab 时只处理 doc。
+ * 仅桌面客户端会打开新窗口：移动端为空操作；浏览器中不会打开窗口，但传入 tab 时仍会将该页签从当前布局移除。
+ */
 export function openWindow(options: {
     position?: {
         x: number,
@@ -691,13 +695,13 @@ export function isRightDockVisible(): boolean;
 export function isBottomDockVisible(): boolean;
 
 /**
- * @param {IObject} [options.data] - 块属性值
+ * @param {Record<string, string>} [options.data] - 块属性值，提供时忽略 nodeElement
  * @param {HTMLElement} [options.nodeElement] - 块元素
  * @param {"bookmark" | "name" | "alias" | "memo" | "av" | "custom"} [options.focusName="bookmark"] - av 为数据库页签，custom 为自定义页签，其余为内置输入框
  * @param {IProtyle} [options.protyle] - 有数据库时需要传入 protyle
  */
 export function openAttributePanel(options: {
-    data?: IObject
+    data?: Record<string, string>,
     nodeElement?: HTMLElement,
     focusName: "bookmark" | "name" | "alias" | "memo" | "av" | "custom",
     protyle?: IProtyle,
