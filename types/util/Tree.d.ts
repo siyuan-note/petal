@@ -32,4 +32,6 @@ export declare class Tree {
     getExpandIds(): string[];
 
     setExpandIds(ids: string[]): void;
+
+    createTopLevelItem(data: IBlockTree): HTMLLIElement;
 }

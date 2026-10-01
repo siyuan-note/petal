@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Add missing public members to `Model`, `Tab`, `Editor`, `Dock`, `Files`, `BlockPanel`, `Tree`, mobile dock panels, and Protyle components, and remove the `WYSIWYG` and `Preview` members that SiYuan no longer has
+
 * Restrict `openAttributePanel` attribute values to strings, declare the promise returned by `ProtyleMethod.mathRender`, and document `openWindow` behavior on mobile and in browsers
 
 * Correct kernel plugin data accessor and capability record declarations: `IDataObject` methods can be called repeatedly and `buffer()`/`arrayBuffer()` share memory with later reads, and registered capability records expose schema wrappers, always-present effect flags, and an empty `actionEffects` object when omitted

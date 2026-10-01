@@ -1050,6 +1050,15 @@ export declare class Editor extends Model {
     });
 
     private initProtyle;
+
+    updateBacklinkPanel(reset?: boolean): void;
+
+    refreshBottomBacklinkPanel(): void;
+
+    destroy(): void;
+
+    /** @returns 选区位于底部反链面板的编辑器中时返回该编辑器，否则返回文档编辑器 */
+    getCurrentProtyle(range?: Range): IProtyle;
 }
 
 export declare class Dock {
@@ -1096,6 +1105,45 @@ export declare class Dock {
     private getMaxSize;
 
     genButton(data: Array<Config.IUILayoutDockTab & { entryId?: string }>, index: number, tabIndex?: number): void;
+
+    isFloating(): boolean;
+
+    isResponsiveFloating(): boolean;
+
+    hasResponsiveManualOverride(): boolean;
+
+    clearResponsiveManualOverride(): void;
+
+    setResponsiveFloating(value: boolean, preferredSize: number): boolean;
+
+    adjustResponsiveCenterLayout(): void;
+
+    prepareForManualResize(): void;
+
+    getResponsivePreferredSize(): number;
+
+    getResponsiveMinimumSize(): number;
+
+    /** @returns 有活动工具且未被整体收起时为 true，浮动面板暂时未悬停显示仍为 true */
+    isPanelVisible(): boolean;
+
+    /** @returns 面板整体收起前的尺寸；未收起或没有记录时为 undefined */
+    getCollapsedPanelSize(): string | undefined;
+
+    /**
+     * 显示、隐藏或切换整个面板
+     * @param {boolean} [visible] - 不传时切换显隐，传入时设置显隐
+     * @returns 与 {@link isPanelVisible} 含义相同；空组返回 false
+     */
+    togglePanel(visible?: boolean): boolean;
+
+    showDockByHover(): void;
+
+    hideDockByHover(): void;
+
+    clearDockHoverTimeout(): void;
+
+    hasActive(): boolean;
 }
 
 export declare class MobileCustom {

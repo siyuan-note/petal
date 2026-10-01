@@ -42,4 +42,22 @@ export declare class Files extends Model {
     private genFileHTML;
     private initMoreMenu;
     private refreshPublishAccessSwitch;
+    onFiletreeSortChanged(data: {
+        notebook: string;
+        parentPath: string;
+    }): void;
+    onDocsImported(data: {
+        notebook: string;
+        parentPath: string;
+        rootIDs: string[];
+    }): void;
+    onDocSortModeChanged(data: {
+        scope: "document" | "notebook" | "global";
+        box: string;
+        id: string;
+        path: string;
+        sortMode: number | null;
+    }): void;
+    onNotebookSortChanged(): void;
+    destroy(): void;
 }

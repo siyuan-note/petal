@@ -34,4 +34,23 @@ export declare class MobileFiles extends Model {
     private getOpenPaths;
     private genFileHTML;
     private refreshPublishAccessSwitch;
+    destroy(): void;
+    onFiletreeSortChanged(data: {
+        notebook: string;
+        parentPath: string;
+    }): void;
+    onDocsImported(data: {
+        notebook: string;
+        parentPath: string;
+        rootIDs: string[];
+    }): void;
+    onDocSortModeChanged(data: {
+        scope: "document" | "notebook" | "global";
+        box: string;
+        id: string;
+        path: string;
+        sortMode: number | null;
+    }): void;
+    onNotebookSortChanged(): void;
+    selectOpenedFile(notebookId: string, filePath: string): Promise<void>;
 }

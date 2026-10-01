@@ -40,6 +40,18 @@ declare class AVAttributePanel {
     expand(avID?: string, animate?: boolean): void;
 
     toggle(): void;
+
+    afterRender(callback: (element: HTMLElement) => void): void;
+
+    updateDisplayConfig(): void;
+
+    updateReadonly(): void;
+
+    hasItem(itemID: string): boolean;
+
+    refreshForOperation(operation: IOperation): void;
+
+    displayEmptyFields(): void;
 }
 
 declare class Breadcrumb {
@@ -54,6 +66,9 @@ declare class Breadcrumb {
     render(protyle: IProtyle, update?: boolean, nodeElement?: Element | false): Promise<void>;
 
     hide(): void;
+
+    /** @returns 是否已将焦点移到面包屑 */
+    focus(range?: Range): boolean;
 }
 
 declare class Scroll {
@@ -71,6 +86,24 @@ declare class Scroll {
     updateIndex(protyle: IProtyle, id: string, cb?: (index: number) => void): Promise<void>;
 
     update(protyle: IProtyle): void;
+
+    /**
+     * @param mode - 1 加载当前内容之前的块，2 加载之后的块
+     * @returns 是否发起了加载请求
+     */
+    loadDynamic(protyle: IProtyle, mode: 1 | 2, options?: {
+        beforeApply?: () => void;
+        onFinish?: (success: boolean) => void;
+        size?: number;
+    }): boolean;
+
+    loadAll(protyle: IProtyle): Promise<boolean>;
+
+    shouldKeepLoadedContent(): boolean;
+
+    invalidateDynamicLoad(protyle: IProtyle): void;
+
+    setCurrentIndex(protyle: IProtyle, index: number, cancelPending?: boolean): void;
 }
 
 declare class WYSIWYG {
@@ -79,12 +112,22 @@ declare class WYSIWYG {
     };
     element: HTMLDivElement;
     preventKeyup: boolean;
-    private shiftStartElement;
     private preventClick;
 
     constructor(protyle: IProtyle);
 
     renderCustom(ial: Record<string, string>): void;
+
+    flushPendingInput(): Promise<void>;
+
+    copyRichText(): void;
+
+    selectByShiftClick(protyle: IProtyle, event: MouseEvent, targetBlockElement?: HTMLElement,
+                       resolveTargetByPoint?: boolean): boolean;
+
+    destroy(): void;
+
+    prepareBlockVirtualization(contentElement: Element, replace: boolean): void;
 
     private escapeInline;
     private setEmptyOutline;
@@ -119,6 +162,8 @@ declare class Gutter {
     private genCopyTextRef;
 
     render(protyle: IProtyle, element: Element, target?: Element): void;
+
+    getNodeElement(protyle: IProtyle, element: Element): Element | undefined;
 }
 
 declare class Title {
@@ -167,10 +212,12 @@ declare class Preview {
 
     render(protyle: IProtyle): void;
 
+    destroy(): void;
+
+    updatePadding(padding: { left: number; right: number; bottom: number; top: number; }): void;
+
     private link2online;
     private copyToX;
-    private processZHBlockquote;
-    private processZHTable;
 }
 
 interface IUndo {
@@ -264,6 +311,22 @@ declare class Hint {
 
     private fixImageCursor;
     private getKey;
+
+    hashTagSearchElement?: HTMLElement;
+
+    deactivateEmojiPanel(): void;
+
+    destroy(): void;
+
+    startHashTagSearch(protyle: IProtyle, tagElement: HTMLElement): void;
+
+    prepareCreateTarget(protyle: IProtyle, type: "doc" | "ref"): {
+        result: boolean;
+        promise: Promise<boolean>;
+        isCurrent: () => boolean;
+    };
+
+    canResumeBlockHint(protyle: IProtyle, range: Range): boolean;
 }
 
 export declare class Toolbar {
@@ -304,6 +367,27 @@ export declare class Toolbar {
     public showContent(protyle: IProtyle, range: Range, nodeElement: Element, pluginMenus?: IMenu[]): void
 
     public isMultiSelectMode(): boolean
+
+    /**
+     * 将浮动元素定位到选区附近
+     * @returns 定位后的纵坐标；没有选区位置时不调整并返回 undefined
+     */
+    public setSelectionElementPosition(protyle: IProtyle, element: HTMLElement, triggerRect?: DOMRect,
+                                       scrollElement?: HTMLElement): number | undefined
+
+    public getCurrentToolbarType(protyle: IProtyle, range?: Range): string[]
+
+    public hasTableCellsInlineMark(cellElements: HTMLTableCellElement[], type: string): boolean
+
+    public setTableCellsInlineMark(protyle: IProtyle, cellElements: HTMLTableCellElement[], type: string, textObj?: {
+        color?: string,
+        type: string
+    }): Node[] | undefined
+
+    public setBlockElementsInlineMark(protyle: IProtyle, blockElements: Element[], type: string, textObj?: {
+        color?: string,
+        type: string
+    }, clearBlockStyle?: boolean): Node[] | undefined
 }
 
 export interface ITrackedRangeHandle {

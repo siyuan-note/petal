@@ -21,6 +21,7 @@ export declare class MobileOutline extends Model {
     setCurrentByPreview(nodeElement: Element): void;
     private setCurrentById;
     update(data: IWebSocketData): void;
+    reload(callback?: () => void): void;
     saveExpendIds(): void;
     private setFilter;
     private getHeadingLevel;
