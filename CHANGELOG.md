@@ -2,6 +2,16 @@
 
 ## v1.3.0 2026
 
+* Declare frozen crypto key usages as readonly and accept readonly usage arrays in key operations
+
+* Narrow `siyuan.crypto.subtle.exportKey` results by format and document the JWK import checks
+
+* Declare the `timeout` option accepted by `siyuan.client.fetch`
+
+* Declare the Web Crypto API available as `siyuan.crypto` in the kernel plugin sandbox
+
+* Declare the non-standard MD5 and AES-ECB algorithms accepted by `siyuan.crypto`
+
 * [Document automatic Markdown footnote conversion to block references](https://github.com/siyuan-note/siyuan/issues/20050)
 
 * [Expose an unassigned shortcut for inserting mind maps and converting lists](https://github.com/siyuan-note/siyuan/issues/20051)
