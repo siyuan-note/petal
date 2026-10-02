@@ -1475,7 +1475,7 @@ export interface ICryptoKey {
      * Public keys of ECDH and X25519 carry an empty array, because only the private
      * key derives.
      */
-    readonly usages: TKeyUsage[];
+    readonly usages: readonly TKeyUsage[];
 }
 
 /** A generated public and private key pair. */
@@ -1559,7 +1559,7 @@ export interface ISubtleCrypto {
      *          {@link ICryptoKeyPair} for asymmetric ones.
      */
     generateKey(algorithm: TAlgorithmIdentifier, extractable: boolean,
-        keyUsages: TKeyUsage[]): Promise<ICryptoKey | ICryptoKeyPair>;
+        keyUsages: readonly TKeyUsage[]): Promise<ICryptoKey | ICryptoKeyPair>;
     /**
      * Imports a key from an external format.
      *
@@ -1575,7 +1575,7 @@ export interface ISubtleCrypto {
      * @param keyUsages   - The operations the key may perform.
      */
     importKey(format: TKeyFormat, keyData: TBufferSource | IJsonWebKey, algorithm: TAlgorithmIdentifier,
-        extractable: boolean, keyUsages: TKeyUsage[]): Promise<ICryptoKey>;
+        extractable: boolean, keyUsages: readonly TKeyUsage[]): Promise<ICryptoKey>;
     /**
      * Exports a key's material as a JSON Web Key.
      *
@@ -1617,7 +1617,7 @@ export interface ISubtleCrypto {
      */
     deriveKey(algorithm: TAlgorithmIdentifier, baseKey: ICryptoKey,
         derivedKeyAlgorithm: TAlgorithmIdentifier, extractable: boolean,
-        keyUsages: TKeyUsage[]): Promise<ICryptoKey>;
+        keyUsages: readonly TKeyUsage[]): Promise<ICryptoKey>;
     /**
      * Exports a key and encrypts the result.
      *
@@ -1634,7 +1634,7 @@ export interface ISubtleCrypto {
      */
     unwrapKey(format: TKeyFormat, wrappedKey: TBufferSource, unwrappingKey: ICryptoKey,
         unwrapAlgorithm: TAlgorithmIdentifier, unwrappedKeyAlgorithm: TAlgorithmIdentifier,
-        extractable: boolean, keyUsages: TKeyUsage[]): Promise<ICryptoKey>;
+        extractable: boolean, keyUsages: readonly TKeyUsage[]): Promise<ICryptoKey>;
 }
 
 /**

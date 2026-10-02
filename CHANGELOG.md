@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare frozen crypto key usages as readonly and accept readonly usage arrays in key operations
+
 * Narrow `siyuan.crypto.subtle.exportKey` results by format and document the JWK import checks
 
 * Declare the `timeout` option accepted by `siyuan.client.fetch`
