@@ -2,15 +2,9 @@
 
 ## v1.3.0 2026
 
-* Declare frozen crypto key usages as readonly and accept readonly usage arrays in key operations
+* [Declare the kernel plugin Web Crypto API and its non-standard MD5 and AES-ECB extensions](https://github.com/siyuan-note/petal/pull/61)
 
-* Narrow `siyuan.crypto.subtle.exportKey` results by format and document the JWK import checks
-
-* Declare the `timeout` option accepted by `siyuan.client.fetch`
-
-* Declare the Web Crypto API available as `siyuan.crypto` in the kernel plugin sandbox
-
-* Declare the non-standard MD5 and AES-ECB algorithms accepted by `siyuan.crypto`
+* [Declare the kernel plugin fetch timeout option](https://github.com/siyuan-note/petal/pull/61)
 
 * [Document automatic Markdown footnote conversion to block references](https://github.com/siyuan-note/siyuan/issues/20050)
 
