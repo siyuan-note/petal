@@ -4,6 +4,8 @@
 
 * Declare the Web Crypto API available as `siyuan.crypto` in the kernel plugin sandbox
 
+* Declare the non-standard MD5 and AES-ECB algorithms accepted by `siyuan.crypto`
+
 * [Expose selectable local OCR providers and model imports](https://github.com/siyuan-note/siyuan/issues/19984)
 
 * [Expose the desktop settings window mode preference](https://github.com/siyuan-note/siyuan/issues/20002)

@@ -1211,8 +1211,46 @@ export type TIntegerArray =
     | Int32Array | Uint32Array
     | BigInt64Array | BigUint64Array;
 
-/** Digest algorithms supported by the kernel. */
-export type THashAlgorithmName = "SHA-1" | "SHA-256" | "SHA-384" | "SHA-512";
+/** Digest algorithms defined by the Web Crypto specification. */
+export type TStandardHashAlgorithmName = "SHA-1" | "SHA-256" | "SHA-384" | "SHA-512";
+
+/**
+ * Digest algorithms the kernel supports beyond the Web Crypto specification.
+ *
+ * @remarks NOT part of the Web Crypto API. A browser rejects `"MD5"` with
+ * `NotSupportedError`, so code using it only runs in the kernel sandbox.
+ *
+ * MD5 is accepted where a digest acts as a pseudorandom function: by
+ * {@link ISubtleCrypto.digest} and as the `hash` of HMAC, HKDF, and PBKDF2. It exists
+ * for interoperating with existing systems that cannot be changed. Signature algorithms
+ * reject it with `NotSupportedError`, because their security depends on collision
+ * resistance and practical MD5 collisions make such signatures forgeable. Do not use it
+ * in new designs.
+ */
+export type TLegacyHashAlgorithmName = "MD5";
+
+/** Digest algorithms supported by the kernel, including the non-standard extension. */
+export type THashAlgorithmName = TStandardHashAlgorithmName | TLegacyHashAlgorithmName;
+
+/**
+ * Cipher algorithms the kernel supports beyond the Web Crypto specification.
+ *
+ * @remarks NOT part of the Web Crypto API. A browser rejects `"AES-ECB"` with
+ * `NotSupportedError`, so code using it only runs in the kernel sandbox.
+ *
+ * ECB encrypts every block independently, so identical plaintext blocks yield identical
+ * ciphertext blocks and the ciphertext leaks the structure of the plaintext. It takes no
+ * IV, which makes encryption deterministic, and it provides no authentication, so
+ * tampering is not detected. It exists for decrypting data produced by existing systems.
+ * Prefer AES-GCM for anything new.
+ *
+ * Only `"encrypt"` and `"decrypt"` are permitted. Requesting `"wrapKey"` or
+ * `"unwrapKey"` rejects with `SyntaxError`, because wrapping a key under a
+ * deterministic, unauthenticated mode would expose the wrapped key's block structure.
+ * The kernel applies PKCS#7 padding, matching OpenSSL's default, so ciphertext
+ * interoperates with `openssl enc -aes-256-ecb` and Node's `createCipheriv`.
+ */
+export type TLegacyAlgorithmName = "AES-ECB";
 
 /** Named elliptic curves supported by the kernel. */
 export type TNamedCurve = "P-256" | "P-384" | "P-521";
@@ -1245,11 +1283,26 @@ export type TAlgorithmIdentifier = string | IAlgorithmParams;
 
 /** Algorithm parameters; only the members an operation needs are read. */
 export interface IAlgorithmParams {
-    /** Algorithm name, e.g. `"AES-GCM"`. */
+    /**
+     * Algorithm name, e.g. `"AES-GCM"`.
+     *
+     * @remarks Besides the Web Crypto algorithms, the kernel accepts the non-standard
+     * `"AES-ECB"`; see {@link TLegacyAlgorithmName}.
+     */
     name: string;
-    /** Digest algorithm, required by HMAC, RSA, ECDSA, HKDF, and PBKDF2. */
+    /**
+     * Digest algorithm, required by HMAC, RSA, ECDSA, HKDF, and PBKDF2.
+     *
+     * @remarks Signature algorithms accept only {@link TStandardHashAlgorithmName};
+     * passing `"MD5"` to RSA or ECDSA rejects with `NotSupportedError`.
+     */
     hash?: THashAlgorithmIdentifier;
-    /** Initialization vector for AES-CBC (16 bytes) and AES-GCM. */
+    /**
+     * Initialization vector for AES-CBC (16 bytes) and AES-GCM.
+     *
+     * @remarks AES-ECB takes no IV, which is why it is unsafe: the same plaintext
+     * always produces the same ciphertext.
+     */
     iv?: TBufferSource;
     /** Initial counter block for AES-CTR; must be 16 bytes. */
     counter?: TBufferSource;
@@ -1397,6 +1450,9 @@ export interface ISubtleCrypto {
     /**
      * Computes a message digest.
      *
+     * @remarks Also accepts the non-standard `"MD5"`; see
+     * {@link TLegacyHashAlgorithmName}.
+     *
      * @param algorithm - One of {@link THashAlgorithmName}.
      * @param data      - The data to hash.
      * @returns The digest as an `ArrayBuffer`.
@@ -1405,9 +1461,10 @@ export interface ISubtleCrypto {
     /**
      * Encrypts data.
      *
-     * @remarks Supports AES-GCM, AES-CBC, AES-CTR, and RSA-OAEP. AES-CBC applies
-     * PKCS#7 padding. AES-CTR wraps the counter within the low `length` bits and
-     * rejects with `DataError` when the counter space is too small for the data.
+     * @remarks Supports AES-GCM, AES-CBC, AES-CTR, and RSA-OAEP, plus the non-standard
+     * AES-ECB; see {@link TLegacyAlgorithmName}. AES-CBC and AES-ECB apply PKCS#7
+     * padding. AES-CTR wraps the counter within the low `length` bits and rejects with
+     * `DataError` when the counter space is too small for the data.
      */
     encrypt(algorithm: TAlgorithmIdentifier, key: ICryptoKey, data: TBufferSource): Promise<ArrayBuffer>;
     /**
@@ -1422,6 +1479,9 @@ export interface ISubtleCrypto {
      *
      * @remarks Supports HMAC, RSASSA-PKCS1-v1_5, RSA-PSS, ECDSA, and Ed25519.
      * ECDSA signatures are the fixed-length `r‖s` form, not DER.
+     *
+     * HMAC accepts `"MD5"` as its `hash`; the signature algorithms reject it with
+     * `NotSupportedError`.
      */
     sign(algorithm: TAlgorithmIdentifier, key: ICryptoKey, data: TBufferSource): Promise<ArrayBuffer>;
     /**
@@ -1511,6 +1571,11 @@ export interface ISubtleCrypto {
  *
  * @remarks Mirrors the browser `Crypto` interface. It is not installed as
  * `globalThis.crypto`, so libraries that look for that global need an adapter.
+ *
+ * The kernel additionally accepts two algorithms that the Web Crypto specification does
+ * not define, for interoperating with existing systems: see
+ * {@link TLegacyHashAlgorithmName} for MD5 and {@link TLegacyAlgorithmName} for AES-ECB.
+ * Code that uses either will not run in a browser.
  */
 export interface ICrypto {
     /**
