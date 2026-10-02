@@ -1322,16 +1322,19 @@ export interface IAlgorithmParams {
     additionalData?: TBufferSource;
     /** Label for RSA-OAEP. */
     label?: TBufferSource;
-    /** Salt for HKDF and PBKDF2. */
+    /** Salt for HKDF and PBKDF2; required by both and may be empty. */
     salt?: TBufferSource;
-    /** Context information for HKDF. */
+    /** Context information for HKDF; required and may be empty. */
     info?: TBufferSource;
     /** Public exponent for RSA key generation; only `65537` is supported. */
     publicExponent?: TBufferSource;
     /**
      * Key length in bits for AES and HMAC; counter length in bits for AES-CTR.
      *
-     * @remarks AES keys must be 128, 192, or 256 bits.
+     * @remarks AES keys must be 128, 192, or 256 bits. `generateKey` and `deriveKey`
+     * require this member for AES, while `importKey` and `unwrapKey` ignore it and take the
+     * length from the key data, so the parameters passed to AES-CTR `encrypt` can be reused
+     * for importing. HMAC imports still check it against the key data.
      */
     length?: number;
     /**
@@ -1363,15 +1366,38 @@ export interface IAlgorithmParams {
 }
 
 /**
- * A JSON Web Key as produced and accepted by {@link ISubtleCrypto.exportKey}
- * and {@link ISubtleCrypto.importKey}.
+ * A JSON Web Key accepted by {@link ISubtleCrypto.importKey}.
+ *
+ * @remarks A private key must be consistent with its public members: an EC `d` outside
+ * [1, n−1] or not matching `x` and `y`, an OKP `d` not matching `x`, or an inconsistent
+ * RSA key rejects with `DataError`. Keys returned by {@link ISubtleCrypto.exportKey} have
+ * the narrower shape {@link IExportedJsonWebKey}.
  */
 export interface IJsonWebKey {
     kty: string;
     crv?: string;
     alg?: string;
+    /**
+     * Intended use of the key, `"sig"` or `"enc"`.
+     *
+     * @remarks When `keyUsages` is not empty, a present value must be `"sig"` for HMAC,
+     * RSASSA-PKCS1-v1_5, RSA-PSS, ECDSA, and Ed25519, and `"enc"` for the AES algorithms,
+     * RSA-OAEP, ECDH, and X25519; otherwise the import rejects with `DataError`.
+     */
     use?: string;
+    /**
+     * Operations the key may perform.
+     *
+     * @remarks When present, even as an empty array, it must contain every requested usage
+     * and no repeated value, otherwise the import rejects with `DataError`. When absent,
+     * it places no restriction on the requested usages.
+     */
     key_ops?: TKeyUsage[];
+    /**
+     * Whether the key may be exported.
+     *
+     * @remarks `false` rejects an import that requests an extractable key with `DataError`.
+     */
     ext?: boolean;
     /** Symmetric key material, base64url-encoded. */
     k?: string;
@@ -1388,6 +1414,18 @@ export interface IJsonWebKey {
     dp?: string;
     dq?: string;
     qi?: string;
+}
+
+/**
+ * A JSON Web Key returned by {@link ISubtleCrypto.exportKey}.
+ *
+ * @remarks Always carries `key_ops` and `ext`. `key_ops` is an empty array for keys
+ * without usages, such as the public half of an ECDH or X25519 pair, and `use` is never
+ * set. The result can be passed back to {@link ISubtleCrypto.importKey} unchanged.
+ */
+export interface IExportedJsonWebKey extends IJsonWebKey {
+    key_ops: TKeyUsage[];
+    ext: boolean;
 }
 
 /**
@@ -1457,6 +1495,10 @@ export interface ICryptoKeyPair {
  * — on an `Error` instance. The sandbox has no `DOMException`, so branch on
  * `error.name` rather than `instanceof`. Invalid argument types reject with a
  * `TypeError`.
+ *
+ * Every method returns a promise and never throws synchronously: an exception raised while
+ * the arguments are read, for example by a getter, `valueOf`, or an iterator, rejects the
+ * promise with the thrown value itself.
  */
 export interface ISubtleCrypto {
     /**
@@ -1521,6 +1563,9 @@ export interface ISubtleCrypto {
     /**
      * Imports a key from an external format.
      *
+     * @remarks A JWK is checked as described on {@link IJsonWebKey}. AES keys take their
+     * length from the key data; see {@link IAlgorithmParams.length}.
+     *
      * @param format      - See {@link TKeyFormat}.
      * @param keyData     - An {@link IJsonWebKey} when `format` is `"jwk"`, otherwise bytes.
      * @param algorithm   - The algorithm the key is for. ECDSA and ECDH need only
@@ -1532,14 +1577,28 @@ export interface ISubtleCrypto {
     importKey(format: TKeyFormat, keyData: TBufferSource | IJsonWebKey, algorithm: TAlgorithmIdentifier,
         extractable: boolean, keyUsages: TKeyUsage[]): Promise<ICryptoKey>;
     /**
-     * Exports a key's material.
+     * Exports a key's material as a JSON Web Key.
+     *
+     * @remarks Rejects with `InvalidAccessError` when the key is not extractable.
+     * @returns An {@link IExportedJsonWebKey}.
+     */
+    exportKey(format: "jwk", key: ICryptoKey): Promise<IExportedJsonWebKey>;
+    /**
+     * Exports a key's material as bytes.
      *
      * @remarks Rejects with `InvalidAccessError` when the key is not extractable,
      * or when the format does not match the key type — `"spki"` and `"raw"` export
      * public keys, `"pkcs8"` private keys.
-     * @returns An {@link IJsonWebKey} when `format` is `"jwk"`, otherwise an `ArrayBuffer`.
+     * @returns The encoded key as an `ArrayBuffer`.
      */
-    exportKey(format: TKeyFormat, key: ICryptoKey): Promise<ArrayBuffer | IJsonWebKey>;
+    exportKey(format: Exclude<TKeyFormat, "jwk">, key: ICryptoKey): Promise<ArrayBuffer>;
+    /**
+     * Exports a key's material in a format chosen at run time.
+     *
+     * @returns An {@link IExportedJsonWebKey} when `format` is `"jwk"`, otherwise an
+     * `ArrayBuffer`.
+     */
+    exportKey(format: TKeyFormat, key: ICryptoKey): Promise<ArrayBuffer | IExportedJsonWebKey>;
     /**
      * Derives raw bits from a base key.
      *

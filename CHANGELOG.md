@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Narrow `siyuan.crypto.subtle.exportKey` results by format and document the JWK import checks
+
 * Declare the `timeout` option accepted by `siyuan.client.fetch`
 
 * Declare the Web Crypto API available as `siyuan.crypto` in the kernel plugin sandbox
