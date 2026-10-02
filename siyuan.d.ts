@@ -387,6 +387,15 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**
+ * `/api/setting/resetSettings` 接收可选的 `exit`（默认 false），要求管理员权限并禁止只读写入。
+ * 仅重置当前工作空间的普通偏好、内置快捷键和当前布局；保留笔记、历史、历史保留天数、学习进度、
+ * 账号、认证、同步、加密及恢复材料、AI/MCP、插件和代码片段及其启用状态、已保存布局、语言及应用级设置。
+ * 已连接的主客户端收到 `prepareSettingsReset` 后，须保存待提交内容并暂停布局保存，再用通知中的一次性
+ * token 调用 `/api/setting/confirmSettingsReset`，传入 `saved: true`；保存失败传 false，15 秒未确认则取消。
+ * 成功后 `settingsReset` 通知所有主客户端直接重载；`exit: true` 仅让管理本地内核的桌面主窗口重载后正常退出，
+ * 不直接停止远程内核。失败时 `cancelSettingsReset` 携带此次操作 ID，客户端应恢复正常保存。
+ * 插件调用前应先取得用户确认，并确保未保存内容已经提交；重复调用恢复同一组默认值。
+ *
  * `/api/ai/agent/getInstructions` 返回工作空间 data/ai/AGENTS.md 的 content 和 revision，要求管理员权限。
  * 缺失文件返回空 content 和 missing 修订，不创建文件；非 UTF-8 文本、超出 32 KiB 或读取失败返回 code=-1。
  * `/api/ai/agent/setInstructions` 接收 content 和读取时的 revision，要求管理员权限且禁止只读写入。

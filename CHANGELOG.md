@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Expose workspace settings reset with pending-save coordination and protected configuration preservation](https://github.com/siyuan-note/siyuan/issues/20044)
+
 * [Declare the kernel plugin Web Crypto API and its non-standard MD5 and AES-ECB extensions](https://github.com/siyuan-note/petal/pull/61)
 
 * [Declare the kernel plugin fetch timeout option](https://github.com/siyuan-note/petal/pull/61)
