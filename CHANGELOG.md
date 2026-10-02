@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Expose atomic list conversion with database binding preservation](https://github.com/siyuan-note/siyuan/issues/20038)
+
 * [Expose selectable local OCR providers and model imports](https://github.com/siyuan-note/siyuan/issues/19984)
 
 * [Expose the desktop settings window mode preference](https://github.com/siyuan-note/siyuan/issues/20002)
