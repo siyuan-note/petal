@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare the `timeout` option accepted by `siyuan.client.fetch`
+
 * Declare the Web Crypto API available as `siyuan.crypto` in the kernel plugin sandbox
 
 * Declare the non-standard MD5 and AES-ECB algorithms accepted by `siyuan.crypto`

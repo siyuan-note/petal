@@ -112,6 +112,16 @@ export interface IRequestInit {
     headers?: Record<string, string>;
     /** Request body. Omit for methods that carry no body (e.g. GET, HEAD). */
     body?: string | ArrayBuffer;
+    /**
+     * Timeout in milliseconds for the whole request, from connecting until the response body is read.
+     * Defaults to `60000` when omitted; `0` disables the timeout. Must be a non-negative finite
+     * number, otherwise the request is rejected without being sent.
+     *
+     * @remarks Pending requests are cancelled when the plugin stops, but only after
+     * {@link IPluginLifecycle.onunload} settles, so awaiting a request without a timeout in
+     * `onunload` can block stopping the plugin and a normal kernel shutdown indefinitely.
+     */
+    timeout?: number;
 }
 
 /**
@@ -390,8 +400,10 @@ export interface IClient {
     /**
      * Tunnels an HTTP request through the kernel's REST API.
      *
+     * @remarks Rejects once {@link IRequestInit.timeout} elapses (60 seconds by default).
+     *
      * @param path - Absolute path starting with `/`, e.g. `"/api/system/version"`.
-     * @param init - Optional request options (method, headers, body).
+     * @param init - Optional request options (method, headers, body, timeout).
      * @returns A {@link IFetchResponse} with lazy body accessor methods.
      */
     fetch(path: TRequestPath, init?: IRequestInit): Promise<IFetchResponse>;
