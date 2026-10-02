@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Expose an unassigned shortcut for inserting mind maps and converting lists](https://github.com/siyuan-note/siyuan/issues/20051)
+
 * [Expose selectable local OCR providers and model imports](https://github.com/siyuan-note/siyuan/issues/19984)
 
 * [Expose the desktop settings window mode preference](https://github.com/siyuan-note/siyuan/issues/20002)
