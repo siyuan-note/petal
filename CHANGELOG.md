@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Expose an unassigned shortcut for inserting mind maps and converting lists](https://github.com/siyuan-note/siyuan/issues/20051)
+
 * [Expose atomic list conversion with database binding preservation](https://github.com/siyuan-note/siyuan/issues/20038)
 
 * [Expose selectable local OCR providers and model imports](https://github.com/siyuan-note/siyuan/issues/19984)
