@@ -378,6 +378,12 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 整批准备成功后调用方再插入内容；失败返回 code=-1、data=null，并清理本批次新建附件。
  * 此接口要求管理员权限，禁止只读写入，响应持有加密笔记本请求租约。
  */
+/**
+ * `/api/import/importStdMd`、`/api/import/importZipMd` 和 `/api/filetree/createDocWithMd` 自动转换标准脚注。
+ * 脚注定义保存为独立列表项，正文引用转换为指向列表项的上标静态块引用，反链复用现有块引用索引。
+ * 多段内容保留在同一列表项内；多次引用共享目标，标签匹配忽略大小写，重复定义引用第一个匹配项。
+ * 未定义的脚注不生成块引用，代码和转义的脚注文本保持原样；请求、响应和笔记本权限规则保持不变。
+ */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**
