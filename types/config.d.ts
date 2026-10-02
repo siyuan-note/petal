@@ -30,8 +30,13 @@ export namespace Config {
         accessAuthCode: string;
         oidc: IOIDC;
         ai: IAI;
-        /** 当前设备的本地 OCR 提供商和模型选择；切换后保留已有识别文本 */
-        ocr: {provider: string; model: string; auto: boolean};
+        /**
+         * 当前设备的 OCR 设置，切换提供商、模型或阈值不重跑已有结果。
+         * thresholds 仅用于 PaddleOCR，detection 和 box 为 (0, 1)，recognition 为 [0, 1]。
+         * 字段为 null 时使用模型检测参数和 0.5 的识别阈值。
+         * setOCRConfig 省略 thresholds 或传 null 时保留已保存值；传入包含三个 null 字段的对象可恢复默认。
+         */
+        ocr: import("./api").SettingOCR;
         api: IAPI;
         appearance: IAppearance;
         bazaar: IBazaar;
