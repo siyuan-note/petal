@@ -2,6 +2,20 @@
 
 ## v1.3.0 2026
 
+* [Expose workspace settings reset with pending-save coordination and protected configuration preservation](https://github.com/siyuan-note/siyuan/issues/20044)
+
+* [Declare the kernel plugin Web Crypto API and its non-standard MD5 and AES-ECB extensions](https://github.com/siyuan-note/petal/pull/61)
+
+* [Declare the kernel plugin fetch timeout option](https://github.com/siyuan-note/petal/pull/61)
+
+* [Document automatic Markdown footnote conversion to block references](https://github.com/siyuan-note/siyuan/issues/20050)
+
+* [Expose an unassigned shortcut for inserting mind maps and converting lists](https://github.com/siyuan-note/siyuan/issues/20051)
+
+* [Expose atomic list conversion with database binding preservation](https://github.com/siyuan-note/siyuan/issues/20038)
+
+* [Expose the bounded keyboard diagnostic log contract](https://github.com/siyuan-note/siyuan/issues/20006)
+
 * Add missing public members to `Model`, `Tab`, `Editor`, `Dock`, `Files`, `BlockPanel`, `Tree`, mobile dock panels, and Protyle components, and remove the `WYSIWYG` and `Preview` members that SiYuan no longer has
 
 * Restrict `openAttributePanel` attribute values to strings, declare the promise returned by `ProtyleMethod.mathRender`, and document `openWindow` behavior on mobile and in browsers
