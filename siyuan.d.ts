@@ -384,6 +384,14 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 多段内容保留在同一列表项内；多次引用共享目标，标签匹配忽略大小写，重复定义引用第一个匹配项。
  * 未定义的脚注不生成块引用，代码和转义的脚注文本保持原样；请求、响应和笔记本权限规则保持不变。
  */
+/**
+ * 数据库自动化由 `/api/transactions` 的 setAttrViewAutomations 操作整体保存，配置 spec 为 1。
+ * `/api/av/getAttributeView` 返回数据库级 automations，所有视图共享；缺省表示没有规则。
+ * addAttributeViewBlocks、setAttributeViewBlockAttr、batchSetAttributeViewBlockAttrs 会触发启用的新增或字段变化规则。
+ * 自动操作与原修改一同提交，失败一起回滚；普通 API 写入不生成编辑器撤销记录。
+ * 自动化不串联，导入、同步、历史恢复和撤销重放不重新触发；重做保留原条目 ID 和触发时间。
+ * 跨库动作限于同一加密边界，要求目标可访问；单笔事务最多执行 1000 个自动操作。
+ */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**
