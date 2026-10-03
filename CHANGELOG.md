@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Expose bazaar package release notes with rendered release descriptions](https://github.com/siyuan-note/siyuan/pull/20078)
+
 * [Expose device-local PaddleOCR detection and recognition thresholds with default restoration](https://github.com/siyuan-note/siyuan/issues/19984)
 
 * [Expose native database automation rules and transactional execution](https://github.com/siyuan-note/siyuan/issues/10863)
