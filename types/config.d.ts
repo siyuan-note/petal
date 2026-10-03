@@ -161,6 +161,12 @@ export namespace Config {
      * AI agent global settings
      */
     export interface IAgent {
+        /**
+         * 同时用于图片菜单的手动 AI OCR，不创建智能体会话或执行工具。
+         * POST /api/ai/ocr 接收 {path}，仅支持普通笔记本或全局 assets/ 图片，保留 box 查询参数。
+         * 成功返回 {text} 并保存到现有 OCR 存储、更新索引；失败保留旧结果，不降级为纯文本请求。
+         * 请求受管理员、只读和 AI 功能开关限制，最长两分钟，提供商配置的更短超时仍生效。
+         */
         modelId: string;
         sessionTimeout: number;
         streamIdleTimeout: number;
