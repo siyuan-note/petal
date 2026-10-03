@@ -5,7 +5,7 @@ export declare class MobileFiles extends Model {
     private actionsElement;
     private closeElement;
     private touchDragState;
-    constructor(app: App);
+    constructor(app: App, filesElement: HTMLElement);
     private handleMsgCallback;
     private clearDragIndicators;
     private genSort;
@@ -29,8 +29,28 @@ export declare class MobileFiles extends Model {
         files: IFile[];
         box: string;
         path: string;
+        effectiveSortMode?: number;
     }, setStorage?: boolean, isSetCurrent?: boolean): Promise<HTMLElement>;
     private getOpenPaths;
     private genFileHTML;
     private refreshPublishAccessSwitch;
+    destroy(): void;
+    onFiletreeSortChanged(data: {
+        notebook: string;
+        parentPath: string;
+    }): void;
+    onDocsImported(data: {
+        notebook: string;
+        parentPath: string;
+        rootIDs: string[];
+    }): void;
+    onDocSortModeChanged(data: {
+        scope: "document" | "notebook" | "global";
+        box: string;
+        id: string;
+        path: string;
+        sortMode: number | null;
+    }): void;
+    onNotebookSortChanged(): void;
+    selectOpenedFile(notebookId: string, filePath: string): Promise<void>;
 }

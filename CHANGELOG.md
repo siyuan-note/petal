@@ -22,6 +22,44 @@
 
 * [Expose the bounded keyboard diagnostic log contract](https://github.com/siyuan-note/siyuan/issues/20006)
 
+* Add missing public members to `Model`, `Tab`, `Editor`, `Dock`, `Files`, `BlockPanel`, `Tree`, mobile dock panels, and Protyle components, and remove the `WYSIWYG` and `Preview` members that SiYuan no longer has
+
+* Restrict `openAttributePanel` attribute values to strings, declare the promise returned by `ProtyleMethod.mathRender`, and document `openWindow` behavior on mobile and in browsers
+
+* Correct kernel plugin data accessor and capability record declarations: `IDataObject` methods can be called repeatedly and `buffer()`/`arrayBuffer()` share memory with later reads, and registered capability records expose schema wrappers, always-present effect flags, and an empty `actionEffects` object when omitted
+
+* Declare the kernel plugin sandbox globals `console`, `setTimeout`, `setInterval`, `setImmediate`, their `clear*` functions, `URL`, `URLSearchParams`, and `GoError`, and document that `siyuan.*` promises reject with `GoError`
+
+* Export `Lute`, `Custom`, `Tab`, `Model`, and other classes that the `siyuan` module does not provide at runtime as types only, so value usage such as `new Custom()` or `Lute.New()` from the module import is reported at compile time
+
+* Correct the frontend kernel plugin RPC declarations: `batch` can resolve to a single error response or `undefined`, error responses always carry `error`, and `call` retry and rejection behavior is documented
+
+* Correct kernel plugin private server declarations: add proxy response bodies, accept `Buffer` raw data, fix form parsing, file part, header, status code, cookie, and SSE port documentation, and document request routing and access checks
+
+* Correct kernel plugin runtime declarations: add `siyuan.secrets` and `siyuan.vars`, type `platform`, `i18n`, event topics, and registered capability records, and document lifecycle order, the per-plugin event bus, RPC endpoints, and broadcast recipients
+
+* Correct kernel plugin client, logger, and storage declarations: synchronous `siyuan.logger` methods, `text`/`binary` WebSocket message events and `wasClean`, WebSocket and EventSource lifecycle documentation, fetch response fields, the `data/storage/petal/<name>/` storage directory, and the `base64Url` Buffer encoding
+
+* Correct plugin declarations: rename `agentActions` to `agentCapabilities`, allow undefined results from top bar, status bar, tab, and dock registration, type `EventBus` as an interface, fix `paste`, `code-language-update`, and `open-menu-av` event details, and correct command callback and `open-asset` documentation
+
+* Correct exported API signatures: asynchronous `lockScreen`, `exitSiYuan`, and `expandDocTree`, `showMessage` and `globalCommand` return values, possibly undefined tabs and editors, `saveExportFile` results, and missing `confirm`, `openEmoji`, `openInputDialog`, `Dialog`, `Menu`, and `Setting` options and members
+
+* Correct mobile dock constructors, `platformUtils` signatures, block tree options, and document and tree statistics response declarations
+
+* Correct editor declarations: add `Protyle.flushPendingTransactions` and `ProtyleMethod.tabsRender` options, rename `Scroll.keepLazyLoad` to `keepLoadedContent`, fix `Gutter.render`, toolbar, breadcrumb, undo, and `IBreadcrumb.children` signatures, and add missing Lute methods
+
+* Correct layout declarations: `window.siyuan.menus.menu` is the built-in popup menu, `Dock` exposes `elements`, and `Layout`, `Editor`, `Dock`, `Wnd`, and `Files` method parameters match SiYuan
+
+* Synchronize block, database, menu, and layout data declarations with SiYuan, removing the obsolete `viewNotFound` database render target status
+
+* Synchronize `Constants` with SiYuan, including RFC 5646 help document language keys and default dock shortcuts
+
+* Fix strict type checking errors in shortcut key declarations
+
+* Fix the unresolved `IScrollAttr` reference in editor tab layout declarations
+
+* Synchronize `window.siyuan.config` declarations with SiYuan, removing the obsolete `ai.vision` and `system.isInsider` fields
+
 * [Expose selectable local OCR providers and model imports](https://github.com/siyuan-note/siyuan/issues/19984)
 
 * [Expose the desktop settings window mode preference](https://github.com/siyuan-note/siyuan/issues/20002)

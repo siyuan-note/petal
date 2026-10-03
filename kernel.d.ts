@@ -5,7 +5,119 @@
 import type { JSONSchema } from "zod/v4/core";
 declare global {
     const siyuan: ISiyuan;
+
+    /**
+     * The goja_nodejs `Buffer` bundled with the kernel names the URL-safe Base64 codec `"base64Url"`.
+     *
+     * @remarks The referenced Buffer declarations list Node's `"base64url"`, which the kernel does not
+     * support: `buf.toString("base64url")` throws `Unknown encoding`, and `Buffer.from(text, "base64url")`
+     * silently decodes `text` as UTF-8. Use `"base64Url"` instead.
+     */
+    interface BufferConstructor {
+        from(string: string, encoding: "base64Url"): Buffer<ArrayBuffer>;
+    }
+
+    interface Buffer<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
+        /** Encodes the bytes as unpadded URL-safe Base64; see {@link BufferConstructor.from}. */
+        toString(encoding: "base64Url", start?: number, end?: number): string;
+    }
+
+    // The declarations below describe other globals of the kernel plugin sandbox. When DOM declarations
+    // are also loaded (e.g. frontend and kernel code share one compilation), timer handles become
+    // numbers and `URL` / `URLSearchParams` use the DOM types, so frontend code keeps compiling.
+    // The sandbox also provides `require`, which is not declared here to avoid conflicts with `@types/node`.
+
+    /**
+     * `console` provided by the sandbox.
+     *
+     * @remarks Output is written to the kernel log with the `[plugin:<name>]` prefix: `log`, `info`,
+     * and `debug` at INFO level, `warn` at WARN level, and `error` at ERROR level.
+     */
+    interface Console {
+        log(...data: any[]): void;
+        info(...data: any[]): void;
+        debug(...data: any[]): void;
+        warn(...data: any[]): void;
+        error(...data: any[]): void;
+    }
+
+    var console: Console;
+
+    /**
+     * Schedules `handler` on the plugin's event loop. String handlers are not supported.
+     *
+     * @returns An opaque handle for {@link clearTimeout}; in the sandbox it is an object, not a number.
+     */
+    function setTimeout(handler: (...args: any[]) => void, timeout?: number, ...args: any[]): TTimeoutHandle;
+
+    /**
+     * Schedules `handler` repeatedly on the plugin's event loop. String handlers are not supported.
+     *
+     * @returns An opaque handle for {@link clearInterval}; in the sandbox it is an object, not a number.
+     */
+    function setInterval(handler: (...args: any[]) => void, timeout?: number, ...args: any[]): TIntervalHandle;
+
+    /**
+     * Runs `handler` on the plugin's event loop as soon as possible.
+     *
+     * @returns An opaque handle for {@link clearImmediate}.
+     */
+    function setImmediate(handler: (...args: any[]) => void, ...args: any[]): TImmediateHandle;
+
+    function clearTimeout(handle: TTimeoutHandle | null | undefined): void;
+
+    function clearInterval(handle: TIntervalHandle | null | undefined): void;
+
+    function clearImmediate(handle: TImmediateHandle | null | undefined): void;
+
+    /** WHATWG `URL` implemented by goja_nodejs. */
+    var URL: typeof globalThis extends { onmessage: any; URL: infer T } ? T : typeof import("url").URL;
+
+    /** WHATWG `URLSearchParams` implemented by goja_nodejs. */
+    var URLSearchParams: typeof globalThis extends { onmessage: any; URLSearchParams: infer T }
+        ? T
+        : typeof import("url").URLSearchParams;
+
+    /**
+     * Error type used by the kernel to reject `siyuan.*` promises and to throw from synchronous APIs.
+     *
+     * @remarks `message` is the kernel's Go error text. Errors created by the kernel also carry the
+     * wrapped Go error in `value`.
+     */
+    interface GoError extends Error {
+        value?: unknown;
+    }
+
+    var GoError: {
+        new(message?: string): GoError;
+        (message?: string): GoError;
+        readonly prototype: GoError;
+    };
 }
+
+/** Opaque object returned by the sandbox `setTimeout`. */
+export interface ITimeoutHandle {
+    readonly __timeoutHandle: never;
+}
+
+/** Opaque object returned by the sandbox `setInterval`. */
+export interface IIntervalHandle {
+    readonly __intervalHandle: never;
+}
+
+/** Opaque object returned by the sandbox `setImmediate`. */
+export interface IImmediateHandle {
+    readonly __immediateHandle: never;
+}
+
+/** Timer handle type: {@link ITimeoutHandle}, or `number` when DOM declarations are also loaded. */
+export type TTimeoutHandle = typeof globalThis extends { onmessage: any } ? number : ITimeoutHandle;
+
+/** Interval handle type: {@link IIntervalHandle}, or `number` when DOM declarations are also loaded. */
+export type TIntervalHandle = typeof globalThis extends { onmessage: any } ? number : IIntervalHandle;
+
+/** Immediate handle type: {@link IImmediateHandle}, or `number` when DOM declarations are also loaded. */
+export type TImmediateHandle = typeof globalThis extends { onmessage: any } ? number : IImmediateHandle;
 
 // ── Primitives ────────────────────────────────────────────────────────────────
 
@@ -51,10 +163,12 @@ export interface IStorageEntry {
 }
 
 /**
- * A lazy data accessor returned by {@link IStorage.get} and {@link IFetchResponse}.
+ * A lazy data accessor returned by {@link IStorage.get} and {@link IFetchResponse}, and used for
+ * private server request bodies and uploaded files.
  *
- * @remarks Each method decodes the same underlying byte slice; call at most
- * once per method per instance.
+ * @remarks Every method reads the same bytes and can be called any number of times. `buffer()` and
+ * `arrayBuffer()` return views over those bytes without copying, so writes through them change what
+ * later calls on the same object return; copy the bytes before modifying them.
  */
 export interface IDataObject {
     /**
@@ -66,7 +180,7 @@ export interface IDataObject {
     /**
      * Parses the data as JSON.
      *
-     * @returns The parsed value.
+     * @returns The parsed value; rejects when the data is not valid JSON.
      */
     json(): Promise<any>;
     /**
@@ -90,13 +204,13 @@ export interface IDataObject {
  * as text, JSON, or raw bytes.
  */
 export interface IFetchResponse extends IDataObject {
-    /** The final URL after any redirects. */
+    /** The path passed to {@link IClient.fetch}; redirects are not reflected. */
     url: string;
     /** `true` when `status` is in the range 200–299. */
     ok: boolean;
     /** HTTP status code, e.g. `200`. */
     status: number;
-    /** HTTP status text, e.g. `"OK"`. */
+    /** HTTP status line text including the code, e.g. `"200 OK"`. */
     statusText: string;
     /** Response headers as a flat string-to-string map. */
     headers: Record<string, string>;
@@ -130,7 +244,7 @@ export interface IRequestInit {
 export interface IEventMessage {
     /** Unique event identifier. */
     id: UUID;
-    /** Event type name, e.g. `"ws"`. */
+    /** Event type name, e.g. `"start"` or `"fs-notify"`. */
     type: string;
     /** Event-specific payload; the shape depends on `type`. */
     detail: any;
@@ -168,7 +282,7 @@ export interface IFsNotifyEventMessage extends IEventMessage {
     detail: {
         /** The type of file-system change that triggered this event. */
         operation: TFsNotifyOperation;
-        /** Path relative to the plugin's storage directory. */
+        /** Path relative to the plugin's storage directory, using the platform's path separator. */
         path: string;
     }
 }
@@ -197,6 +311,8 @@ export interface IWebSocketCloseEvent {
     code: number;
     /** Human-readable reason string supplied by the closing peer. */
     reason: string;
+    /** `true` if no outgoing data was still buffered when the connection closed. */
+    wasClean: boolean;
 }
 
 /**
@@ -235,13 +351,19 @@ export interface IWebSocketPongEvent {
 /**
  * Event fired when the WebSocket data frame is received.
  *
+ * @remarks `type` distinguishes text frames from binary frames.
+ *
  * @see {@link IWebSocket.onmessage}
  */
-export interface IWebSocketMessageEvent {
-    type: 'message';
-    /** Payload: `string` for text frames, `ArrayBuffer` for binary frames. */
-    data: string | ArrayBuffer;
-}
+export type IWebSocketMessageEvent = {
+    type: 'text';
+    /** Payload of a text frame. */
+    data: string;
+} | {
+    type: 'binary';
+    /** Payload of a binary frame. */
+    data: ArrayBuffer;
+};
 
 // ── EventSource ───────────────────────────────────────────────────────────────
 
@@ -308,7 +430,7 @@ export interface IWebSocket {
     readonly binaryType: string;
     /** Number of bytes currently queued for sending but not yet transmitted. */
     readonly bufferedAmount: number;
-    /** Negotiated WebSocket extensions, or an empty string if none. */
+    /** Always an empty string; negotiated extensions are not reported. */
     readonly extensions: string;
     /** Negotiated sub-protocol, or an empty string if none was negotiated. */
     readonly protocol: string;
@@ -318,9 +440,19 @@ export interface IWebSocket {
     readonly url: string;
     /** Called when the connection is established. */
     onopen: ((event: IWebSocketOpenEvent) => void | Promise<void>) | null;
-    /** Called when the connection is closed. */
+    /**
+     * Called only when the remote peer sends a Close frame, after {@link IWebSocket.onerror}.
+     *
+     * @remarks Not called for a local {@link IWebSocket.close} or an abrupt disconnect.
+     * `readyState` is `2` during the callback and `3` afterwards.
+     */
     onclose: ((event: IWebSocketCloseEvent) => void | Promise<void>) | null;
-    /** Called when a transport error occurs. */
+    /**
+     * Called when a connection attempt fails and whenever the connection terminates,
+     * including clean closes and a local {@link IWebSocket.close}.
+     *
+     * @remarks `error.message` is the kernel's close or transport error text.
+     */
     onerror: ((event: IWebSocketErrorEvent) => void | Promise<void>) | null;
     /** Called when a ping control frame is received. */
     onping: ((event: IWebSocketPingEvent) => void | Promise<void>) | null;
@@ -331,9 +463,11 @@ export interface IWebSocket {
     /**
      * Initiates the WebSocket connection.
      *
-     * @remarks The returned `Promise` resolves once the TCP/TLS handshake
-     * succeeds and the HTTP upgrade is confirmed. Calling `open()` more than
-     * once is a no-op — the second call resolves immediately.
+     * @remarks The returned `Promise` resolves once the upgrade to the local kernel
+     * succeeds, before {@link IWebSocket.onopen} runs. While a connection attempt is
+     * pending, further calls share its result; once open, calls resolve immediately.
+     * After a failed attempt or {@link IWebSocket.close}, calls reject and the handle
+     * cannot be reopened.
      */
     open(): Promise<void>;
     /**
@@ -355,10 +489,11 @@ export interface IWebSocket {
      */
     pong(data?: string): Promise<void>;
     /**
-     * Initiates a graceful close handshake.
+     * Sends a Close frame and closes the connection immediately without waiting
+     * for the peer's reply.
      *
-     * @param code   - WebSocket close code (default `1000` — normal closure).
-     * @param reason - Optional human-readable reason string (max 123 bytes).
+     * @param code   - WebSocket close code (default `1000` — normal closure); codes below `1000` become `1000`.
+     * @param reason - Optional human-readable reason string, truncated to 123 bytes.
      */
     close(code?: number, reason?: string): Promise<void>;
 }
@@ -370,7 +505,14 @@ export interface IWebSocket {
  *
  * @remarks The object is returned in {@link TEventSourceReadyState | CONNECTING} state
  * immediately; the kernel starts the SSE subscription in the background and
- * fires {@link IEventSource.onopen} once the stream is established.
+ * fires {@link IEventSource.onopen} when the first event arrives, not when the
+ * response headers are received.
+ *
+ * After a stream read error the kernel fires {@link IEventSource.onclose}, reconnects with
+ * exponential backoff, and fires `onopen` again on the next event. Connection failures,
+ * including non-200 responses, are retried the same way; {@link IEventSource.onerror} fires
+ * only after retries give up (about 15 minutes by default). If the server ends the stream
+ * cleanly, neither `onclose` nor `onerror` fires and `readyState` becomes `2`.
  * Call {@link IEventSource.close} to cancel the subscription.
  */
 export interface IEventSource {
@@ -378,13 +520,13 @@ export interface IEventSource {
     readonly readyState: TEventSourceReadyState;
     /** The original path passed to {@link IClient.event}, e.g. `"/api/…"`. */
     readonly url: string;
-    /** Called when the connection is established. */
+    /** Called when the first event arrives after connecting or reconnecting. */
     onopen: ((event: IEventSourceOpenEvent) => void | Promise<void>) | null;
     /** Called when a message is received. */
     onmessage: ((event: IEventSourceMessageEvent) => void | Promise<void>) | null;
-    /** Called when the connection is closed by the server or after {@link IEventSource.close}. */
+    /** Called when reading the stream fails, before the kernel reconnects. */
     onclose: ((event: IEventSourceCloseEvent) => void | Promise<void>) | null;
-    /** Called when a transport error occurs. */
+    /** Called when the subscription ends with an error after retries give up. */
     onerror: ((event: IEventSourceErrorEvent) => void | Promise<void>) | null;
     /** Cancels the subscription and closes the connection. */
     close(): void;
@@ -400,7 +542,8 @@ export interface IClient {
     /**
      * Tunnels an HTTP request through the kernel's REST API.
      *
-     * @remarks Rejects once {@link IRequestInit.timeout} elapses (60 seconds by default).
+     * @remarks The request is always sent to the local kernel (`http://127.0.0.1:<port><path>`)
+     * and rejects once {@link IRequestInit.timeout} elapses (60 seconds by default).
      *
      * @param path - Absolute path starting with `/`, e.g. `"/api/system/version"`.
      * @param init - Optional request options (method, headers, body, timeout).
@@ -443,10 +586,13 @@ export interface IPlugin {
     readonly version: string;
     /** Human-readable display name shown in the plugin marketplace. */
     readonly displayName: string;
-    /** Backend platform identifier, e.g. `"windows"`, `"linux"`, `"darwin"`. */
-    readonly platform: string;
-    /** Localization strings loaded from the plugin's `i18n/` directory. */
-    readonly i18n: Record<string, any>;
+    /**
+     * Backend platform identifier: the operating system on desktop (`"windows"`, `"linux"`, `"darwin"`),
+     * otherwise the container (`"docker"`, `"android"`, `"ios"`, `"harmony"`).
+     */
+    readonly platform: "windows" | "linux" | "darwin" | "docker" | "android" | "ios" | "harmony" | (string & {});
+    /** Localization strings loaded from the plugin's `i18n/` directory, or `null` if none were loaded. */
+    readonly i18n: Record<string, any> | null;
     /** Kernel lifecycle hooks for this plugin. */
     readonly lifecycle: IPluginLifecycle;
 }
@@ -456,38 +602,56 @@ export interface IPlugin {
  *
  * @remarks Exposed as `siyuan.plugin.lifecycle`. Assign a function to any
  * property to subscribe; the kernel awaits any returned `Promise` before
- * advancing to the next lifecycle stage. Unset callbacks (`null`) are skipped.
+ * advancing to the next lifecycle stage, with no timeout, so a `Promise` that
+ * never settles blocks starting or stopping the plugin. Errors thrown by a hook
+ * are logged and do not abort the transition. Unset callbacks (`null`) are
+ * skipped, but the kernel logs an error for them.
  */
 export interface IPluginLifecycle {
-    /** Called when the plugin script is first evaluated (before the `running` state.). */
+    /**
+     * Called after the top-level code of `kernel.js` finishes, while the plugin is still
+     * `loading`; RPC and private server requests are rejected until it becomes `running`.
+     */
     onload: (() => void | Promise<void>) | null;
-    /** Called when the plugin transitions to the `running` state. */
+    /**
+     * Called after the plugin enters the `running` state; the `start` event is published
+     * after this hook settles.
+     */
     onrunning: (() => void | Promise<void>) | null;
-    /** Called when the plugin is being unloaded (e.g. on shutdown or hot-reload). */
+    /**
+     * Called when a running plugin is stopped (e.g. disabled, reloaded, or on a normal kernel
+     * shutdown), after the `stop` event and while the plugin is `stopping`.
+     */
     onunload: (() => void | Promise<void>) | null;
 }
 
 /**
  * Kernel event bridge.
  *
- * @remarks Exposed as `siyuan.event`. Allows the plugin to receive kernel
- * broadcast events and publish events to the in-process bus.
+ * @remarks Exposed as `siyuan.event`. Each plugin has its own in-process bus;
+ * events never reach other plugins or the frontend.
  */
 export interface IEvent {
     /**
-     * Inbound kernel event handler.
+     * Inbound event handler.
      *
-     * @remarks Assign a function to receive every kernel dispatched event.
+     * @remarks Receives the kernel's `start`, `stop`, and `fs-notify` events, plus any payload
+     * emitted to the `"runtime"` topic as-is. It is called with `this` set to `siyuan.event`;
+     * a returned `Promise` is not awaited and errors thrown by the handler are not reported.
      * Set to `null` to stop receiving events.
      */
     handler: ((event: TEventMessage) => void | Promise<void>) | null;
     /**
-     * Publishes an event to the in-process event bus.
+     * Publishes a payload to this plugin's in-process event bus.
+     *
+     * @remarks Only the `"runtime"` topic is delivered, asynchronously, to {@link IEvent.handler};
+     * the `"plugin"` topic is only written to the debug log, and other topics have no subscribers.
+     * Rejects if `topic` is empty or `event` is omitted.
      *
      * @param topic - Event topic string used to route the event to subscribers.
-     * @param event - Arbitrary serializable payload.
+     * @param event - Payload to publish.
      */
-    emit(topic: string, event: IEventMessage): Promise<void>;
+    emit(topic: "runtime" | "plugin" | (string & {}), event: unknown): Promise<void>;
 }
 
 /**
@@ -495,33 +659,42 @@ export interface IEvent {
  *
  * @remarks Exposed as `siyuan.logger`. Level semantics mirror the browser
  * `console` API (`trace` < `debug` < `info` < `warn` < `error`). Output is
- * written to the kernel log file and prefixed with the plugin name.
+ * written to the kernel log file; each line is prefixed with `[plugin:<name>]`.
+ *
+ * Every method is synchronous and returns `undefined`. Arguments are joined with
+ * spaces: strings as-is, objects serialized as JSON, other values converted with
+ * `String()`. Each call is written asynchronously, so consecutive calls may appear
+ * out of order in the log.
  */
 export interface ILogger {
     /** Emits a `TRACE`-level log entry. */
-    readonly trace: (...args: any[]) => Promise<void>;
+    readonly trace: (...args: any[]) => void;
     /** Emits a `DEBUG`-level log entry. */
-    readonly debug: (...args: any[]) => Promise<void>;
+    readonly debug: (...args: any[]) => void;
     /** Emits an `INFO`-level log entry. */
-    readonly info: (...args: any[]) => Promise<void>;
+    readonly info: (...args: any[]) => void;
     /** Emits a `WARN`-level log entry. */
-    readonly warn: (...args: any[]) => Promise<void>;
+    readonly warn: (...args: any[]) => void;
     /** Emits an `ERROR`-level log entry. */
-    readonly error: (...args: any[]) => Promise<void>;
+    readonly error: (...args: any[]) => void;
 }
 
 /**
  * Scoped file storage for the plugin.
  *
- * @remarks Exposed as `siyuan.storage`. All paths are relative to the
- * plugin's data directory at `data/plugins/<name>/`. Forward slashes are
- * accepted on all platforms.
+ * @remarks Exposed as `siyuan.storage`. All paths are resolved against the
+ * plugin's private storage directory `<workspace>/data/storage/petal/<name>/`,
+ * which is created when the plugin starts and is shared with the frontend
+ * plugin's `loadData`/`saveData`. A leading `/` is treated as relative to that
+ * directory, and a path that escapes it rejects with
+ * `siyuan.storage: path traversal not allowed`. Forward slashes are accepted on
+ * all platforms.
  */
 export interface IStorage {
     /**
      * Reads a file and returns a lazy data accessor.
      *
-     * @param path - Path relative to the plugin data directory.
+     * @param path - Path relative to the plugin storage directory.
      * @returns A {@link IDataObject} wrapping the file contents.
      * @throws Rejects if the file does not exist.
      */
@@ -529,20 +702,26 @@ export interface IStorage {
     /**
      * Creates or overwrites a file with the provided UTF-8 string content.
      *
-     * @param path    - Path relative to the plugin data directory.
+     * @remarks Missing parent directories are created. Rejects when the kernel is
+     * in read-only mode.
+     *
+     * @param path    - Path relative to the plugin storage directory.
      * @param content - UTF-8 encoded content to write.
      */
     put(path: string, content: string): Promise<void>;
     /**
      * Deletes a file or recursively removes a directory tree.
      *
-     * @param path - Path relative to the plugin data directory.
+     * @remarks Resolves when the path does not exist. Rejects when the kernel is in
+     * read-only mode or when `path` resolves to the storage directory itself.
+     *
+     * @param path - Path relative to the plugin storage directory.
      */
     remove(path: string): Promise<void>;
     /**
      * Lists the entries in a directory.
      *
-     * @param path - Path relative to the plugin data directory.
+     * @param path - Path relative to the plugin storage directory.
      * @returns An array of {@link IStorageEntry} descriptors.
      */
     list(path: string): Promise<IStorageEntry[]>;
@@ -557,11 +736,15 @@ export interface IStorage {
 export interface IStorageWatcher {
     /**
      * Resolves `path` and registers it with the file-system watcher.
+     *
+     * @remarks Rejects on mobile, where the plugin file watcher is not supported.
      * @param path - Path relative to the storage directory to start watching.
      */
     add(path: string): Promise<void>;
     /**
      * Resolves `path` and unregisters it from the file-system watcher.
+     *
+     * @remarks Rejects on mobile, or if no path has been added yet.
      * @param path - Path relative to the storage directory to stop watching.
      */
     remove(path: string): Promise<void>;
@@ -576,13 +759,22 @@ export type TAgentCapabilityHandler = (input: Record<string, any>) => any | Prom
 /**
  * JSON-RPC method registry for the plugin.
  *
- * @remarks Exposed as `siyuan.rpc`. Registered methods are callable by
- * external clients via `GET /api/plugin/rpc`, `POST /api/plugin/rpc`, or
- * the WebSocket endpoint `GET /ws/plugin/rpc`.
+ * @remarks Exposed as `siyuan.rpc`. Registered methods are called with JSON-RPC 2.0 via
+ * `POST /api/plugin/rpc/<plugin>` (or `POST /api/plugin/rpc?name=<plugin>`) and over the
+ * WebSocket endpoint `GET /ws/plugin/rpc/<plugin>`; `GET /api/plugin/rpc` only reports
+ * loaded plugins and their methods. Calling requires an authenticated administrator, is
+ * blocked in read-only mode, and returns error `-32001` or `-32002` unless the plugin is
+ * loaded and running.
+ *
+ * An array `params` is spread into handler arguments, an object is passed as the single
+ * argument, and a missing or `null` value passes no arguments. A handler that throws or
+ * rejects produces error `-32603`.
  */
 export interface IRpc {
     /**
      * Registers a named RPC method callable by external clients.
+     *
+     * @remarks Binding an existing name replaces the previous handler.
      *
      * @param name         - Unique method name used to dispatch the call.
      * @param handler      - Handler function; may be async.
@@ -600,7 +792,10 @@ export interface IRpc {
      */
     unbind(name: string): Promise<void>;
     /**
-     * Broadcasts a JSON-RPC notification to all connected clients.
+     * Sends a JSON-RPC notification to every client connected to this plugin's RPC WebSocket.
+     *
+     * @remarks HTTP callers and private server WebSocket ports do not receive it. Resolves after
+     * all writes finish.
      *
      * @param method - Notification method name.
      * @param params - Optional notification parameters.
@@ -667,9 +862,33 @@ export interface IAgentCapabilityConfig {
 }
 
 /**
- * The registration record returned by {@link IAgent.registerCapability}.
+ * JSON Schema echoed by {@link IRegisteredCapability}.
+ *
+ * @remarks The value wraps the schema parsed by the kernel. `JSON.stringify(schema)` returns the schema
+ * exactly as registered, so use `JSON.parse(JSON.stringify(schema))` to obtain a plain
+ * {@link JSONSchema.Schema}. Reading keywords directly only exposes the members below: unset keywords
+ * read as `""`, `[]`, or `{}` instead of `undefined`, other keywords such as `description` or
+ * `additionalProperties` read as `undefined`, and entries of `properties` omit keywords such as
+ * `minLength`. When the kernel cannot parse the schema, for example because a property's `type` is an
+ * array, every member except `type` reads as empty.
  */
-export interface IRegisteredCapability extends IAgentCapabilityConfig {
+export interface IRegisteredCapabilitySchema {
+    type: string;
+    properties: Record<string, unknown>;
+    required: string[];
+    oneOf: IRegisteredCapabilitySchema[];
+    anyOf: IRegisteredCapabilitySchema[];
+    allOf: IRegisteredCapabilitySchema[];
+    $ref: string;
+    $defs: Record<string, IRegisteredCapabilitySchema>;
+}
+
+/**
+ * The registration record returned by {@link IAgent.registerCapability}.
+ *
+ * @remarks Every field is present, even when the corresponding setting was omitted.
+ */
+export interface IRegisteredCapability {
     /** Stable capability identifier used by Agent configuration. */
     id: string;
     /**
@@ -678,6 +897,18 @@ export interface IRegisteredCapability extends IAgentCapabilityConfig {
      * @example "plugin__plugin_name__capability_name__0123456789ab"
      */
     name: string;
+    /** Display name, or an empty string when not provided. */
+    title: string;
+    /** Trimmed description. */
+    description: string;
+    /** Input schema; its `type` is always `"object"` because registration requires an object root. */
+    inputSchema: IRegisteredCapabilitySchema;
+    /** Output schema, or `null` when not provided. */
+    outputSchema: IRegisteredCapabilitySchema | null;
+    /** Default side effects with every flag present, or `null` when not provided. */
+    effects: Required<IAgentCapabilityEffects> | null;
+    /** Per-action side effects with every flag present; an empty object when not provided. */
+    actionEffects: Record<string, Required<IAgentCapabilityEffects>>;
 }
 
 // ── Server request types ─────────────────────────────────────────────────────
@@ -742,14 +973,14 @@ export interface IRequestFile {
     /**
      * File contents as a lazy {@link IDataObject}.
      *
-     * @remarks `null` if the file could not be read during request parsing.
+     * @remarks If a file part cannot be read, the kernel answers the request with `400`
+     * before invoking the handler.
      */
-    data: IDataObject | null;
+    data: IDataObject;
 }
 
 /**
- * Parsed form data from an `application/x-www-form-urlencoded` or
- * `multipart/form-data` request.
+ * Parsed form data from a `multipart/form-data` request.
  */
 export interface IRequestForm {
     /**
@@ -766,22 +997,23 @@ export interface IRequestForm {
 /**
  * Body of an incoming server request.
  *
- * @remarks Exactly one of `form` or `data` is non-null:
- * `form` is set for `application/x-www-form-urlencoded` and
- * `multipart/form-data`; `data` is set for all other content types and is
- * `null` when the request carries no body.
+ * @remarks Exactly one of `form` or `data` is non-null: `form` is set only for
+ * `multipart/form-data`; `data` is set for all other requests and yields empty
+ * content when the request carries no body. For
+ * `application/x-www-form-urlencoded` requests the body is consumed while parsing,
+ * so `form` is `null`, `data` is empty, and the fields are not available.
  */
 export interface IRequestBody {
     /**
      * Parsed form data.
      *
-     * @remarks `null` for non-form requests.
+     * @remarks `null` for requests other than `multipart/form-data`.
      */
     form: IRequestForm | null;
     /**
      * Raw request body as a lazy {@link IDataObject}.
      *
-     * @remarks `null` when `form` is non-null or the request carries no body.
+     * @remarks `null` only when `form` is non-null.
      */
     data: IDataObject | null;
 }
@@ -936,7 +1168,7 @@ export interface IResponseRawData {
     /** MIME type for the `Content-Type` response header, e.g. `"image/png"`. */
     contentType: string;
     /** Raw response body bytes. */
-    data: string | ArrayBuffer;
+    data: string | ArrayBuffer | Buffer;
 }
 
 /**
@@ -951,10 +1183,27 @@ export interface IResponseRedirect {
 }
 
 /**
+ * A response body streamed from another HTTP server.
+ *
+ * @remarks The kernel requests `url` through an SSRF-safe dialer (30-second dial timeout,
+ * up to 10 redirects), then streams back the upstream status, headers, and body.
+ * Hop-by-hop and `Set-Cookie` headers are dropped in both directions. Invalid options are
+ * answered with `400`, and a failed upstream request with `502`.
+ */
+export interface IResponseProxy {
+    /** Absolute `http:` or `https:` URL to request. */
+    url: string;
+    /** `"GET"` or `"HEAD"`; defaults to the incoming request method, and other methods are rejected. */
+    method?: string;
+    /** Request headers forwarded to the target. */
+    headers?: Record<string, string[]>;
+}
+
+/**
  * The body of an HTTP response returned by a server handler.
  *
  * @remarks Set exactly one field; the kernel inspects `data`, `file`,
- * `string`, `raw`, and `redirect` in that order and uses the first
+ * `string`, `raw`, `redirect`, and `proxy` in that order and uses the first
  * non-null value. Returning an empty object (all fields absent or null)
  * results in a status-only response via `c.Status`.
  */
@@ -969,6 +1218,8 @@ export interface IResponseBody {
     raw?: IResponseRawData | null;
     /** HTTP redirect. */
     redirect?: IResponseRedirect | null;
+    /** Response streamed from another HTTP server. */
+    proxy?: IResponseProxy | null;
 }
 
 /**
@@ -993,7 +1244,7 @@ export interface IResponseCookie {
     Expires?: string;
     /** Raw, unparsed `Expires` attribute string (informational). */
     RawExpires?: string;
-    /** `Max-Age` in seconds. `0` deletes the cookie; negative values are not sent. */
+    /** `Max-Age` in seconds. `0` omits the attribute; negative values delete the cookie (`Max-Age=0`). */
     MaxAge?: number;
     /** Restricts the cookie to HTTPS connections. */
     Secure?: boolean;
@@ -1003,9 +1254,9 @@ export interface IResponseCookie {
      * `SameSite` cookie policy.
      *
      * @remarks Maps to Go `http.SameSite` constants:
-     * `0` = default (browser-defined), `1` = None, `2` = Lax, `3` = Strict.
+     * `0` = unset and `1` = default (both omit the attribute), `2` = Lax, `3` = Strict, `4` = None.
      */
-    SameSite?: number;
+    SameSite?: 0 | 1 | 2 | 3 | 4;
     /** Sets the `Partitioned` (CHIPS) cookie attribute. */
     Partitioned?: boolean;
     /** Raw `Set-Cookie` line as sent by the server (informational). */
@@ -1018,13 +1269,19 @@ export interface IResponseCookie {
  * The return value expected from an HTTP server handler.
  */
 export interface IHttpResponse {
-    /** HTTP status code to send, e.g. `200`, `404`. */
+    /**
+     * HTTP status code to send, e.g. `200`, `404`.
+     *
+     * @remarks Ignored for `file` bodies, where the file server decides the status, and for
+     * `proxy` bodies, which use the upstream status.
+     */
     statusCode: number;
     /**
      * Additional response headers.
      *
-     * @remarks Each header name maps to an array of values to support
-     * multi-value headers such as `Link` or repeated `Set-Cookie` entries.
+     * @remarks Each header name maps to an array of values, but the values are applied in
+     * order and each one replaces the previous, so only the last value is sent. Use `cookies`
+     * to send several `Set-Cookie` headers.
      */
     headers?: Record<string, string[]>;
     /** Cookies to attach to the response via `Set-Cookie` headers. */
@@ -1074,7 +1331,8 @@ export interface IEventSourcePort {
      *
      * @remarks
      * `send` is synchronous — no `await` required. It enqueues the event in
-     * the kernel's SSE write buffer; the actual flush is asynchronous.
+     * the kernel's SSE write buffer; the actual flush is asynchronous. It throws if
+     * `event` is not an object or `event.data` is `undefined`.
      *
      * @param event - The SSE event to send.
      */
@@ -1120,7 +1378,7 @@ export interface IServerEventSourceRequest extends IServerRequest {
      *
      * @remarks
      * Assign `onopen` and `onclose` callbacks in the handler body. Call
-     * `port.send(eventType, data)` inside `onopen` to emit SSE events.
+     * `port.send({ event, data })` inside `onopen` to emit SSE events.
      */
     readonly port: IEventSourcePort;
 }
@@ -1131,7 +1389,11 @@ export interface IServerEventSourceRequest extends IServerRequest {
  * @remarks
  * The object is sealed by the kernel; only the `handler` property may be
  * reassigned. Set `handler` to `null` to leave the slot empty — the kernel
- * will return `500 Internal Server Error` for any unhandled request.
+ * will return `500 Internal Server Error` for any unhandled HTTP request, and
+ * closes an unhandled WebSocket right after the upgrade.
+ *
+ * WebSocket upgrade requests are routed to `ws`, requests whose `Accept` header is
+ * exactly `text/event-stream` to `es`, and all other requests to `http`.
  *
  * @typeParam TRes - Expected return type of the handler function.
  * @typeParam TReq - Request object type passed to the handler. Defaults to
@@ -1198,8 +1460,10 @@ export interface IServer {
      * Private-scope handler group.
      *
      * @remarks Routes under `/plugin/private/<name>/*path` require kernel
-     * authentication and admin role before the request reaches the handler.
-     * The `<name>` segment must match the running plugin's `name`.
+     * authentication and admin role before the request reaches the handler, and
+     * are rejected in read-only mode; WebSocket upgrades must also pass the session
+     * Origin check. The `<name>` segment must match the running plugin's `name`:
+     * an unknown plugin is answered with `404`, and a plugin that is not running with `503`.
      */
     readonly private: IServerScope;
 }
@@ -1670,6 +1934,9 @@ export interface ICrypto {
  *
  * @remarks Available as the global constant `siyuan`. All async operations
  * return `Promise`s resolved on the plugin's JavaScript runtime event loop.
+ * They reject with a {@link GoError} whose `message` is the kernel's error text;
+ * invalid arguments are also reported as rejections rather than synchronous throws.
+ * {@link IEventSourcePort.send} is the only method that throws synchronously.
  */
 export interface ISiyuan {
     /** Static metadata about this plugin instance. */
@@ -1688,6 +1955,24 @@ export interface ISiyuan {
     readonly client: IClient;
     /** Web request handler registry. */
     readonly server: IServer;
+    /** Resolves `{{secrets.NAME}}` placeholders from the workspace secret store. */
+    readonly secrets: ITemplateResolver;
+    /** Resolves `{{vars.NAME}}` placeholders from the workspace variable store. */
+    readonly vars: ITemplateResolver;
     /** Web Crypto primitives. */
     readonly crypto: ICrypto;
+}
+
+/**
+ * Placeholder resolver exposed as `siyuan.secrets` and `siyuan.vars`.
+ *
+ * @remarks Names cannot be listed; only placeholders in the given template are replaced.
+ */
+export interface ITemplateResolver {
+    /**
+     * Replaces the placeholders in `template` synchronously.
+     *
+     * @returns The resolved string, or an empty string if `template` is not a string.
+     */
+    resolve(template: string): string;
 }

@@ -33,4 +33,6 @@ export declare class Tab {
     unpin(): void;
 
     close(): void;
+
+    restoreHeadElementOrder(): void;
 }

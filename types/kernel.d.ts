@@ -83,7 +83,7 @@ export interface IKernelPluginRpcResultResponse extends IKernelPluginRpcBaseResp
 
 export interface IKernelPluginRpcErrorResponse extends IKernelPluginRpcBaseResponse {
     id: TJsonRpcId | null;
-    error?: any;
+    error: IKernelPluginRpcError;
 }
 
 export interface IKernelPluginRpcError {
@@ -95,6 +95,8 @@ export interface IKernelPluginRpcError {
 export interface IKernelPluginRpc {
     /**
      * 通过 {@link Proxy} 实现的动态方法调用，插件开发者可以直接调用 `call.方法名(params)` 来调用内核插件暴露的方法，无需关心 JSON-RPC 的细节
+     *
+     * 内核插件尚未加载或未运行时每 100 毫秒重试一次，最多重试 50 次；返回 JSON-RPC 错误时 Promise 以包含 code 和 data 的 Error 拒绝
      */
     call: Record<TJsonRpcMethod, (...args: TJsonRpcMethodParams) => Promise<any>>;
 
@@ -105,8 +107,10 @@ export interface IKernelPluginRpc {
 
     /**
      * 批量调用方法，接受一个方法调用数组，返回一个结果数组，结果数组中的每一项对应方法调用数组中非通知的每一项，包含成功的结果或错误信息
+     *
+     * 整个请求失败（如内核插件未加载或未运行）时返回单个错误响应对象；全部为通知时没有响应内容，返回 undefined
      */
-    batch: (...calls: IKernelPluginRpcCall[]) => Promise<IKernelPluginRpcError | (IKernelPluginRpcResultResponse | IKernelPluginRpcErrorResponse)[]>;
+    batch: (...calls: IKernelPluginRpcCall[]) => Promise<(IKernelPluginRpcResultResponse | IKernelPluginRpcErrorResponse)[] | IKernelPluginRpcErrorResponse | undefined>;
 
     /**
      * 绑定内核插件调用时的事件处理函数，插件开发者可以通过 `bind("方法名", handler)` 来监听内核插件通过 JSON-RPC 推送到客户端插件的通知
