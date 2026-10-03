@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Use Tiny as the sole bundled OCR model and migrate legacy built-in Small selections](https://github.com/siyuan-note/siyuan/issues/19984)
+
 * [Expose manual image AI OCR using the configured agent model](https://github.com/siyuan-note/siyuan/issues/20082)
 
 * [Expose device-local PaddleOCR detection and recognition thresholds with default restoration](https://github.com/siyuan-note/siyuan/issues/19984)

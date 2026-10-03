@@ -32,6 +32,7 @@ export namespace Config {
         ai: IAI;
         /**
          * 当前设备的 OCR 设置，切换提供商、模型或阈值不重跑已有结果。
+         * 仅内置 Tiny；旧内置 Small 选择自动迁移为 Tiny，自行导入的模型仍使用内容摘要标识。
          * thresholds 仅用于 PaddleOCR，detection 和 box 为 (0, 1)，recognition 为 [0, 1]。
          * 字段为 null 时使用模型检测参数和 0.5 的识别阈值。
          * setOCRConfig 省略 thresholds 或传 null 时保留已保存值；传入包含三个 null 字段的对象可恢复默认。
