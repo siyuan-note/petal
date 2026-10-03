@@ -5,6 +5,14 @@
 import type { JSONSchema } from "zod/v4/core";
 declare global {
     const siyuan: ISiyuan;
+    /**
+     * The same object as {@link ISiyuan.crypto}, installed for code that uses the standard
+     * Web Crypto global.
+     *
+     * @remarks When the DOM library is also loaded, this keeps the DOM `Crypto` type; use
+     * `siyuan.crypto` for the kernel's own typing.
+     */
+    var crypto: typeof globalThis extends { crypto: infer T; onmessage: any } ? T : ICrypto;
 }
 
 // ── Primitives ────────────────────────────────────────────────────────────────
@@ -1638,10 +1646,12 @@ export interface ISubtleCrypto {
 }
 
 /**
- * Cryptography exposed as `siyuan.crypto`.
+ * Cryptography exposed as `siyuan.crypto` and, as the same object, `globalThis.crypto`.
  *
- * @remarks Mirrors the browser `Crypto` interface. It is not installed as
- * `globalThis.crypto`, so libraries that look for that global need an adapter.
+ * @remarks Mirrors the browser `Crypto` interface, so code that uses the standard
+ * global needs no adapter. The `Crypto`, `SubtleCrypto`, and `CryptoKey` interfaces
+ * have no global constructors, so `instanceof` checks against them throw a
+ * `ReferenceError`.
  *
  * The kernel additionally accepts two algorithms that the Web Crypto specification does
  * not define, for interoperating with existing systems: see
