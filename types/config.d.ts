@@ -165,6 +165,8 @@ export namespace Config {
         /**
          * 同时用于图片菜单的手动 AI OCR，不创建智能体会话或执行工具。
          * POST /api/ai/ocr 接收 {path}，仅支持普通笔记本或全局 assets/ 图片，保留 box 查询参数。
+         * 支持 PNG、JPEG、GIF、WebP；BMP、TIFF 转为 PNG，HEIC/HEIF 转为 JPEG，其他格式返回错误。
+         * 保留原图分辨率，原始文件和发送图片均限制为 20 MiB，发送图片限制为四千万像素；HEIF 遵循预览解码限制。
          * 成功返回 {text} 并保存到现有 OCR 存储、更新索引；失败保留旧结果，不降级为纯文本请求。
          * 请求受管理员、只读和 AI 功能开关限制，最长两分钟，提供商配置的更短超时仍生效。
          */
