@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare the `TextEncoder` and `TextDecoder` globals of kernel plugins
+
 * [Declare `globalThis.crypto` as the same object as `siyuan.crypto` in kernel plugins](https://github.com/siyuan-note/siyuan/issues/20041)
 
 * [Clarify image formats and conversion limits for manual AI OCR](https://github.com/siyuan-note/siyuan/issues/20082)

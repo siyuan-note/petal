@@ -13,6 +13,18 @@ declare global {
      * `siyuan.crypto` for the kernel's own typing.
      */
     var crypto: typeof globalThis extends { crypto: infer T; onmessage: any } ? T : ICrypto;
+    /**
+     * Encodes strings as UTF-8; see {@link ITextEncoderConstructor}.
+     *
+     * @remarks When the DOM library is also loaded, this keeps the DOM `TextEncoder` type.
+     */
+    var TextEncoder: typeof globalThis extends { TextEncoder: infer T; onmessage: any } ? T : ITextEncoderConstructor;
+    /**
+     * Decodes UTF-8 and UTF-16 bytes; see {@link ITextDecoderConstructor}.
+     *
+     * @remarks When the DOM library is also loaded, this keeps the DOM `TextDecoder` type.
+     */
+    var TextDecoder: typeof globalThis extends { TextDecoder: infer T; onmessage: any } ? T : ITextDecoderConstructor;
 }
 
 // ── Primitives ────────────────────────────────────────────────────────────────
@@ -1215,12 +1227,12 @@ export interface IServer {
 // ── Web Crypto ────────────────────────────────────────────────────────────────
 
 /**
- * Binary input accepted by {@link ISubtleCrypto} operations.
+ * Binary input accepted by {@link ISubtleCrypto} operations and {@link ITextDecoder.decode}.
  *
- * @remarks Strings and plain arrays are rejected with a `TypeError`; encode text
- * yourself, e.g. `Buffer.from(text, "utf8")`. The sandbox has no `TextEncoder`.
- * The kernel copies the bytes before computing, so modifying the buffer afterwards
- * does not affect the pending operation.
+ * @remarks {@link ISubtleCrypto} rejects strings and plain arrays with a `TypeError`;
+ * encode text yourself, e.g. `new TextEncoder().encode(text)`. The kernel copies the
+ * bytes before computing, so modifying the buffer afterwards does not affect the
+ * pending operation.
  */
 export type TBufferSource = ArrayBuffer | ArrayBufferView;
 
@@ -1671,6 +1683,96 @@ export interface ICrypto {
     randomUUID(): string;
     /** Low-level cryptographic primitives. */
     readonly subtle: ISubtleCrypto;
+}
+
+// ── Text encoding ────────────────────────────────────────────────────────────
+
+/** Canonical encoding names reported by {@link ITextDecoder.encoding}. */
+export type TTextDecoderEncoding = "utf-8" | "utf-16le" | "utf-16be";
+
+/** Options of the global `TextDecoder` constructor. */
+export interface ITextDecoderOptions {
+    /**
+     * Throw a `TypeError` on malformed input instead of decoding it as U+FFFD.
+     *
+     * @defaultValue `false`
+     */
+    fatal?: boolean;
+    /**
+     * Keep a leading byte order mark in the output instead of removing it.
+     *
+     * @defaultValue `false`
+     */
+    ignoreBOM?: boolean;
+}
+
+/** Options of {@link ITextDecoder.decode}. */
+export interface ITextDecodeOptions {
+    /**
+     * Hold back an incomplete trailing byte sequence for the next call instead of
+     * decoding it as U+FFFD.
+     *
+     * @defaultValue `false`
+     */
+    stream?: boolean;
+}
+
+/** An encoder created by the global `TextEncoder`. */
+export interface ITextEncoder {
+    /** Always `"utf-8"`. */
+    readonly encoding: "utf-8";
+    /**
+     * Encodes `input` as UTF-8.
+     *
+     * @remarks `undefined` and `null` encode as an empty array; lone surrogates encode
+     * as U+FFFD.
+     */
+    encode(input?: string): Uint8Array;
+}
+
+/**
+ * The global `TextEncoder` constructor of the WHATWG Encoding Standard.
+ *
+ * @remarks Instances are plain objects carrying their members as own read-only
+ * properties, so `instanceof TextEncoder` is `false`. `encodeInto` is not available.
+ */
+export interface ITextEncoderConstructor {
+    new(): ITextEncoder;
+}
+
+/** A decoder created by the global `TextDecoder`. */
+export interface ITextDecoder {
+    /** Canonical name of the encoding selected by the constructor label. */
+    readonly encoding: TTextDecoderEncoding;
+    /** Whether malformed input throws instead of decoding as U+FFFD. */
+    readonly fatal: boolean;
+    /** Whether a leading byte order mark is kept in the output. */
+    readonly ignoreBOM: boolean;
+    /**
+     * Decodes `input` and returns the text.
+     *
+     * @remarks Omitting `input` decodes nothing and flushes the bytes held back by a
+     * previous `{ stream: true }` call. With {@link ITextDecoderOptions.fatal}, malformed
+     * input throws a `TypeError` and discards the held-back bytes.
+     */
+    decode(input?: TBufferSource, options?: ITextDecodeOptions): string;
+}
+
+/**
+ * The global `TextDecoder` constructor of the WHATWG Encoding Standard.
+ *
+ * @remarks Instances are plain objects carrying their members as own read-only
+ * properties, so `instanceof TextDecoder` is `false`.
+ */
+export interface ITextDecoderConstructor {
+    /**
+     * @param label - Encoding label, matched case-insensitively after trimming ASCII
+     * whitespace; defaults to `"utf-8"`. Only UTF-8 and UTF-16 labels are supported,
+     * such as `"utf8"`, `"utf-16"` (little-endian), and `"utf-16be"`; any other label,
+     * including valid ones such as `"gbk"`, throws a `RangeError`.
+     * @param options - Decoding options.
+     */
+    new(label?: string, options?: ITextDecoderOptions): ITextDecoder;
 }
 
 // ── Top-level interface ───────────────────────────────────────────────────────
