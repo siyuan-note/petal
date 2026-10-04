@@ -103,8 +103,10 @@ export interface IStorageEntry {
 /**
  * A lazy data accessor returned by {@link IStorage.get} and {@link IFetchResponse}.
  *
- * @remarks Each method decodes the same underlying byte slice; call at most
- * once per method per instance.
+ * @remarks Each method decodes the same underlying byte slice; call at most once per method per
+ * instance. The results of {@link IDataObject.buffer}, {@link IDataObject.arrayBuffer}, and
+ * {@link IDataObject.bytes} share that memory, so changes made through one of them are visible to the
+ * others and to later calls, whereas {@link IDataObject.blob} returns a copy.
  */
 export interface IDataObject {
     /**
@@ -131,13 +133,32 @@ export interface IDataObject {
      * @returns The binary content.
      */
     arrayBuffer(): Promise<ArrayBuffer>;
+    /**
+     * Returns the raw bytes as a `Uint8Array`.
+     *
+     * @returns The binary content.
+     */
+    bytes(): Promise<Uint8Array>;
+    /**
+     * Returns a copy of the raw bytes as a blob that is not a file.
+     *
+     * @remarks The blob's `type` is the `Content-Type` header of the response for {@link IFetchResponse},
+     * of the request for {@link IRequestBody.data}, and of the part for {@link IRequestFile.data},
+     * normalized as described for {@link IBlobPropertyBag.type}. It is `""` for {@link IStorage.get} and
+     * when the header is absent. Unlike the Fetch Standard, the header is not parsed as a MIME type, so
+     * whitespace is kept and a value that is not a valid MIME type is not replaced with `""`:
+     * `Text/HTML; Charset=UTF-8` becomes `text/html; charset=utf-8`.
+     *
+     * @returns The binary content.
+     */
+    blob(): Promise<TBlob>;
 }
 
 /**
  * Response object returned by {@link ISiyuan.fetch}.
  *
  * @remarks Extends {@link IDataObject} so the response body can be read
- * as text, JSON, or raw bytes.
+ * as text, JSON, raw bytes, or a blob.
  */
 export interface IFetchResponse extends IDataObject {
     /** The final URL after any redirects. */
@@ -2024,6 +2045,16 @@ export interface IBlobConstructor {
      */
     new(blobParts?: Iterable<TBlobPart>, options?: IBlobPropertyBag): IBlob;
 }
+
+/**
+ * The `Blob` instance type returned by {@link IDataObject.blob}.
+ *
+ * @remarks Resolves to the DOM `Blob` type when the DOM library is loaded, matching what
+ * `new Blob()` produces in that case; otherwise resolves to {@link IBlob}.
+ */
+export type TBlob = typeof globalThis extends { Blob: infer T; onmessage: any }
+    ? T extends new (...args: any) => infer Instance ? Instance : IBlob
+    : IBlob;
 
 /** A {@link IBlob} with a file name and a modification time, created by {@link IFileConstructor}. */
 export interface IFile extends IBlob {
