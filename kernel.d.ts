@@ -18,17 +18,33 @@
 // literals, optional chaining, nullish coalescing, and logical assignment operators — are fully
 // implemented but have nothing to redeclare.
 //
-// `Intl`, `Atomics`, `SharedArrayBuffer`, `WeakRef`, and `FinalizationRegistry` are NOT
-// implemented — there is no corresponding source file anywhere in goja's tree, unlike the sibling
-// `WeakMap`/`WeakSet` implementations that do exist. `Atomics`/`SharedArrayBuffer` are additionally
-// unlikely to ever land: goja's own documentation states a `goja.Runtime` is not goroutine-safe and
-// values cannot cross between runtime instances, which rules out the cross-thread shared memory
-// these two exist for. Despite this, a TypeScript project targeting `lib: "ES2022"` or higher (as
-// well as plain `lib: "ES5"` for `Intl` specifically, which TypeScript has always declared
-// unconditionally) type-checks code using all five as if they existed; such code compiles but
-// throws `ReferenceError` at runtime in this sandbox. There is no way to retract a global that an
+// `Intl`, `Atomics`, `SharedArrayBuffer`, `WeakRef`, and `FinalizationRegistry`, the ES2025
+// `Iterator` (and with it every iterator helper method) and `Float16Array`, and the ESNext
+// `DisposableStack`, `AsyncDisposableStack`, `SuppressedError`, and `Temporal` are NOT implemented.
+// `Atomics`/`SharedArrayBuffer` are additionally unlikely to ever land: goja's own documentation
+// states a `goja.Runtime` is not goroutine-safe and values cannot cross between runtime instances,
+// which rules out the cross-thread shared memory these two exist for. Despite this, a TypeScript
+// project whose `lib` includes the edition that declares one of them (`Intl` is declared even by
+// plain `lib: "ES5"`) type-checks code using it as if it existed; such code compiles but throws
+// `ReferenceError` at runtime in this sandbox. There is no way to retract a global that an
 // already-loaded `lib` tier declares, so this is a correctness note for plugin authors rather than
 // something expressible as a type here.
+//
+// Running the same member check against the built-in globals that are not redeclared below found
+// these missing: `Object.groupBy` and `String.prototype.isWellFormed`/`toWellFormed` (ES2024),
+// `RegExp.escape` and `Math.f16round` (ES2025), `Array.fromAsync`, `Error.isError` (also absent
+// from every error subclass), and
+// `Date.prototype.toTemporalInstant` (ESNext), as well as legacy members that TypeScript still
+// declares: the `RegExp` statics `$1`–`$9`, `input`, `lastMatch`, `lastParen`, `leftContext`, and
+// `rightContext` with their `$_`, `$&`, `$+`, `` $` ``, and `$'` aliases, and the HTML methods of
+// `String.prototype` such as `anchor`, `bold`, and `link`.
+//
+// Some syntax is not supported: async generators and `for await...of` (ES2018), `using` and
+// `await using` declarations (ESNext), and dynamic `import()` fail with a `SyntaxError` when the
+// script is compiled, and the RegExp `d` (ES2022) and `v` (ES2024) flags throw a `SyntaxError` when
+// the regular expression is created. Unicode property escapes such as `\p{L}` (ES2018) are worse:
+// they are accepted, but matched as literal text even with the `u` flag, so `/\p{L}/u.test("a")` is
+// `false` while `/\p{L}/u.test("p{L}")` is `true`.
 //
 // Two further spec deviations, both inherited from Go's standard library and documented in goja's
 // own README: `JSON.parse` cannot correctly round-trip a lone (unpaired) UTF-16 surrogate, because
@@ -55,6 +71,8 @@ import type {
     IConsole,
     IURLConstructor,
     IURLSearchParamsConstructor,
+    IRequire,
+    IGoErrorConstructor,
     ISetTimeout,
     IClearTimeout,
     ISetInterval,
@@ -170,6 +188,12 @@ declare global {
      */
     var URLSearchParams: typeof globalThis extends { URLSearchParams: infer T; onmessage: any } ? T : IURLSearchParamsConstructor;
     /**
+     * Loads a CommonJS module from the plugin's directory or a built-in module; see {@link IRequire}.
+     *
+     * @remarks Absent from `lib.dom.d.ts`, so no DOM-coexistence fallback is needed.
+     */
+    var require: IRequire;
+    /**
      * Schedules a one-off callback; see {@link ISetTimeout}.
      *
      * @remarks Unlike the other DOM-coexisting globals in this block, this cannot fall back to the DOM
@@ -200,6 +224,12 @@ declare global {
     var setImmediate: ISetImmediate;
     /** Cancels a callback scheduled by {@link setImmediate}; see {@link IClearImmediate}. */
     var clearImmediate: IClearImmediate;
+    /**
+     * goja's built-in error type for failures that originate in kernel (Go) code; see {@link IGoError}.
+     *
+     * @remarks Not part of any web or Node.js standard, so no DOM-coexistence fallback is needed.
+     */
+    var GoError: IGoErrorConstructor;
     /**
      * Implemented by the kernel plugin sandbox, but `Promise.withResolvers` (ES2024) and `Promise.try` (ES2025) are
      * missing at runtime although the standard type declares them; see the top-of-file ECMAScript-conformance note.

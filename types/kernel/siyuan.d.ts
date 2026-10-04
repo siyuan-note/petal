@@ -1,4 +1,4 @@
-import type { IPlugin, IEvent, ILogger, IStorage, IRpc, IAgent } from "./plugin";
+import type { IPlugin, IEvent, ILogger, IStorage, IRpc, IAgent, IPlaceholderResolver } from "./plugin";
 import type { IClient } from "./client";
 import type { IServer } from "./server";
 
@@ -25,4 +25,8 @@ export interface ISiyuan {
     readonly client: IClient;
     /** Web request handler registry. */
     readonly server: IServer;
+    /** Resolves `{{secrets.NAME}}` placeholders against the workspace's configured secrets. */
+    readonly secrets: IPlaceholderResolver;
+    /** Resolves `{{vars.NAME}}` placeholders against the workspace's configured variables. */
+    readonly vars: IPlaceholderResolver;
 }

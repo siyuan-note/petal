@@ -16,3 +16,5 @@ export * from "./siyuan";
 export * from "./console";
 export * from "./url";
 export * from "./timers";
+export * from "./require";
+export * from "./goError";

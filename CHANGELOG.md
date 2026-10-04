@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare `siyuan.secrets` and `siyuan.vars` for resolving configured secret and variable placeholders, the `require` and `GoError` kernel plugin globals, and further ECMAScript built-in and syntax gaps found by checking against a running sandbox
+
 * [Remove `ISiyuan.crypto`; kernel plugins now access Web Crypto only through the standard `globalThis.crypto` global](https://github.com/siyuan-note/siyuan/issues/20041)
 
 * Redeclare the kernel plugin `Promise`, `Symbol`, `Proxy`, `Reflect`, `Map`, `Set`, `WeakMap`, `WeakSet`, `BigInt`, `ArrayBuffer`, `DataView`, and typed array globals to document which members of their standard `lib.es*.d.ts` types are missing at runtime

@@ -251,3 +251,25 @@ export interface IRegisteredCapability extends IAgentCapabilityConfig {
      */
     name: string;
 }
+
+/**
+ * Resolves placeholders in a string against one of the workspace's configured value stores.
+ *
+ * @remarks Exposed as `siyuan.secrets` (configured secrets) and `siyuan.vars` (configured variables). Each store
+ * is consulted only by its own resolver, and neither exposes the list of configured names.
+ */
+export interface IPlaceholderResolver {
+    /**
+     * Replaces placeholders in `template` with configured values.
+     *
+     * @remarks Synchronous. Replaces `{{secrets.NAME}}` (for `siyuan.secrets`) or `{{vars.NAME}}` (for
+     * `siyuan.vars`), as well as the unprefixed shell-style `$NAME` and `${NAME}`, where a shell-style `NAME` is
+     * a letter or underscore followed by letters, digits, or underscores. A placeholder whose name is not
+     * configured is left unchanged. Returns `""` when `template` is missing or is not itself a `string` (unlike
+     * most of this API, a non-`string` is not converted, even when it has a `toString` method).
+     *
+     * @param template - The string containing placeholders.
+     * @returns `template` with every placeholder whose name is configured replaced by its value.
+     */
+    resolve(template: string): string;
+}
