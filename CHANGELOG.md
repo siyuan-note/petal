@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare the kernel plugin `console`, `URL`, `URLSearchParams`, `setTimeout`, `setInterval`, `setImmediate`, `clearTimeout`, `clearInterval`, and `clearImmediate` globals, and document the gaps between the declared `Buffer` global and its actual kernel plugin implementation
+
 * Declare the kernel plugin Streams API (`ReadableStream`, `WritableStream`, `TransformStream`, `CountQueuingStrategy`, `ByteLengthQueuingStrategy`), `IFetchResponse.body` as a stream, and `IResponseBody.stream` for server streaming responses
 
 * Declare the `bytes()` and `blob()` methods of `IDataObject`

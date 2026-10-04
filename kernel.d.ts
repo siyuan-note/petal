@@ -17,6 +17,15 @@ import type {
     ITransformStreamConstructor,
     ICountQueuingStrategyConstructor,
     IByteLengthQueuingStrategyConstructor,
+    IConsole,
+    IURLConstructor,
+    IURLSearchParamsConstructor,
+    ISetTimeout,
+    IClearTimeout,
+    ISetInterval,
+    IClearInterval,
+    ISetImmediate,
+    IClearImmediate,
 } from "./types/kernel/index";
 
 export * from "./types/kernel/index";
@@ -107,4 +116,55 @@ declare global {
      * @remarks When the DOM library is also loaded, this keeps the DOM `ByteLengthQueuingStrategy` type.
      */
     var ByteLengthQueuingStrategy: typeof globalThis extends { ByteLengthQueuingStrategy: infer T; onmessage: any } ? T : IByteLengthQueuingStrategyConstructor;
+    /**
+     * Logs to the kernel log; see {@link IConsole}.
+     *
+     * @remarks When the DOM library is also loaded, this keeps the DOM `Console` type, which declares methods
+     * the sandbox does not implement (`table`, `group`, `trace`, etc.); see {@link IConsole} for the real
+     * surface.
+     */
+    var console: typeof globalThis extends { console: infer T; onmessage: any } ? T : IConsole;
+    /**
+     * Parses and manipulates a URL; see {@link IURLConstructor}.
+     *
+     * @remarks When the DOM library is also loaded, this keeps the DOM `URL` type.
+     */
+    var URL: typeof globalThis extends { URL: infer T; onmessage: any } ? T : IURLConstructor;
+    /**
+     * Parses and serializes a URL's query string; see {@link IURLSearchParamsConstructor}.
+     *
+     * @remarks When the DOM library is also loaded, this keeps the DOM `URLSearchParams` type.
+     */
+    var URLSearchParams: typeof globalThis extends { URLSearchParams: infer T; onmessage: any } ? T : IURLSearchParamsConstructor;
+    /**
+     * Schedules a one-off callback; see {@link ISetTimeout}.
+     *
+     * @remarks Unlike the other DOM-coexisting globals in this block, this cannot fall back to the DOM
+     * `setTimeout` type when the DOM library is also loaded: `lib.dom.d.ts` declares `setTimeout` as an
+     * unconditional `declare function`, not as a `Window`-shaped property, so there is no way to detect and
+     * defer to it the way `crypto` or `Blob` do; loading this declaration together with `lib: dom` produces a
+     * duplicate-identifier error on `setTimeout`/`setInterval`/`clearTimeout`/`clearInterval`, the same
+     * long-standing conflict `@types/node` has with `lib: dom` for the same four globals.
+     */
+    var setTimeout: ISetTimeout;
+    /** Cancels a callback scheduled by {@link setTimeout}; see {@link IClearTimeout}. */
+    var clearTimeout: IClearTimeout;
+    /**
+     * Schedules a repeating callback; see {@link ISetInterval}.
+     *
+     * @remarks See the {@link setTimeout} remarks: this has the same unconditional-`declare function` conflict
+     * with the DOM library.
+     */
+    var setInterval: ISetInterval;
+    /** Cancels a callback scheduled by {@link setInterval}; see {@link IClearInterval}. */
+    var clearInterval: IClearInterval;
+    /**
+     * Schedules a callback to run as soon as the event loop is next free; see {@link ISetImmediate}.
+     *
+     * @remarks Not part of any web standard; also absent from `lib.dom.d.ts`, so no DOM-coexistence fallback
+     * is needed here, unlike the other globals in this block.
+     */
+    var setImmediate: ISetImmediate;
+    /** Cancels a callback scheduled by {@link setImmediate}; see {@link IClearImmediate}. */
+    var clearImmediate: IClearImmediate;
 }

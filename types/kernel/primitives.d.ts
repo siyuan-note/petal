@@ -66,6 +66,20 @@ export interface IDataObject {
     /**
      * Returns the raw bytes as a node.js compatible `Buffer`.
      *
+     * @remarks The global `Buffer` type comes from `@dop251/types-goja_nodejs-buffer`, which declares a larger
+     * surface than the sandbox actually implements (`github.com/dop251/goja_nodejs/buffer`). Only
+     * `Buffer.from`, `Buffer.alloc`, `Buffer.concat`, and `Buffer.poolSize` exist as statics — `isBuffer`,
+     * `isEncoding`, `byteLength`, `compare`, and `allocUnsafe`/`allocUnsafeSlow` are declared but not defined,
+     * so calling one throws `TypeError: ... is not a function`. On instances, the full `read*`/`write*` numeric
+     * family and `equals` are genuinely Buffer-specific; `copy` and `toJSON` are declared but not defined, so
+     * calling either also throws. `slice`, `fill`, `indexOf`, `includes`, and `subarray` are declared with
+     * Node's Buffer-specific signatures but are not actually defined on the Buffer prototype either — because a
+     * Buffer is built on `Uint8Array`, calling one instead silently runs `Uint8Array.prototype`'s version with
+     * `Uint8Array`'s own (different) parameter meaning and return type, rather than throwing or matching the
+     * declared signature. The supported encodings are exactly `"hex"`, `"utf8"`, `"utf-8"`, `"base64"`, and
+     * `"base64Url"` (capital `U`) — the declared type's lowercase `"base64url"` does not match and is rejected
+     * at runtime.
+     *
      * @returns The binary content.
      */
     buffer(): Promise<Buffer>;
