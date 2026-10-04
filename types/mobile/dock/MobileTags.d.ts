@@ -3,6 +3,6 @@ export declare class MobileTags {
     element: HTMLElement;
     private tree;
     private openNodes;
-    constructor(app: App);
+    constructor(app: App, element: HTMLElement);
     update(ignoreMaxListHint?: boolean): void;
 }

@@ -25,5 +25,9 @@ export declare class BlockPanel {
     });
     private initProtyle;
     destroy(): void;
+    removeEditors(options: {
+        notebookId?: string;
+        rootIDs: ReadonlySet<string>;
+    }): void;
     private render;
 }

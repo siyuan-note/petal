@@ -15,7 +15,11 @@ export declare class Wnd {
 
     showHeading(): void;
 
-    switchTab(target: HTMLElement, pushBack?: boolean, update?: boolean, resize?: boolean, isSaveLayout?: boolean): void;
+    /**
+     * @param {boolean} [focusEditor] - 是否聚焦切换后的编辑器，默认仅在非手机和平板设备上聚焦
+     */
+    switchTab(target: HTMLElement, pushBack?: boolean, update?: boolean, resize?: boolean, isSaveLayout?: boolean,
+              focusEditor?: boolean): void;
 
     addTab(tab: Tab, keepCursor?: boolean, isSaveLayout?: boolean, activeTime?: string): void;
 
