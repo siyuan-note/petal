@@ -2,6 +2,36 @@
 /// <reference types="@dop251/types-goja_nodejs-global" />
 /// <reference types="@dop251/types-goja_nodejs-url" />
 
+// ── ECMAScript conformance ────────────────────────────────────────────────────
+//
+// The kernel plugin sandbox runs on `github.com/dop251/goja`, a from-scratch Go implementation of
+// ECMAScript, not a browser or Node.js engine. Confirmed against goja's own source tree and README
+// at the pinned commit (`kernel/go.mod`):
+//
+// `Promise`, `Symbol`, `Proxy`, `Reflect`, `Map`/`Set`/`WeakMap`/`WeakSet`, the typed array family,
+// `BigInt`, classes, generators, `async`/`await`, destructuring, template literals, optional
+// chaining, nullish coalescing, and logical assignment operators are all implemented and match
+// their TypeScript `lib.es*.d.ts` declarations — nothing further needs declaring for these here.
+//
+// `Intl`, `Atomics`, `SharedArrayBuffer`, `WeakRef`, and `FinalizationRegistry` are NOT
+// implemented — there is no corresponding source file anywhere in goja's tree, unlike the sibling
+// `WeakMap`/`WeakSet` implementations that do exist. `Atomics`/`SharedArrayBuffer` are additionally
+// unlikely to ever land: goja's own documentation states a `goja.Runtime` is not goroutine-safe and
+// values cannot cross between runtime instances, which rules out the cross-thread shared memory
+// these two exist for. Despite this, a TypeScript project targeting `lib: "ES2022"` or higher (as
+// well as plain `lib: "ES5"` for `Intl` specifically, which TypeScript has always declared
+// unconditionally) type-checks code using all five as if they existed; such code compiles but
+// throws `ReferenceError` at runtime in this sandbox. There is no way to retract a global that an
+// already-loaded `lib` tier declares, so this is a correctness note for plugin authors rather than
+// something expressible as a type here.
+//
+// Two further spec deviations, both inherited from Go's standard library and documented in goja's
+// own README: `JSON.parse` cannot correctly round-trip a lone (unpaired) UTF-16 surrogate, because
+// it is implemented on top of Go's UTF-8-based `encoding/json`; and converting a calendar date to
+// a `Date` epoch timestamp uses Go's `int` rather than the specification's `float`, so arguments
+// large enough to overflow `int` produce an incorrect result instead of the IEEE 754 value a
+// browser or Node.js would give.
+
 import type {
     ISiyuan,
     ICrypto,
