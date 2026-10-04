@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare the `AbortController` and `AbortSignal` globals of kernel plugins, and the `signal` option of `IRequestInit`
+
 * Declare the `TextEncoder` and `TextDecoder` globals of kernel plugins
 
 * [Declare `globalThis.crypto` as the same object as `siyuan.crypto` in kernel plugins](https://github.com/siyuan-note/siyuan/issues/20041)
