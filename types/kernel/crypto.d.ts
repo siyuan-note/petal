@@ -277,7 +277,7 @@ export interface ICryptoKeyPair {
 }
 
 /**
- * Cryptographic primitives exposed as `siyuan.crypto.subtle`.
+ * Cryptographic primitives exposed as `globalThis.crypto.subtle`.
  *
  * @remarks Mirrors the browser `SubtleCrypto` interface, computed by the kernel with
  * Go's standard library. Operations run off the event loop and resolve on it.
@@ -430,7 +430,7 @@ export interface ISubtleCrypto {
 }
 
 /**
- * Cryptography exposed as `siyuan.crypto` and, as the same object, `globalThis.crypto`.
+ * Cryptography exposed as `globalThis.crypto`.
  *
  * @remarks Mirrors the browser `Crypto` interface, so code that uses the standard
  * global needs no adapter. The `Crypto`, `SubtleCrypto`, and `CryptoKey` interfaces

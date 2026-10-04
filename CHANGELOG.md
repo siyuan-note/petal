@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Remove `ISiyuan.crypto`; kernel plugins now access Web Crypto only through the standard `globalThis.crypto` global](https://github.com/siyuan-note/siyuan/issues/20041)
+
 * Redeclare the kernel plugin `Promise`, `Symbol`, `Proxy`, `Reflect`, `Map`, `Set`, `WeakMap`, `WeakSet`, `BigInt`, `ArrayBuffer`, `DataView`, and typed array globals to document which members of their standard `lib.es*.d.ts` types are missing at runtime
 
 * Document the kernel plugin sandbox's ECMAScript conformance, including the `Intl`, `Atomics`, `SharedArrayBuffer`, `WeakRef`, and `FinalizationRegistry` globals that type-check but are not implemented, and two `JSON`/`Date` spec deviations

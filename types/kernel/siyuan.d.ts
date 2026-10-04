@@ -1,7 +1,6 @@
 import type { IPlugin, IEvent, ILogger, IStorage, IRpc, IAgent } from "./plugin";
 import type { IClient } from "./client";
 import type { IServer } from "./server";
-import type { ICrypto } from "./crypto";
 
 /**
  * The root `siyuan` global exposed to every kernel plugin script.
@@ -26,6 +25,4 @@ export interface ISiyuan {
     readonly client: IClient;
     /** Web request handler registry. */
     readonly server: IServer;
-    /** Web Crypto primitives. */
-    readonly crypto: ICrypto;
 }

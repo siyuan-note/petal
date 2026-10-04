@@ -68,11 +68,9 @@ export * from "./types/kernel/index";
 declare global {
     const siyuan: ISiyuan;
     /**
-     * The same object as {@link ISiyuan.crypto}, installed for code that uses the standard
-     * Web Crypto global.
+     * Web Crypto primitives; see {@link ICrypto}.
      *
-     * @remarks When the DOM library is also loaded, this keeps the DOM `Crypto` type; use
-     * `siyuan.crypto` for the kernel's own typing.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `Crypto` type.
      */
     var crypto: typeof globalThis extends { crypto: infer T; onmessage: any } ? T : ICrypto;
     /**
