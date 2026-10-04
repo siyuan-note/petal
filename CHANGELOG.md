@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare the kernel plugin Streams API (`ReadableStream`, `WritableStream`, `TransformStream`, `CountQueuingStrategy`, `ByteLengthQueuingStrategy`), `IFetchResponse.body` as a stream, and `IResponseBody.stream` for server streaming responses
+
 * Declare the `bytes()` and `blob()` methods of `IDataObject`
 
 * Declare the `Blob`, `File`, and `FormData` globals of kernel plugins, and `FormData` as the `body` of `IRequestInit`
