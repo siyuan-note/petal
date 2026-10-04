@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare the `Blob`, `File`, and `FormData` globals of kernel plugins, and `FormData` as the `body` of `IRequestInit`
+
 * Declare the `AbortController` and `AbortSignal` globals of kernel plugins, and the `signal` option of `IRequestInit`
 
 * Declare the `TextEncoder` and `TextDecoder` globals of kernel plugins
