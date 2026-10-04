@@ -176,6 +176,16 @@ declare global {
      */
     var console: typeof globalThis extends { console: infer T; onmessage: any } ? T : IConsole;
     /**
+     * Creates a Node.js-compatible `Buffer`; redeclared purely to attach this comment, not because the type
+     * itself differs from the ambient `@dop251/types-goja_nodejs-buffer` package's.
+     *
+     * @remarks `BufferConstructor` declares a larger surface than the sandbox actually implements; see the
+     * `@remarks` on {@link IDataObject.buffer} for exactly which statics and instance methods are missing or
+     * behave differently. Not part of any web standard, so no DOM-coexistence fallback is needed; `lib.dom.d.ts`
+     * does not declare `Buffer`.
+     */
+    var Buffer: BufferConstructor;
+    /**
      * Parses and manipulates a URL; see {@link IURLConstructor}.
      *
      * @remarks When the DOM library is also loaded, this keeps the DOM `URL` type.
