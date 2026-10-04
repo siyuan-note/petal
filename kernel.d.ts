@@ -8,10 +8,15 @@
 // ECMAScript, not a browser or Node.js engine. Confirmed against goja's own source tree and README
 // at the pinned commit (`kernel/go.mod`):
 //
-// `Promise`, `Symbol`, `Proxy`, `Reflect`, `Map`/`Set`/`WeakMap`/`WeakSet`, the typed array family,
-// `BigInt`, classes, generators, `async`/`await`, destructuring, template literals, optional
-// chaining, nullish coalescing, and logical assignment operators are all implemented and match
-// their TypeScript `lib.es*.d.ts` declarations — nothing further needs declaring for these here.
+// `Promise`, `Symbol`, `Proxy`, `Reflect`, `Map`/`Set`/`WeakMap`/`WeakSet`, `ArrayBuffer`,
+// `DataView`, the typed array family, and `BigInt` are all implemented, but some lack members that
+// later editions added to their standard `lib.es*.d.ts` types. Each is redeclared below with its
+// standard type unchanged (so a missing member still type-checks) purely to attach a comment listing
+// what is missing at runtime; the lists come from checking every member that TypeScript 6.0's
+// `lib.esnext` declares for these globals against a running sandbox. Syntax-only ES6+ features with
+// no corresponding global object — classes, generators, `async`/`await`, destructuring, template
+// literals, optional chaining, nullish coalescing, and logical assignment operators — are fully
+// implemented but have nothing to redeclare.
 //
 // `Intl`, `Atomics`, `SharedArrayBuffer`, `WeakRef`, and `FinalizationRegistry` are NOT
 // implemented — there is no corresponding source file anywhere in goja's tree, unlike the sibling
@@ -197,4 +202,125 @@ declare global {
     var setImmediate: ISetImmediate;
     /** Cancels a callback scheduled by {@link setImmediate}; see {@link IClearImmediate}. */
     var clearImmediate: IClearImmediate;
+    /**
+     * Implemented by the kernel plugin sandbox, but `Promise.withResolvers` (ES2024) and `Promise.try` (ES2025) are
+     * missing at runtime although the standard type declares them; see the top-of-file ECMAScript-conformance note.
+     */
+    var Promise: PromiseConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox, but `Symbol.asyncIterator` (ES2018) and the ESNext `Symbol.dispose`,
+     * `Symbol.asyncDispose`, and `Symbol.metadata` are missing at runtime although the standard type declares them;
+     * see the top-of-file ECMAScript-conformance note.
+     */
+    var Symbol: SymbolConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Proxy: ProxyConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard namespace declares; see the
+     * top-of-file ECMAScript-conformance note.
+     *
+     * @remarks `lib.es2015.reflect.d.ts` declares `Reflect` as a `namespace`, not a `var` of a `*Constructor`
+     * type, so this is an empty namespace merge rather than a `var` redeclaration like the other entries below.
+     */
+    namespace Reflect {}
+    /**
+     * Implemented by the kernel plugin sandbox, but `Map.groupBy` (ES2024) and the ESNext `Map.prototype.getOrInsert`
+     * and `Map.prototype.getOrInsertComputed` are missing at runtime although the standard type declares them; see
+     * the top-of-file ECMAScript-conformance note.
+     */
+    var Map: MapConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox, but the ES2025 set methods `union`, `intersection`, `difference`,
+     * `symmetricDifference`, `isSubsetOf`, `isSupersetOf`, and `isDisjointFrom` are missing from `Set.prototype` at
+     * runtime although the standard type declares them; see the top-of-file ECMAScript-conformance note.
+     */
+    var Set: SetConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox, but the ESNext `WeakMap.prototype.getOrInsert` and
+     * `WeakMap.prototype.getOrInsertComputed` are missing at runtime although the standard type declares them; see
+     * the top-of-file ECMAScript-conformance note.
+     */
+    var WeakMap: WeakMapConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var WeakSet: WeakSetConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var BigInt: BigIntConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox except for resizable and transferable buffers (ES2024): the
+     * `ArrayBuffer.prototype` members `resize`, `resizable`, `maxByteLength`, `transfer`, `transferToFixedLength`, and
+     * `detached` are missing at runtime although the standard type declares them; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var ArrayBuffer: ArrayBufferConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox, but `DataView.prototype.getFloat16` and `setFloat16` (ES2025) are
+     * missing at runtime although the standard type declares them; see the top-of-file ECMAScript-conformance note.
+     */
+    var DataView: DataViewConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Int8Array: Int8ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox, but the ESNext base64 and hex conversions `Uint8Array.fromBase64`,
+     * `Uint8Array.fromHex`, and the `Uint8Array.prototype` methods `toBase64`, `toHex`, `setFromBase64`, and
+     * `setFromHex` are missing at runtime although the standard type declares them; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Uint8Array: Uint8ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Uint8ClampedArray: Uint8ClampedArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Int16Array: Int16ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Uint16Array: Uint16ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Int32Array: Int32ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Uint32Array: Uint32ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Float32Array: Float32ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Float64Array: Float64ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var BigInt64Array: BigInt64ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var BigUint64Array: BigUint64ArrayConstructor;
 }

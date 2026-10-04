@@ -2,7 +2,9 @@
 
 ## v1.3.0 2026
 
-* Document the kernel plugin sandbox's ECMAScript conformance: confirm `Promise`, `Symbol`, `Proxy`, `Reflect`, `Map`/`Set`/`WeakMap`/`WeakSet`, typed arrays, `BigInt`, and modern syntax match their standard `lib.es*.d.ts` declarations, and flag that `Intl`, `Atomics`, `SharedArrayBuffer`, `WeakRef`, `FinalizationRegistry`, and two `JSON`/`Date` spec deviations are not actually implemented despite type-checking as if they were
+* Redeclare the kernel plugin `Promise`, `Symbol`, `Proxy`, `Reflect`, `Map`, `Set`, `WeakMap`, `WeakSet`, `BigInt`, `ArrayBuffer`, `DataView`, and typed array globals to document which members of their standard `lib.es*.d.ts` types are missing at runtime
+
+* Document the kernel plugin sandbox's ECMAScript conformance, including the `Intl`, `Atomics`, `SharedArrayBuffer`, `WeakRef`, and `FinalizationRegistry` globals that type-check but are not implemented, and two `JSON`/`Date` spec deviations
 
 * Declare the kernel plugin `console`, `URL`, `URLSearchParams`, `setTimeout`, `setInterval`, `setImmediate`, `clearTimeout`, `clearInterval`, and `clearImmediate` globals, and document the gaps between the declared `Buffer` global and its actual kernel plugin implementation
 
