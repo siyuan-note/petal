@@ -36,6 +36,10 @@ export namespace Config {
          * thresholds 仅用于 PaddleOCR，detection 和 box 为 (0, 1)，recognition 为 [0, 1]。
          * 字段为 null 时使用模型检测参数和 0.5 的识别阈值。
          * setOCRConfig 省略 thresholds 或传 null 时保留已保存值；传入包含三个 null 字段的对象可恢复默认。
+         * provider 为 ai 时，手动和自动识别均使用独立的 aiModelId；失效时不回退到其他模型或提供商。
+         * setOCRConfig 省略 aiModelId 或传 null 时保留已有选择。
+         * 首次从本地提供商切换到 AI 时关闭自动识别，之后可以显式开启；仅处理尚无结果的普通图片。
+         * /api/asset/ocr 使用所选 OCR 提供商；AI 返回保留换行和空格的 text 和空 ocrJSON，不虚构坐标。
          */
         ocr: import("./api").SettingOCR;
         api: IAPI;
@@ -163,7 +167,8 @@ export namespace Config {
      */
     export interface IAgent {
         /**
-         * 同时用于图片菜单的手动 AI OCR，不创建智能体会话或执行工具。
+         * 未保存独立 OCR AI 模型且选用本地 OCR 提供商时，图片菜单的手动 AI OCR 兼容此模型。
+         * 独立模型保存在 config.ocr.aiModelId，失效时返回错误，不回退到智能体或其他模型。
          * POST /api/ai/ocr 接收 {path}，仅支持普通笔记本或全局 assets/ 图片，保留 box 查询参数。
          * 支持 PNG、JPEG、GIF、WebP；BMP、TIFF 转为 PNG，HEIC/HEIF 转为 JPEG，其他格式返回错误。
          * 保留原图分辨率，原始文件和发送图片均限制为 20 MiB，发送图片限制为四千万像素；HEIF 遵循预览解码限制。

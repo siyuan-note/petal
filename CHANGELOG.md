@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Expose AI as an OCR provider with an independent model selection and opt-in automatic recognition](https://github.com/siyuan-note/siyuan/issues/20082)
+
 * [Document relation item and context filters for database rollups](https://github.com/siyuan-note/siyuan/issues/20085)
 
 * [Clarify image formats and conversion limits for manual AI OCR](https://github.com/siyuan-note/siyuan/issues/20082)
