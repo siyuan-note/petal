@@ -397,6 +397,11 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 生效的同级锚点必须是非文档块；未使用的定位参数不参与节点类型校验，文档 parentID 插入到文档开头。
  * 目标非法时返回 code=-1、data=null，成功返回已落盘的操作。
  */
+/**
+ * `/api/block/moveBlock` 按 previousID、parentID 的顺序选择移动位置，省略 previousID 时移动到父块开头。
+ * 成功和主动跳过返回 code=0、data=null；事务校验或提交失败返回 code=-1、data=null 和原因。
+ * 事务回滚时保留界面重载和错误通知行为，加密笔记本的访问规则及跨加密边界限制保持不变。
+ */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**

@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Clarify moveBlock transaction failures and skipped operations](https://github.com/siyuan-note/siyuan/issues/20142)
+
 * [Clarify insertBlock sibling anchors, positioning precedence, and document parent placement](https://github.com/siyuan-note/siyuan/issues/20139)
 
 * [Declare opt-in plugin instances in independent settings windows and their lifecycle and UI restrictions](https://github.com/siyuan-note/siyuan/issues/20002)
