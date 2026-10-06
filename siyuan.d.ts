@@ -179,6 +179,7 @@ export interface IEventBusMap {
     "open-menu-tag": IMenuBaseDetail;
     "open-menu-doctree": {
         menu: subMenu,
+        /** 关系图文档菜单中的 elements 为空，应通过 items 获取目标文档信息 */
         elements: NodeListOf<HTMLElement>,
         type: "doc" | "docs" | "notebook" | "notebooks" | "items",
         items: { id: string, path: string, notebookId: string }[],
