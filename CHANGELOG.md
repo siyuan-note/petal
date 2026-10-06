@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document native Tabs and Mindmap block insertion and structural editing](https://github.com/siyuan-note/siyuan/issues/20163)
+
 * [Expose settings navigation with optional provider options](https://github.com/siyuan-note/siyuan/issues/20109)
 
 * [Declare removal of saved ChatGPT account registrations](https://github.com/siyuan-note/siyuan/issues/20109)

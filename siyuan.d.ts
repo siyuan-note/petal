@@ -397,6 +397,11 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * `/api/block/insertBlock` 按 nextID、previousID、parentID 的顺序选择插入位置。
  * 生效的同级锚点必须是非文档块；未使用的定位参数不参与节点类型校验，文档 parentID 插入到文档开头。
  * 目标非法时返回 code=-1、data=null，成功返回已落盘的操作。
+ * insertBlock、appendBlock、prependBlock 的目标为原生页签或脑图容器时，只能插入各自的项目块。
+ * 输入同类型容器片段时展开其直属项目，保留目标容器属性及项目 ID；非法子块由事务校验拒绝。
+ * prependBlock 保留排队执行的响应行为，事务失败不落盘，但 code=0 不代表事务已通过校验。
+ * 原生页签和脑图的结构化编辑使用 getBlockDOM 和 dataType="dom"，并保留已有 ID 和属性。
+ * getBlockKramdown 默认输出供阅读的 Markdown，会平铺页签并将脑图输出为普通列表。
  */
 /**
  * `/api/block/moveBlock` 按 previousID、parentID 的顺序选择移动位置，省略 previousID 时移动到父块开头。
