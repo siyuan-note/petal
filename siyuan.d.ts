@@ -661,7 +661,15 @@ export function hideMessage(id?: string): void;
  *
  * 截止时间后，JavaScript Promise 无法取消，超时钩子可能继续运行。思源仍会尽力调用每个剩余的拆除钩子一次，但不再等待，
  * 随后拆除宿主管理的资源。这 5 秒只限制思源等待 Promise 的时间，无法中断同步 JavaScript。关闭窗口或退出思源时，
- * 该操作不会触发前端插件生命周期钩子。
+ * 普通前端窗口不会触发前端插件生命周期钩子。独立设置窗口销毁时会尽力调用 onunload 并立即释放宿主管理的资源，
+ * 不等待异步钩子完成；窗口关闭后不能继续操作其文档。
+ *
+ * plugin.json 可声明 settingsWindow: true，允许已启用且兼容 desktop 的插件在内置和插件的独立设置窗口中运行。
+ * 省略或 false 不加载；该声明不会启用已禁用的插件，也不改变主窗口、文档窗口和移动端的 frontends 兼容性。
+ * 每个设置窗口使用独立实例、事件总线和存储缓存，复用 onload、onLayoutReady、onDataChanged 和 onunload 生命周期。
+ * 主窗口的配置写入通过现有数据变更通知同步；未覆盖 onDataChanged 时重载实例。插件应自行清理其样式和事件监听。
+ * 设置窗口未提供编辑器、顶栏、状态栏和停靠栏，相关注册入口不生效，也不注册命令、全局快捷键或智能体能力。
+ * 插件的 openSetting 调用交由所属宿主窗口处理；设置窗口在打开后启用、停用和重载插件时也更新本地实例。
  */
 export abstract class Plugin {
     eventBus: EventBus;
@@ -944,8 +952,10 @@ export class Setting {
         confirmCallback?: () => void,
         /**
          * 桌面客户端使用独立原生窗口，默认 false，浏览器和移动端仍使用原有设置界面。
-         * 不重复加载插件；回调在插件所属窗口执行，原生窗口关闭或插件卸载时触发一次销毁回调。
+         * 原插件实例保持在所属窗口；声明 settingsWindow: true 的插件可在原生设置窗口另建独立实例。
+         * 控件回调在原插件所属窗口执行，原生窗口关闭或原插件卸载时触发一次销毁回调。
          * 控件会迁入独立窗口，应使用元素引用操作控件，避免依赖所属窗口的 document 查询或样式。
+         * 在设置窗口中再次打开 Setting 使用普通对话框，关闭该对话框不会关闭整个设置窗口。
          */
         openInWindow?: boolean,
     });

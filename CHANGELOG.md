@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare opt-in plugin instances in independent settings windows and their lifecycle and UI restrictions](https://github.com/siyuan-note/siyuan/issues/20002)
+
 * [Declare independent reasoning effort for AI OCR](https://github.com/siyuan-note/siyuan/issues/20082)
 
 * [Expose AI as an OCR provider with an independent model selection and opt-in automatic recognition](https://github.com/siyuan-note/siyuan/issues/20082)
