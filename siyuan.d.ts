@@ -392,6 +392,11 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 自动化不串联，导入、同步、历史恢复和撤销重放不重新触发；重做保留原条目 ID 和触发时间。
  * 跨库动作限于同一加密边界，要求目标可访问；单笔事务最多执行 1000 个自动操作。
  */
+/**
+ * `/api/block/insertBlock` 按 nextID、previousID、parentID 的顺序选择插入位置。
+ * 生效的同级锚点必须是非文档块；未使用的定位参数不参与节点类型校验，文档 parentID 插入到文档开头。
+ * 目标非法时返回 code=-1、data=null，成功返回已落盘的操作。
+ */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**
