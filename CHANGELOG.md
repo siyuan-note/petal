@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare ChatGPT account authentication and encrypted session transfer APIs](https://github.com/siyuan-note/siyuan/issues/20109)
+
 * [Clarify editor title menu event context when document menus are reused in graphs](https://github.com/siyuan-note/siyuan/issues/20148)
 
 * [Expose the built-in document child sorting attribute constant](https://github.com/siyuan-note/siyuan/issues/20148)
