@@ -40,6 +40,8 @@ export namespace Config {
          * setOCRConfig 省略 aiModelId 或传 null 时保留已有选择。
          * 首次从本地提供商切换到 AI 时关闭自动识别，之后可以显式开启；仅处理尚无结果的普通图片。
          * /api/asset/ocr 使用所选 OCR 提供商；AI 返回保留换行和空格的 text 和空 ocrJSON，不虚构坐标。
+         * reasoningEffort 独立控制手动和自动 AI OCR，省略或 null 保留已有值，空字符串沿用模型默认。
+         * 可选 none、low、medium、high、xhigh、max；无表示关闭或尽量减少思考，支持情况依提供商及模型而定。
          */
         ocr: import("./api").SettingOCR;
         api: IAPI;
