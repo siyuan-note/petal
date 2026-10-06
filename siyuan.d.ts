@@ -555,7 +555,10 @@ export function getAllTabs(type?: TTab | string): Tab[]
 
 export function getAllModels(): IModels
 
-export function openSetting(app: App): Dialog | undefined;
+export function openSetting(app: App, tab?: "editor" | "file" | "appearance" | "bazaar" | "flashcard" | "ai" | "secretsVariables" | "assets" | "ocr" | "export" | "search" | "keymap" | "sync" | "access" | "app" | "about", options?: {
+    /** 在人工智能设置中打开 ChatGPT 提供商；搭配 tab="ai" 使用 */
+    aiProvider?: "chatgpt";
+}): Dialog | undefined;
 
 export function openEmoji(options: {
     position: IPosition,

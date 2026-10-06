@@ -2,6 +2,10 @@
 
 ## v1.3.0 2026
 
+* [Expose settings navigation with optional provider options](https://github.com/siyuan-note/siyuan/issues/20109)
+
+* [Declare removal of saved ChatGPT account registrations](https://github.com/siyuan-note/siyuan/issues/20109)
+
 * [Declare ChatGPT account authentication and encrypted session transfer APIs](https://github.com/siyuan-note/siyuan/issues/20109)
 
 * [Clarify editor title menu event context when document menus are reused in graphs](https://github.com/siyuan-note/siyuan/issues/20148)
