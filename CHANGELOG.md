@@ -2,7 +2,9 @@
 
 ## v1.3.0 2026
 
-* [Expose the built-in document child sorting attribute constant and clarify graph document menu event targets](https://github.com/siyuan-note/siyuan/issues/20148)
+* [Clarify editor title menu event context when document menus are reused in graphs](https://github.com/siyuan-note/siyuan/issues/20148)
+
+* [Expose the built-in document child sorting attribute constant](https://github.com/siyuan-note/siyuan/issues/20148)
 
 * [Clarify moveBlock transaction failures and skipped operations](https://github.com/siyuan-note/siyuan/issues/20142)
 
