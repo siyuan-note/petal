@@ -188,6 +188,8 @@ export namespace Config {
         capabilityPolicy: ICapabilityPolicy;
         skills: {
             userEnabled: string[];
+            /** Stable official skill IDs that are disabled; unknown IDs are preserved and an empty list enables all built-ins. */
+            builtinDisabled: string[];
         };
         approvalPolicy: {
             default: string;
