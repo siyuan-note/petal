@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare the workspace settings window preference and API, and remove its obsolete storage constant](https://github.com/siyuan-note/siyuan/pull/20183)
+
 * [Clarify explicit deletion of the Android notification switch while preserving bulk cleanup protection](https://github.com/siyuan-note/siyuan/issues/20184)
 
 * [Declare document tree click modes](https://github.com/siyuan-note/siyuan/pull/20178)
