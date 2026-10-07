@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare default item template previews and undoable relation item creation](https://github.com/siyuan-note/siyuan/issues/20114)
+
 * [Declare isolated decision-provider profiles and draft connection testing](https://github.com/siyuan-note/siyuan/issues/19986)
 
 * Clarify batch block existence queries across ordinary and encrypted notebooks
