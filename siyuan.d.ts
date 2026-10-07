@@ -421,9 +421,7 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 该文件不出现在 getUnusedAssets 中，也不被 removeUnusedAssets 批量清理。
  */
 /**
- * `/api/system/setSettingsWindow` 要求管理员权限且禁止只读写入，接收必填布尔字段 settingsWindow。
- * 该偏好保存在工作空间 conf.json，仅桌面 Electron 客户端使用；保存后通知 system 配置域。
- * 默认 false，不读取旧的 local-settings-window-mode；重置设置时恢复为 false。
+ * `/api/system/setSettingsWindow` 更新工作空间的独立设置窗口开关，仅桌面 Electron 客户端使用。
  */
 export const fetchPost: FetchPost<IWebSocketData>;
 
