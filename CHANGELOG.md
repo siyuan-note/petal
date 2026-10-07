@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Clarify explicit deletion of the Android notification switch while preserving bulk cleanup protection](https://github.com/siyuan-note/siyuan/issues/20184)
+
 * [Declare document tree click modes](https://github.com/siyuan-note/siyuan/pull/20178)
 
 * [Declare explicit template or input names when creating related items](https://github.com/siyuan-note/siyuan/issues/20114)

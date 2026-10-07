@@ -414,6 +414,12 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 不存在或已锁定且无法确定归属的块返回 false；显式指定已锁定的加密笔记本返回 code=-1、data=null。
  * 发布读者的不可访问块不返回结果，加密响应租约保持到响应发送完成。
  */
+/**
+ * `/api/asset/removeUnusedAsset` 的 path 为 data 相对资源路径，普通资源须通过完整未引用扫描。
+ * 全局 `assets/android-notification-texts.txt` 普通文件允许显式删除以关闭 Android 保活通知，
+ * 不依赖未引用扫描；目录和符号链接不能使用该例外。删除前仍保存资源历史并触发同步。
+ * 该文件不出现在 getUnusedAssets 中，也不被 removeUnusedAssets 批量清理。
+ */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**
