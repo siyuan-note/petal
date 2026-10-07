@@ -408,6 +408,12 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 成功和主动跳过返回 code=0、data=null；事务校验或提交失败返回 code=-1、data=null 和原因。
  * 事务回滚时保留界面重载和错误通知行为，加密笔记本的访问规则及跨加密边界限制保持不变。
  */
+/**
+ * `/api/block/checkBlocksExist` 接收 ids，忽略非字符串及无效块 ID，重复 ID 合并为一个结果。
+ * notebook 为加密笔记本时只查询该库；省略或传入普通笔记本时查询全局库及本请求已持有租约的加密库。
+ * 不存在或已锁定且无法确定归属的块返回 false；显式指定已锁定的加密笔记本返回 code=-1、data=null。
+ * 发布读者的不可访问块不返回结果，加密响应租约保持到响应发送完成。
+ */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**

@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Clarify batch block existence queries across ordinary and encrypted notebooks
+
 * [Document native Tabs and Mindmap block insertion and structural editing](https://github.com/siyuan-note/siyuan/issues/20163)
 
 * [Expose settings navigation with optional provider options](https://github.com/siyuan-note/siyuan/issues/20109)
