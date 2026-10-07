@@ -875,18 +875,15 @@ export namespace Config {
          */
         alwaysSelectOpenedFile: boolean;
         /**
-         * Whether clicking a document icon expands or collapses its child documents
+         * 桌面端单击文档图标的行为：0 修改图标，1 展开或折叠子文档；没有子文档时打开文档
+         * 桌面端笔记本图标始终用于修改图标；旧的布尔配置不迁移
          */
-        docIconClickExpand: boolean;
+        docIconClickMode: number;
         /**
-         * Whether clicking a parent document title expands or collapses its child documents
+         * 点击父文档标题的行为：0 打开文档，1 立即展开或折叠子文档，2 单击展开或折叠、双击打开父文档
+         * 取 2 时单击等待约 300 毫秒；没有子文档时直接打开；旧的布尔配置不迁移
          */
-        parentDocClickExpand: boolean;
-        /**
-         * 单击标题展开启用时，是否允许双击打开父文档；缺失时默认启用
-         * 关闭后单击不等待双击判定；设置接口省略或传 null 时保留当前值
-         */
-        parentDocDoubleClickOpen: boolean;
+        parentDocTitleClickMode: number;
         /**
          * Whether to enable top-level notebook documents
          */

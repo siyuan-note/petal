@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare document tree click modes](https://github.com/siyuan-note/siyuan/pull/20178)
+
 * [Declare explicit template or input names when creating related items](https://github.com/siyuan-note/siyuan/issues/20114)
 
 * [Declare optional double-click opening for parent document titles](https://github.com/siyuan-note/siyuan/issues/20169)
