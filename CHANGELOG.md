@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document consistent case-sensitive matching across search replacement types](https://github.com/siyuan-note/siyuan/issues/20276)
+
 * [Generate attribute-view field types, filter operators, and capability declarations from the kernel](https://github.com/siyuan-note/siyuan/issues/20255)
 
 * [Document supported search replacement methods and rejection of SQL and semantic search](https://github.com/siyuan-note/siyuan/issues/20226)
