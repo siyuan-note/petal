@@ -480,6 +480,10 @@ export const fetchPost: FetchPost<IWebSocketData>;
  */
 export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 
+/**
+ * `/api/network/echo` 的 URL、TLS 和 Cookie 诊断对象保留标准库的原始 JSON。
+ * 已声明字段及其类型保持稳定；工具链新增的诊断字段通过 JSONValue 索引读取，不保证跨版本存在。
+ */
 export const fetchGet: FetchGet<IWebSocketData | IObject | string>;
 
 export function openWindow(options: {

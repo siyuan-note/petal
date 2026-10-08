@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Keep network echo diagnostic declarations stable across Go toolchains while preserving additional JSON fields](https://github.com/siyuan-note/siyuan/issues/20222)
+
 * Declare the built-in table rich text, table header, and attribute-view static text attribute constants
 
 * [Declare read-only daily note candidate information](https://github.com/siyuan-note/siyuan/issues/20201)
