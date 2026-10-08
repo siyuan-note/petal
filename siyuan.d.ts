@@ -423,6 +423,13 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
 /**
  * `/api/system/setSettingsWindow` 更新工作空间的独立设置窗口开关，仅桌面 Electron 客户端使用。
  */
+/**
+ * `/api/snippet/getSnippet` 为管理员返回完整列表的 revision，即使结果按类型、启用状态或关键字筛选。
+ * 全量编辑应读取 type="all"、enabled=2 且不设置 keyword。发布读者不获得 revision。
+ * `/api/snippet/setSnippet` 可携带 revision，在同一临界区检查版本并保存。
+ * 版本不匹配返回 code=-1、msg="snippet revision conflict"，不会覆盖当前片段；调用方应保留草稿供用户合并。
+ * 省略 revision 或传入 null 保持旧的无条件全量保存行为，不能防止旧列表覆盖并发修改。
+ */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**

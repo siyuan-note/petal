@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Add optional revision checking to snippet saves and document conflict handling for concurrent edits
+
 * Redeclare the kernel plugin `Buffer` global with a pointer to the members it lacks at runtime
 
 * Declare `siyuan.secrets` and `siyuan.vars` for resolving configured secret and variable placeholders, the `require` and `GoError` kernel plugin globals, and further ECMAScript built-in and syntax gaps found by checking against a running sandbox
