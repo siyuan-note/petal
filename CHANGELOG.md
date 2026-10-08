@@ -4,6 +4,8 @@
 
 * Declare the built-in table rich text, table header, and attribute-view static text attribute constants
 
+* [Declare read-only daily note candidate information](https://github.com/siyuan-note/siyuan/issues/20201)
+
 * Add optional revision checking to snippet saves and document conflict handling for concurrent edits
 
 * Redeclare the kernel plugin `Buffer` global with a pointer to the members it lacks at runtime
