@@ -55,6 +55,7 @@ export abstract class Constants {
 
     // custom
     public static readonly CUSTOM_SY_READONLY: string = "custom-sy-readonly";
+    public static readonly CUSTOM_SY_SUBDOC_SORT_MODE: string = "custom-sy-subdoc-sort-mode";
     public static readonly CUSTOM_SY_FULLWIDTH: string = "custom-sy-fullwidth";
     public static readonly CUSTOM_SY_AV_VIEW: string = "custom-sy-av-view";
     public static readonly CUSTOM_SY_LIST_MINDMAP: string = "custom-sy-list-mindmap";
@@ -142,7 +143,6 @@ export abstract class Constants {
 
     // localstorage
     public static readonly LOCAL_ZOOM = "local-zoom";
-    public static readonly LOCAL_SETTINGS_WINDOW_MODE = "local-settings-window-mode";
     public static readonly LOCAL_SEARCHDATA = "local-searchdata";
     public static readonly LOCAL_SEARCHKEYS = "local-searchkeys";
     public static readonly LOCAL_SEARCHASSET = "local-searchasset";
@@ -580,6 +580,8 @@ export abstract class Constants {
                 jumpToParent: {default: "⇧⌘J", custom: "⇧⌘J"},
                 moveToUp: {default: "⇧⌘↑", custom: "⇧⌘↑"},
                 moveToDown: {default: "⇧⌘↓", custom: "⇧⌘↓"},
+                goToDocumentStart: {default: "⌘Home", custom: "⌘Home"},
+                goToDocumentEnd: {default: "⌘End", custom: "⌘End"},
                 selectToPageStart: {default: "⇧Home", custom: "⇧Home"},
                 selectToPageEnd: {default: "⇧End", custom: "⇧End"},
                 scrollPageUpWithoutMovingCaret: {default: "⌥PageUp", custom: "⌥PageUp"},

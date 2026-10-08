@@ -26,6 +26,52 @@
 
 * [Declare `globalThis.crypto` as the same object as `siyuan.crypto` in kernel plugins](https://github.com/siyuan-note/siyuan/issues/20041)
 
+* [Declare optional target dates for daily note creation](https://github.com/siyuan-note/siyuan/issues/20201)
+
+* [Declare customizable document start and end shortcuts](https://github.com/siyuan-note/siyuan/issues/20202)
+
+* [Declare read-only official skill metadata and independent built-in skill switches](https://github.com/siyuan-note/siyuan/issues/20182)
+
+* [Simplify settings window configuration and API comments](https://github.com/siyuan-note/siyuan/pull/20183)
+
+* [Declare the workspace settings window preference and API, and remove its obsolete storage constant](https://github.com/siyuan-note/siyuan/pull/20183)
+
+* [Clarify explicit deletion of the Android notification switch while preserving bulk cleanup protection](https://github.com/siyuan-note/siyuan/issues/20184)
+
+* [Declare document tree click modes](https://github.com/siyuan-note/siyuan/pull/20178)
+
+* [Declare explicit template or input names when creating related items](https://github.com/siyuan-note/siyuan/issues/20114)
+
+* [Declare optional double-click opening for parent document titles](https://github.com/siyuan-note/siyuan/issues/20169)
+
+* [Declare default item template previews and undoable relation item creation](https://github.com/siyuan-note/siyuan/issues/20114)
+
+* [Declare isolated decision-provider profiles and draft connection testing](https://github.com/siyuan-note/siyuan/issues/19986)
+
+* Clarify batch block existence queries across ordinary and encrypted notebooks
+
+* [Document native Tabs and Mindmap block insertion and structural editing](https://github.com/siyuan-note/siyuan/issues/20163)
+
+* [Expose settings navigation with optional provider options](https://github.com/siyuan-note/siyuan/issues/20109)
+
+* [Declare removal of saved ChatGPT account registrations](https://github.com/siyuan-note/siyuan/issues/20109)
+
+* [Declare ChatGPT account authentication and encrypted session transfer APIs](https://github.com/siyuan-note/siyuan/issues/20109)
+
+* [Clarify editor title menu event context when document menus are reused in graphs](https://github.com/siyuan-note/siyuan/issues/20148)
+
+* [Expose the built-in document child sorting attribute constant](https://github.com/siyuan-note/siyuan/issues/20148)
+
+* [Clarify moveBlock transaction failures and skipped operations](https://github.com/siyuan-note/siyuan/issues/20142)
+
+* [Clarify insertBlock sibling anchors, positioning precedence, and document parent placement](https://github.com/siyuan-note/siyuan/issues/20139)
+
+* [Declare opt-in plugin instances in independent settings windows and their lifecycle and UI restrictions](https://github.com/siyuan-note/siyuan/issues/20002)
+
+* [Declare independent reasoning effort for AI OCR](https://github.com/siyuan-note/siyuan/issues/20082)
+
+* [Expose AI as an OCR provider with an independent model selection and opt-in automatic recognition](https://github.com/siyuan-note/siyuan/issues/20082)
+
 * [Document relation item and context filters for database rollups](https://github.com/siyuan-note/siyuan/issues/20085)
 
 * [Clarify image formats and conversion limits for manual AI OCR](https://github.com/siyuan-note/siyuan/issues/20082)

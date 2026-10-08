@@ -134,6 +134,7 @@ export interface IEventBusMap {
         protyle: IProtyle,
         event: MouseEvent,
     };
+    /** 仅在具备实际编辑器上下文时触发，关系图按文档信息构造的菜单不触发此事件 */
     "click-editortitleicon": {
         menu: subMenu,
         protyle: IProtyle,
@@ -392,6 +393,36 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 自动化不串联，导入、同步、历史恢复和撤销重放不重新触发；重做保留原条目 ID 和触发时间。
  * 跨库动作限于同一加密边界，要求目标可访问；单笔事务最多执行 1000 个自动操作。
  */
+/**
+ * `/api/block/insertBlock` 按 nextID、previousID、parentID 的顺序选择插入位置。
+ * 生效的同级锚点必须是非文档块；未使用的定位参数不参与节点类型校验，文档 parentID 插入到文档开头。
+ * 目标非法时返回 code=-1、data=null，成功返回已落盘的操作。
+ * insertBlock、appendBlock、prependBlock 的目标为原生页签或脑图容器时，只能插入各自的项目块。
+ * 输入同类型容器片段时展开其直属项目，保留目标容器属性及项目 ID；非法子块由事务校验拒绝。
+ * prependBlock 保留排队执行的响应行为，事务失败不落盘，但 code=0 不代表事务已通过校验。
+ * 原生页签和脑图的结构化编辑使用 getBlockDOM 和 dataType="dom"，并保留已有 ID 和属性。
+ * getBlockKramdown 默认输出供阅读的 Markdown，会平铺页签并将脑图输出为普通列表。
+ */
+/**
+ * `/api/block/moveBlock` 按 previousID、parentID 的顺序选择移动位置，省略 previousID 时移动到父块开头。
+ * 成功和主动跳过返回 code=0、data=null；事务校验或提交失败返回 code=-1、data=null 和原因。
+ * 事务回滚时保留界面重载和错误通知行为，加密笔记本的访问规则及跨加密边界限制保持不变。
+ */
+/**
+ * `/api/block/checkBlocksExist` 接收 ids，忽略非字符串及无效块 ID，重复 ID 合并为一个结果。
+ * notebook 为加密笔记本时只查询该库；省略或传入普通笔记本时查询全局库及本请求已持有租约的加密库。
+ * 不存在或已锁定且无法确定归属的块返回 false；显式指定已锁定的加密笔记本返回 code=-1、data=null。
+ * 发布读者的不可访问块不返回结果，加密响应租约保持到响应发送完成。
+ */
+/**
+ * `/api/asset/removeUnusedAsset` 的 path 为 data 相对资源路径，普通资源须通过完整未引用扫描。
+ * 全局 `assets/android-notification-texts.txt` 普通文件允许显式删除以关闭 Android 保活通知，
+ * 不依赖未引用扫描；目录和符号链接不能使用该例外。删除前仍保存资源历史并触发同步。
+ * 该文件不出现在 getUnusedAssets 中，也不被 removeUnusedAssets 批量清理。
+ */
+/**
+ * `/api/system/setSettingsWindow` 更新工作空间的独立设置窗口开关，仅桌面 Electron 客户端使用。
+ */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**
@@ -544,7 +575,10 @@ export function getAllTabs(type?: TTab | string): Tab[]
 
 export function getAllModels(): IModels
 
-export function openSetting(app: App): Dialog | undefined;
+export function openSetting(app: App, tab?: "editor" | "file" | "appearance" | "bazaar" | "flashcard" | "ai" | "secretsVariables" | "assets" | "ocr" | "export" | "search" | "keymap" | "sync" | "access" | "app" | "about", options?: {
+    /** 在人工智能设置中打开 ChatGPT 提供商；搭配 tab="ai" 使用 */
+    aiProvider?: "chatgpt";
+}): Dialog | undefined;
 
 export function openEmoji(options: {
     position: IPosition,
@@ -661,7 +695,15 @@ export function hideMessage(id?: string): void;
  *
  * 截止时间后，JavaScript Promise 无法取消，超时钩子可能继续运行。思源仍会尽力调用每个剩余的拆除钩子一次，但不再等待，
  * 随后拆除宿主管理的资源。这 5 秒只限制思源等待 Promise 的时间，无法中断同步 JavaScript。关闭窗口或退出思源时，
- * 该操作不会触发前端插件生命周期钩子。
+ * 普通前端窗口不会触发前端插件生命周期钩子。独立设置窗口销毁时会尽力调用 onunload 并立即释放宿主管理的资源，
+ * 不等待异步钩子完成；窗口关闭后不能继续操作其文档。
+ *
+ * plugin.json 可声明 settingsWindow: true，允许已启用且兼容 desktop 的插件在内置和插件的独立设置窗口中运行。
+ * 省略或 false 不加载；该声明不会启用已禁用的插件，也不改变主窗口、文档窗口和移动端的 frontends 兼容性。
+ * 每个设置窗口使用独立实例、事件总线和存储缓存，复用 onload、onLayoutReady、onDataChanged 和 onunload 生命周期。
+ * 主窗口的配置写入通过现有数据变更通知同步；未覆盖 onDataChanged 时重载实例。插件应自行清理其样式和事件监听。
+ * 设置窗口未提供编辑器、顶栏、状态栏和停靠栏，相关注册入口不生效，也不注册命令、全局快捷键或智能体能力。
+ * 插件的 openSetting 调用交由所属宿主窗口处理；设置窗口在打开后启用、停用和重载插件时也更新本地实例。
  */
 export abstract class Plugin {
     eventBus: EventBus;
@@ -944,8 +986,10 @@ export class Setting {
         confirmCallback?: () => void,
         /**
          * 桌面客户端使用独立原生窗口，默认 false，浏览器和移动端仍使用原有设置界面。
-         * 不重复加载插件；回调在插件所属窗口执行，原生窗口关闭或插件卸载时触发一次销毁回调。
+         * 原插件实例保持在所属窗口；声明 settingsWindow: true 的插件可在原生设置窗口另建独立实例。
+         * 控件回调在原插件所属窗口执行，原生窗口关闭或原插件卸载时触发一次销毁回调。
          * 控件会迁入独立窗口，应使用元素引用操作控件，避免依赖所属窗口的 document 查询或样式。
+         * 在设置窗口中再次打开 Setting 使用普通对话框，关闭该对话框不会关闭整个设置窗口。
          */
         openInWindow?: boolean,
     });

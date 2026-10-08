@@ -36,6 +36,12 @@ export namespace Config {
          * thresholds 仅用于 PaddleOCR，detection 和 box 为 (0, 1)，recognition 为 [0, 1]。
          * 字段为 null 时使用模型检测参数和 0.5 的识别阈值。
          * setOCRConfig 省略 thresholds 或传 null 时保留已保存值；传入包含三个 null 字段的对象可恢复默认。
+         * provider 为 ai 时，手动和自动识别均使用独立的 aiModelId；失效时不回退到其他模型或提供商。
+         * setOCRConfig 省略 aiModelId 或传 null 时保留已有选择。
+         * 首次从本地提供商切换到 AI 时关闭自动识别，之后可以显式开启；仅处理尚无结果的普通图片。
+         * /api/asset/ocr 使用所选 OCR 提供商；AI 返回保留换行和空格的 text 和空 ocrJSON，不虚构坐标。
+         * reasoningEffort 独立控制手动和自动 AI OCR，省略或 null 保留已有值，空字符串沿用模型默认。
+         * 可选 none、low、medium、high、xhigh、max；无表示关闭或尽量减少思考，支持情况依提供商及模型而定。
          */
         ocr: import("./api").SettingOCR;
         api: IAPI;
@@ -163,7 +169,8 @@ export namespace Config {
      */
     export interface IAgent {
         /**
-         * 同时用于图片菜单的手动 AI OCR，不创建智能体会话或执行工具。
+         * 未保存独立 OCR AI 模型且选用本地 OCR 提供商时，图片菜单的手动 AI OCR 兼容此模型。
+         * 独立模型保存在 config.ocr.aiModelId，失效时返回错误，不回退到智能体或其他模型。
          * POST /api/ai/ocr 接收 {path}，仅支持普通笔记本或全局 assets/ 图片，保留 box 查询参数。
          * 支持 PNG、JPEG、GIF、WebP；BMP、TIFF 转为 PNG，HEIC/HEIF 转为 JPEG，其他格式返回错误。
          * 保留原图分辨率，原始文件和发送图片均限制为 20 MiB，发送图片限制为四千万像素；HEIF 遵循预览解码限制。
@@ -181,6 +188,8 @@ export namespace Config {
         capabilityPolicy: ICapabilityPolicy;
         skills: {
             userEnabled: string[];
+            /** Stable official skill IDs that are disabled; unknown IDs are preserved and an empty list enables all built-ins. */
+            builtinDisabled: string[];
         };
         approvalPolicy: {
             default: string;
@@ -222,15 +231,19 @@ export namespace Config {
         outputFormat: string;
     }
 
-    /**
-     * 智能体决策模型配置，使用 TypeSafe System One 协议。
-     */
-    export interface IDecision {
-        enabled: boolean;
+    /** 独立保存的决策服务凭证和参数。 */
+    export interface IDecisionProfile {
         endpoint: string;
         apiKey: string;
         name: string;
         timeout: number;
+    }
+
+    /** 当前决策服务及各供应商独立配置；平铺字段仅兼容 TypeSafe 客户端。 */
+    export interface IDecision extends IDecisionProfile {
+        enabled: boolean;
+        provider: string;
+        profiles: Record<string, IDecisionProfile>;
     }
 
     /**
@@ -264,6 +277,9 @@ export namespace Config {
      * AI provider configuration
      */
     export interface IProvider {
+        /** 账户认证只保存本机账户引用；省略时使用 API Key */
+        authType?: string;
+        accountID?: string;
         headers?: Record<string, string>;
         id: string;
         enabled: boolean;
@@ -861,13 +877,15 @@ export namespace Config {
          */
         alwaysSelectOpenedFile: boolean;
         /**
-         * Whether clicking a document icon expands or collapses its child documents
+         * 桌面端单击文档图标的行为：0 修改图标，1 展开或折叠子文档；没有子文档时打开文档
+         * 桌面端笔记本图标始终用于修改图标；旧的布尔配置不迁移
          */
-        docIconClickExpand: boolean;
+        docIconClickMode: number;
         /**
-         * Whether clicking a parent document title expands or collapses its child documents
+         * 点击父文档标题的行为：0 打开文档，1 立即展开或折叠子文档，2 单击展开或折叠、双击打开父文档
+         * 取 2 时单击等待约 300 毫秒；没有子文档时直接打开；旧的布尔配置不迁移
          */
-        parentDocClickExpand: boolean;
+        parentDocTitleClickMode: number;
         /**
          * Whether to enable top-level notebook documents
          */
@@ -1222,6 +1240,8 @@ export namespace Config {
         scrollPageUpWithoutMovingCaret?: IKey;
         selectToPageEnd?: IKey;
         selectToPageStart?: IKey;
+        goToDocumentStart?: IKey;
+        goToDocumentEnd?: IKey;
         showInFolder?: IKey;
         spaceRepetition?: IKey;
         switchReadonly?: IKey;
@@ -2009,6 +2029,10 @@ export namespace Config {
          * Whether the current boot is in safe mode (disables code snippets, plugins, custom theme and icon)
          */
         safeMode: boolean;
+        /**
+         * 是否在独立窗口中打开设置界面，仅桌面 Electron 客户端生效，默认 false。
+         */
+        settingsWindow: boolean;
         /**
          * The absolute path of the workspace directory
          */

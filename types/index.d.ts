@@ -317,6 +317,7 @@ export interface IAV {
     views: IAVView[];
     isMirror?: boolean;
     newItemTemplates?: IAVNewItemTemplate[];
+    /** 关联选择面板新建也使用此默认模板；名称不同时可选择模板名称或输入名称，其他模板配置均保留。 */
     defaultTemplateID?: string;
     customColors?: IAVCustomColor[];
     usedCustomColorIndexes?: number[];
