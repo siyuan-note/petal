@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare customizable document start and end shortcuts](https://github.com/siyuan-note/siyuan/issues/20202)
+
 * [Declare read-only official skill metadata and independent built-in skill switches](https://github.com/siyuan-note/siyuan/issues/20182)
 
 * [Simplify settings window configuration and API comments](https://github.com/siyuan-note/siyuan/pull/20183)
