@@ -2,1692 +2,357 @@
 /// <reference types="@dop251/types-goja_nodejs-global" />
 /// <reference types="@dop251/types-goja_nodejs-url" />
 
-import type { JSONSchema } from "zod/v4/core";
+// ── ECMAScript conformance ────────────────────────────────────────────────────
+//
+// The kernel plugin sandbox runs on `github.com/dop251/goja`, a from-scratch Go implementation of
+// ECMAScript, not a browser or Node.js engine. Confirmed against goja's own source tree and README
+// at the pinned commit (`kernel/go.mod`):
+//
+// `Promise`, `Symbol`, `Proxy`, `Reflect`, `Map`/`Set`/`WeakMap`/`WeakSet`, `ArrayBuffer`,
+// `DataView`, the typed array family, and `BigInt` are all implemented, but some lack members that
+// later editions added to their standard `lib.es*.d.ts` types. Each is redeclared below with its
+// standard type unchanged (so a missing member still type-checks) purely to attach a comment listing
+// what is missing at runtime; the lists come from checking every member that TypeScript 6.0's
+// `lib.esnext` declares for these globals against a running sandbox. Syntax-only ES6+ features with
+// no corresponding global object — classes, generators, `async`/`await`, destructuring, template
+// literals, optional chaining, nullish coalescing, and logical assignment operators — are fully
+// implemented but have nothing to redeclare.
+//
+// `Intl`, `Atomics`, `SharedArrayBuffer`, `WeakRef`, and `FinalizationRegistry`, the ES2025
+// `Iterator` (and with it every iterator helper method) and `Float16Array`, and the ESNext
+// `DisposableStack`, `AsyncDisposableStack`, `SuppressedError`, and `Temporal` are NOT implemented.
+// `Atomics`/`SharedArrayBuffer` are additionally unlikely to ever land: goja's own documentation
+// states a `goja.Runtime` is not goroutine-safe and values cannot cross between runtime instances,
+// which rules out the cross-thread shared memory these two exist for. Despite this, a TypeScript
+// project whose `lib` includes the edition that declares one of them (`Intl` is declared even by
+// plain `lib: "ES5"`) type-checks code using it as if it existed; such code compiles but throws
+// `ReferenceError` at runtime in this sandbox. There is no way to retract a global that an
+// already-loaded `lib` tier declares, so this is a correctness note for plugin authors rather than
+// something expressible as a type here.
+//
+// Running the same member check against the built-in globals that are not redeclared below found
+// these missing: `Object.groupBy` and `String.prototype.isWellFormed`/`toWellFormed` (ES2024),
+// `RegExp.escape` and `Math.f16round` (ES2025), `Array.fromAsync`, `Error.isError` (also absent
+// from every error subclass), and
+// `Date.prototype.toTemporalInstant` (ESNext), as well as legacy members that TypeScript still
+// declares: the `RegExp` statics `$1`–`$9`, `input`, `lastMatch`, `lastParen`, `leftContext`, and
+// `rightContext` with their `$_`, `$&`, `$+`, `` $` ``, and `$'` aliases, and the HTML methods of
+// `String.prototype` such as `anchor`, `bold`, and `link`.
+//
+// Some syntax is not supported: async generators and `for await...of` (ES2018), `using` and
+// `await using` declarations (ESNext), and dynamic `import()` fail with a `SyntaxError` when the
+// script is compiled, and the RegExp `d` (ES2022) and `v` (ES2024) flags throw a `SyntaxError` when
+// the regular expression is created. Unicode property escapes such as `\p{L}` (ES2018) are worse:
+// they are accepted, but matched as literal text even with the `u` flag, so `/\p{L}/u.test("a")` is
+// `false` while `/\p{L}/u.test("p{L}")` is `true`.
+//
+// Two further spec deviations, both inherited from Go's standard library and documented in goja's
+// own README: `JSON.parse` cannot correctly round-trip a lone (unpaired) UTF-16 surrogate, because
+// it is implemented on top of Go's UTF-8-based `encoding/json`; and converting a calendar date to
+// a `Date` epoch timestamp uses Go's `int` rather than the specification's `float`, so arguments
+// large enough to overflow `int` produce an incorrect result instead of the IEEE 754 value a
+// browser or Node.js would give.
+
+import type {
+    ISiyuan,
+    ICrypto,
+    ITextEncoderConstructor,
+    ITextDecoderConstructor,
+    IAbortControllerConstructor,
+    IAbortSignalConstructor,
+    IBlobConstructor,
+    IFileConstructor,
+    IFormDataConstructor,
+    IReadableStreamConstructor,
+    IWritableStreamConstructor,
+    ITransformStreamConstructor,
+    ICountQueuingStrategyConstructor,
+    IByteLengthQueuingStrategyConstructor,
+    IConsole,
+    IURLConstructor,
+    IURLSearchParamsConstructor,
+    IRequire,
+    IGoErrorConstructor,
+    ISetTimeout,
+    IClearTimeout,
+    ISetInterval,
+    IClearInterval,
+    ISetImmediate,
+    IClearImmediate,
+} from "./types/kernel/index";
+
+export * from "./types/kernel/index";
+
 declare global {
     const siyuan: ISiyuan;
-}
-
-// ── Primitives ────────────────────────────────────────────────────────────────
-
-/**
- * WebSocket connection ready-state values.
- *
- * @remarks Mirrors the browser `WebSocket.readyState` constants:
- * - `0`: CONNECTING
- * - `1`: OPEN
- * - `2`: CLOSING
- * - `3`: CLOSED
- */
-export type TWebSocketReadyState = 0 | 1 | 2 | 3;
-
-/**
- * Server-Sent Events connection ready-state values.
- *
- * @remarks Mirrors the browser `EventSource.readyState` constants:
- * - `0`: CONNECTING
- * - `1`: OPEN
- * - `2`: CLOSED
- */
-export type TEventSourceReadyState = 0 | 1 | 2;
-
-/** An absolute URL path that must start with `/`. */
-export type TRequestPath = `/${string}`;
-
-/** A standard UUID in hyphenated 8-4-4-4-12 format. */
-export type UUID = `${string}-${string}-${string}-${string}-${string}`;
-
-/**
- * A single directory entry returned by {@link IStorage.list}.
- */
-export interface IStorageEntry {
-    /** File or directory name (not the full path). */
-    name: string;
-    /** `true` if this entry is a directory. */
-    isDir: boolean;
-    /** `true` if this entry is a symbolic link. */
-    isSymlink: boolean;
-    /** Last-modified time as a Unix timestamp (seconds since epoch). */
-    updated: number;
-}
-
-/**
- * A lazy data accessor returned by {@link IStorage.get} and {@link IFetchResponse}.
- *
- * @remarks Each method decodes the same underlying byte slice; call at most
- * once per method per instance.
- */
-export interface IDataObject {
-    /**
-     * Decodes the data as a UTF-8 string.
+    /**
+     * Web Crypto primitives; see {@link ICrypto}.
      *
-     * @returns The text content.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `Crypto` type.
      */
-    text(): Promise<string>;
+    var crypto: typeof globalThis extends { crypto: infer T; onmessage: any } ? T : ICrypto;
     /**
-     * Parses the data as JSON.
+     * Encodes strings as UTF-8; see {@link ITextEncoderConstructor}.
      *
-     * @returns The parsed value.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `TextEncoder` type.
      */
-    json(): Promise<any>;
+    var TextEncoder: typeof globalThis extends { TextEncoder: infer T; onmessage: any } ? T : ITextEncoderConstructor;
     /**
-     * Returns the raw bytes as a node.js compatible `Buffer`.
+     * Decodes UTF-8 and UTF-16 bytes; see {@link ITextDecoderConstructor}.
      *
-     * @returns The binary content.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `TextDecoder` type.
      */
-    buffer(): Promise<Buffer>;
+    var TextDecoder: typeof globalThis extends { TextDecoder: infer T; onmessage: any } ? T : ITextDecoderConstructor;
     /**
-     * Returns the raw bytes as an `ArrayBuffer`.
-     *
-     * @returns The binary content.
-     */
-    arrayBuffer(): Promise<ArrayBuffer>;
-}
-
-/**
- * Response object returned by {@link ISiyuan.fetch}.
- *
- * @remarks Extends {@link IDataObject} so the response body can be read
- * as text, JSON, or raw bytes.
- */
-export interface IFetchResponse extends IDataObject {
-    /** The final URL after any redirects. */
-    url: string;
-    /** `true` when `status` is in the range 200–299. */
-    ok: boolean;
-    /** HTTP status code, e.g. `200`. */
-    status: number;
-    /** HTTP status text, e.g. `"OK"`. */
-    statusText: string;
-    /** Response headers as a flat string-to-string map. */
-    headers: Record<string, string>;
-}
-
-/**
- * Options accepted by {@link ISiyuan.fetch}.
- */
-export interface IRequestInit {
-    /** HTTP method. Defaults to `"GET"` when omitted. */
-    method?: string;
-    /** Additional request headers. */
-    headers?: Record<string, string>;
-    /** Request body. Omit for methods that carry no body (e.g. GET, HEAD). */
-    body?: string | ArrayBuffer;
-    /**
-     * Timeout in milliseconds for the whole request, from connecting until the response body is read.
-     * Defaults to `60000` when omitted; `0` disables the timeout. Must be a non-negative finite
-     * number, otherwise the request is rejected without being sent.
-     *
-     * @remarks Pending requests are cancelled when the plugin stops, but only after
-     * {@link IPluginLifecycle.onunload} settles, so awaiting a request without a timeout in
-     * `onunload` can block stopping the plugin and a normal kernel shutdown indefinitely.
-     */
-    timeout?: number;
-}
-
-/**
- * An event message delivered to {@link IEvent.handler}.
- */
-export interface IEventMessage {
-    /** Unique event identifier. */
-    id: UUID;
-    /** Event type name, e.g. `"ws"`. */
-    type: string;
-    /** Event-specific payload; the shape depends on `type`. */
-    detail: any;
-}
-
-/**
- * Published on the runtime event bus after the plugin starts successfully
- * and enters the running state.
- */
-export interface IStartEventMessage extends IEventMessage {
-    type: 'start';
-    detail: null;
-}
-
-/**
- * Published on the runtime event bus at the beginning of a clean plugin
- * shutdown, before the runtime is torn down.
- */
-export interface IStopEventMessage extends IEventMessage {
-    type: 'stop';
-    detail: null;
-}
-
-/** File-system event kind emitted by the kernel storage watcher. */
-export type TFsNotifyOperation = 'CREATE' | 'WRITE' | 'RENAME' | 'REMOVE';
-
-/**
- * Published on the runtime event bus when a watched storage path is
- * created, written, renamed, or removed.
- *
- * Watching is managed via {@link IStorage.watcher}.
- */
-export interface IFsNotifyEventMessage extends IEventMessage {
-    type: 'fs-notify';
-    detail: {
-        /** The type of file-system change that triggered this event. */
-        operation: TFsNotifyOperation;
-        /** Path relative to the plugin's storage directory. */
-        path: string;
-    }
-}
-
-export type TEventMessage = IStartEventMessage | IStopEventMessage | IFsNotifyEventMessage | IEventMessage;
-
-// ── WebSocket ─────────────────────────────────────────────────────────────────
-
-/**
- * Event fired when the WebSocket connection is established.
- *
- * @see {@link IWebSocket.onopen}
- */
-export interface IWebSocketOpenEvent {
-    type: 'open';
-}
-
-/**
- * Event fired when the WebSocket connection is closed.
- *
- * @see {@link IWebSocket.onclose}
- */
-export interface IWebSocketCloseEvent {
-    type: 'close';
-    /** WebSocket close code per RFC 6455, e.g. `1000` (normal closure). */
-    code: number;
-    /** Human-readable reason string supplied by the closing peer. */
-    reason: string;
-}
-
-/**
- * Event fired when a WebSocket transport error occurs.
- *
- * @see {@link IWebSocket.onerror}
- */
-export interface IWebSocketErrorEvent {
-    type: 'error';
-    /** The underlying error. */
-    error: Error;
-}
-
-/**
- * Event fired when a WebSocket ping frame is received.
- *
- * @see {@link IWebSocket.onping}
- */
-export interface IWebSocketPingEvent {
-    type: 'ping';
-    /** Application data carried in the ping frame. */
-    data: string;
-}
-
-/**
- * Event fired when a WebSocket pong frame is received.
- *
- * @see {@link IWebSocket.onpong}
- */
-export interface IWebSocketPongEvent {
-    type: 'pong';
-    /** Application data carried in the pong frame. */
-    data: string;
-}
-
-/**
- * Event fired when the WebSocket data frame is received.
- *
- * @see {@link IWebSocket.onmessage}
- */
-export interface IWebSocketMessageEvent {
-    type: 'message';
-    /** Payload: `string` for text frames, `ArrayBuffer` for binary frames. */
-    data: string | ArrayBuffer;
-}
-
-// ── EventSource ───────────────────────────────────────────────────────────────
-
-/**
- * Event fired when the EventSource connection is established.
- *
- * @see {@link IEventSource.onopen}
- */
-export interface IEventSourceOpenEvent {
-    type: 'open';
-}
-
-/**
- * Event fired when an SSE message is received.
- *
- * @remarks The `type` field reflects the SSE `event:` field value;
- * defaults to `"message"` when the field is absent.
- *
- * @see {@link IEventSource.onmessage}
- */
-export interface IEventSourceMessageEvent {
-    /** Event type; mirrors the SSE `event:` field, defaulting to `"message"`. */
-    type: string;
-    /** UTF-8 decoded SSE `data:` field value. */
-    data: string;
-    /** Value of the SSE `id:` field, or an empty string if absent. */
-    lastEventId: string;
-}
-
-/**
- * Event fired when the EventSource connection is closed.
- *
- * @see {@link IEventSource.onclose}
- */
-export interface IEventSourceCloseEvent {
-    type: 'close';
-}
-
-/**
- * Event fired when an EventSource transport error occurs.
- *
- * @see {@link IEventSource.onerror}
- */
-export interface IEventSourceErrorEvent {
-    type: 'error';
-    /** The underlying error. */
-    error: Error;
-}
-
-/**
- * A kernel-proxied WebSocket connection returned by {@link IClient.socket}.
- *
- * @remarks Unlike the browser `WebSocket`, this object is returned
- * immediately in a disconnected state. Call {@link IWebSocket.open} to
- * initiate the connection. All event callbacks are nullable; assign a
- * function to start receiving events. Every send operation is asynchronous.
- */
-export interface IWebSocket {
-    /**
-     * How binary data is returned in {@link IWebSocket.onmessage}.
-     *
-     * @remarks Always `"arraybuffer"`.
-     */
-    readonly binaryType: string;
-    /** Number of bytes currently queued for sending but not yet transmitted. */
-    readonly bufferedAmount: number;
-    /** Negotiated WebSocket extensions, or an empty string if none. */
-    readonly extensions: string;
-    /** Negotiated sub-protocol, or an empty string if none was negotiated. */
-    readonly protocol: string;
-    /** Current connection state. See {@link TWebSocketReadyState}. */
-    readonly readyState: TWebSocketReadyState;
-    /** The WebSocket server URL (e.g. `"ws://127.0.0.1:6806/ws/…"`). */
-    readonly url: string;
-    /** Called when the connection is established. */
-    onopen: ((event: IWebSocketOpenEvent) => void | Promise<void>) | null;
-    /** Called when the connection is closed. */
-    onclose: ((event: IWebSocketCloseEvent) => void | Promise<void>) | null;
-    /** Called when a transport error occurs. */
-    onerror: ((event: IWebSocketErrorEvent) => void | Promise<void>) | null;
-    /** Called when a ping control frame is received. */
-    onping: ((event: IWebSocketPingEvent) => void | Promise<void>) | null;
-    /** Called when a pong control frame is received. */
-    onpong: ((event: IWebSocketPongEvent) => void | Promise<void>) | null;
-    /** Called when a data frame is received. */
-    onmessage: ((event: IWebSocketMessageEvent) => void | Promise<void>) | null;
-    /**
-     * Initiates the WebSocket connection.
+     * Creates an {@link IAbortSignal} that can be aborted on demand; see {@link IAbortControllerConstructor}.
      *
-     * @remarks The returned `Promise` resolves once the TCP/TLS handshake
-     * succeeds and the HTTP upgrade is confirmed. Calling `open()` more than
-     * once is a no-op — the second call resolves immediately.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `AbortController` type.
      */
-    open(): Promise<void>;
+    var AbortController: typeof globalThis extends { AbortController: infer T; onmessage: any } ? T : IAbortControllerConstructor;
     /**
-     * Sends a text or binary data frame to the remote peer.
+     * A cancellation signal usable with {@link IClient.fetch}; see {@link IAbortSignalConstructor}.
      *
-     * @param data - UTF-8 string for a text frame; `ArrayBuffer` for a binary frame.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `AbortSignal` type.
      */
-    send(data: string | ArrayBuffer): Promise<void>;
+    var AbortSignal: typeof globalThis extends { AbortSignal: infer T; onmessage: any } ? T : IAbortSignalConstructor;
     /**
-     * Sends a ping control frame.
+     * Creates immutable binary data; see {@link IBlobConstructor}.
      *
-     * @param data - Optional application data to include in the frame.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `Blob` type.
      */
-    ping(data?: string): Promise<void>;
+    var Blob: typeof globalThis extends { Blob: infer T; onmessage: any } ? T : IBlobConstructor;
     /**
-     * Sends a pong control frame.
+     * Creates a {@link IBlob} with a file name and a modification time; see {@link IFileConstructor}.
      *
-     * @param data - Optional application data to include in the frame.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `File` type.
      */
-    pong(data?: string): Promise<void>;
+    var File: typeof globalThis extends { File: infer T; onmessage: any } ? T : IFileConstructor;
     /**
-     * Initiates a graceful close handshake.
+     * Builds `multipart/form-data` request bodies for {@link IClient.fetch}; see {@link IFormDataConstructor}.
      *
-     * @param code   - WebSocket close code (default `1000` — normal closure).
-     * @param reason - Optional human-readable reason string (max 123 bytes).
-     */
-    close(code?: number, reason?: string): Promise<void>;
-}
-
-// ── Sub-namespaces ────────────────────────────────────────────────────────────
-
-/**
- * A kernel-proxied Server-Sent Events connection returned by {@link IClient.event}.
- *
- * @remarks The object is returned in {@link TEventSourceReadyState | CONNECTING} state
- * immediately; the kernel starts the SSE subscription in the background and
- * fires {@link IEventSource.onopen} once the stream is established.
- * Call {@link IEventSource.close} to cancel the subscription.
- */
-export interface IEventSource {
-    /** Current connection state. See {@link TEventSourceReadyState}. */
-    readonly readyState: TEventSourceReadyState;
-    /** The original path passed to {@link IClient.event}, e.g. `"/api/…"`. */
-    readonly url: string;
-    /** Called when the connection is established. */
-    onopen: ((event: IEventSourceOpenEvent) => void | Promise<void>) | null;
-    /** Called when a message is received. */
-    onmessage: ((event: IEventSourceMessageEvent) => void | Promise<void>) | null;
-    /** Called when the connection is closed by the server or after {@link IEventSource.close}. */
-    onclose: ((event: IEventSourceCloseEvent) => void | Promise<void>) | null;
-    /** Called when a transport error occurs. */
-    onerror: ((event: IEventSourceErrorEvent) => void | Promise<void>) | null;
-    /** Cancels the subscription and closes the connection. */
-    close(): void;
-}
-
-/**
- * Network client utilities exposed as `siyuan.client`.
- *
- * @remarks Provides HTTP, WebSocket, and Server-Sent Events access, all
- * tunnelled through the kernel and authenticated with the plugin token.
- */
-export interface IClient {
-    /**
-     * Tunnels an HTTP request through the kernel's REST API.
-     *
-     * @remarks Rejects once {@link IRequestInit.timeout} elapses (60 seconds by default).
-     *
-     * @param path - Absolute path starting with `/`, e.g. `"/api/system/version"`.
-     * @param init - Optional request options (method, headers, body, timeout).
-     * @returns A {@link IFetchResponse} with lazy body accessor methods.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `FormData` type.
      */
-    fetch(path: TRequestPath, init?: IRequestInit): Promise<IFetchResponse>;
+    var FormData: typeof globalThis extends { FormData: infer T; onmessage: any } ? T : IFormDataConstructor;
     /**
-     * Creates a WebSocket connection proxied through the kernel.
+     * Creates a {@link IReadableStream}, such as {@link IFetchResponse.body}; see
+     * {@link IReadableStreamConstructor}.
      *
-     * @remarks The returned object is in {@link TWebSocketReadyState | CONNECTING}
-     * state but not yet connected. Call {@link IWebSocket.open} to initiate
-     * the handshake.
-     *
-     * @param path      - Absolute path starting with `/`.
-     * @param protocols - Optional WebSocket sub-protocol(s) to negotiate.
-     * @returns A sealed {@link IWebSocket} handle.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `ReadableStream` type.
      */
-    socket(path: TRequestPath, protocols?: string | string[]): Promise<IWebSocket>;
+    var ReadableStream: typeof globalThis extends { ReadableStream: infer T; onmessage: any } ? T : IReadableStreamConstructor;
     /**
-     * Opens a Server-Sent Events stream proxied through the kernel.
+     * Creates a {@link IWritableStream}, such as {@link IResponseStream.stream}; see
+     * {@link IWritableStreamConstructor}.
      *
-     * @param path - Absolute path starting with `/`.
-     * @returns A sealed {@link IEventSource} handle.
-     */
-    event(path: TRequestPath): Promise<IEventSource>;
-}
-
-// ── Plugin sub-namespaces ─────────────────────────────────────────────────────
-
-/**
- * Static metadata for the running plugin instance.
- *
- * @remarks Exposed as `siyuan.plugin`. All properties are read-only at
- * runtime; the values are set by the kernel before `onload` is called.
- */
-export interface IPlugin {
-    /** Internal plugin identifier (matches the plugin directory name). */
-    readonly name: string;
-    /** Semantic version string, e.g. `"1.0.0"`. */
-    readonly version: string;
-    /** Human-readable display name shown in the plugin marketplace. */
-    readonly displayName: string;
-    /** Backend platform identifier, e.g. `"windows"`, `"linux"`, `"darwin"`. */
-    readonly platform: string;
-    /** Localization strings loaded from the plugin's `i18n/` directory. */
-    readonly i18n: Record<string, any>;
-    /** Kernel lifecycle hooks for this plugin. */
-    readonly lifecycle: IPluginLifecycle;
-}
-
-/**
- * Optional lifecycle callbacks invoked by the kernel at state transitions.
- *
- * @remarks Exposed as `siyuan.plugin.lifecycle`. Assign a function to any
- * property to subscribe; the kernel awaits any returned `Promise` before
- * advancing to the next lifecycle stage. Unset callbacks (`null`) are skipped.
- */
-export interface IPluginLifecycle {
-    /** Called when the plugin script is first evaluated (before the `running` state.). */
-    onload: (() => void | Promise<void>) | null;
-    /** Called when the plugin transitions to the `running` state. */
-    onrunning: (() => void | Promise<void>) | null;
-    /** Called when the plugin is being unloaded (e.g. on shutdown or hot-reload). */
-    onunload: (() => void | Promise<void>) | null;
-}
-
-/**
- * Kernel event bridge.
- *
- * @remarks Exposed as `siyuan.event`. Allows the plugin to receive kernel
- * broadcast events and publish events to the in-process bus.
- */
-export interface IEvent {
-    /**
-     * Inbound kernel event handler.
-     *
-     * @remarks Assign a function to receive every kernel dispatched event.
-     * Set to `null` to stop receiving events.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `WritableStream` type.
      */
-    handler: ((event: TEventMessage) => void | Promise<void>) | null;
+    var WritableStream: typeof globalThis extends { WritableStream: infer T; onmessage: any } ? T : IWritableStreamConstructor;
     /**
-     * Publishes an event to the in-process event bus.
-     *
-     * @param topic - Event topic string used to route the event to subscribers.
-     * @param event - Arbitrary serializable payload.
-     */
-    emit(topic: string, event: IEventMessage): Promise<void>;
-}
-
-/**
- * Structured logger for the plugin.
- *
- * @remarks Exposed as `siyuan.logger`. Level semantics mirror the browser
- * `console` API (`trace` < `debug` < `info` < `warn` < `error`). Output is
- * written to the kernel log file and prefixed with the plugin name.
- */
-export interface ILogger {
-    /** Emits a `TRACE`-level log entry. */
-    readonly trace: (...args: any[]) => Promise<void>;
-    /** Emits a `DEBUG`-level log entry. */
-    readonly debug: (...args: any[]) => Promise<void>;
-    /** Emits an `INFO`-level log entry. */
-    readonly info: (...args: any[]) => Promise<void>;
-    /** Emits a `WARN`-level log entry. */
-    readonly warn: (...args: any[]) => Promise<void>;
-    /** Emits an `ERROR`-level log entry. */
-    readonly error: (...args: any[]) => Promise<void>;
-}
-
-/**
- * Scoped file storage for the plugin.
- *
- * @remarks Exposed as `siyuan.storage`. All paths are relative to the
- * plugin's data directory at `data/plugins/<name>/`. Forward slashes are
- * accepted on all platforms.
- */
-export interface IStorage {
-    /**
-     * Reads a file and returns a lazy data accessor.
+     * Creates a {@link ITransformStream}; see {@link ITransformStreamConstructor}.
      *
-     * @param path - Path relative to the plugin data directory.
-     * @returns A {@link IDataObject} wrapping the file contents.
-     * @throws Rejects if the file does not exist.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `TransformStream` type.
      */
-    get(path: string): Promise<IDataObject>;
+    var TransformStream: typeof globalThis extends { TransformStream: infer T; onmessage: any } ? T : ITransformStreamConstructor;
     /**
-     * Creates or overwrites a file with the provided UTF-8 string content.
+     * A {@link IQueuingStrategy} that counts each chunk as size `1`; see
+     * {@link ICountQueuingStrategyConstructor}.
      *
-     * @param path    - Path relative to the plugin data directory.
-     * @param content - UTF-8 encoded content to write.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `CountQueuingStrategy` type.
      */
-    put(path: string, content: string): Promise<void>;
+    var CountQueuingStrategy: typeof globalThis extends { CountQueuingStrategy: infer T; onmessage: any } ? T : ICountQueuingStrategyConstructor;
     /**
-     * Deletes a file or recursively removes a directory tree.
+     * A {@link IQueuingStrategy} that sizes each chunk by its `byteLength`; see
+     * {@link IByteLengthQueuingStrategyConstructor}.
      *
-     * @param path - Path relative to the plugin data directory.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `ByteLengthQueuingStrategy` type.
      */
-    remove(path: string): Promise<void>;
+    var ByteLengthQueuingStrategy: typeof globalThis extends { ByteLengthQueuingStrategy: infer T; onmessage: any } ? T : IByteLengthQueuingStrategyConstructor;
     /**
-     * Lists the entries in a directory.
+     * Logs to the kernel log; see {@link IConsole}.
      *
-     * @param path - Path relative to the plugin data directory.
-     * @returns An array of {@link IStorageEntry} descriptors.
-     */
-    list(path: string): Promise<IStorageEntry[]>;
-    readonly watcher: IStorageWatcher;
-}
-
-/**
- * Controls which storage paths the plugin's file-system watcher monitors.
- * Changes on watched paths are delivered as {@link IFsNotifyEventMessage}
- * events on the runtime event bus.
- */
-export interface IStorageWatcher {
-    /**
-     * Resolves `path` and registers it with the file-system watcher.
-     * @param path - Path relative to the storage directory to start watching.
-     */
-    add(path: string): Promise<void>;
-    /**
-     * Resolves `path` and unregisters it from the file-system watcher.
-     * @param path - Path relative to the storage directory to stop watching.
-     */
-    remove(path: string): Promise<void>;
-}
-
-/** RPC method handler type. */
-export type THandler = (...args: any[]) => any | Promise<any>;
-
-/** Agent capability handler type. */
-export type TAgentCapabilityHandler = (input: Record<string, any>) => any | Promise<any>;
-
-/**
- * JSON-RPC method registry for the plugin.
- *
- * @remarks Exposed as `siyuan.rpc`. Registered methods are callable by
- * external clients via `GET /api/plugin/rpc`, `POST /api/plugin/rpc`, or
- * the WebSocket endpoint `GET /ws/plugin/rpc`.
- */
-export interface IRpc {
-    /**
-     * Registers a named RPC method callable by external clients.
-     *
-     * @param name         - Unique method name used to dispatch the call.
-     * @param handler      - Handler function; may be async.
-     * @param descriptions - Optional human-readable description strings.
-     */
-    bind(
-        name: string,
-        handler: THandler,
-        ...descriptions: string[]
-    ): Promise<void>;
-    /**
-     * Unregisters a previously registered RPC method.
-     *
-     * @param name - The method name originally passed to {@link IRpc.bind}.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `Console` type, which declares methods
+     * the sandbox does not implement (`table`, `group`, `trace`, etc.); see {@link IConsole} for the real
+     * surface.
      */
-    unbind(name: string): Promise<void>;
+    var console: typeof globalThis extends { console: infer T; onmessage: any } ? T : IConsole;
     /**
-     * Broadcasts a JSON-RPC notification to all connected clients.
-     *
-     * @param method - Notification method name.
-     * @param params - Optional notification parameters.
-     */
-    broadcast(method: string, params?: any[] | Record<string, any>): Promise<void>;
-}
-
-/** Agent capability registry exposed to plugins as `siyuan.agent`. */
-export interface IAgent {
-    /**
-     * Registers an Agent capability.
-     *
-     * The capability name is automatically namespaced and suffixed with a stable hash
-     * to avoid collisions between plugins.
-     *
-     * @param name - The capability name local to this plugin (e.g. `"my-capability"`).
-     * @param config - Metadata, schemas, and declared side effects for the capability.
-     * @param handler - The function invoked when an Agent calls the capability.
-     * @returns The registration record, including the fully-qualified tool name.
-     */
-    registerCapability(
-        name: string,
-        config: IAgentCapabilityConfig,
-        handler: TAgentCapabilityHandler,
-    ): Promise<IRegisteredCapability>;
-
-    /**
-     * Unregisters a previously registered Agent capability.
-     *
-     * Uses the same local name passed to {@link registerCapability}; the kernel resolves
-     * the fully-qualified name internally.
-     *
-     * @param name - The local capability name used when the capability was registered.
-     */
-    unregisterCapability(name: string): Promise<void>;
-}
-
-/** Side effects declared by an Agent capability or one of its actions. */
-export interface IAgentCapabilityEffects {
-    /** Reads local data. */
-    localRead?: boolean;
-    /** Modifies local data. */
-    localWrite?: boolean;
-    /** Sends data outside the local environment. */
-    dataEgress?: boolean;
-    /** May incur an external cost. */
-    externalCost?: boolean;
-}
-
-/** Metadata, schemas, and side effects describing an Agent capability. */
-export interface IAgentCapabilityConfig {
-    /** Human-readable display name shown in Agent UIs. */
-    title?: string;
-    /** Natural-language description used by the Agent to discover and select the capability. */
-    description: string;
-    /** JSON Schema describing the capability's input parameters. */
-    inputSchema: JSONSchema.ObjectSchema;
-    /** JSON Schema describing the capability's output. */
-    outputSchema?: JSONSchema.Schema;
-    /** Default side effects for the capability. */
-    effects?: IAgentCapabilityEffects;
-    /** Side effects for individual values of the input `action` property. */
-    actionEffects?: Record<string, IAgentCapabilityEffects>;
-}
-
-/**
- * The registration record returned by {@link IAgent.registerCapability}.
- */
-export interface IRegisteredCapability extends IAgentCapabilityConfig {
-    /** Stable capability identifier used by Agent configuration. */
-    id: string;
-    /**
-     * The fully-qualified tool name exposed to the Agent.
-     *
-     * @example "plugin__plugin_name__capability_name__0123456789ab"
-     */
-    name: string;
-}
-
-// ── Server request types ─────────────────────────────────────────────────────
-
-/**
- * Serialization format for a structured {@link IResponseBody.data} payload.
- *
- * @remarks The kernel delegates to the corresponding Gin writer:
- * JSON variants map to `c.JSON` / `c.JSONP` / `c.AsciiJSON` / etc.;
- * `XML` → `c.XML`; `YAML` → `c.YAML`; `TOML` → `c.TOML`;
- * `ProtoBuf` → `c.ProtoBuf`.
- */
-export type TSerializedType =
-    | 'JSON' | 'JSONP' | 'AsciiJSON' | 'IndentedJSON' | 'PureJSON' | 'SecureJSON'
-    | 'XML' | 'YAML' | 'TOML' | 'ProtoBuf';
-
-/**
- * HTTP Basic authentication credentials extracted from the request URL.
- */
-export interface IRequestUser {
-    /** Decoded username. */
-    username: string;
-    /** Decoded password. */
-    password: string;
-}
-
-/**
- * Parsed URL components of an incoming server request.
- *
- * @remarks Field names mirror the browser `URL` / `Location` API where
- * applicable (`pathname`, `hash`, `search`).
- */
-export interface IRequestUrl {
-    /** Basic-auth credentials, or `null` if the request carries none. */
-    user: IRequestUser | null;
-    /** Value of the `Host` request header, e.g. `"127.0.0.1:6806"`. */
-    host: string;
-    /** URL-decoded path, e.g. `"/plugin/private/sample/api/hello/a space"`. */
-    path: string;
-    /** Percent-encoded path, e.g. `"/plugin/private/sample/api/hello/a%20space"`. */
-    pathname: string;
-    /** URL-decoded fragment without the leading `#`. */
-    fragment: string;
-    /** Percent-encoded fragment without the leading `#`. */
-    hash: string;
-    /** Raw query string without the leading `?`, e.g. `"a=1&b=2"`. */
-    search: string;
-    /** Parsed query parameters, e.g. `{ a: ["1"], b: ["2"] }`. */
-    query: Record<string, string[]>;
-}
-
-/**
- * An uploaded file part within a `multipart/form-data` request.
- */
-export interface IRequestFile {
-    /** Original filename provided by the client. */
-    filename: string;
-    /** MIME part headers (e.g. `Content-Disposition`, `Content-Type`). */
-    headers: Record<string, string[]>;
-    /** File size in bytes. */
-    size: number;
-    /**
-     * File contents as a lazy {@link IDataObject}.
-     *
-     * @remarks `null` if the file could not be read during request parsing.
-     */
-    data: IDataObject | null;
-}
-
-/**
- * Parsed form data from an `application/x-www-form-urlencoded` or
- * `multipart/form-data` request.
- */
-export interface IRequestForm {
-    /**
-     * String form fields keyed by field name.
-     *
-     * @remarks Each key maps to an array to support repeated fields with the
-     * same name, e.g. `{ tags: ["a", "b"] }`.
-     */
-    values: Record<string, string[]>;
-    /** Uploaded file parts keyed by field name. */
-    files: Record<string, IRequestFile[]>;
-}
-
-/**
- * Body of an incoming server request.
- *
- * @remarks Exactly one of `form` or `data` is non-null:
- * `form` is set for `application/x-www-form-urlencoded` and
- * `multipart/form-data`; `data` is set for all other content types and is
- * `null` when the request carries no body.
- */
-export interface IRequestBody {
-    /**
-     * Parsed form data.
+     * Creates a Node.js-compatible `Buffer`; redeclared purely to attach this comment, not because the type
+     * itself differs from the ambient `@dop251/types-goja_nodejs-buffer` package's.
      *
-     * @remarks `null` for non-form requests.
+     * @remarks `BufferConstructor` declares a larger surface than the sandbox actually implements; see the
+     * `@remarks` on {@link IDataObject.buffer} for exactly which statics and instance methods are missing or
+     * behave differently. Not part of any web standard, so no DOM-coexistence fallback is needed; `lib.dom.d.ts`
+     * does not declare `Buffer`.
      */
-    form: IRequestForm | null;
+    var Buffer: BufferConstructor;
     /**
-     * Raw request body as a lazy {@link IDataObject}.
+     * Parses and manipulates a URL; see {@link IURLConstructor}.
      *
-     * @remarks `null` when `form` is non-null or the request carries no body.
-     */
-    data: IDataObject | null;
-}
-
-/**
- * HTTP request-line and header fields.
- *
- * @remarks The `Cookie` and `Authorization` headers are stripped from
- * `headers` before the request is forwarded to the plugin handler.
- */
-export interface IRequestContent {
-    /** HTTP method in upper-case, e.g. `"GET"`, `"POST"`. */
-    method: string;
-    /** Full request URI including the query string, e.g. `"/plugin/private/sample/api/hello?a=1"`. */
-    uri: string;
-    /** HTTP protocol version string, e.g. `"HTTP/1.1"`. */
-    proto: string;
-    /** Major protocol version number, e.g. `1`. */
-    protoMajor: number;
-    /** Minor protocol version number, e.g. `1`. */
-    protoMinor: number;
-    /**
-     * Request headers with `Cookie` and `Authorization` redacted.
-     *
-     * @remarks Each header name maps to an array of values to handle
-     * repeated headers, e.g. `{ "Accept-Encoding": ["gzip", "br"] }`.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `URL` type.
      */
-    headers: Record<string, string[]>;
+    var URL: typeof globalThis extends { URL: infer T; onmessage: any } ? T : IURLConstructor;
     /**
-     * Request cookies keyed by cookie name.
-     *
-     * @remarks Each name maps to an array to handle duplicate cookie names.
-     */
-    cookies: Record<string, string[]>;
-    /** Media type from the `Content-Type` header (parameters stripped), e.g. `"application/json"`. */
-    contentType: string;
-    /** Value of the `Content-Length` header in bytes; `-1` if unknown. */
-    contentLength: number;
-    /** Value of the `Referer` header, or an empty string if absent. */
-    referer: string;
-    /** Value of the `User-Agent` header. */
-    userAgent: string;
-    /** Parsed request body. */
-    body: IRequestBody;
-}
-
-/**
- * Gin routing context for an incoming server request.
- */
-export interface IRequestContext {
-    /**
-     * The sub-path captured by the `*path` wildcard parameter.
-     *
-     * @example `"/api/hello"` for a request to `/plugin/private/sample/api/hello`.
-     */
-    path: string;
-    /** Full Gin route template, e.g. `"/plugin/private/:name/*path"`. */
-    fullPath: string;
-    /** Best-guess client IP address (honors `X-Forwarded-For` / `X-Real-IP`). */
-    clientIp: string;
-    /** Remote IP of the TCP connection (proxy headers are not considered). */
-    remoteIp: string;
-    /** `host:port` of the remote TCP endpoint, e.g. `"127.0.0.1:54321"`. */
-    remoteAddr: string;
-    /**
-     * Named route parameters extracted by Gin.
-     *
-     * @example `{ name: ["plugin-sample"], path: ["/api/hello"] }`
-     */
-    params: Record<string, string[]>;
-}
-
-/**
- * The complete request object passed as the sole argument to server handlers.
- */
-export interface IServerRequest {
-    /** Parsed URL components. */
-    url: IRequestUrl;
-    /** HTTP request-line, headers, and body. */
-    request: IRequestContent;
-    /** Gin routing context. */
-    context: IRequestContext;
-}
-
-// ── Server response types ─────────────────────────────────────────────────────
-
-/**
- * A structured-data response body serialized by the kernel.
- *
- * @remarks The kernel selects the Gin writer that corresponds to `type`
- * (e.g. `c.JSON` for `"JSON"`, `c.XML` for `"XML"`).
- */
-export interface IResponseSerializedData {
-    /** Serialization format to use. */
-    type: TSerializedType;
-    /** The value to serialize; must be compatible with the chosen format. */
-    data: any;
-}
-
-/**
- * A file response body served directly from the local filesystem.
- *
- * @remarks When `name` is non-empty the kernel sends the file as a
- * downloadable attachment (`Content-Disposition: attachment; filename="<name>"`).
- * When `name` is empty or omitted the file is served inline via `c.File`.
- *
- * The path must resolve inside the SiYuan workspace, matching the boundary the
- * kernel file APIs enforce. Absolute paths inside the workspace and
- * workspace-relative paths (a leading slash is allowed) are both accepted.
- * Symbolic links and directory junctions that resolve outside the workspace are
- * rejected. A path that resolves outside the workspace is answered with `404`,
- * the same response as a missing file.
- */
-export interface IResponseFile {
-    /**
-     * Download filename for the `Content-Disposition` header.
+     * Parses and serializes a URL's query string; see {@link IURLSearchParamsConstructor}.
      *
-     * @remarks Omit or leave empty to serve the file inline.
+     * @remarks When the DOM library is also loaded, this keeps the DOM `URLSearchParams` type.
      */
-    name?: string;
+    var URLSearchParams: typeof globalThis extends { URLSearchParams: infer T; onmessage: any } ? T : IURLSearchParamsConstructor;
     /**
-     * Path of the file to serve.
-     *
-     * @remarks Must resolve inside the SiYuan workspace, for example
-     * `/data/plugins/<plugin-name>/app/index.html`. A path outside the workspace
-     * is answered with `404`.
-     */
-    path: string;
-}
-
-/**
- * A formatted-string response body.
- *
- * @remarks The kernel passes `format` and `values` to Go's `fmt.Sprintf`
- * and writes the resulting string via `c.String`.
- */
-export interface IResponseString {
-    /** Go `fmt.Sprintf`-style format string, e.g. `"Hello, %s!"`. */
-    format: string;
-    /** Positional arguments interpolated into `format`. */
-    values?: any[];
-}
-
-/**
- * A raw-bytes response body with an explicit `Content-Type`.
- *
- * @remarks Written to the response via `c.Data`. `data` accepts a UTF-8
- * string, a Node.js `Buffer`, or an `ArrayBuffer`; the kernel converts all
- * three forms to `[]byte` before writing.
- */
-export interface IResponseRawData {
-    /** MIME type for the `Content-Type` response header, e.g. `"image/png"`. */
-    contentType: string;
-    /** Raw response body bytes. */
-    data: string | ArrayBuffer;
-}
-
-/**
- * A redirect response body.
- *
- * @remarks The kernel issues the redirect via `c.Redirect` using the
- * `statusCode` from the enclosing {@link IHttpResponse}.
- */
-export interface IResponseRedirect {
-    /** Target URL; may be absolute or relative. */
-    location: string;
-}
-
-/**
- * The body of an HTTP response returned by a server handler.
- *
- * @remarks Set exactly one field; the kernel inspects `data`, `file`,
- * `string`, `raw`, and `redirect` in that order and uses the first
- * non-null value. Returning an empty object (all fields absent or null)
- * results in a status-only response via `c.Status`.
- */
-export interface IResponseBody {
-    /** Structured data serialized by the kernel (JSON, XML, YAML, …). */
-    data?: IResponseSerializedData | null;
-    /** File served from the local filesystem. */
-    file?: IResponseFile | null;
-    /** Formatted string written via `fmt.Sprintf`. */
-    string?: IResponseString | null;
-    /** Raw bytes with an explicit `Content-Type`. */
-    raw?: IResponseRawData | null;
-    /** HTTP redirect. */
-    redirect?: IResponseRedirect | null;
-}
-
-/**
- * A `Set-Cookie` descriptor included in an {@link IHttpResponse}.
- *
- * @remarks Field names use PascalCase because they mirror Go's
- * `net/http.Cookie` struct, which has no JSON tags and therefore serializes
- * its exported field names verbatim.
- */
-export interface IResponseCookie {
-    /** Cookie name. */
-    Name: string;
-    /** Cookie value. */
-    Value: string;
-    /** `true` if the value should be wrapped in double-quotes in the header. */
-    Quoted?: boolean;
-    /** Cookie path scope, e.g. `"/plugin/private/my-plugin/"`. */
-    Path?: string;
-    /** Cookie domain scope. */
-    Domain?: string;
-    /** Absolute expiry time as an ISO 8601 string. */
-    Expires?: string;
-    /** Raw, unparsed `Expires` attribute string (informational). */
-    RawExpires?: string;
-    /** `Max-Age` in seconds. `0` deletes the cookie; negative values are not sent. */
-    MaxAge?: number;
-    /** Restricts the cookie to HTTPS connections. */
-    Secure?: boolean;
-    /** Hides the cookie from JavaScript (`HttpOnly` flag). */
-    HttpOnly?: boolean;
-    /**
-     * `SameSite` cookie policy.
-     *
-     * @remarks Maps to Go `http.SameSite` constants:
-     * `0` = default (browser-defined), `1` = None, `2` = Lax, `3` = Strict.
-     */
-    SameSite?: number;
-    /** Sets the `Partitioned` (CHIPS) cookie attribute. */
-    Partitioned?: boolean;
-    /** Raw `Set-Cookie` line as sent by the server (informational). */
-    Raw?: string;
-    /** Unparsed attribute strings not recognized by the Go cookie parser. */
-    Unparsed?: string[] | null;
-}
-
-/**
- * The return value expected from an HTTP server handler.
- */
-export interface IHttpResponse {
-    /** HTTP status code to send, e.g. `200`, `404`. */
-    statusCode: number;
-    /**
-     * Additional response headers.
-     *
-     * @remarks Each header name maps to an array of values to support
-     * multi-value headers such as `Link` or repeated `Set-Cookie` entries.
-     */
-    headers?: Record<string, string[]>;
-    /** Cookies to attach to the response via `Set-Cookie` headers. */
-    cookies?: IResponseCookie[];
-    /** Response body. Omit or set to `null` for a header-only response. */
-    body?: IResponseBody | null;
-}
-
-// ── Server handler interfaces ─────────────────────────────────────────────────
-
-/**
- * A single Server-Sent Event (SSE) frame sent from the server to the client.
- *
- * Each field corresponds to a line prefix defined by the SSE specification
- * {@link https://html.spec.whatwg.org/multipage/server-sent-events.html | HTML Standard - 9.2 Server-sent events}.
- */
-export interface IServerSentEvent {
-    /** `id:` field — sets the event source's last-event-ID, used for reconnection replay. */
-    id?: string;
-    /** `event:` field — custom event type. */
-    event?: string;
-    /** `data:` field — the payload of the event. Multi-line values are joined with `\n`. */
-    data: any;
-    /** `retry:` field — overrides the client's reconnection delay (milliseconds). */
-    retry?: number;
-}
-
-/**
- * Server-side SSE (Server-Sent Events) port provided to
- * {@link IServerEventSourceRequest.port}.
- *
- * @remarks
- * The kernel opens the SSE response stream before invoking the handler.
- * Once streaming begins, {@link IEventSourcePort.onopen} fires to signal that
- * the stream is ready for events. Call {@link IEventSourcePort.send} to push
- * SSE events to the client and {@link IEventSourcePort.close} to terminate
- * the stream. The connection stays open until `close()` is called or the
- * client disconnects.
- */
-export interface IEventSourcePort {
-    /** Called once when the SSE stream is ready to accept events. */
-    onopen: ((event: IEventSourceOpenEvent) => void | Promise<void>) | null;
-    /** Called when the client disconnects or after {@link IEventSourcePort.close}. */
-    onclose: ((event: IEventSourceCloseEvent) => void | Promise<void>) | null;
-    /**
-     * Pushes one SSE event to the connected client.
-     *
-     * @remarks
-     * `send` is synchronous — no `await` required. It enqueues the event in
-     * the kernel's SSE write buffer; the actual flush is asynchronous.
-     *
-     * @param event - The SSE event to send.
-     */
-    send(event: IServerSentEvent): void;
-    /** Terminates the SSE stream and closes the response. */
-    close(): void;
-}
-
-/**
- * The request object received by {@link IServerScope.ws | WebSocket server handlers}.
- *
- * @remarks
- * Extends {@link IServerRequest} with a `port` property that mirrors the
- * {@link IWebSocket} client interface. The kernel upgrades the HTTP connection
- * to WebSocket before invoking the handler. After the handler returns, the
- * kernel auto-opens the port's read loop if `port.open()` was not called
- * explicitly.
- */
-export interface IServerWebSocketRequest extends IServerRequest {
-    /**
-     * Bidirectional WebSocket port connected to the client.
+     * Loads a CommonJS module from the plugin's directory or a built-in module; see {@link IRequire}.
      *
-     * @remarks
-     * Assign event callbacks (`onopen`, `onmessage`, `onping`, `onpong`,
-     * `onclose`, `onerror`) before the handler returns. Calling `port.open()`
-     * is optional — the kernel opens the read loop automatically.
-     */
-    readonly port: Omit<IWebSocket, "extensions" | "url">;
-}
-
-/**
- * The request object received by {@link IServerScope.es | SSE server handlers}.
- *
- * @remarks
- * Extends {@link IServerRequest} with a `port` property for pushing
- * Server-Sent Events to the client. The kernel opens the SSE response before
- * the handler is invoked; {@link IEventSourcePort.onopen} fires once streaming
- * begins.
- */
-export interface IServerEventSourceRequest extends IServerRequest {
-    /**
-     * Server-side SSE port for pushing events to the connected client.
-     *
-     * @remarks
-     * Assign `onopen` and `onclose` callbacks in the handler body. Call
-     * `port.send(eventType, data)` inside `onopen` to emit SSE events.
-     */
-    readonly port: IEventSourcePort;
-}
-
-/**
- * Handler slot for one request type within a server scope.
- *
- * @remarks
- * The object is sealed by the kernel; only the `handler` property may be
- * reassigned. Set `handler` to `null` to leave the slot empty — the kernel
- * will return `500 Internal Server Error` for any unhandled request.
- *
- * @typeParam TRes - Expected return type of the handler function.
- * @typeParam TReq - Request object type passed to the handler. Defaults to
- *   {@link IServerRequest} for the HTTP slot; specialised to
- *   {@link IServerWebSocketRequest} and {@link IServerEventSourceRequest} for the WS and SSE
- *   slots respectively.
- */
-export interface IServerRequestHandler<TRes, TReq extends IServerRequest = IServerRequest> {
-    /**
-     * The function invoked for each incoming request of this type.
-     *
-     * @remarks
-     * The kernel passes the parsed request as the sole argument and awaits
-     * any returned `Promise` before writing the response.
-     */
-    handler: ((request: TReq) => TRes | Promise<TRes>) | null;
-}
-
-/**
- * All request-type handler slots for one access scope.
- *
- * @remarks The object is frozen by the kernel; only the `handler` property
- * on each child object may be reassigned.
- */
-export interface IServerScope {
-    /**
-     * HTTP request handler.
-     *
-     * @remarks Handles all HTTP methods at `ANY /plugin/private/<name>/*path`.
-     * The handler must return an {@link IHttpResponse}.
+     * @remarks Absent from `lib.dom.d.ts`, so no DOM-coexistence fallback is needed.
      */
-    readonly http: IServerRequestHandler<IHttpResponse>;
+    var require: IRequire;
     /**
-     * WebSocket upgrade handler.
-     *
-     * @remarks
-     * The handler receives an {@link IServerWebSocketRequest} that includes
-     * `request.port`, a bidirectional {@link IWebSocket} connected to the
-     * client. Assign event callbacks before the handler returns; the kernel
-     * auto-opens the port's read loop afterwards.
-     */
-    readonly ws: IServerRequestHandler<void, IServerWebSocketRequest>;
-    /**
-     * Server-Sent Events handler.
-     *
-     * @remarks
-     * The handler receives an {@link IServerEventSourceRequest} that includes
-     * `request.port`, an {@link IEventSourcePort} for pushing SSE events.
-     * Assign `onopen` / `onclose` callbacks and call `port.send` inside
-     * `onopen`.
-     */
-    readonly es: IServerRequestHandler<void, IServerEventSourceRequest>;
-}
-
-/**
- * Web server handler registry for the plugin.
- *
- * @remarks Exposed as `siyuan.server`. The kernel creates one frozen scope
- * object per access level. Only the `handler` properties inside each scope
- * object are writable.
- */
-export interface IServer {
-    /**
-     * Private-scope handler group.
+     * Schedules a one-off callback; see {@link ISetTimeout}.
      *
-     * @remarks Routes under `/plugin/private/<name>/*path` require kernel
-     * authentication and admin role before the request reaches the handler.
-     * The `<name>` segment must match the running plugin's `name`.
-     */
-    readonly private: IServerScope;
-}
-
-// ── Web Crypto ────────────────────────────────────────────────────────────────
-
-/**
- * Binary input accepted by {@link ISubtleCrypto} operations.
- *
- * @remarks Strings and plain arrays are rejected with a `TypeError`; encode text
- * yourself, e.g. `Buffer.from(text, "utf8")`. The sandbox has no `TextEncoder`.
- * The kernel copies the bytes before computing, so modifying the buffer afterwards
- * does not affect the pending operation.
- */
-export type TBufferSource = ArrayBuffer | ArrayBufferView;
-
-/** Integer `TypedArray` accepted by {@link ICrypto.getRandomValues}. */
-export type TIntegerArray =
-    | Int8Array | Uint8Array | Uint8ClampedArray
-    | Int16Array | Uint16Array
-    | Int32Array | Uint32Array
-    | BigInt64Array | BigUint64Array;
-
-/** Digest algorithms defined by the Web Crypto specification. */
-export type TStandardHashAlgorithmName = "SHA-1" | "SHA-256" | "SHA-384" | "SHA-512";
-
-/**
- * Digest algorithms the kernel supports beyond the Web Crypto specification.
- *
- * @remarks NOT part of the Web Crypto API. A browser rejects `"MD5"` with
- * `NotSupportedError`, so code using it only runs in the kernel sandbox.
- *
- * MD5 is accepted where a digest acts as a pseudorandom function: by
- * {@link ISubtleCrypto.digest} and as the `hash` of HMAC, HKDF, and PBKDF2. It exists
- * for interoperating with existing systems that cannot be changed. Signature algorithms
- * reject it with `NotSupportedError`, because their security depends on collision
- * resistance and practical MD5 collisions make such signatures forgeable. Do not use it
- * in new designs.
- */
-export type TLegacyHashAlgorithmName = "MD5";
-
-/** Digest algorithms supported by the kernel, including the non-standard extension. */
-export type THashAlgorithmName = TStandardHashAlgorithmName | TLegacyHashAlgorithmName;
-
-/**
- * Cipher algorithms the kernel supports beyond the Web Crypto specification.
- *
- * @remarks NOT part of the Web Crypto API. A browser rejects `"AES-ECB"` with
- * `NotSupportedError`, so code using it only runs in the kernel sandbox.
- *
- * ECB encrypts every block independently, so identical plaintext blocks yield identical
- * ciphertext blocks and the ciphertext leaks the structure of the plaintext. It takes no
- * IV, which makes encryption deterministic, and it provides no authentication, so
- * tampering is not detected. It exists for decrypting data produced by existing systems.
- * Prefer AES-GCM for anything new.
- *
- * Only `"encrypt"` and `"decrypt"` are permitted. Requesting `"wrapKey"` or
- * `"unwrapKey"` rejects with `SyntaxError`, because wrapping a key under a
- * deterministic, unauthenticated mode would expose the wrapped key's block structure.
- * The kernel applies PKCS#7 padding, matching OpenSSL's default, so ciphertext
- * interoperates with `openssl enc -aes-256-ecb` and Node's `createCipheriv`.
- */
-export type TLegacyAlgorithmName = "AES-ECB";
-
-/** Named elliptic curves supported by the kernel. */
-export type TNamedCurve = "P-256" | "P-384" | "P-521";
-
-/** Key usages recognized by {@link ISubtleCrypto}. */
-export type TKeyUsage =
-    | "encrypt" | "decrypt" | "sign" | "verify"
-    | "deriveKey" | "deriveBits" | "wrapKey" | "unwrapKey";
-
-/**
- * Key data formats recognized by {@link ISubtleCrypto}.
- *
- * @remarks Which formats an algorithm accepts differs: symmetric and HMAC keys use
- * `"raw"` and `"jwk"`, HKDF and PBKDF2 only `"raw"`, RSA `"spki"` / `"pkcs8"` / `"jwk"`,
- * and the curve algorithms additionally accept `"raw"` for public keys. Requesting an
- * unsupported combination rejects with `NotSupportedError`.
- */
-export type TKeyFormat = "raw" | "pkcs8" | "spki" | "jwk";
-
-/** A hash algorithm given either by name or as an object with a `name`. */
-export type THashAlgorithmIdentifier = THashAlgorithmName | { name: THashAlgorithmName };
-
-/**
- * An algorithm given either by name or as an object with parameters.
- *
- * @remarks Names are matched case-insensitively; unknown names reject with
- * `NotSupportedError`.
- */
-export type TAlgorithmIdentifier = string | IAlgorithmParams;
-
-/** Algorithm parameters; only the members an operation needs are read. */
-export interface IAlgorithmParams {
-    /**
-     * Algorithm name, e.g. `"AES-GCM"`.
-     *
-     * @remarks Besides the Web Crypto algorithms, the kernel accepts the non-standard
-     * `"AES-ECB"`; see {@link TLegacyAlgorithmName}.
+     * @remarks 使用函数重载与 DOM 库中的计时器声明合并，保留沙箱的回调参数和句柄类型。
      */
-    name: string;
+    function setTimeout(...args: Parameters<ISetTimeout>): ReturnType<ISetTimeout>;
+    /** Cancels a callback scheduled by {@link setTimeout}; see {@link IClearTimeout}. */
+    function clearTimeout(...args: Parameters<IClearTimeout>): ReturnType<IClearTimeout>;
     /**
-     * Digest algorithm, required by HMAC, RSA, ECDSA, HKDF, and PBKDF2.
+     * Schedules a repeating callback; see {@link ISetInterval}.
      *
-     * @remarks Signature algorithms accept only {@link TStandardHashAlgorithmName};
-     * passing `"MD5"` to RSA or ECDSA rejects with `NotSupportedError`.
+     * @remarks 使用函数重载与 DOM 库中的计时器声明合并。
      */
-    hash?: THashAlgorithmIdentifier;
+    function setInterval(...args: Parameters<ISetInterval>): ReturnType<ISetInterval>;
+    /** Cancels a callback scheduled by {@link setInterval}; see {@link IClearInterval}. */
+    function clearInterval(...args: Parameters<IClearInterval>): ReturnType<IClearInterval>;
     /**
-     * Initialization vector for AES-CBC (16 bytes) and AES-GCM.
-     *
-     * @remarks AES-ECB takes no IV, which is why it is unsafe: the same plaintext
-     * always produces the same ciphertext.
-     */
-    iv?: TBufferSource;
-    /** Initial counter block for AES-CTR; must be 16 bytes. */
-    counter?: TBufferSource;
-    /** Additional authenticated data for AES-GCM. */
-    additionalData?: TBufferSource;
-    /** Label for RSA-OAEP. */
-    label?: TBufferSource;
-    /** Salt for HKDF and PBKDF2; required by both and may be empty. */
-    salt?: TBufferSource;
-    /** Context information for HKDF; required and may be empty. */
-    info?: TBufferSource;
-    /** Public exponent for RSA key generation; only `65537` is supported. */
-    publicExponent?: TBufferSource;
-    /**
-     * Key length in bits for AES and HMAC; counter length in bits for AES-CTR.
+     * Schedules a callback to run as soon as the event loop is next free; see {@link ISetImmediate}.
      *
-     * @remarks AES keys must be 128, 192, or 256 bits. `generateKey` and `deriveKey`
-     * require this member for AES, while `importKey` and `unwrapKey` ignore it and take the
-     * length from the key data, so the parameters passed to AES-CTR `encrypt` can be reused
-     * for importing. HMAC imports still check it against the key data.
+     * @remarks Not part of any web standard; also absent from `lib.dom.d.ts`, so no DOM-coexistence fallback
+     * is needed here, unlike the other globals in this block.
      */
-    length?: number;
+    var setImmediate: ISetImmediate;
+    /** Cancels a callback scheduled by {@link setImmediate}; see {@link IClearImmediate}. */
+    var clearImmediate: IClearImmediate;
     /**
-     * Authentication tag length in bits for AES-GCM.
+     * goja's built-in error type for failures that originate in kernel (Go) code; see {@link IGoError}.
      *
-     * @remarks The kernel supports 96 to 128 bits. With an IV other than 12 bytes
-     * only 128 is available, and 32 or 64 reject with `NotSupportedError`.
-     * @defaultValue 128
-     */
-    tagLength?: number;
-    /** Iteration count for PBKDF2; must be greater than zero. */
-    iterations?: number;
-    /**
-     * Salt length in bytes for RSA-PSS.
-     *
-     * @remarks A value of `0` rejects with `NotSupportedError`.
+     * @remarks Not part of any web or Node.js standard, so no DOM-coexistence fallback is needed.
      */
-    saltLength?: number;
+    var GoError: IGoErrorConstructor;
     /**
-     * Modulus length in bits for RSA key generation.
-     *
-     * @remarks The kernel requires at least 1024 bits.
-     */
-    modulusLength?: number;
-    /** Named curve for ECDSA and ECDH key generation and import. */
-    namedCurve?: TNamedCurve;
-    /** The other party's public key for ECDH and X25519 derivation. */
-    public?: ICryptoKey;
-}
-
-/**
- * A JSON Web Key accepted by {@link ISubtleCrypto.importKey}.
- *
- * @remarks A private key must be consistent with its public members: an EC `d` outside
- * [1, n−1] or not matching `x` and `y`, an OKP `d` not matching `x`, or an inconsistent
- * RSA key rejects with `DataError`. Keys returned by {@link ISubtleCrypto.exportKey} have
- * the narrower shape {@link IExportedJsonWebKey}.
- */
-export interface IJsonWebKey {
-    kty: string;
-    crv?: string;
-    alg?: string;
-    /**
-     * Intended use of the key, `"sig"` or `"enc"`.
-     *
-     * @remarks When `keyUsages` is not empty, a present value must be `"sig"` for HMAC,
-     * RSASSA-PKCS1-v1_5, RSA-PSS, ECDSA, and Ed25519, and `"enc"` for the AES algorithms,
-     * RSA-OAEP, ECDH, and X25519; otherwise the import rejects with `DataError`.
+     * Implemented by the kernel plugin sandbox, but `Promise.withResolvers` (ES2024) and `Promise.try` (ES2025) are
+     * missing at runtime although the standard type declares them; see the top-of-file ECMAScript-conformance note.
      */
-    use?: string;
+    var Promise: PromiseConstructor;
     /**
-     * Operations the key may perform.
-     *
-     * @remarks When present, even as an empty array, it must contain every requested usage
-     * and no repeated value, otherwise the import rejects with `DataError`. When absent,
-     * it places no restriction on the requested usages.
+     * Implemented by the kernel plugin sandbox, but `Symbol.asyncIterator` (ES2018) and the ESNext `Symbol.dispose`,
+     * `Symbol.asyncDispose`, and `Symbol.metadata` are missing at runtime although the standard type declares them;
+     * see the top-of-file ECMAScript-conformance note.
      */
-    key_ops?: TKeyUsage[];
+    var Symbol: SymbolConstructor;
     /**
-     * Whether the key may be exported.
-     *
-     * @remarks `false` rejects an import that requests an extractable key with `DataError`.
-     */
-    ext?: boolean;
-    /** Symmetric key material, base64url-encoded. */
-    k?: string;
-    /** RSA modulus and exponent, base64url-encoded. */
-    n?: string;
-    e?: string;
-    /** EC and OKP public key coordinates, base64url-encoded. */
-    x?: string;
-    y?: string;
-    /** Private key material, base64url-encoded. */
-    d?: string;
-    p?: string;
-    q?: string;
-    dp?: string;
-    dq?: string;
-    qi?: string;
-}
-
-/**
- * A JSON Web Key returned by {@link ISubtleCrypto.exportKey}.
- *
- * @remarks Always carries `key_ops` and `ext`. `key_ops` is an empty array for keys
- * without usages, such as the public half of an ECDH or X25519 pair, and `use` is never
- * set. The result can be passed back to {@link ISubtleCrypto.importKey} unchanged.
- */
-export interface IExportedJsonWebKey extends IJsonWebKey {
-    key_ops: TKeyUsage[];
-    ext: boolean;
-}
-
-/**
- * The algorithm a {@link ICryptoKey} was created with.
- *
- * @remarks Only the members that apply to the key's algorithm are present. ECDSA
- * keys carry no `hash`, because the digest belongs to the sign and verify parameters.
- */
-export interface IKeyAlgorithm {
-    /** Normalized algorithm name, e.g. `"AES-GCM"`. */
-    readonly name: string;
-    /** Digest algorithm for HMAC and RSA keys. */
-    readonly hash?: { readonly name: THashAlgorithmName };
-    /** Key length in bits for AES and HMAC keys. */
-    readonly length?: number;
-    /** Modulus length in bits for RSA keys. */
-    readonly modulusLength?: number;
-    /** Public exponent for RSA keys. */
-    readonly publicExponent?: Uint8Array;
-    /** Named curve for ECDSA and ECDH keys. */
-    readonly namedCurve?: TNamedCurve;
-}
-
-/**
- * An opaque handle to key material held by the kernel.
- *
- * @remarks The key material never enters the plugin runtime; retrieve it with
- * {@link ISubtleCrypto.exportKey}, which requires {@link ICryptoKey.extractable}.
- * All properties are read-only accessors, so the object exposes no own properties:
- * `Object.keys(key)` returns `[]` and `JSON.stringify(key)` returns `{}`. Only keys
- * created by the kernel are accepted; a plain object with the same shape is rejected
- * with a `TypeError`. The handle cannot be frozen or structured-cloned, and persists
- * only for the lifetime of the runtime — to keep a key across restarts, export it
- * and store the result with {@link IStorage.put}.
- */
-export interface ICryptoKey {
-    /** Which half of a key pair this is, or `"secret"` for symmetric keys. */
-    readonly type: "secret" | "public" | "private";
-    /** Whether {@link ISubtleCrypto.exportKey} may return the key material. */
-    readonly extractable: boolean;
-    /** The algorithm and its parameters. */
-    readonly algorithm: IKeyAlgorithm;
-    /**
-     * The operations this key permits.
-     *
-     * @remarks Using the key for anything else rejects with `InvalidAccessError`.
-     * Public keys of ECDH and X25519 carry an empty array, because only the private
-     * key derives.
-     */
-    readonly usages: readonly TKeyUsage[];
-}
-
-/** A generated public and private key pair. */
-export interface ICryptoKeyPair {
-    readonly publicKey: ICryptoKey;
-    readonly privateKey: ICryptoKey;
-}
-
-/**
- * Cryptographic primitives exposed as `siyuan.crypto.subtle`.
- *
- * @remarks Mirrors the browser `SubtleCrypto` interface, computed by the kernel with
- * Go's standard library. Operations run off the event loop and resolve on it.
- *
- * Rejections carry the error name defined by the Web Crypto specification — for
- * example `NotSupportedError`, `InvalidAccessError`, `DataError`, or `OperationError`
- * — on an `Error` instance. The sandbox has no `DOMException`, so branch on
- * `error.name` rather than `instanceof`. Invalid argument types reject with a
- * `TypeError`.
- *
- * Every method returns a promise and never throws synchronously: an exception raised while
- * the arguments are read, for example by a getter, `valueOf`, or an iterator, rejects the
- * promise with the thrown value itself.
- */
-export interface ISubtleCrypto {
-    /**
-     * Computes a message digest.
-     *
-     * @remarks Also accepts the non-standard `"MD5"`; see
-     * {@link TLegacyHashAlgorithmName}.
-     *
-     * @param algorithm - One of {@link THashAlgorithmName}.
-     * @param data      - The data to hash.
-     * @returns The digest as an `ArrayBuffer`.
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
      */
-    digest(algorithm: THashAlgorithmIdentifier, data: TBufferSource): Promise<ArrayBuffer>;
+    var Proxy: ProxyConstructor;
     /**
-     * Encrypts data.
+     * Implemented by the kernel plugin sandbox with every member its standard namespace declares; see the
+     * top-of-file ECMAScript-conformance note.
      *
-     * @remarks Supports AES-GCM, AES-CBC, AES-CTR, and RSA-OAEP, plus the non-standard
-     * AES-ECB; see {@link TLegacyAlgorithmName}. AES-CBC and AES-ECB apply PKCS#7
-     * padding. AES-CTR wraps the counter within the low `length` bits and rejects with
-     * `DataError` when the counter space is too small for the data.
+     * @remarks `lib.es2015.reflect.d.ts` declares `Reflect` as a `namespace`, not a `var` of a `*Constructor`
+     * type, so this is an empty namespace merge rather than a `var` redeclaration like the other entries below.
      */
-    encrypt(algorithm: TAlgorithmIdentifier, key: ICryptoKey, data: TBufferSource): Promise<ArrayBuffer>;
+    namespace Reflect {}
     /**
-     * Decrypts data.
-     *
-     * @remarks Authentication and padding failures reject with `OperationError`
-     * without distinguishing the cause.
+     * Implemented by the kernel plugin sandbox, but `Map.groupBy` (ES2024) and the ESNext `Map.prototype.getOrInsert`
+     * and `Map.prototype.getOrInsertComputed` are missing at runtime although the standard type declares them; see
+     * the top-of-file ECMAScript-conformance note.
      */
-    decrypt(algorithm: TAlgorithmIdentifier, key: ICryptoKey, data: TBufferSource): Promise<ArrayBuffer>;
+    var Map: MapConstructor;
     /**
-     * Signs data.
-     *
-     * @remarks Supports HMAC, RSASSA-PKCS1-v1_5, RSA-PSS, ECDSA, and Ed25519.
-     * ECDSA signatures are the fixed-length `r‖s` form, not DER.
-     *
-     * HMAC accepts `"MD5"` as its `hash`; the signature algorithms reject it with
-     * `NotSupportedError`.
+     * Implemented by the kernel plugin sandbox, but the ES2025 set methods `union`, `intersection`, `difference`,
+     * `symmetricDifference`, `isSubsetOf`, `isSupersetOf`, and `isDisjointFrom` are missing from `Set.prototype` at
+     * runtime although the standard type declares them; see the top-of-file ECMAScript-conformance note.
      */
-    sign(algorithm: TAlgorithmIdentifier, key: ICryptoKey, data: TBufferSource): Promise<ArrayBuffer>;
+    var Set: SetConstructor;
     /**
-     * Verifies a signature.
-     *
-     * @returns `true` when the signature is valid. A malformed or wrong-length
-     * signature resolves with `false` rather than rejecting.
+     * Implemented by the kernel plugin sandbox, but the ESNext `WeakMap.prototype.getOrInsert` and
+     * `WeakMap.prototype.getOrInsertComputed` are missing at runtime although the standard type declares them; see
+     * the top-of-file ECMAScript-conformance note.
      */
-    verify(algorithm: TAlgorithmIdentifier, key: ICryptoKey, signature: TBufferSource,
-        data: TBufferSource): Promise<boolean>;
+    var WeakMap: WeakMapConstructor;
     /**
-     * Generates a key or key pair.
-     *
-     * @param algorithm   - The algorithm and its generation parameters.
-     * @param extractable - Whether the key material may be exported. Public keys of a
-     *                      generated pair are always extractable.
-     * @param keyUsages   - The operations the key may perform. Usages are split between
-     *                      the public and private key; at least one private-key usage is
-     *                      required, otherwise the call rejects with `SyntaxError`.
-     * @returns A single {@link ICryptoKey} for symmetric algorithms, or an
-     *          {@link ICryptoKeyPair} for asymmetric ones.
-     */
-    generateKey(algorithm: TAlgorithmIdentifier, extractable: boolean,
-        keyUsages: readonly TKeyUsage[]): Promise<ICryptoKey | ICryptoKeyPair>;
-    /**
-     * Imports a key from an external format.
-     *
-     * @remarks A JWK is checked as described on {@link IJsonWebKey}. AES keys take their
-     * length from the key data; see {@link IAlgorithmParams.length}.
-     *
-     * @param format      - See {@link TKeyFormat}.
-     * @param keyData     - An {@link IJsonWebKey} when `format` is `"jwk"`, otherwise bytes.
-     * @param algorithm   - The algorithm the key is for. ECDSA and ECDH need only
-     *                      `namedCurve`; the digest is supplied per operation.
-     * @param extractable - Whether the key material may be exported. HKDF and PBKDF2
-     *                      keys must not be extractable.
-     * @param keyUsages   - The operations the key may perform.
-     */
-    importKey(format: TKeyFormat, keyData: TBufferSource | IJsonWebKey, algorithm: TAlgorithmIdentifier,
-        extractable: boolean, keyUsages: readonly TKeyUsage[]): Promise<ICryptoKey>;
-    /**
-     * Exports a key's material as a JSON Web Key.
-     *
-     * @remarks Rejects with `InvalidAccessError` when the key is not extractable.
-     * @returns An {@link IExportedJsonWebKey}.
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
      */
-    exportKey(format: "jwk", key: ICryptoKey): Promise<IExportedJsonWebKey>;
+    var WeakSet: WeakSetConstructor;
     /**
-     * Exports a key's material as bytes.
-     *
-     * @remarks Rejects with `InvalidAccessError` when the key is not extractable,
-     * or when the format does not match the key type — `"spki"` and `"raw"` export
-     * public keys, `"pkcs8"` private keys.
-     * @returns The encoded key as an `ArrayBuffer`.
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
      */
-    exportKey(format: Exclude<TKeyFormat, "jwk">, key: ICryptoKey): Promise<ArrayBuffer>;
+    var BigInt: BigIntConstructor;
     /**
-     * Exports a key's material in a format chosen at run time.
-     *
-     * @returns An {@link IExportedJsonWebKey} when `format` is `"jwk"`, otherwise an
-     * `ArrayBuffer`.
+     * Implemented by the kernel plugin sandbox except for resizable and transferable buffers (ES2024): the
+     * `ArrayBuffer.prototype` members `resize`, `resizable`, `maxByteLength`, `transfer`, `transferToFixedLength`, and
+     * `detached` are missing at runtime although the standard type declares them; see the top-of-file
+     * ECMAScript-conformance note.
      */
-    exportKey(format: TKeyFormat, key: ICryptoKey): Promise<ArrayBuffer | IExportedJsonWebKey>;
+    var ArrayBuffer: ArrayBufferConstructor;
     /**
-     * Derives raw bits from a base key.
-     *
-     * @param algorithm - HKDF, PBKDF2, ECDH, or X25519 parameters.
-     * @param baseKey   - The key to derive from.
-     * @param length    - Number of bits to derive; must be a non-zero multiple of 8.
-     *                    For ECDH and X25519, `null` returns the full shared secret.
-     */
-    deriveBits(algorithm: TAlgorithmIdentifier, baseKey: ICryptoKey,
-        length?: number | null): Promise<ArrayBuffer>;
-    /**
-     * Derives a key from a base key.
-     *
-     * @remarks Derives the bits the target algorithm needs and imports them as a
-     * `"raw"` key, so `derivedKeyAlgorithm` must be AES or HMAC.
+     * Implemented by the kernel plugin sandbox, but `DataView.prototype.getFloat16` and `setFloat16` (ES2025) are
+     * missing at runtime although the standard type declares them; see the top-of-file ECMAScript-conformance note.
      */
-    deriveKey(algorithm: TAlgorithmIdentifier, baseKey: ICryptoKey,
-        derivedKeyAlgorithm: TAlgorithmIdentifier, extractable: boolean,
-        keyUsages: readonly TKeyUsage[]): Promise<ICryptoKey>;
+    var DataView: DataViewConstructor;
     /**
-     * Exports a key and encrypts the result.
-     *
-     * @remarks The wrapping key needs the `wrapKey` usage and the wrapped key must be
-     * extractable. Supports AES-KW as well as the AES encryption modes and RSA-OAEP.
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
      */
-    wrapKey(format: TKeyFormat, key: ICryptoKey, wrappingKey: ICryptoKey,
-        wrapAlgorithm: TAlgorithmIdentifier): Promise<ArrayBuffer>;
+    var Int8Array: Int8ArrayConstructor;
     /**
-     * Decrypts a wrapped key and imports it.
-     *
-     * @remarks The unwrapping key needs the `unwrapKey` usage. A failed integrity
-     * check rejects with `OperationError`.
-     */
-    unwrapKey(format: TKeyFormat, wrappedKey: TBufferSource, unwrappingKey: ICryptoKey,
-        unwrapAlgorithm: TAlgorithmIdentifier, unwrappedKeyAlgorithm: TAlgorithmIdentifier,
-        extractable: boolean, keyUsages: readonly TKeyUsage[]): Promise<ICryptoKey>;
-}
-
-/**
- * Cryptography exposed as `siyuan.crypto`.
- *
- * @remarks Mirrors the browser `Crypto` interface. It is not installed as
- * `globalThis.crypto`, so libraries that look for that global need an adapter.
- *
- * The kernel additionally accepts two algorithms that the Web Crypto specification does
- * not define, for interoperating with existing systems: see
- * {@link TLegacyHashAlgorithmName} for MD5 and {@link TLegacyAlgorithmName} for AES-ECB.
- * Code that uses either will not run in a browser.
- */
-export interface ICrypto {
-    /**
-     * Fills an integer `TypedArray` with cryptographically strong random values.
-     *
-     * @remarks Writes in place and returns the same array. Float arrays and
-     * `DataView` throw `TypeMismatchError`; more than 65536 bytes throws
-     * `QuotaExceededError`.
-     */
-    getRandomValues<T extends TIntegerArray>(array: T): T;
-    /** Returns a randomly generated version 4 UUID. */
-    randomUUID(): string;
-    /** Low-level cryptographic primitives. */
-    readonly subtle: ISubtleCrypto;
-}
-
-// ── Top-level interface ───────────────────────────────────────────────────────
-
-/**
- * The root `siyuan` global exposed to every kernel plugin script.
- *
- * @remarks Available as the global constant `siyuan`. All async operations
- * return `Promise`s resolved on the plugin's JavaScript runtime event loop.
- */
-export interface ISiyuan {
-    /** Static metadata about this plugin instance. */
-    readonly plugin: IPlugin;
-    /** Kernel event bridge. */
-    readonly event: IEvent;
-    /** Structured logger. */
-    readonly logger: ILogger;
-    /** Scoped persistent file storage. */
-    readonly storage: IStorage;
-    /** JSON-RPC method registry. */
-    readonly rpc: IRpc;
-    /** Agent capability registry. */
-    readonly agent: IAgent;
-    /** Network client utilities (HTTP, WebSocket, SSE). */
-    readonly client: IClient;
-    /** Web request handler registry. */
-    readonly server: IServer;
-    /** Web Crypto primitives. */
-    readonly crypto: ICrypto;
+     * Implemented by the kernel plugin sandbox, but the ESNext base64 and hex conversions `Uint8Array.fromBase64`,
+     * `Uint8Array.fromHex`, and the `Uint8Array.prototype` methods `toBase64`, `toHex`, `setFromBase64`, and
+     * `setFromHex` are missing at runtime although the standard type declares them; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Uint8Array: Uint8ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Uint8ClampedArray: Uint8ClampedArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Int16Array: Int16ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Uint16Array: Uint16ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Int32Array: Int32ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Uint32Array: Uint32ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Float32Array: Float32ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var Float64Array: Float64ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var BigInt64Array: BigInt64ArrayConstructor;
+    /**
+     * Implemented by the kernel plugin sandbox with every member its standard type declares; see the top-of-file
+     * ECMAScript-conformance note.
+     */
+    var BigUint64Array: BigUint64ArrayConstructor;
 }

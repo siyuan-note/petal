@@ -7,6 +7,12 @@
     "Zuoqiu-Yingyi"
   ],
   "types": "siyuan.d.ts",
+  "scripts": {
+    "test:kernel-types": "node tests/kernel-types.cjs"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  },
   "exports": {
     ".": {
       "import": {
