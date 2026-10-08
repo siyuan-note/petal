@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare kernel route authorization metadata generated from endpoint contracts](https://github.com/siyuan-note/siyuan/issues/20292)
+
 * [Document consistent case-sensitive matching across search replacement types](https://github.com/siyuan-note/siyuan/issues/20276)
 
 * [Generate attribute-view field types, filter operators, and capability declarations from the kernel](https://github.com/siyuan-note/siyuan/issues/20255)
