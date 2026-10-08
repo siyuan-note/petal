@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare the built-in table rich text, table header, and attribute-view static text attribute constants
+
 * Add optional revision checking to snippet saves and document conflict handling for concurrent edits
 
 * Redeclare the kernel plugin `Buffer` global with a pointer to the members it lacks at runtime
