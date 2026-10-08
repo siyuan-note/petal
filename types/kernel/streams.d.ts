@@ -274,31 +274,24 @@ export interface IByteLengthQueuingStrategyConstructor {
  *
  * @remarks Resolves to the DOM `ReadableStream` type when the DOM library is loaded, matching what
  * `new ReadableStream()` produces in that case; otherwise resolves to {@link IReadableStream}.
- * TypeScript cannot thread the chunk type parameter `R` through the DOM branch, so `R` is only
- * honored when the DOM library is not loaded.
+ * 两种环境均保留 chunk 类型参数 `R`。
  */
-export type TReadableStream<R = any> = typeof globalThis extends { ReadableStream: infer T; onmessage: any }
-    ? T extends new (...args: any) => infer Instance ? Instance : IReadableStream<R>
-    : IReadableStream<R>;
+export type TReadableStream<R = any> = InstanceType<typeof globalThis.ReadableStream<R>>;
 
 /**
  * The `WritableStream` instance type produced by {@link IWritableStreamConstructor}.
  *
  * @remarks Resolves to the DOM `WritableStream` type when the DOM library is loaded, matching what
- * `new WritableStream()` produces in that case; otherwise resolves to {@link IWritableStream}. See
- * {@link TReadableStream} for the same caveat about the chunk type parameter `W`.
+ * `new WritableStream()` produces in that case; otherwise resolves to {@link IWritableStream}.
+ * 两种环境均保留 chunk 类型参数 `W`。
  */
-export type TWritableStream<W = any> = typeof globalThis extends { WritableStream: infer T; onmessage: any }
-    ? T extends new (...args: any) => infer Instance ? Instance : IWritableStream<W>
-    : IWritableStream<W>;
+export type TWritableStream<W = any> = InstanceType<typeof globalThis.WritableStream<W>>;
 
 /**
  * The `TransformStream` instance type produced by {@link ITransformStreamConstructor}.
  *
  * @remarks Resolves to the DOM `TransformStream` type when the DOM library is loaded, matching what
- * `new TransformStream()` produces in that case; otherwise resolves to {@link ITransformStream}. See
- * {@link TReadableStream} for the same caveat about the chunk type parameters `I`/`O`.
+ * `new TransformStream()` produces in that case; otherwise resolves to {@link ITransformStream}.
+ * 两种环境均保留输入、输出类型参数 `I` 和 `O`。
  */
-export type TTransformStream<I = any, O = any> = typeof globalThis extends { TransformStream: infer T; onmessage: any }
-    ? T extends new (...args: any) => infer Instance ? Instance : ITransformStream<I, O>
-    : ITransformStream<I, O>;
+export type TTransformStream<I = any, O = any> = InstanceType<typeof globalThis.TransformStream<I, O>>;

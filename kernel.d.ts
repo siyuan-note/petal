@@ -206,25 +206,19 @@ declare global {
     /**
      * Schedules a one-off callback; see {@link ISetTimeout}.
      *
-     * @remarks Unlike the other DOM-coexisting globals in this block, this cannot fall back to the DOM
-     * `setTimeout` type when the DOM library is also loaded: `lib.dom.d.ts` declares `setTimeout` as an
-     * unconditional `declare function`, not as a `Window`-shaped property, so there is no way to detect and
-     * defer to it the way `crypto` or `Blob` do; loading this declaration together with `lib: dom` produces a
-     * duplicate-identifier error on `setTimeout`/`setInterval`/`clearTimeout`/`clearInterval`, the same
-     * long-standing conflict `@types/node` has with `lib: dom` for the same four globals.
+     * @remarks 使用函数重载与 DOM 库中的计时器声明合并，保留沙箱的回调参数和句柄类型。
      */
-    var setTimeout: ISetTimeout;
+    function setTimeout(...args: Parameters<ISetTimeout>): ReturnType<ISetTimeout>;
     /** Cancels a callback scheduled by {@link setTimeout}; see {@link IClearTimeout}. */
-    var clearTimeout: IClearTimeout;
+    function clearTimeout(...args: Parameters<IClearTimeout>): ReturnType<IClearTimeout>;
     /**
      * Schedules a repeating callback; see {@link ISetInterval}.
      *
-     * @remarks See the {@link setTimeout} remarks: this has the same unconditional-`declare function` conflict
-     * with the DOM library.
+     * @remarks 使用函数重载与 DOM 库中的计时器声明合并。
      */
-    var setInterval: ISetInterval;
+    function setInterval(...args: Parameters<ISetInterval>): ReturnType<ISetInterval>;
     /** Cancels a callback scheduled by {@link setInterval}; see {@link IClearInterval}. */
-    var clearInterval: IClearInterval;
+    function clearInterval(...args: Parameters<IClearInterval>): ReturnType<IClearInterval>;
     /**
      * Schedules a callback to run as soon as the event loop is next free; see {@link ISetImmediate}.
      *
