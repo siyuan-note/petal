@@ -22,6 +22,7 @@ import {MobileBacklinks} from "./mobile/dock/MobileBacklinks";
 
 export * from "./config";
 export * from "./api";
+export * from "./av";
 export * from "./events";
 export * from "./kernel";
 export * from "./protyle";
@@ -48,40 +49,8 @@ type TRecentDocsSort = "viewedAt" | "closedAt" | "openAt" | "updated"
 type TPublishAccessLevel = "public" | "protected" | "hidden" | "private" | "forbidden"
 type TAVView = "table" | "list" | "gallery" | "kanban" | "calendar";
 export type TAVAlign = "" | "left" | "center" | "right"
-type TAVFilterOperator =
-    "="
-    | "!="
-    | ">"
-    | ">="
-    | "<"
-    | "<="
-    | "Contains"
-    | "Does not contains"
-    | "Is empty"
-    | "Is not empty"
-    | "Starts with"
-    | "Ends with"
-    | "Is between"
-    | "Is true"
-    | "Is false"
-export type TAVCol =
-    "text"
-    | "date"
-    | "number"
-    | "relation"
-    | "rollup"
-    | "select"
-    | "block"
-    | "mSelect"
-    | "url"
-    | "email"
-    | "phone"
-    | "mAsset"
-    | "template"
-    | "created"
-    | "updated"
-    | "checkbox"
-    | "lineNumber"
+export type TAVFilterOperator = import("./av").AVFilterOperator;
+export type TAVCol = import("./av").AVKeyType;
 
 interface ILayoutOptions {
     direction?: Config.TUILayoutDirection;
