@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare optional target dates for daily note creation](https://github.com/siyuan-note/siyuan/issues/20201)
+
 * [Declare customizable document start and end shortcuts](https://github.com/siyuan-note/siyuan/issues/20202)
 
 * [Declare read-only official skill metadata and independent built-in skill switches](https://github.com/siyuan-note/siyuan/issues/20182)
