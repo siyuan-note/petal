@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document supported search replacement methods and rejection of SQL and semantic search](https://github.com/siyuan-note/siyuan/issues/20226)
+
 * [Keep network echo diagnostic declarations stable across Go toolchains while preserving additional JSON fields](https://github.com/siyuan-note/siyuan/issues/20222)
 
 * Declare the built-in table rich text, table header, and attribute-view static text attribute constants

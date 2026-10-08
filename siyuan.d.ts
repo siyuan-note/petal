@@ -429,6 +429,9 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * `/api/snippet/setSnippet` 可携带 revision，在同一临界区检查版本并保存。
  * 版本不匹配返回 code=-1、msg="snippet revision conflict"，不会覆盖当前片段；调用方应保留草稿供用户合并。
  * 省略 revision 或传入 null 保持旧的无条件全量保存行为，不能防止旧列表覆盖并发修改。
+ *
+ * `/api/search/findReplace` 的 method 缺省或为 null 时使用文本替换，支持文本（0）、查询语法（1）和正则表达式（3）。
+ * SQL（2）和语义搜索（4）返回 code=1 与提示信息，不执行替换；ids 为空时表示替换全部。
  */
 export const fetchPost: FetchPost<IWebSocketData>;
 
