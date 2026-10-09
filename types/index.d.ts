@@ -524,6 +524,8 @@ interface IAVColumn {
     hidden?: boolean,
     type?: TAVCol,
     numberFormat?: string,
+    /** 日期字段的整列显示格式；lunar 使用农历录入和显示，时间戳不变，公历覆盖范围为 1901-02-19 - 2100-12-31 */
+    dateFormat?: "" | "full" | "month-day-year" | "day-month-year" | "year-month-day" | "lunar",
     template?: string,
     renderTemplate?: string,
     calc?: IAVCalc,

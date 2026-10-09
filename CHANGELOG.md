@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare field-level lunar date input and display while preserving stored timestamps](https://github.com/siyuan-note/siyuan/issues/20322)
+
 * [Declare shared attribute-view field groups and distinct accepted and offered filter profiles](https://github.com/siyuan-note/siyuan/issues/20279)
 
 * [Declare kernel route authorization metadata generated from endpoint contracts](https://github.com/siyuan-note/siyuan/issues/20292)
