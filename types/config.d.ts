@@ -44,6 +44,8 @@ export namespace Config {
          * 可选 none、low、medium、high、xhigh、max；无表示关闭或尽量减少思考，支持情况依提供商及模型而定。
          */
         ocr: import("./api").SettingOCR;
+        /** 当前设备的地图服务摘要，不包含密钥；视图仅保存服务 ID。 */
+        map: import("./api").MapConfig;
         api: IAPI;
         appearance: IAppearance;
         bazaar: IBazaar;

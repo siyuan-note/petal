@@ -47,7 +47,7 @@ type TDockPosition = "Left" | "Right" | "Bottom"
 type TBazaarType = "templates" | "icons" | "widgets" | "themes" | "plugins"
 type TRecentDocsSort = "viewedAt" | "closedAt" | "openAt" | "updated"
 type TPublishAccessLevel = "public" | "protected" | "hidden" | "private" | "forbidden"
-type TAVView = "table" | "list" | "gallery" | "kanban" | "calendar";
+type TAVView = "table" | "list" | "gallery" | "kanban" | "calendar" | "map";
 export type TAVAlign = "" | "left" | "center" | "right"
 export type TAVFilterOperator = import("./av").AVFilterOperator;
 export type TAVCol = import("./av").AVKeyType;
@@ -425,7 +425,18 @@ interface IAVCalendarRange {
 }
 
 // 表格、列表和日历共用行列结构，布局由 viewType 区分。
+interface IAVMapSettings {
+    /** 设备本地地图服务的稳定引用；缺失时保留，不自动替换。 */
+    serviceID: string;
+    /** 位置字段引用；缺失或类型变化时保留，不自动改绑。 */
+    locationKeyID: string;
+    showRecordList: boolean;
+}
+
 interface IAVTable extends IAVView {
+    /** 地图只渲染当前加载页中匹配服务坐标系的原始坐标。 */
+    map?: IAVMapSettings;
+    mapMarkerScope?: "page";
     /** 仅日历布局返回的持久化字段设置。 */
     calendar?: IAVCalendarSettings;
     /** 回显本次请求的日期范围，省略范围的请求不返回此字段。 */
