@@ -3,6 +3,7 @@
 ## v1.3.0 2026
 
 * [Declare field-level lunar date input and display while preserving stored timestamps](https://github.com/siyuan-note/siyuan/issues/20322)
+* [Declare database location values, per-field defaults, explicit coordinate systems, and preserved source input](https://github.com/siyuan-note/siyuan/issues/20325)
 
 * [Declare shared attribute-view field groups and distinct accepted and offered filter profiles](https://github.com/siyuan-note/siyuan/issues/20279)
 

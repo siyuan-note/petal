@@ -526,6 +526,8 @@ interface IAVColumn {
     numberFormat?: string,
     /** 日期字段的整列显示格式；lunar 使用农历录入和显示，时间戳不变，公历覆盖范围为 1901-02-19 - 2100-12-31 */
     dateFormat?: "" | "full" | "month-day-year" | "day-month-year" | "year-month-day" | "lunar",
+    /** 仅用于新录入，不覆盖已有位置的坐标系。 */
+    location?: {defaultCoordinateSystem?: IAVCellLocationValue["coordinateSystem"]},
     template?: string,
     renderTemplate?: string,
     calc?: IAVCalc,
@@ -609,6 +611,7 @@ interface IAVCellValue {
     phone?: {
         content: string
     }
+    location?: IAVCellLocationValue
     email?: {
         content: string
     }
@@ -626,6 +629,19 @@ interface IAVCellValue {
     date?: IAVCellDateValue
     created?: IAVCellDateValue
     updated?: IAVCellDateValue
+}
+
+/**
+ * 坐标按原坐标系保存，不自动转换；文本顺序为纬度、经度。未知坐标系不能当作 WGS84 使用。
+ * 位置字段的文本筛选条件使用 IAVCellValue.text.content，不把查询词解析成坐标。
+ */
+interface IAVCellLocationValue {
+    name?: string;
+    latitude?: number | null;
+    longitude?: number | null;
+    coordinateSystem?: "" | "unknown" | "wgs84" | "gcj02" | "bd09";
+    /** 原始坐标输入仅作为来源信息，不参与判空、筛选和排序。 */
+    originalInput?: string;
 }
 
 interface IAVCellRelationValue {
