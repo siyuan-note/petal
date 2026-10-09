@@ -421,6 +421,11 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 该文件不出现在 getUnusedAssets 中，也不被 removeUnusedAssets 批量清理。
  */
 /**
+ * `/api/asset/renameAsset` 重命名普通笔记本资源，并同步字面量及百分号编码的文档、数据库引用。
+ * 引用及成功返回的 data.newPath 保留查询参数和片段；源资源解析失败返回 code=-1 和 5000 毫秒错误提示。
+ * 加密笔记本资源仍拒绝重命名；空名称或与原文件名相同的名称返回 code=0、data.newPath=""。
+ */
+/**
  * `/api/system/setSettingsWindow` 更新工作空间的独立设置窗口开关，仅桌面 Electron 客户端使用。
  */
 /**
