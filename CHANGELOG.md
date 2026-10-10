@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document automatic heading numbers in Markdown exports and copying](https://github.com/siyuan-note/siyuan/issues/20393)
+
 * Generate endpoint documentation from kernel contract comments and keep fetch helper documentation focused on transport
 
 * [Declare database map views and device-local map service configuration](https://github.com/siyuan-note/siyuan/issues/20129)
