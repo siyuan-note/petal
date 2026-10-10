@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Clarify longitude-first location display and latitude-first canonical copy and export text
+
 * Declare independently paginated unplaced map records with current view filters, searches, sorting, and location-field selection
 
 * [Simplify database maps to built-in OpenFreeMap and WGS84 location values without service configuration](https://github.com/siyuan-note/siyuan/issues/20129)
