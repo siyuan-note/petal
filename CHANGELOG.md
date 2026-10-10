@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Simplify database maps to built-in OpenFreeMap and WGS84 location values without service configuration](https://github.com/siyuan-note/siyuan/issues/20129)
+
 * [Document automatic heading numbers in Markdown exports and copying](https://github.com/siyuan-note/siyuan/issues/20393)
 
 * Generate endpoint documentation from kernel contract comments and keep fetch helper documentation focused on transport
