@@ -75,7 +75,7 @@ export interface IEventBusMap {
     "before-search-results-render": {
         protyle: Protyle,
         config: Config.IUILayoutTabSearchConfig,
-        searchElement: HTMLInputElement,
+        searchElement: HTMLInputElement | HTMLTextAreaElement,
         blocks: IBlock[],
     };
     "before-show-tooltip": {
@@ -445,6 +445,7 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 加密笔记本及笔记本级数据库不参与全局未引用数据库清理；扫描成功后的响应格式保持不变。
  * `/api/riff/getRiffCards` 按到期时间升序分页，新卡排在前面，相同到期时间按卡片 ID 排序。
  * `.sy.zip` 文档和笔记本导入复用同名同内容的自定义表情，同名不同内容时返回错误并保留已有表情文件。
+ * `/api/search/fullTextSearchBlock` 的 SQL 模式保留换行、注释与字面量大小写，支持带别名的完整块投影。
  */
 export const fetchPost: FetchPost<IWebSocketData>;
 
