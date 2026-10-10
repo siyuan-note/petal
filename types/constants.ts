@@ -125,7 +125,6 @@ export abstract class Constants {
 
     // ws callback
     public static readonly CB_MOVE_NOLIST = "cb-move-nolist";
-    public static readonly CB_MOUNT_REMOVE = "cb-mount-remove";
     public static readonly CB_GET_APPEND = "cb-get-append"; // 向下滚动加载
     public static readonly CB_GET_BEFORE = "cb-get-before"; // 向上滚动加载
     public static readonly CB_GET_UNCHANGEID = "cb-get-unchangeid"; // 上下滚动，定位时不修改 blockid
@@ -163,7 +162,6 @@ export abstract class Constants {
     public static readonly LOCAL_PDFTHEME = "local-pdftheme";
     public static readonly LOCAL_LAYOUTS = "local-layouts";
     public static readonly LOCAL_WINDOW_WORKSPACE = "local-window-workspace-";
-    public static readonly LOCAL_AI = "local-ai";
     public static readonly LOCAL_PLUGINTOPUNPIN = "local-plugintopunpin";
     public static readonly LOCAL_FLASHCARD = "local-flashcard";
     public static readonly LOCAL_FILEPOSITION = "local-fileposition";
@@ -286,8 +284,7 @@ export abstract class Constants {
     public static readonly MENU_SEARCH_HISTORY = "search-history"; // 搜索历史菜单
     public static readonly MENU_SEARCH_REPLACE_HISTORY = "search-replace-history"; // 替换历史菜单
     public static readonly MENU_SEARCH_ASSET_HISTORY = "search-asset-history"; // 资源文件搜索历史菜单
-    public static readonly MENU_MOVE_PATH_HISTORY = "move-path-history"; // 移动文档窗口搜索历史菜单
-    public static readonly MENU_CALLOUT_SELECT = "callout-select"; // 提示选择菜单
+    public static readonly MENU_MOVE_PATH_HISTORY = "move-path-history"; // 提示选择菜单
 
     public static readonly MENU_BACKGROUND_ASSET = "background-asset"; // 资源文件选择器菜单
     public static readonly MENU_AI = "ai"; // 块 AI 菜单
@@ -909,4 +906,56 @@ export abstract class Constants {
     public static readonly SIYUAN_RENDER_CODE_LANGUAGES: string[] = [
         "abc", "plantuml", "mermaid", "flowchart", "echarts", "graphviz", "math"
     ];
+    public static readonly SIYUAN_DROP_DOCUMENTS: string;
+    public static readonly SIYUAN_DROP_BLOCK: string;
+    public static readonly SIYUAN_DROP_BLOCK_REF: string;
+    public static readonly SIYUAN_DROP_DOCUMENT_TAB: string;
+    public static readonly SIYUAN_INSTALL_UPDATE: string;
+    public static readonly SIYUAN_SYNC_APP_MENU: string;
+    public static readonly SIYUAN_READY_TO_SHOW: string;
+    public static readonly SIYUAN_BLOCK_DRAG: string;
+    public static readonly SIYUAN_SPELLCHECK_CONTEXT: string;
+    public static readonly SIYUAN_SPELLCHECK_ACTION: string;
+    public static readonly SIYUAN_CONFIRM_DIALOG: string;
+    public static readonly SIYUAN_ALERT_DIALOG: string;
+    public static readonly SIYUAN_OPEN_SETTING: string;
+    public static readonly SIYUAN_OPEN_HELP: string;
+    public static readonly SIYUAN_TOPBAR_CONTEXT_MENU: string;
+    public static readonly CUSTOM_SY_HEADING_NUMBER: string;
+    public static readonly CUSTOM_SY_AV_VISIBLE_VIEWS: string;
+    public static readonly CUSTOM_SY_TITLE_EMPTY: string;
+    public static readonly CUSTOM_SY_CODE_TAB_SPACES: string;
+    public static readonly ATTRIBUTE_EDITING: string;
+    public static readonly ATTRIBUTE_V_SCROLL: string;
+    public static readonly SIZE_UPLOAD_TIP_SIZE: number;
+    public static readonly CB_GET_AV_NO_CREATE: string;
+    public static readonly LOCAL_MOBILE_TABS: string;
+    public static readonly LOCAL_MOBILE_BOTTOM_BAR: string;
+    public static readonly LOCAL_MOBILE_SIDE_PANEL: string;
+    public static readonly LOCAL_SLASH_FREQUENT_ENABLED: string;
+    public static readonly LOCAL_SLASH_USAGE: string;
+    public static readonly LOCAL_EXPORTPATH: string;
+    public static readonly LOCAL_CLOSED_TABS: string;
+    public static readonly LOCAL_AV_CALENDAR_MODES: string;
+    public static readonly LOCAL_TABS_READING: string;
+    public static readonly LOCAL_PAGE_SCROLL_BUTTONS: string;
+    public static readonly DIALOG_AIPROVIDER: string;
+    public static readonly DIALOG_AIMODEL: string;
+    public static readonly DIALOG_AIMCPSERVER: string;
+    public static readonly MENU_BAR_ENTRY: string;
+    public static readonly MENU_DOCK: string;
+    public static readonly MENU_DOC_TAG: string;
+    public static readonly MENU_BREADCRUMB_CHILDREN: string;
+    public static readonly MENU_DOC_TREE_PANEL_MORE: string;
+    public static readonly MENU_AV_COL_FORMAT_DATE: string;
+    public static readonly MENU_AV_KANBAN_GROUP: string;
+    public static readonly MENU_MOBILE_TABS: string;
+    public static readonly MENU_MOBILE_TABS_OVERVIEW: string;
+    public static readonly TIMEOUT_DOCK_TOGGLE: number;
+    public static readonly TIMEOUT_TAB_SWITCH: number;
+    public static readonly TIMEOUT_SNIPPET_LOAD: number;
+    public static readonly TIMEOUT_LONGPRESS: number;
+    public static readonly TIMEOUT_VIBRATION_DURATION: number;
+    public static readonly SIYUAN_IMAGE_SPONSOR: string;
+    public static readonly WORD_JOINER: string;
 }

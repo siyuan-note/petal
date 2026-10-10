@@ -1,4 +1,4 @@
-import type { JSONSchema } from "zod/v4/core";
+import type { IJSONSchema, TJSONSchemaType } from "./jsonSchema";
 import type { IStorageEntry, IDataObject } from "./primitives";
 import type { IEventMessage, TEventMessage } from "./events";
 
@@ -229,9 +229,9 @@ export interface IAgentCapabilityConfig {
     /** Natural-language description used by the Agent to discover and select the capability. */
     description: string;
     /** JSON Schema describing the capability's input parameters. */
-    inputSchema: JSONSchema.ObjectSchema;
+    inputSchema: IJSONSchema & {type: "object"};
     /** JSON Schema describing the capability's output. */
-    outputSchema?: JSONSchema.Schema;
+    outputSchema?: IJSONSchema & {type: TJSONSchemaType};
     /** Default side effects for the capability. */
     effects?: IAgentCapabilityEffects;
     /** Side effects for individual values of the input `action` property. */

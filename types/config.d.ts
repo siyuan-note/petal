@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TEditorMode, TProtyleAction} from "./protyle";
+import {IScrollAttr, TEditorMode, TProtyleAction} from "./protyle";
 import {TDock} from "../siyuan";
 
 export namespace Config {
@@ -158,7 +158,6 @@ export namespace Config {
         providers: IProvider[];
         editing: IEditing;
         agent: IAgent;
-        vision: IVision;
         imageGeneration: IImageGeneration;
         mcp: IMCP;
         embedding: IEmbedding;
@@ -215,14 +214,6 @@ export namespace Config {
         maxHistoryMessages: number;
         temperature: number;
         maxCompletionTokens: number;
-    }
-
-    export interface IVision {
-        modelId: string;
-        requestTimeout: number;
-        maxImageBytes: number;
-        maxPixels: number;
-        maxEdge: number;
     }
 
     export interface IImageGeneration {
@@ -303,6 +294,7 @@ export namespace Config {
         enabled: boolean;
         name: string;
         displayName?: string;
+        contextLength?: number;
     }
 
     /**
@@ -325,6 +317,8 @@ export namespace Config {
         timeout: number;
         disableStandaloneSSE: boolean;
         trustToolAnnotations: boolean;
+        inheritEnv?: string[];
+        env?: Record<string, string>;
     }
 
     /**
@@ -390,11 +384,11 @@ export namespace Config {
         /**
          * List of installed light themes
          */
-        lightThemes: { label: string; name: string }[];
+        lightThemes: IAppearanceTheme[];
         /**
          * List of installed dark themes
          */
-        darkThemes: { label: string; name: string }[];
+        darkThemes: IAppearanceTheme[];
         /**
          * The current theme mode
          * - `0`: Light theme
@@ -423,6 +417,7 @@ export namespace Config {
         themeVer: string;
         statusBar: IAppearanceStatusBar;
         notifications: IAppearanceNotifications;
+        entryVisibility: IEntryVisibility;
     }
 
     export interface IAppearanceStatusBar {
@@ -430,6 +425,7 @@ export namespace Config {
         msgTaskHistoryDatabaseIndexCommitDisabled: boolean;
         msgTaskAssetDatabaseIndexCommitDisabled: boolean;
         msgTaskHistoryGenerateFileDisabled: boolean;
+        msgDataSyncDisabled: boolean;
     }
 
     /**
@@ -440,6 +436,9 @@ export namespace Config {
         tagMaxList: boolean;
         workspaceNotSSD: boolean;
         browserCompatibility: boolean;
+        selectAllTip?: boolean;
+        selectAllIncompleteTip?: boolean;
+        formatPainterTip?: boolean;
     }
 
     /**
@@ -522,6 +521,18 @@ export namespace Config {
          * Whether to enable the inline mark
          */
         inlineMark: boolean;
+        /**
+         * 是否启用全角行内删除线
+         */
+        inlineFullWidthStrikethrough: boolean;
+        /**
+         * 是否启用全角任务列表输入快捷方式
+         */
+        blockFullWidthTaskList: boolean;
+        /**
+         * 是否启用中点代码块输入快捷方式
+         */
+        codeBlockMiddleDot: boolean;
     }
 
     export type TAssetOpenAction = "follow-tab" | "current" | "right" | "bottom" | "background" |
@@ -758,6 +769,48 @@ export namespace Config {
          * Virtual reference keyword inclusion list (separated by commas `,`)
          */
         virtualBlockRefInclude: string;
+        /**
+         * 是否在文档底部显示反向链接
+         */
+        backlinkShowBottom: boolean;
+        /**
+         * 是否在文档顶部显示数据库属性
+         */
+        databaseAttrShow: boolean;
+        /**
+         * 点击数据库标记的行为
+         * - `0`：聚焦区块并展开数据库面板
+         * - `1`：打开区块属性面板
+         */
+        databaseAttrClickMode: number;
+        /**
+         * 是否隐藏空数据库属性
+         */
+        databaseAttrHideEmpty: boolean;
+        /**
+         * 是否使用页签显示数据库属性
+         */
+        databaseAttrUseTabs: boolean;
+        /**
+         * 是否保留动态加载的内容区块
+         */
+        keepLoadedContent: boolean;
+        /**
+         * 是否显示自动标题编号
+         */
+        headingNumber: boolean;
+        /**
+         * 自动标题编号的格式预设
+         */
+        headingNumberFormat: string;
+        /**
+         * 是否将拖入的 HTML 文件嵌入为 IFrame 区块
+         */
+        dragHTMLFileToIframe: boolean;
+        /**
+         * 是否在输入 `#` 时搜索标签
+         */
+        hashTagSearch: boolean;
     }
 
     /**
@@ -977,14 +1030,16 @@ export namespace Config {
          */
         recentDocsMaxListCount: number;
             tabStartupMode: number;
+        /**
+         * 新建文档的内容模板路径
+         */
+        docCreateTemplatePath: string;
     }
 
     /**
      * Flashcard related configuration
      */
     export interface IFlashCard {
-        /** 默认打开方式，0：弹窗，1：页签，2：右侧分屏，3：新窗口 */
-        openMode: number;
         /**
          * Whether to enable deck card making
          */
@@ -1032,6 +1087,14 @@ export namespace Config {
          * FSRS weight parameter list
          */
         weights: string;
+        /**
+         * 是否启用引述区块制卡
+         */
+        blockquote: boolean;
+        /**
+         * 是否启用提示区块制卡
+         */
+        callout: boolean;
     }
 
     /**
@@ -1705,6 +1768,7 @@ export namespace Config {
     export interface ISecret {
         name: string;
         value: string;
+        allowedHosts: string[];
     }
 
     /**
@@ -1841,6 +1905,7 @@ export namespace Config {
         synced: number;
         webdav: ISyncWebDAV;
         local: ISyncLocal;
+        lan: ISyncLAN;
     }
 
     /**
@@ -1981,10 +2046,6 @@ export namespace Config {
          * The UUID of the current session
          */
         id: string;
-        /**
-         * Whether the current version is an internal test version
-         */
-        isInsider: boolean;
         /**
          * Whether the current version is a Microsoft Store version
          */
@@ -2615,6 +2676,10 @@ export namespace Config {
         sort?: number;
         types?: IUILayoutTabSearchConfigTypes;
         subTypes?: IUILayoutTabSearchConfigSubTypes;
+        /**
+         * 搜索是否包含禁止持久化的加密笔记本数据
+         */
+        sensitive?: boolean;
     }
 
     /**
@@ -2881,5 +2946,36 @@ export namespace Config {
      * - `right`: Right panel
      */
     export type TUILayoutType = "normal" | "center" | "top" | "bottom" | "left" | "right";
+    export interface ISyncLAN {
+        /**
+         * 是否启用局域网同步加速
+         */
+        enabled: boolean;
+        /**
+         * 对等节点请求的最大并发数
+         */
+        maxConcurrentReqs: number;
+    }
 
+
+    export interface IEntryVisibility {
+        version: number;
+        active: string;
+        profiles: IEntryVisibilityProfile[];
+    }
+
+
+    export interface IEntryVisibilityProfile {
+        id: string;
+        name: string;
+        entries: Record<string, boolean>;
+        orders: Record<string, string[]>;
+    }
+
+
+    export interface IAppearanceTheme {
+        label: string;
+        name: string;
+        frontends?: string[];
+    }
 }

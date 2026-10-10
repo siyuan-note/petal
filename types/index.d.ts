@@ -220,6 +220,7 @@ export interface IBlock {
     length?: number
     ial: Record<string, string>
     refCount?: number
+    number?: string;
 }
 
 export interface IRiffCard {
@@ -719,6 +720,7 @@ export interface IPosition {
     w?: number,
     h?: number,
     isLeft?: boolean
+    target?: HTMLElement
 }
 
 export interface ISiyuan {
@@ -835,6 +837,17 @@ export interface ISiyuan {
      * 是否在发布服务下访问
      */
     isPublish?: boolean;
+    isReady?: boolean
+    dragTab?: ITabDragData,
+}
+
+export interface ITabDragData {
+    title?: string;
+    icon?: string;
+    docIcon?: string;
+    pin: boolean;
+    focus: boolean;
+    unupdate: boolean;
 }
 
 export interface IMenu {

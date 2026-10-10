@@ -838,7 +838,7 @@ interface IUpload {
     linkToImgCallback?(responseText: string): void;
 }
 
-interface IScrollAttr {
+export interface IScrollAttr {
     rootId: string,
     startId?: string,
     endId?: string
