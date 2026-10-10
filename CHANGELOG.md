@@ -3,146 +3,76 @@
 ## v1.3.0 2026
 
 * [Declare database map views and device-local map service configuration](https://github.com/siyuan-note/siyuan/issues/20129)
-
 * [Declare field-level lunar date input and display while preserving stored timestamps](https://github.com/siyuan-note/siyuan/issues/20322)
 * [Declare database location values, per-field defaults, explicit coordinate systems, and preserved source input](https://github.com/siyuan-note/siyuan/issues/20325)
-
 * [Declare shared attribute-view field groups and distinct accepted and offered filter profiles](https://github.com/siyuan-note/siyuan/issues/20279)
-
 * [Declare kernel route authorization metadata generated from endpoint contracts](https://github.com/siyuan-note/siyuan/issues/20292)
-
 * [Document consistent case-sensitive matching across search replacement types](https://github.com/siyuan-note/siyuan/issues/20276)
-
 * [Generate attribute-view field types, filter operators, and capability declarations from the kernel](https://github.com/siyuan-note/siyuan/issues/20255)
-
 * [Document supported search replacement methods and rejection of SQL and semantic search](https://github.com/siyuan-note/siyuan/issues/20226)
-
 * [Keep network echo diagnostic declarations stable across Go toolchains while preserving additional JSON fields](https://github.com/siyuan-note/siyuan/issues/20222)
-
 * Declare the built-in table rich text, table header, and attribute-view static text attribute constants
-
 * [Declare read-only daily note candidate information](https://github.com/siyuan-note/siyuan/issues/20201)
-
 * Add optional revision checking to snippet saves and document conflict handling for concurrent edits
-
 * Redeclare the kernel plugin `Buffer` global with a pointer to the members it lacks at runtime
-
 * Declare `siyuan.secrets` and `siyuan.vars` for resolving configured secret and variable placeholders, the `require` and `GoError` kernel plugin globals, and further ECMAScript built-in and syntax gaps found by checking against a running sandbox
-
 * [Remove `ISiyuan.crypto`; kernel plugins now access Web Crypto only through the standard `globalThis.crypto` global](https://github.com/siyuan-note/siyuan/issues/20041)
-
 * Redeclare the kernel plugin `Promise`, `Symbol`, `Proxy`, `Reflect`, `Map`, `Set`, `WeakMap`, `WeakSet`, `BigInt`, `ArrayBuffer`, `DataView`, and typed array globals to document which members of their standard `lib.es*.d.ts` types are missing at runtime
-
 * Document the kernel plugin sandbox's ECMAScript conformance, including the `Intl`, `Atomics`, `SharedArrayBuffer`, `WeakRef`, and `FinalizationRegistry` globals that type-check but are not implemented, and two `JSON`/`Date` spec deviations
-
 * Declare the kernel plugin `console`, `URL`, `URLSearchParams`, `setTimeout`, `setInterval`, `setImmediate`, `clearTimeout`, `clearInterval`, and `clearImmediate` globals, and document the gaps between the declared `Buffer` global and its actual kernel plugin implementation
-
 * Declare the kernel plugin Streams API (`ReadableStream`, `WritableStream`, `TransformStream`, `CountQueuingStrategy`, `ByteLengthQueuingStrategy`), `IFetchResponse.body` as a stream, and `IResponseBody.stream` for server streaming responses
-
 * Declare the `bytes()` and `blob()` methods of `IDataObject`
-
 * Declare the `Blob`, `File`, and `FormData` globals of kernel plugins, and `FormData` as the `body` of `IRequestInit`
-
 * Declare the `AbortController` and `AbortSignal` globals of kernel plugins, and the `signal` option of `IRequestInit`
-
 * Declare the `TextEncoder` and `TextDecoder` globals of kernel plugins
-
 * [Declare `globalThis.crypto` as the same object as `siyuan.crypto` in kernel plugins](https://github.com/siyuan-note/siyuan/issues/20041)
-
 * [Declare optional target dates for daily note creation](https://github.com/siyuan-note/siyuan/issues/20201)
-
 * [Declare customizable document start and end shortcuts](https://github.com/siyuan-note/siyuan/issues/20202)
-
 * [Declare read-only official skill metadata and independent built-in skill switches](https://github.com/siyuan-note/siyuan/issues/20182)
-
 * [Simplify settings window configuration and API comments](https://github.com/siyuan-note/siyuan/pull/20183)
-
 * [Declare the workspace settings window preference and API, and remove its obsolete storage constant](https://github.com/siyuan-note/siyuan/pull/20183)
-
 * [Clarify explicit deletion of the Android notification switch while preserving bulk cleanup protection](https://github.com/siyuan-note/siyuan/issues/20184)
-
 * [Declare document tree click modes](https://github.com/siyuan-note/siyuan/pull/20178)
-
 * [Declare explicit template or input names when creating related items](https://github.com/siyuan-note/siyuan/issues/20114)
-
 * [Declare optional double-click opening for parent document titles](https://github.com/siyuan-note/siyuan/issues/20169)
-
 * [Declare default item template previews and undoable relation item creation](https://github.com/siyuan-note/siyuan/issues/20114)
-
 * [Declare isolated decision-provider profiles and draft connection testing](https://github.com/siyuan-note/siyuan/issues/19986)
-
 * Clarify batch block existence queries across ordinary and encrypted notebooks
-
 * [Document native Tabs and Mindmap block insertion and structural editing](https://github.com/siyuan-note/siyuan/issues/20163)
-
 * [Expose settings navigation with optional provider options](https://github.com/siyuan-note/siyuan/issues/20109)
-
 * [Declare removal of saved ChatGPT account registrations](https://github.com/siyuan-note/siyuan/issues/20109)
-
 * [Declare ChatGPT account authentication and encrypted session transfer APIs](https://github.com/siyuan-note/siyuan/issues/20109)
-
 * [Clarify editor title menu event context when document menus are reused in graphs](https://github.com/siyuan-note/siyuan/issues/20148)
-
 * [Expose the built-in document child sorting attribute constant](https://github.com/siyuan-note/siyuan/issues/20148)
-
 * [Clarify moveBlock transaction failures and skipped operations](https://github.com/siyuan-note/siyuan/issues/20142)
-
 * [Clarify insertBlock sibling anchors, positioning precedence, and document parent placement](https://github.com/siyuan-note/siyuan/issues/20139)
-
 * [Declare opt-in plugin instances in independent settings windows and their lifecycle and UI restrictions](https://github.com/siyuan-note/siyuan/issues/20002)
-
 * [Declare independent reasoning effort for AI OCR](https://github.com/siyuan-note/siyuan/issues/20082)
-
 * [Expose AI as an OCR provider with an independent model selection and opt-in automatic recognition](https://github.com/siyuan-note/siyuan/issues/20082)
-
 * [Document relation item and context filters for database rollups](https://github.com/siyuan-note/siyuan/issues/20085)
-
 * [Clarify image formats and conversion limits for manual AI OCR](https://github.com/siyuan-note/siyuan/issues/20082)
-
 * [Use Tiny as the sole bundled OCR model and migrate legacy built-in Small selections](https://github.com/siyuan-note/siyuan/issues/19984)
-
 * [Expose manual image AI OCR using the configured agent model](https://github.com/siyuan-note/siyuan/issues/20082)
-
 * [Expose device-local PaddleOCR detection and recognition thresholds with default restoration](https://github.com/siyuan-note/siyuan/issues/19984)
-
 * [Expose native database automation rules and transactional execution](https://github.com/siyuan-note/siyuan/issues/10863)
-
 * [Expose workspace settings reset with pending-save coordination and protected configuration preservation](https://github.com/siyuan-note/siyuan/issues/20044)
-
 * [Declare the kernel plugin Web Crypto API and its non-standard MD5 and AES-ECB extensions](https://github.com/siyuan-note/petal/pull/61)
-
 * [Declare the kernel plugin fetch timeout option](https://github.com/siyuan-note/petal/pull/61)
-
 * [Document automatic Markdown footnote conversion to block references](https://github.com/siyuan-note/siyuan/issues/20050)
-
 * [Expose an unassigned shortcut for inserting mind maps and converting lists](https://github.com/siyuan-note/siyuan/issues/20051)
-
 * [Expose atomic list conversion with database binding preservation](https://github.com/siyuan-note/siyuan/issues/20038)
-
 * [Expose the bounded keyboard diagnostic log contract](https://github.com/siyuan-note/siyuan/issues/20006)
-
 * [Expose selectable local OCR providers and model imports](https://github.com/siyuan-note/siyuan/issues/19984)
-
 * [Expose the desktop settings window mode preference](https://github.com/siyuan-note/siyuan/issues/20002)
-
 * [Support opt-in native settings windows and synchronize settings across windows](https://github.com/siyuan-note/siyuan/issues/20002)
-
 * [Expose direct insertion without residual hint context](https://github.com/siyuan-note/siyuan/issues/19996)
-
 * [Support per-field database attribute panel visibility](https://github.com/siyuan-note/siyuan/issues/19993)
-
 * [Document database entry icon presets and binding inheritance](https://github.com/siyuan-note/siyuan/issues/19953)
-
 * [Support image tooltip text display](https://github.com/siyuan-note/siyuan/issues/19979)
-
 * [Support image file name display](https://github.com/siyuan-note/siyuan/issues/19978)
-
 * [Support image metadata matching in asset picking](https://github.com/siyuan-note/siyuan/issues/19976)
-
 * [Document automatic list item direction and marker placement](https://github.com/siyuan-note/siyuan/issues/19915)
-
 * [Limit global font inheritance to dynamic text icons](https://github.com/siyuan-note/siyuan/issues/19941)
-
 * [Document template-calculated dates in database calendar views](https://github.com/siyuan-note/siyuan/issues/19951)
 
 ## v1.2.9 2026-09-29
