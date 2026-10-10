@@ -440,6 +440,9 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * 文本与查询语法替换的所有启用类型遵循搜索配置的 caseSensitive，替换串按字面量写入。
  * 正则模式的大小写匹配由表达式决定，替换串保留捕获组展开语义。
  * `/api/system/uiproc` 不读取请求体，正整数 pid 通过 URL 查询参数传递；无效 pid 或注册表已满时返回空 200。
+ * `/api/av/getUnusedAttributeViews` 完整扫描普通笔记本的数据库引用；读取或目录遍历失败返回 code=-1。
+ * `/api/av/removeUnusedAttributeView` 和 `/api/av/removeUnusedAttributeViews` 扫描失败时保留数据库且不创建清理历史。
+ * 加密笔记本及笔记本级数据库不参与全局未引用数据库清理；扫描成功后的响应格式保持不变。
  */
 export const fetchPost: FetchPost<IWebSocketData>;
 
