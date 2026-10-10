@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document setting notifications for the encrypted notebook system-lock policy](https://github.com/siyuan-note/siyuan/issues/20419)
+
 * Declare per-view map height choices of 320, 480, 640, and 800 CSS pixels, defaulting to 480 when omitted
 
 * [Add `Menu.toggle` to switch shared menus by trigger element while retaining existing construction and opening behavior](https://github.com/siyuan-note/siyuan/issues/20418)
