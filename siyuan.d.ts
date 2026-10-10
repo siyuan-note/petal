@@ -26,7 +26,7 @@ import type {
     TProtyleAction,
 } from "./types";
 import {App, Config, Custom, Files, Lute, MobileCustom, Model, Protyle, subMenu, Tab, Toolbar,} from "./types";
-import type {FetchGet, FetchPost, FetchSyncPost} from "./types/api";
+import type {APIGETRoutes, APIPOSTRoutes, FetchGet, FetchPost, FetchSyncPost} from "./types/api";
 
 export * from "./types";
 export * from "./types/api";
@@ -339,170 +339,20 @@ export function adjustEditorFontSize(action: TEditorFontSizeAction, options?: IE
 export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOptions): number;
 
 /**
- * `/api/setting/getCloudUser` 可传入 `cached: true`，仅返回内存中的账户，未登录时返回 null。
- * 此模式忽略 token，不联网、不等待同步或切换资源来源；缓存结果不代表云端凭据仍然有效。
- * 省略 cached 或传入 false 时保留账户恢复和令牌刷新行为；非管理员在两种模式下均得到 null。
- * 客户端可先读取缓存完成初始化，再刷新账户，并通过 setCloudUser 主通道事件接收账户变化。
- */
-/**
- * `/api/av/getAttributeViewRelationCandidates` 支持可选的 sort: {column, order}，order 为 ASC 或 DESC。
- * 按关联数据库字段的现有规则排序全部候选后分页，仅影响本次查询，不修改视图和 selectedRows 顺序。
- * 省略 sort 时保留创建时间倒序；不存在的字段或无效方向返回错误。
- * `/api/block/getBlockTreeInfos` 的标题结果包含可选的 `headingChildren` 布尔值，表示完整文档同一容器内是否有下辖块。
- * 空段落也算下辖块，结果不受折叠或分页影响；非标题及旧版内核省略该字段，省略不能视为空标题。
- * `/api/transactions` 的 move 操作支持 nextID，将块移到该同级锚点之前，优先于 previousID 和 parentID。
- * 移动保留折叠标题下辖块顺序及源块身份，不将整列表自动拆成列表项；公开 moveBlock 接口的参数保持不变。
- * `/api/repo/getRepoSnapshots` 可传入可选的 `id`，按 7 至 40 位十六进制 ID 前缀查询本地快照。
- * 前缀匹配多个快照时全部返回，按创建时间降序排列。
- * ID 忽略首尾空白和大小写；page 仍为必填，但按 ID 查询时不参与分页。
- * 省略或留空 ID 保留分页列表；未找到返回空列表，格式错误、损坏或读取失败返回错误。
- * 此接口保留管理员权限要求，返回已有的快照元数据及资源下载状态，不下载或回滚快照。
- * includeFiles 默认为 false；传入 true 时必须提供完整 ID，并返回该快照的文件元数据，不读取正文。
- * 本地快照结果的 tags 包含按名称排序的全部标记，未标记时为空数组；分页与 ID 查询均返回此字段。
- * `/api/repo/getRepoSnapshots` 和 `/api/repo/getCloudRepoSnapshots` 可传入 startTime、endTime，按创建时间筛选后分页。
- * 时间为非负整数 Unix 毫秒时间戳，包含起点、不包含终点；省略或为 0 表示该端无界，两端均非 0 时终点必须大于起点。
- * 本地 ID 查询也应用时间范围并继续忽略分页；云端筛选遍历索引页，读取失败不会返回部分结果。
- * `/api/repo/getRepoTagSnapshots` 仍按标记逐行返回，tag 是当前行供上传、移除使用的标记，tags 是全部别名。
- * `/api/history/getDocHistorySnapshots` 接收文档 id、最多 32 个 searchHistory 时间戳 created，以及可选 op。
- * op 默认为 all；每条结果包含 created、historyPath 和 snapshots，按快照创建时间倒序排列。
- * snapshots 的每项包含 id、fileID、tags、memo 和 created；同一快照的多个标记合并到 tags。
- * 仅匹配本地标记快照中认证解密后完整 .sy 数据相同的文件，不保证资源、数据库或引用内容相同。
- * 无仓库密钥时关联为空；缺失历史、格式错误、读取或认证失败返回错误，不冒充无匹配结果。
- * 此接口要求管理员权限，加密笔记本必须解锁，响应持有请求租约；不下载云端内容，不持久化摘要。
- * `/api/repo/getRepoDocHistory` 的每个文件版本还包含 snapshots，按文件 ID 关联全部本地标记快照。
- * snapshots 按快照创建时间倒序排列，同一快照的多个标记合并；无关联时为空数组，不读取文件正文。
- */
-/**
- * `/api/clipboard/preparePasteAssets` 接收已解锁的加密 notebook 和 assets 引用数组，返回原引用到新引用的映射。
- * 普通附件复制为独立加密副本，原文件保持不变；同一笔记本内复用已有附件，拒绝跨加密笔记本复制。
- * 引用仅限工作空间 assets/ 路径，可包含查询参数、片段和 PDF 标注 ID；PDF 标注文件随附件复制。
- * 整批准备成功后调用方再插入内容；失败返回 code=-1、data=null，并清理本批次新建附件。
- * 此接口要求管理员权限，禁止只读写入，响应持有加密笔记本请求租约。
- */
-/**
- * `/api/import/importStdMd`、`/api/import/importZipMd` 和 `/api/filetree/createDocWithMd` 自动转换标准脚注。
- * 脚注定义保存为独立列表项，正文引用转换为指向列表项的上标静态块引用，反链复用现有块引用索引。
- * 多段内容保留在同一列表项内；多次引用共享目标，标签匹配忽略大小写，重复定义引用第一个匹配项。
- * 未定义的脚注不生成块引用，代码和转义的脚注文本保持原样；请求、响应和笔记本权限规则保持不变。
- */
-/**
- * 数据库自动化由 `/api/transactions` 的 setAttrViewAutomations 操作整体保存，配置 spec 为 1。
- * `/api/av/getAttributeView` 返回数据库级 automations，所有视图共享；缺省表示没有规则。
- * addAttributeViewBlocks、setAttributeViewBlockAttr、batchSetAttributeViewBlockAttrs 会触发启用的新增或字段变化规则。
- * 自动操作与原修改一同提交，失败一起回滚；普通 API 写入不生成编辑器撤销记录。
- * 自动化不串联，导入、同步、历史恢复和撤销重放不重新触发；重做保留原条目 ID 和触发时间。
- * 跨库动作限于同一加密边界，要求目标可访问；单笔事务最多执行 1000 个自动操作。
- */
-/**
- * `/api/block/insertBlock` 按 nextID、previousID、parentID 的顺序选择插入位置。
- * 生效的同级锚点必须是非文档块；未使用的定位参数不参与节点类型校验，文档 parentID 插入到文档开头。
- * 目标非法时返回 code=-1、data=null，成功返回已落盘的操作。
- * insertBlock、appendBlock、prependBlock 的目标为原生页签或脑图容器时，只能插入各自的项目块。
- * 输入同类型容器片段时展开其直属项目，保留目标容器属性及项目 ID；非法子块由事务校验拒绝。
- * prependBlock 保留排队执行的响应行为，事务失败不落盘，但 code=0 不代表事务已通过校验。
- * 原生页签和脑图的结构化编辑使用 getBlockDOM 和 dataType="dom"，并保留已有 ID 和属性。
- * getBlockKramdown 默认输出供阅读的 Markdown，会平铺页签并将脑图输出为普通列表。
- */
-/**
- * `/api/block/moveBlock` 按 previousID、parentID 的顺序选择移动位置，省略 previousID 时移动到父块开头。
- * 成功和主动跳过返回 code=0、data=null；事务校验或提交失败返回 code=-1、data=null 和原因。
- * 事务回滚时保留界面重载和错误通知行为，加密笔记本的访问规则及跨加密边界限制保持不变。
- */
-/**
- * `/api/block/checkBlocksExist` 接收 ids，忽略非字符串及无效块 ID，重复 ID 合并为一个结果。
- * notebook 为加密笔记本时只查询该库；省略或传入普通笔记本时查询全局库及本请求已持有租约的加密库。
- * 不存在或已锁定且无法确定归属的块返回 false；显式指定已锁定的加密笔记本返回 code=-1、data=null。
- * 发布读者的不可访问块不返回结果，加密响应租约保持到响应发送完成。
- */
-/**
- * `/api/asset/removeUnusedAsset` 的 path 为 data 相对资源路径，普通资源须通过完整未引用扫描。
- * 全局 `assets/android-notification-texts.txt` 普通文件允许显式删除以关闭 Android 保活通知，
- * 不依赖未引用扫描；目录和符号链接不能使用该例外。删除前仍保存资源历史并触发同步。
- * 该文件不出现在 getUnusedAssets 中，也不被 removeUnusedAssets 批量清理。
- */
-/**
- * `/api/asset/renameAsset` 重命名普通笔记本资源，并同步字面量及百分号编码的文档、数据库引用。
- * 引用及成功返回的 data.newPath 保留查询参数和片段；源资源解析失败返回 code=-1 和 5000 毫秒错误提示。
- * 加密笔记本资源仍拒绝重命名；空名称或与原文件名相同的名称返回 code=0、data.newPath=""。
- */
-/**
- * `/api/system/setSettingsWindow` 更新工作空间的独立设置窗口开关，仅桌面 Electron 客户端使用。
- */
-/**
- * `/api/snippet/getSnippet` 为管理员返回完整列表的 revision，即使结果按类型、启用状态或关键字筛选。
- * 全量编辑应读取 type="all"、enabled=2 且不设置 keyword。发布读者不获得 revision。
- * `/api/snippet/setSnippet` 可携带 revision，在同一临界区检查版本并保存。
- * 版本不匹配返回 code=-1、msg="snippet revision conflict"，不会覆盖当前片段；调用方应保留草稿供用户合并。
- * 省略 revision 或传入 null 保持旧的无条件全量保存行为，不能防止旧列表覆盖并发修改。
- *
- * `/api/search/findReplace` 的 method 缺省或为 null 时使用文本替换，支持文本（0）、查询语法（1）和正则表达式（3）。
- * SQL（2）和语义搜索（4）返回 code=1 与提示信息，不执行替换；ids 为空时表示替换全部。
- * 文本与查询语法替换的所有启用类型遵循搜索配置的 caseSensitive，替换串按字面量写入。
- * 正则模式的大小写匹配由表达式决定，替换串保留捕获组展开语义。
- * `/api/system/uiproc` 不读取请求体，正整数 pid 通过 URL 查询参数传递；无效 pid 或注册表已满时返回空 200。
- * `/api/av/getUnusedAttributeViews` 完整扫描普通笔记本的数据库引用；读取或目录遍历失败返回 code=-1。
- * `/api/av/removeUnusedAttributeView` 和 `/api/av/removeUnusedAttributeViews` 扫描失败时保留数据库且不创建清理历史。
- * 加密笔记本及笔记本级数据库不参与全局未引用数据库清理；扫描成功后的响应格式保持不变。
- * `/api/riff/getRiffCards` 按到期时间升序分页，新卡排在前面，相同到期时间按卡片 ID 排序。
- * `.sy.zip` 文档和笔记本导入复用同名同内容的自定义表情，同名不同内容时返回错误并保留已有表情文件。
- * `/api/search/fullTextSearchBlock` 的 SQL 模式保留换行、注释与字面量大小写，支持带别名的完整块投影。
+ * 异步发送 POST 请求，通过回调接收响应；请求参数和响应类型按接口路径推导。
+ * 具体接口说明见 {@link APIPOSTRoutes}。
  */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**
- * `/api/setting/resetSettings` 接收可选的 `exit`（默认 false），要求管理员权限并禁止只读写入。
- * 仅重置当前工作空间的普通偏好、内置快捷键和当前布局；保留笔记、历史、历史保留天数、学习进度、
- * 账号、认证、同步、加密及恢复材料、AI/MCP、插件和代码片段及其启用状态、已保存布局、语言及应用级设置。
- * 已连接的主客户端收到 `prepareSettingsReset` 后，须保存待提交内容并暂停布局保存，再用通知中的一次性
- * token 调用 `/api/setting/confirmSettingsReset`，传入 `saved: true`；保存失败传 false，15 秒未确认则取消。
- * 成功后 `settingsReset` 通知所有主客户端直接重载；`exit: true` 仅让管理本地内核的桌面主窗口重载后正常退出，
- * 不直接停止远程内核。失败时 `cancelSettingsReset` 携带此次操作 ID，客户端应恢复正常保存。
- * 插件调用前应先取得用户确认，并确保未保存内容已经提交；重复调用恢复同一组默认值。
- *
- * `/api/ai/agent/getInstructions` 返回工作空间 data/ai/AGENTS.md 的 content 和 revision，要求管理员权限。
- * 缺失文件返回空 content 和 missing 修订，不创建文件；非 UTF-8 文本、超出 32 KiB 或读取失败返回 code=-1。
- * `/api/ai/agent/setInstructions` 接收 content 和读取时的 revision，要求管理员权限且禁止只读写入。
- * 内容允许为空；修订冲突返回 code=-1 并保留原文。保存采用原子替换，并按工作空间同步忽略规则通知同步。
- * 指令在下一轮用户对话生效，同轮工具调用和压缩使用固定快照，且不能覆盖工具权限、审批或访问控制。
- *
- * 读取 `/api/template/manage` 的模板源码时，可选的 `sourceDocID` 表示导出模板末尾文档属性中的静态来源 ID。
- * 普通 Markdown、目录或未声明有效 ID 的模板不返回该字段；读取不会执行模板或检查源文档是否仍可访问。
- * 打开来源时需按当前工作空间的文档访问规则处理失败；该字段不是预览上下文，也不保证模板与源文档保持同步。
- * `/api/system/getWorkspaceStorage` 无需参数，要求管理员权限并允许只读模式，统计当前内核工作空间的本地文件大小。
- * `totalSize` 为普通文件字节数之和，`assetsSize` 是 `data` 的子集，不能重复累加；不含目录分配空间或链接目标。
- * `directories` 按 data、repo、history、temp、conf、other 排序，`calculatedAt` 为扫描完成的 Unix 毫秒时间。
- * 扫描不下载资源或解密文件，不返回绝对路径；并发请求共享扫描，完成后不缓存，也不保证扫描期间的快照一致性。
- * 扫描期间已删除的子文件或子目录不计入；根目录丢失、权限错误等仍返回失败。
- * 读取失败或扫描超时返回 code=-1、data=null；调用方应保留旧结果的时间标记，并允许用户重试。
- *
- * 导出图片或 PDF 预览时，/api/export/exportPreviewHTML 可选 keepJSEmbed: true 保留脚本嵌入占位。
- * 默认不保留；内核不执行脚本，调用方须遵守安全模式限制并等待异步渲染完成后再导出。
- *
- * 加密笔记本归档接口要求管理员权限；移出和恢复均禁止只读模式。
- * `/api/notebook/prepareNotebookArchive` 接收已锁定的笔记本 ID，返回归档 ID 和下载路径，不删除源数据。
- * 下载完成后，必须由用户确认已保存归档，再调用 `/api/notebook/commitNotebookArchive` 并传入 `saved: true`。
- * 提交前会重新检查源文件；内容变化需重新导出。重复提交同一归档不会重复移出，未选择的笔记本不受影响。
- * `/api/notebook/importNotebookArchive` 接收 multipart 的 `file`、旧 `password` 和可选密钥备份 `key`。
- * 恢复目标必须关闭同步，且没有加密密钥配置或加密数据；密文全部通过认证后才发布，恢复后仍保持锁定。
- *
- * 内置 MCP 服务端 OAuth 与思源连接外部 MCP 的客户端 OAuth 配置相互独立，默认关闭。
- * `/api/mcp/getOAuth` 返回公开地址、开关和预注册客户端列表，不返回凭证摘要或客户端密钥。
- * `/api/mcp/setOAuth` 接收 enabled 和不含路径的 HTTPS publicURL；启用需要锁屏密码或 OIDC 登录。
- * `/api/mcp/addOAuthClient` 接收 name 和精确匹配的 redirectURI，返回客户端 id 及仅显示一次的 secret。
- * `/api/mcp/removeOAuthClient` 接收 id 删除客户端并撤销授权，或传 all: true 撤销全部授权但保留注册。
- * 以上接口要求管理员权限，配置和注册变更禁止只读模式。关闭、修改地址或管理员认证配置会撤销已有授权。
- * OAuth 使用授权码与 PKCE S256，支持 client_secret_basic 和 client_secret_post，不支持动态注册。
- * 访问令牌最长有效一小时；offline_access 刷新令牌轮换并在授权后三十天过期，重放会撤销同一授权。
- * OAuth 令牌只用于 /mcp，不能用于上述管理接口或其他内核 API，且不会解锁加密笔记本。
+ * 发送 POST 请求并返回响应 Promise；请求参数和响应类型按接口路径推导。
+ * 具体接口说明见 {@link APIPOSTRoutes}。
  */
 export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 
 /**
- * `/api/network/echo` 的 URL、TLS 和 Cookie 诊断对象保留标准库的原始 JSON。
- * 已声明字段及其类型保持稳定；工具链新增的诊断字段通过 JSONValue 索引读取，不保证跨版本存在。
- * `/api/icon/getDynamicIcon` 不读取请求体，type、color、date、lang、weekdayType、content 和 id 均为 URL 查询参数。
- * type 默认 1，lang 默认内核语言，weekdayType 默认 1；文字图标跟随全局字体，日期图标使用内置字体。
- * `/api/system/oidc/callback` 从 URL 查询参数读取 state、code 和 error，验证登录事务及会话绑定，不读取请求体。
+ * 发送 GET 请求，通过回调接收响应。
+ * 具体接口说明见 {@link APIGETRoutes}。
  */
 export const fetchGet: FetchGet<IWebSocketData | IObject | string>;
 
