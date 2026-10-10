@@ -443,6 +443,7 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * `/api/av/getUnusedAttributeViews` 完整扫描普通笔记本的数据库引用；读取或目录遍历失败返回 code=-1。
  * `/api/av/removeUnusedAttributeView` 和 `/api/av/removeUnusedAttributeViews` 扫描失败时保留数据库且不创建清理历史。
  * 加密笔记本及笔记本级数据库不参与全局未引用数据库清理；扫描成功后的响应格式保持不变。
+ * `/api/riff/getRiffCards` 按到期时间升序分页，新卡排在前面，相同到期时间按卡片 ID 排序。
  */
 export const fetchPost: FetchPost<IWebSocketData>;
 
