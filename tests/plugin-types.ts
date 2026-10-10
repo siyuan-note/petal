@@ -1,4 +1,4 @@
-import {Constants} from "../siyuan";
+import {Constants, Menu} from "../siyuan";
 import type {Config, IBlock, IPosition, IScrollAttr, ISiyuan} from "../siyuan";
 
 declare const editor: Config.IEditor;
@@ -18,6 +18,18 @@ declare const block: IBlock;
 const number: string | undefined = block.number;
 declare const position: IPosition;
 const target: HTMLElement | undefined = position.target;
+declare const menuButton: HTMLButtonElement;
+Menu.toggle({
+    target: menuButton,
+    build: menu => { menu.addItem({label: "Action"}); },
+    show: menu => menu.open({...position, target: menuButton}),
+});
+Menu.toggle({
+    target: menuButton,
+    toggle: false,
+    build: menu => { menu.addSeparator(); },
+    show: menu => menu.fullscreen("bottom"),
+});
 const headingAttribute: string = Constants.CUSTOM_SY_HEADING_NUMBER;
 // @ts-expect-error 内核不再提供旧的 AI 配置常量。
 Constants.LOCAL_AI;

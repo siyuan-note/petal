@@ -975,6 +975,19 @@ export class Dialog {
 }
 
 export class Menu {
+    /**
+     * 按触发元素切换共享菜单，在构造前判断归属；同一按钮关闭，其他按钮直接打开。
+     * target 省略或 toggle 为 false 时仅打开，不改变既有构造器及独立菜单的行为。
+     */
+    static toggle(options: {
+        target?: Element;
+        toggle?: boolean;
+        id?: string;
+        closeCB?: () => void;
+        build: (menu: Menu) => void;
+        show: (menu: Menu) => void;
+    }): void;
+
     private menu;
     isOpen: boolean;
     element: HTMLElement;
