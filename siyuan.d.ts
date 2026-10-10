@@ -439,6 +439,7 @@ export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOpt
  * SQL（2）和语义搜索（4）返回 code=1 与提示信息，不执行替换；ids 为空时表示替换全部。
  * 文本与查询语法替换的所有启用类型遵循搜索配置的 caseSensitive，替换串按字面量写入。
  * 正则模式的大小写匹配由表达式决定，替换串保留捕获组展开语义。
+ * `/api/system/uiproc` 不读取请求体，正整数 pid 通过 URL 查询参数传递；无效 pid 或注册表已满时返回空 200。
  */
 export const fetchPost: FetchPost<IWebSocketData>;
 
@@ -493,6 +494,9 @@ export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 /**
  * `/api/network/echo` 的 URL、TLS 和 Cookie 诊断对象保留标准库的原始 JSON。
  * 已声明字段及其类型保持稳定；工具链新增的诊断字段通过 JSONValue 索引读取，不保证跨版本存在。
+ * `/api/icon/getDynamicIcon` 不读取请求体，type、color、date、lang、weekdayType、content 和 id 均为 URL 查询参数。
+ * type 默认 1，lang 默认内核语言，weekdayType 默认 1；文字图标跟随全局字体，日期图标使用内置字体。
+ * `/api/system/oidc/callback` 从 URL 查询参数读取 state、code 和 error，验证登录事务及会话绑定，不读取请求体。
  */
 export const fetchGet: FetchGet<IWebSocketData | IObject | string>;
 
