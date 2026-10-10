@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare per-view map height choices of 320, 480, 640, and 800 CSS pixels, defaulting to 480 when omitted
+
 * Clarify longitude-first location display and latitude-first canonical copy and export text
 
 * Declare independently paginated unplaced map records with current view filters, searches, sorting, and location-field selection
