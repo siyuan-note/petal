@@ -11,20 +11,8 @@
 * [Generate attribute-view field types, filter operators, and capability declarations from the kernel](https://github.com/siyuan-note/siyuan/issues/20255)
 * [Document supported search replacement methods and rejection of SQL and semantic search](https://github.com/siyuan-note/siyuan/issues/20226)
 * [Keep network echo diagnostic declarations stable across Go toolchains while preserving additional JSON fields](https://github.com/siyuan-note/siyuan/issues/20222)
-* Declare the built-in table rich text, table header, and attribute-view static text attribute constants
 * [Declare read-only daily note candidate information](https://github.com/siyuan-note/siyuan/issues/20201)
-* Add optional revision checking to snippet saves and document conflict handling for concurrent edits
-* Redeclare the kernel plugin `Buffer` global with a pointer to the members it lacks at runtime
-* Declare `siyuan.secrets` and `siyuan.vars` for resolving configured secret and variable placeholders, the `require` and `GoError` kernel plugin globals, and further ECMAScript built-in and syntax gaps found by checking against a running sandbox
 * [Remove `ISiyuan.crypto`; kernel plugins now access Web Crypto only through the standard `globalThis.crypto` global](https://github.com/siyuan-note/siyuan/issues/20041)
-* Redeclare the kernel plugin `Promise`, `Symbol`, `Proxy`, `Reflect`, `Map`, `Set`, `WeakMap`, `WeakSet`, `BigInt`, `ArrayBuffer`, `DataView`, and typed array globals to document which members of their standard `lib.es*.d.ts` types are missing at runtime
-* Document the kernel plugin sandbox's ECMAScript conformance, including the `Intl`, `Atomics`, `SharedArrayBuffer`, `WeakRef`, and `FinalizationRegistry` globals that type-check but are not implemented, and two `JSON`/`Date` spec deviations
-* Declare the kernel plugin `console`, `URL`, `URLSearchParams`, `setTimeout`, `setInterval`, `setImmediate`, `clearTimeout`, `clearInterval`, and `clearImmediate` globals, and document the gaps between the declared `Buffer` global and its actual kernel plugin implementation
-* Declare the kernel plugin Streams API (`ReadableStream`, `WritableStream`, `TransformStream`, `CountQueuingStrategy`, `ByteLengthQueuingStrategy`), `IFetchResponse.body` as a stream, and `IResponseBody.stream` for server streaming responses
-* Declare the `bytes()` and `blob()` methods of `IDataObject`
-* Declare the `Blob`, `File`, and `FormData` globals of kernel plugins, and `FormData` as the `body` of `IRequestInit`
-* Declare the `AbortController` and `AbortSignal` globals of kernel plugins, and the `signal` option of `IRequestInit`
-* Declare the `TextEncoder` and `TextDecoder` globals of kernel plugins
 * [Declare `globalThis.crypto` as the same object as `siyuan.crypto` in kernel plugins](https://github.com/siyuan-note/siyuan/issues/20041)
 * [Declare optional target dates for daily note creation](https://github.com/siyuan-note/siyuan/issues/20201)
 * [Declare customizable document start and end shortcuts](https://github.com/siyuan-note/siyuan/issues/20202)
@@ -37,7 +25,6 @@
 * [Declare optional double-click opening for parent document titles](https://github.com/siyuan-note/siyuan/issues/20169)
 * [Declare default item template previews and undoable relation item creation](https://github.com/siyuan-note/siyuan/issues/20114)
 * [Declare isolated decision-provider profiles and draft connection testing](https://github.com/siyuan-note/siyuan/issues/19986)
-* Clarify batch block existence queries across ordinary and encrypted notebooks
 * [Document native Tabs and Mindmap block insertion and structural editing](https://github.com/siyuan-note/siyuan/issues/20163)
 * [Expose settings navigation with optional provider options](https://github.com/siyuan-note/siyuan/issues/20109)
 * [Declare removal of saved ChatGPT account registrations](https://github.com/siyuan-note/siyuan/issues/20109)
