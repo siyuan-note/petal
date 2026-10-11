@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document WebDAV and local sync address validation while preserving anonymous WebDAV access](https://github.com/siyuan-note/siyuan/issues/20427)
+
 * Remove database map views and map service APIs while retaining location values and canonical WGS84 text exchange
 
 * [Declare clearing third-party sync configuration while protecting incomplete resources and history](https://github.com/siyuan-note/siyuan/issues/20427)
