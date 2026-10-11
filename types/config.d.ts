@@ -2966,6 +2966,8 @@ export namespace Config {
     export interface IEntryVisibilityProfile {
         id: string;
         name: string;
+        /** 未覆盖的显隐跟随内置方案；缺省时保留旧方案的独立显隐行为。 */
+        defaults?: "simple" | "full";
         entries: Record<string, boolean>;
         orders: Record<string, string[]>;
     }
