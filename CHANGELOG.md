@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare clearing third-party sync configuration while protecting incomplete resources and history](https://github.com/siyuan-note/siyuan/issues/20427)
+
 * [Document normalization of deprecated block reference export modes when saving and importing settings](https://github.com/siyuan-note/siyuan/issues/20426)
 
 * [Document setting notifications for the encrypted notebook system-lock policy](https://github.com/siyuan-note/siyuan/issues/20419)
