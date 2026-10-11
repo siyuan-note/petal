@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document normalization of deprecated block reference export modes when saving and importing settings](https://github.com/siyuan-note/siyuan/issues/20426)
+
 * [Document setting notifications for the encrypted notebook system-lock policy](https://github.com/siyuan-note/siyuan/issues/20419)
 
 * Declare per-view map height choices of 320, 480, 640, and 800 CSS pixels, defaulting to 480 when omitted
