@@ -2,7 +2,7 @@
 
 ## v1.3.0 2026
 
-* [Declare additional setting patch namespaces and configuration write metadata](https://github.com/siyuan-note/siyuan/issues/20443)
+* [Declare additional setting patch namespaces, field diagnostics, and write compatibility](https://github.com/siyuan-note/siyuan/issues/20443)
 
 * [Document WebDAV and local sync address validation while preserving anonymous WebDAV access](https://github.com/siyuan-note/siyuan/issues/20427)
 
