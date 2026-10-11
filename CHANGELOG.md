@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Remove database map views and map service APIs while retaining location values and canonical WGS84 text exchange
+
 * [Declare clearing third-party sync configuration while protecting incomplete resources and history](https://github.com/siyuan-note/siyuan/issues/20427)
 
 * [Document normalization of deprecated block reference export modes when saving and importing settings](https://github.com/siyuan-note/siyuan/issues/20426)
