@@ -20,6 +20,8 @@ export interface IWebSocketCloseEvent {
     code: number;
     /** Human-readable reason string supplied by the closing peer. */
     reason: string;
+    /** `true` if no outgoing data was still buffered when the connection closed. */
+    wasClean: boolean;
 }
 
 /**
@@ -58,13 +60,20 @@ export interface IWebSocketPongEvent {
 /**
  * Event fired when the WebSocket data frame is received.
  *
+ * @remarks Unlike the browser `WebSocket`, `type` is not `"message"`: it distinguishes text frames
+ * from binary frames, so narrowing on it also narrows `data`.
+ *
  * @see {@link IWebSocket.onmessage}
  */
-export interface IWebSocketMessageEvent {
-    type: 'message';
-    /** Payload: `string` for text frames, `ArrayBuffer` for binary frames. */
-    data: string | ArrayBuffer;
-}
+export type IWebSocketMessageEvent = {
+    type: 'text';
+    /** Payload of a text frame. */
+    data: string;
+} | {
+    type: 'binary';
+    /** Payload of a binary frame. */
+    data: ArrayBuffer;
+};
 
 /**
  * A kernel-proxied WebSocket connection returned by {@link IClient.socket}.
@@ -83,7 +92,7 @@ export interface IWebSocket {
     readonly binaryType: string;
     /** Number of bytes currently queued for sending but not yet transmitted. */
     readonly bufferedAmount: number;
-    /** Negotiated WebSocket extensions, or an empty string if none. */
+    /** Always an empty string; negotiated extensions are not reported. */
     readonly extensions: string;
     /** Negotiated sub-protocol, or an empty string if none was negotiated. */
     readonly protocol: string;
@@ -93,9 +102,20 @@ export interface IWebSocket {
     readonly url: string;
     /** Called when the connection is established. */
     onopen: ((event: IWebSocketOpenEvent) => void | Promise<void>) | null;
-    /** Called when the connection is closed. */
+    /**
+     * Called only when the remote peer sends a Close frame, after {@link IWebSocket.onerror}.
+     *
+     * @remarks Not called for a local {@link IWebSocket.close} or an abrupt disconnect.
+     * `readyState` is `2` during the callback and `3` afterwards.
+     */
     onclose: ((event: IWebSocketCloseEvent) => void | Promise<void>) | null;
-    /** Called when a transport error occurs. */
+    /**
+     * Called when a connection attempt fails and whenever an established connection terminates,
+     * including clean closes and a local {@link IWebSocket.close}.
+     *
+     * @remarks `error.message` is the kernel's close or transport error text, so a normal closure
+     * also arrives here rather than only in {@link IWebSocket.onclose}.
+     */
     onerror: ((event: IWebSocketErrorEvent) => void | Promise<void>) | null;
     /** Called when a ping control frame is received. */
     onping: ((event: IWebSocketPingEvent) => void | Promise<void>) | null;
@@ -106,9 +126,10 @@ export interface IWebSocket {
     /**
      * Initiates the WebSocket connection.
      *
-     * @remarks The returned `Promise` resolves once the TCP/TLS handshake
-     * succeeds and the HTTP upgrade is confirmed. Calling `open()` more than
-     * once is a no-op — the second call resolves immediately.
+     * @remarks The returned `Promise` resolves once the upgrade to the local kernel is confirmed,
+     * before {@link IWebSocket.onopen} runs. While a connection attempt is pending, further calls
+     * share its result; once the connection is open, calls resolve immediately. After a failed
+     * attempt or after {@link IWebSocket.close}, calls reject and the handle cannot be reopened.
      */
     open(): Promise<void>;
     /**
@@ -130,10 +151,11 @@ export interface IWebSocket {
      */
     pong(data?: string): Promise<void>;
     /**
-     * Initiates a graceful close handshake.
+     * Sends a Close frame and closes the connection immediately, without waiting for the peer's
+     * reply.
      *
-     * @param code   - WebSocket close code (default `1000` — normal closure).
-     * @param reason - Optional human-readable reason string (max 123 bytes).
+     * @param code   - WebSocket close code (default `1000` — normal closure); codes below `1000` become `1000`.
+     * @param reason - Optional human-readable reason string, truncated to 123 bytes.
      */
     close(code?: number, reason?: string): Promise<void>;
 }

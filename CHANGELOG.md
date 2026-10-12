@@ -2,6 +2,28 @@
 
 ## v1.3.0 2026
 
+* [Fix strict type checking errors in shortcut key declarations](https://github.com/siyuan-note/petal/pull/60)
+
+* [Synchronize block, database, and layout data declarations with SiYuan, including gallery cover positions, and remove the obsolete `viewNotFound` render target status](https://github.com/siyuan-note/petal/pull/60)
+
+* [Add missing public members to `Dock`, `Editor`, `Layout`, `BlockPanel`, `Scroll`, `Title`, `Tree`, mobile dock panels, and Protyle components](https://github.com/siyuan-note/petal/pull/60)
+
+* [Correct plugin declarations: rename `agentActions` to `agentCapabilities`, report the undefined results of registration in independent settings windows, and fix the `paste`, `code-language-update`, `open-menu-av`, and `open-asset` event details](https://github.com/siyuan-note/petal/pull/60)
+
+* [Export `Lute`, `Custom`, `Tab`, `Model`, and other classes that the `siyuan` module does not provide at runtime as types only](https://github.com/siyuan-note/petal/pull/60)
+
+* [Correct exported API signatures: asynchronous `lockScreen`, `exitSiYuan`, and `expandDocTree`, possibly undefined tabs and editors, `saveExportFile` results, `openSetting` without a settings tab argument, and the missing `confirm`, `openEmoji`, `openInputDialog`, `Dialog`, `Menu`, and `Setting` options and members](https://github.com/siyuan-note/petal/pull/60)
+
+* [Declare the kernel plugin private server proxy response body, and correct raw response data, form parsing, response headers, cookies, status codes, synchronous SSE sending, request routing, and access checks](https://github.com/siyuan-note/petal/pull/60)
+
+* [Correct kernel plugin RPC and agent capability declarations: endpoints, authorization, error codes, parameter spreading, and registration records with schema wrappers and always-present effect flags](https://github.com/siyuan-note/petal/pull/60)
+
+* [Correct kernel plugin runtime declarations: platform values, nullable `i18n`, lifecycle order and unbound callback logging, the per-plugin event bus and its topics, synchronous `siyuan.logger`, and the `data/storage/petal/<name>/` storage directory](https://github.com/siyuan-note/petal/pull/60)
+
+* [Correct kernel plugin WebSocket and EventSource declarations: `text` and `binary` message events, `wasClean`, always-empty `extensions`, and the order in which the open, close, error, and reconnect callbacks run](https://github.com/siyuan-note/petal/pull/60)
+
+* [Correct the kernel plugin data accessor and fetch response declarations: repeatable reads over shared views, the request path as the response URL, the status line in `statusText`, and a `timeout` that only bounds receiving the response headers](https://github.com/siyuan-note/petal/pull/60)
+
 * [Document setting value ranges, invalid-value defaults, and preserved sync validation](https://github.com/siyuan-note/siyuan/issues/20468)
 
 * [Declare additional setting patch namespaces, field diagnostics, and write compatibility](https://github.com/siyuan-note/siyuan/issues/20443)

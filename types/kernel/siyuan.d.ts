@@ -7,6 +7,11 @@ import type { IServer } from "./server";
  *
  * @remarks Available as the global constant `siyuan`. All async operations
  * return `Promise`s resolved on the plugin's JavaScript runtime event loop.
+ * They reject with an {@link IGoError} whose `message` is the kernel's error text, and invalid
+ * arguments are reported as rejections rather than synchronous throws;
+ * {@link IEventSourcePort.send} is the only member of this API that throws synchronously. The
+ * sandbox globals outside `siyuan`, such as `crypto` and the WebIDL constructors, keep throwing
+ * synchronously as their standards require.
  */
 export interface ISiyuan {
     /** Static metadata about this plugin instance. */

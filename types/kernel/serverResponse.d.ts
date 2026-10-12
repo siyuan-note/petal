@@ -81,7 +81,25 @@ export interface IResponseRawData {
     /** MIME type for the `Content-Type` response header, e.g. `"image/png"`. */
     contentType: string;
     /** Raw response body bytes. */
-    data: string | ArrayBuffer;
+    data: string | ArrayBuffer | Buffer;
+}
+
+/**
+ * A response body streamed from another HTTP server.
+ *
+ * @remarks The kernel requests {@link IResponseProxy.url} through an SSRF-safe dialer (30-second
+ * dial timeout, at most 10 redirects, no response timeout), then streams the upstream status,
+ * headers, and body back to the client. Only the headers given here are forwarded, not the
+ * incoming request's; `Set-Cookie` and hop-by-hop headers are dropped in both directions. Invalid
+ * options are answered with `400` and a failed upstream request with `502`.
+ */
+export interface IResponseProxy {
+    /** Absolute `http:` or `https:` URL to request. */
+    url: string;
+    /** `"GET"` or `"HEAD"`; defaults to the incoming request method, and any other method is rejected. */
+    method?: string;
+    /** Request headers forwarded to the target. */
+    headers?: Record<string, string[]>;
 }
 
 /**
@@ -130,6 +148,8 @@ export interface IResponseBody {
     raw?: IResponseRawData | null;
     /** HTTP redirect. */
     redirect?: IResponseRedirect | null;
+    /** Response streamed from another HTTP server. */
+    proxy?: IResponseProxy | null;
     /** Response body read incrementally from a {@link IReadableStream}. */
     stream?: IResponseStream | null;
 }
@@ -156,7 +176,7 @@ export interface IResponseCookie {
     Expires?: string;
     /** Raw, unparsed `Expires` attribute string (informational). */
     RawExpires?: string;
-    /** `Max-Age` in seconds. `0` deletes the cookie; negative values are not sent. */
+    /** `Max-Age` in seconds. `0` omits the attribute; negative values delete the cookie (`Max-Age=0`). */
     MaxAge?: number;
     /** Restricts the cookie to HTTPS connections. */
     Secure?: boolean;
@@ -166,9 +186,9 @@ export interface IResponseCookie {
      * `SameSite` cookie policy.
      *
      * @remarks Maps to Go `http.SameSite` constants:
-     * `0` = default (browser-defined), `1` = None, `2` = Lax, `3` = Strict.
+     * `0` = unset and `1` = default (both omit the attribute), `2` = Lax, `3` = Strict, `4` = None.
      */
-    SameSite?: number;
+    SameSite?: 0 | 1 | 2 | 3 | 4;
     /** Sets the `Partitioned` (CHIPS) cookie attribute. */
     Partitioned?: boolean;
     /** Raw `Set-Cookie` line as sent by the server (informational). */
@@ -181,13 +201,19 @@ export interface IResponseCookie {
  * The return value expected from an HTTP server handler.
  */
 export interface IHttpResponse {
-    /** HTTP status code to send, e.g. `200`, `404`. */
+    /**
+     * HTTP status code to send, e.g. `200`, `404`.
+     *
+     * @remarks Ignored for `file` bodies, where the file server decides the status, and for
+     * `proxy` bodies, which use the upstream status.
+     */
     statusCode: number;
     /**
      * Additional response headers.
      *
-     * @remarks Each header name maps to an array of values to support
-     * multi-value headers such as `Link` or repeated `Set-Cookie` entries.
+     * @remarks Each header name maps to an array of values, but the values are applied in order
+     * and each one replaces the previous, so only the last value of a name is sent. Use
+     * {@link IHttpResponse.cookies} to send several `Set-Cookie` headers.
      */
     headers?: Record<string, string[]>;
     /** Cookies to attach to the response via `Set-Cookie` headers. */

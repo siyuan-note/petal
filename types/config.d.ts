@@ -1332,7 +1332,11 @@ export namespace Config {
      * SiYuan shortcut keys
      */
     export interface IKeys {
-        [key: string]: IKey;
+        /**
+         * 索引签名包含 `undefined`，以便子接口声明可选快捷键。SiYuan 自身未开启 strictNullChecks，
+         * 若此处写成 `IKey`，开启 strict 的插件工程会在每个可选成员上报 TS2411
+         */
+        [key: string]: IKey | undefined;
     }
 
     /**

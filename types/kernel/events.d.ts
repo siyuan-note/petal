@@ -20,11 +20,14 @@ export interface IRequestInit {
      */
     body?: string | ArrayBuffer | TFormData;
     /**
-     * Timeout in milliseconds for the whole request, from connecting until the response body is read.
-     * Defaults to `60000` when omitted; `0` disables the timeout. Must be a non-negative finite
-     * number, otherwise the request is rejected without being sent.
+     * Timeout in milliseconds for connecting and receiving the response headers. Defaults to
+     * `60000` when omitted; `0` disables the timeout. Must be a non-negative finite number,
+     * otherwise the request is rejected without being sent.
      *
-     * @remarks Pending requests are cancelled when the plugin stops, but only after
+     * @remarks The timer is stopped once the response headers arrive, so reading the body is no
+     * longer bounded by it; abort a slow body with {@link signal} instead.
+     *
+     * Pending requests are cancelled when the plugin stops, but only after
      * {@link IPluginLifecycle.onunload} settles, so awaiting a request without a timeout in
      * `onunload` can block stopping the plugin and a normal kernel shutdown indefinitely.
      */
@@ -45,7 +48,7 @@ export interface IRequestInit {
 export interface IEventMessage {
     /** Unique event identifier. */
     id: UUID;
-    /** Event type name, e.g. `"ws"`. */
+    /** Event type name, e.g. `"start"` or `"fs-notify"`. */
     type: string;
     /** Event-specific payload; the shape depends on `type`. */
     detail: any;
@@ -83,7 +86,7 @@ export interface IFsNotifyEventMessage extends IEventMessage {
     detail: {
         /** The type of file-system change that triggered this event. */
         operation: TFsNotifyOperation;
-        /** Path relative to the plugin's storage directory. */
+        /** Path relative to the plugin's storage directory, using the platform's path separator. */
         path: string;
     }
 }

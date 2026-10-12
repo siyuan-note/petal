@@ -51,7 +51,14 @@ export interface IEventSourceErrorEvent {
  *
  * @remarks The object is returned in {@link TEventSourceReadyState | CONNECTING} state
  * immediately; the kernel starts the SSE subscription in the background and
- * fires {@link IEventSource.onopen} once the stream is established.
+ * fires {@link IEventSource.onopen} when the first event arrives, not when the
+ * response headers are received.
+ *
+ * After a stream read error the kernel fires {@link IEventSource.onclose}, reconnects with
+ * exponential backoff, and fires `onopen` again on the next event. Connection failures,
+ * including non-200 responses, are retried the same way; {@link IEventSource.onerror} fires
+ * only once the retries give up (after about 15 minutes by default). If the server ends the
+ * stream cleanly, neither `onclose` nor `onerror` fires and `readyState` becomes `2`.
  * Call {@link IEventSource.close} to cancel the subscription.
  */
 export interface IEventSource {
@@ -59,13 +66,13 @@ export interface IEventSource {
     readonly readyState: TEventSourceReadyState;
     /** The original path passed to {@link IClient.event}, e.g. `"/api/…"`. */
     readonly url: string;
-    /** Called when the connection is established. */
+    /** Called when the first event arrives after connecting or reconnecting. */
     onopen: ((event: IEventSourceOpenEvent) => void | Promise<void>) | null;
     /** Called when a message is received. */
     onmessage: ((event: IEventSourceMessageEvent) => void | Promise<void>) | null;
-    /** Called when the connection is closed by the server or after {@link IEventSource.close}. */
+    /** Called when reading the stream fails, before the kernel reconnects. */
     onclose: ((event: IEventSourceCloseEvent) => void | Promise<void>) | null;
-    /** Called when a transport error occurs. */
+    /** Called when the subscription ends with an error after the retries give up. */
     onerror: ((event: IEventSourceErrorEvent) => void | Promise<void>) | null;
     /** Cancels the subscription and closes the connection. */
     close(): void;
