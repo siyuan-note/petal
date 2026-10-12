@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document setting value ranges, invalid-value defaults, and preserved sync validation](https://github.com/siyuan-note/siyuan/issues/20468)
+
 * [Declare additional setting patch namespaces, field diagnostics, and write compatibility](https://github.com/siyuan-note/siyuan/issues/20443)
 
 * [Document WebDAV and local sync address validation while preserving anonymous WebDAV access](https://github.com/siyuan-note/siyuan/issues/20427)
