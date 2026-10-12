@@ -2,6 +2,7 @@ import {
     Config, Dialog,
     IProtyle,
     IScrollAttr,
+    Menu,
     Plugin,
     Protyle,
     TDock,
@@ -22,6 +23,7 @@ import {MobileBacklinks} from "./mobile/dock/MobileBacklinks";
 
 export * from "./config";
 export * from "./api";
+export * from "./av";
 export * from "./events";
 export * from "./kernel";
 export * from "./protyle";
@@ -44,47 +46,12 @@ export * as platformUtils from "./platformUtils";
 
 type TDockPosition = "Left" | "Right" | "Bottom"
 type TBazaarType = "templates" | "icons" | "widgets" | "themes" | "plugins"
-type TRecentDocsSort = "viewedAt" | "closedAt" | "openAt" | "created" | "updated"
+type TRecentDocsSort = "viewedAt" | "closedAt" | "openAt" | "updated"
 type TPublishAccessLevel = "public" | "protected" | "hidden" | "private" | "forbidden"
 type TAVView = "table" | "list" | "gallery" | "kanban" | "calendar";
 export type TAVAlign = "" | "left" | "center" | "right"
-type TAVDateFormat = "" | "full" | "month-day-year" | "day-month-year" | "year-month-day"
-type TAVFilterOperator =
-    "="
-    | "!="
-    | ">"
-    | ">="
-    | "<"
-    | "<="
-    | "Contains"
-    | "Does not contains"
-    | "Contains any item"
-    | "Does not contain any item"
-    | "Is empty"
-    | "Is not empty"
-    | "Starts with"
-    | "Ends with"
-    | "Is between"
-    | "Is true"
-    | "Is false"
-export type TAVCol =
-    "text"
-    | "date"
-    | "number"
-    | "relation"
-    | "rollup"
-    | "select"
-    | "block"
-    | "mSelect"
-    | "url"
-    | "email"
-    | "phone"
-    | "mAsset"
-    | "template"
-    | "created"
-    | "updated"
-    | "checkbox"
-    | "lineNumber"
+export type TAVFilterOperator = import("./av").AVFilterOperator;
+export type TAVCol = import("./av").AVKeyType;
 
 interface ILayoutOptions {
     direction?: Config.TUILayoutDirection;
@@ -213,13 +180,13 @@ export interface IClipboardData {
     siyuanHTML?: string;
     files?: FileList | DataTransferItemList | File[];
     localFiles?: ILocalFiles[];
-    preserveSourceFormat?: boolean;
+    preserveSourceFormat?: boolean,
 }
 
 export interface IBlockTree {
     box?: string,
-    revision?: string,
     number?: string,
+    revision?: string,
     nodeType?: string,
     hPath?: string,
     subType?: string,
@@ -245,7 +212,6 @@ export interface IBlock {
     rootID?: string;
     type?: string;
     content?: string;
-    number?: string;
     def?: IBlock;
     defID?: string
     defPath?: string
@@ -259,6 +225,7 @@ export interface IBlock {
     length?: number
     ial: Record<string, string>
     refCount?: number
+    number?: string;
 }
 
 export interface IRiffCard {
@@ -290,7 +257,6 @@ interface IBackStack {
         endId: string
         path: string
         notebookId: string
-        rootID: string
     },
     scrollTop?: number,
     callback?: TProtyleAction[],
@@ -327,6 +293,7 @@ export interface IAV {
     views: IAVView[];
     isMirror?: boolean;
     newItemTemplates?: IAVNewItemTemplate[];
+    /** 关联选择面板新建也使用此默认模板；名称不同时可选择模板名称或输入名称，其他模板配置均保留。 */
     defaultTemplateID?: string;
     customColors?: IAVCustomColor[];
     colorOrder?: string[];
@@ -338,6 +305,7 @@ export interface IAV {
 
 export interface IAVContextFilter {
     spec: 1;
+    /** 直接关联或目标为关联且显示原值/唯一值的汇总字段；汇总仅用于筛选，不回填新增条目 */
     keyID: string;
 }
 
@@ -345,6 +313,7 @@ export interface IAVContextFilterField {
     id: string;
     name: string;
     icon: string;
+    /** 最终关联目标数据库的 ID；汇总字段返回关联目标，而非中间数据库 */
     targetAvID: string;
 }
 
@@ -484,16 +453,17 @@ interface IAVVirtualData {
     renderedStart: number;
     renderedEnd: number;
     topSpacerHeight: number;
-    rowOffset?: number;
     locate?: boolean;
+    rowOffset?: number;
 }
 
 interface IAVGallery extends IAVView {
     coverFrom: number;    // 0：无，1：内容图，2：资源字段，3：内容块
     coverFromAssetKeyID?: string;
-    cardSize: number;   // 0：小卡片，1：中卡片，2：大卡片
-    cardWidth: number;
-    cardLayout: number;   // 0：列表，1：紧凑
+    cardSize: number;
+    cardLayout: number;
+   // 0：小卡片，1：中卡片，2：大卡片
+    cardWidth: number;   // 0：小卡片，1：中卡片，2：大卡片
     cardAspectRatio: number;
     cardAspectRatioValue: number;
     displayFieldName: boolean;
@@ -508,9 +478,10 @@ interface IAVGallery extends IAVView {
 interface IAVKanban extends IAVView {
     coverFrom: number;    // 0：无，1：内容图，2：资源字段，3：内容块
     coverFromAssetKeyID?: string;
-    cardSize: number;   // 0：小卡片，1：中卡片，2：大卡片
-    cardWidth: number;
-    cardLayout: number;   // 0：列表，1：紧凑
+    cardSize: number;
+    cardLayout: number;
+   // 0：小卡片，1：中卡片，2：大卡片
+    cardWidth: number;   // 0：小卡片，1：中卡片，2：大卡片
     cardAspectRatio: number;
     cardAspectRatioValue: number;
     displayFieldName: boolean;
@@ -530,8 +501,9 @@ interface IAVFilter {
     quantifier?: string,                              // 叶子节点：量词
     value?: IAVCellValue,                             // 叶子节点：过滤值
     relativeDate?: IAVRelativeDate,                   // 叶子节点：相对时间
-    relativeDate2?: IAVRelativeDate,                  // 叶子节点：第二个相对时间
-    dateEndpoint?: "start" | "end",                   // 叶子节点：日期端点，默认为开始时间
+    relativeDate2?: IAVRelativeDate,
+                  // 叶子节点：第二个相对时间
+    dateEndpoint?: "start" | "end",                  // 叶子节点：第二个相对时间
     combination?: "and" | "or",                       // 分组节点：子条件组合方式
     filters?: IAVFilter[],                            // 分组节点：子节点（递归）
 }
@@ -558,7 +530,7 @@ interface IAVGroup {
 interface IAVSort {
     column: string,
     valueSource?: "stored" | "rendered",             // 值来源，默认为存储值
-    order: "ASC" | "DESC" | "",
+    order: "ASC" | "DESC" | ""
     dateEndpoint?: "start" | "end"
 }
 
@@ -577,7 +549,8 @@ interface IAVColumn {
     fullRow?: boolean,
     type?: TAVCol,
     numberFormat?: string,
-    dateFormat?: TAVDateFormat,
+    /** 日期字段的整列显示格式；lunar 使用农历录入和显示，时间戳不变，公历覆盖范围为 1901-02-19 - 2100-12-31 */
+    dateFormat?: "" | "full" | "month-day-year" | "day-month-year" | "year-month-day" | "lunar",
     template?: string,
     renderTemplate?: string,
     calc?: IAVCalc,
@@ -660,8 +633,7 @@ interface IAVCellValue {
         content: string,
         id?: string,
         /** 游离条目可独立设置图标；绑定条目与目标块共享图标，无图标的普通块在绑定时继承条目图标。 */
-        icon?: string,
-        refSubtype?: "s" | "d"
+        icon?: string
     }
     url?: {
         content: string
@@ -669,6 +641,7 @@ interface IAVCellValue {
     phone?: {
         content: string
     }
+    location?: IAVCellLocationValue
     email?: {
         content: string
     }
@@ -686,6 +659,18 @@ interface IAVCellValue {
     date?: IAVCellDateValue
     created?: IAVCellDateValue
     updated?: IAVCellDateValue
+}
+
+/**
+ * 坐标统一使用 WGS84，不自动转换；界面按经度、纬度显示，规范复制与导出文本按纬度、经度排列。
+ * 位置字段的文本筛选条件使用 IAVCellValue.text.content，不把查询词解析成坐标。
+ */
+interface IAVCellLocationValue {
+    name?: string;
+    latitude?: number | null;
+    longitude?: number | null;
+    /** 原始坐标输入仅作为来源信息，不参与判空、筛选和排序。 */
+    originalInput?: string;
 }
 
 interface IAVCellRelationValue {
@@ -745,10 +730,10 @@ export type IOperation = Exclude<import("./api").TransactionOperationRequest, {a
 
 export interface IRefDefs {
     refID: string,
-    defIDs?: string[],
-    avItemID?: string,
-    avViewID?: string,
+    defIDs?: string[]
     avGroupID?: string,
+    avViewID?: string,
+    avItemID?: string,
 }
 
 export interface IPosition {
@@ -756,22 +741,12 @@ export interface IPosition {
     y: number,
     w?: number,
     h?: number,
-    isLeft?: boolean,
+    isLeft?: boolean
     target?: HTMLElement
-}
-
-interface ITabDragData {
-    title?: string;
-    icon?: string;
-    docIcon?: string;
-    pin: boolean;
-    focus: boolean;
-    unupdate: boolean;
 }
 
 export interface ISiyuan {
     zIndex: number
-    isReady?: boolean
     storage?: {
         [key: string]: any
     },
@@ -848,7 +823,6 @@ export interface ISiyuan {
         }[]
     },
     dragElement?: HTMLElement,
-    dragTab?: ITabDragData,
     dragTitle?: string,
     currentDragOverTabHeadersElement?: HTMLElement
     touchDragActive?: boolean,
@@ -885,6 +859,17 @@ export interface ISiyuan {
      * 是否在发布服务下访问
      */
     isPublish?: boolean;
+    isReady?: boolean
+    dragTab?: ITabDragData,
+}
+
+export interface ITabDragData {
+    title?: string;
+    icon?: string;
+    docIcon?: string;
+    pin: boolean;
+    focus: boolean;
+    unupdate: boolean;
 }
 
 export interface IMenu {
@@ -1012,6 +997,8 @@ declare class Viewer {
     public destroy(): void
 
     public show(): void
+
+    public hide(): void
 }
 
 export declare class Layout {
@@ -1057,13 +1044,16 @@ export declare class Editor extends Model {
 
     private initProtyle;
 
+    /**
+     * @param {boolean} [reset=false] - 为 true 时重置反链面板的筛选和展开状态
+     */
     updateBacklinkPanel(reset?: boolean): void;
 
     refreshBottomBacklinkPanel(): void;
 
     destroy(): void;
 
-    /** @returns 选区位于底部反链面板的编辑器中时返回该编辑器，否则返回文档编辑器 */
+    /** 返回当前获得焦点的编辑器，没有时返回主编辑器 */
     getCurrentProtyle(range?: Range): IProtyle;
 }
 
@@ -1089,29 +1079,6 @@ export declare class Dock {
         position: TDockPosition;
     });
 
-    togglePin(): void;
-
-    private resetDockPosition;
-
-    showDock(reset?: boolean): void;
-
-    hideDock(reset?: boolean, preferredSize?: number): void;
-
-    toggleModel(type: TDock | string, show?: boolean, close?: boolean, removeDock?: boolean, isSaveLayout?: boolean,
-                restorePanel?: boolean): void;
-
-    add(index: number, sourceElement: Element, previousType?: string, options?: {
-        syncEntryOrders?: boolean,
-    }): void;
-
-    remove(key: string): void;
-
-    setSize(): void;
-
-    private getMaxSize;
-
-    genButton(data: Array<Config.IUILayoutDockTab & { entryId?: string }>, index: number, tabIndex?: number): void;
-
     isFloating(): boolean;
 
     isResponsiveFloating(): boolean;
@@ -1128,20 +1095,15 @@ export declare class Dock {
 
     getResponsivePreferredSize(): number;
 
-    getResponsiveMinimumSize(): number;
+    getResponsiveMinimumSize(): 232 | 320 | 64;
 
-    /** @returns 有活动工具且未被整体收起时为 true，浮动面板暂时未悬停显示仍为 true */
     isPanelVisible(): boolean;
 
-    /** @returns 面板整体收起前的尺寸；未收起或没有记录时为 undefined */
-    getCollapsedPanelSize(): string | undefined;
+    getCollapsedPanelSize(): string;
 
-    /**
-     * 显示、隐藏或切换整个面板
-     * @param {boolean} [visible] - 不传时切换显隐，传入时设置显隐
-     * @returns 与 {@link isPanelVisible} 含义相同；空组返回 false
-     */
     togglePanel(visible?: boolean): boolean;
+
+    togglePin(): void;
 
     showDockByHover(): void;
 
@@ -1149,7 +1111,25 @@ export declare class Dock {
 
     clearDockHoverTimeout(): void;
 
+    showDock(reset?: boolean): void;
+
+    hideDock(reset?: boolean, preferredSize?: number): void;
+
+    toggleModel(type: TDock | string, show?: boolean, close?: boolean, removeDock?: boolean, isSaveLayout?: boolean, restorePanel?: boolean): void;
+
+    add(index: number, sourceElement: Element, previousType?: string, options?: {
+        syncEntryOrders?: boolean;
+    }): void;
+
+    remove(key: TDock | string): void;
+
+    setSize(): void;
+
     hasActive(): boolean;
+
+    private getMaxSize;
+
+    genButton(data: Array<Config.IUILayoutDockTab & { entryId?: string }>, index: number, tabIndex?: number): void;
 }
 
 export declare class MobileCustom {

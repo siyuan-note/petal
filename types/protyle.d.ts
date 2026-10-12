@@ -85,6 +85,9 @@ declare class Scroll {
 
     updateIndex(protyle: IProtyle, id: string, cb?: (index: number) => void): Promise<void>;
 
+    /** 刷新滚动条上下按钮的快捷键提示 */
+    updateHotkeyLabels(): void;
+
     update(protyle: IProtyle): void;
 
     /**
@@ -175,6 +178,12 @@ declare class Title {
 
     private rename;
 
+    /** 立即提交待处理的标题输入，例如保存或切换文档前 */
+    flushPendingInput(): void;
+
+    /** 丢弃待处理的标题输入 */
+    cancelPendingInput(): void;
+
     /**
      * @param {boolean} [empty=false] - 为 true 时标题编辑区显示为空
      */
@@ -238,9 +247,9 @@ interface IOperations {
 }
 
 declare class Undo implements IUndo {
-    undo(protyle: IProtyle): void | Promise<void>;
+    undo(protyle: IProtyle): Promise<void>;
 
-    redo(protyle: IProtyle): void | Promise<void>;
+    redo(protyle: IProtyle): Promise<void>;
 
     renderLocal(protyle: IProtyle, operations: IOperation[]): void;
 
@@ -764,6 +773,8 @@ declare class Viewer {
     public destroy(): void
 
     public show(): void
+
+    public hide(): void
 }
 
 export class Lute {
@@ -970,7 +981,7 @@ interface IUpload {
     linkToImgCallback?(responseText: string): void;
 }
 
-interface IScrollAttr {
+export interface IScrollAttr {
     rootId: string,
     startId?: string,
     endId?: string

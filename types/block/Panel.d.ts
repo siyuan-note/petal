@@ -24,7 +24,10 @@ export declare class BlockPanel {
         y?: number;
     });
     private initProtyle;
-    destroy(): void;
+    /**
+     * @param {boolean} [removeMenu=true] - 是否同时关闭浮层上打开的菜单
+     */
+    destroy(removeMenu?: boolean): void;
     removeEditors(options: {
         notebookId?: string;
         rootIDs: ReadonlySet<string>;

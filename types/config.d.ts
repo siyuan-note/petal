@@ -30,8 +30,20 @@ export namespace Config {
         accessAuthCode: string;
         oidc: IOIDC;
         ai: IAI;
-        /** 当前设备的本地 OCR 提供商和模型选择；切换后保留已有识别文本 */
-        ocr: {provider: string; model: string; auto: boolean};
+        /**
+         * 当前设备的 OCR 设置，切换提供商、模型或阈值不重跑已有结果。
+         * 仅内置 Tiny；旧内置 Small 选择自动迁移为 Tiny，自行导入的模型仍使用内容摘要标识。
+         * thresholds 仅用于 PaddleOCR，detection 和 box 为 (0, 1)，recognition 为 [0, 1]。
+         * 字段为 null 时使用模型检测参数和 0.5 的识别阈值。
+         * setOCRConfig 省略 thresholds 或传 null 时保留已保存值；传入包含三个 null 字段的对象可恢复默认。
+         * provider 为 ai 时，手动和自动识别均使用独立的 aiModelId；失效时不回退到其他模型或提供商。
+         * setOCRConfig 省略 aiModelId 或传 null 时保留已有选择。
+         * 首次从本地提供商切换到 AI 时关闭自动识别，之后可以显式开启；仅处理尚无结果的普通图片。
+         * /api/asset/ocr 使用所选 OCR 提供商；AI 返回保留换行和空格的 text 和空 ocrJSON，不虚构坐标。
+         * reasoningEffort 独立控制手动和自动 AI OCR，省略或 null 保留已有值，空字符串沿用模型默认。
+         * 可选 none、low、medium、high、xhigh、max；无表示关闭或尽量减少思考，支持情况依提供商及模型而定。
+         */
+        ocr: import("./api").SettingOCR;
         api: IAPI;
         appearance: IAppearance;
         bazaar: IBazaar;
@@ -117,8 +129,6 @@ export namespace Config {
     /**
      * Access authorization code
      */
-    export type TAccessAuthCode = "" | "*******";
-
     export interface IOIDCClaimRule {
         claim: string;
         operator: string;
@@ -136,6 +146,8 @@ export namespace Config {
         allowAll: boolean;
         claimRules: IOIDCClaimRule[];
     }
+
+    export type TAccessAuthCode = "" | "*******";
 
     /**
      * Artificial Intelligence (AI) related configuration
@@ -155,17 +167,32 @@ export namespace Config {
      * AI agent global settings
      */
     export interface IAgent {
+        /**
+         * 未保存独立 OCR AI 模型且选用本地 OCR 提供商时，图片菜单的手动 AI OCR 兼容此模型。
+         * 独立模型保存在 config.ocr.aiModelId，失效时返回错误，不回退到智能体或其他模型。
+         * POST /api/ai/ocr 接收 {path}，仅支持普通笔记本或全局 assets/ 图片，保留 box 查询参数。
+         * 支持 PNG、JPEG、GIF、WebP；BMP、TIFF 转为 PNG，HEIC/HEIF 转为 JPEG，其他格式返回错误。
+         * 保留原图分辨率，原始文件和发送图片均限制为 20 MiB，发送图片限制为四千万像素；HEIF 遵循预览解码限制。
+         * 成功返回 {text} 并保存到现有 OCR 存储、更新索引；失败保留旧结果，不降级为纯文本请求。
+         * 请求受管理员、只读和 AI 功能开关限制，最长两分钟，提供商配置的更短超时仍生效。
+         */
         modelId: string;
         sessionTimeout: number;
         streamIdleTimeout: number;
+        /** 确认等待秒数；负数回退 600，0 保留无限等待语义 */
         confirmTimeout: number;
         maxRetries: number;
+        /** 有效范围为 0–2；越界值在配置规范化时回退 1 */
         temperature: number;
+        /** 输出 token 上限；负数归零，0 表示使用模型默认值 */
         maxCompletionTokens: number;
+        /** 工具调用轮数上限；负数归零，0 表示不限制轮数 */
         maxToolCallRounds: number;
         capabilityPolicy: ICapabilityPolicy;
         skills: {
             userEnabled: string[];
+            /** Stable official skill IDs that are disabled; unknown IDs are preserved and an empty list enables all built-ins. */
+            builtinDisabled: string[];
         };
         approvalPolicy: {
             default: string;
@@ -199,15 +226,19 @@ export namespace Config {
         outputFormat: string;
     }
 
-    /**
-     * 智能体决策模型配置，使用 TypeSafe System One 协议。
-     */
-    export interface IDecision {
-        enabled: boolean;
+    /** 独立保存的决策服务凭证和参数。 */
+    export interface IDecisionProfile {
         endpoint: string;
         apiKey: string;
         name: string;
         timeout: number;
+    }
+
+    /** 当前决策服务及各供应商独立配置；平铺字段仅兼容 TypeSafe 客户端。 */
+    export interface IDecision extends IDecisionProfile {
+        enabled: boolean;
+        provider: string;
+        profiles: Record<string, IDecisionProfile>;
     }
 
     /**
@@ -241,6 +272,9 @@ export namespace Config {
      * AI provider configuration
      */
     export interface IProvider {
+        /** 账户认证只保存本机账户引用；省略时使用 API Key */
+        authType?: string;
+        accountID?: string;
         headers?: Record<string, string>;
         id: string;
         enabled: boolean;
@@ -255,7 +289,7 @@ export namespace Config {
 
     /**
      * AI model configuration. Behavior params (maxTokens/temperature/maxContexts)
-     * live on IEditing; Model holds identity and provider metadata.
+     * live on IEditing; Model holds only identity fields.
      */
     export interface IModel {
         id: string;
@@ -281,12 +315,12 @@ export namespace Config {
         type: string;
         command: string;
         args?: string[];
-        inheritEnv?: string[];
-        env?: Record<string, string>;
         headers?: Record<string, string>;
         timeout: number;
         disableStandaloneSSE: boolean;
         trustToolAnnotations: boolean;
+        inheritEnv?: string[];
+        env?: Record<string, string>;
     }
 
     /**
@@ -315,6 +349,7 @@ export namespace Config {
          * Close button behavior
          * - `0`: Exit application
          * - `1`: Minimize to pallets
+         * 仅接受 0、1，越界值在配置规范化时回退 0
          */
         closeButtonBehavior: number;
         /**
@@ -386,25 +421,6 @@ export namespace Config {
         statusBar: IAppearanceStatusBar;
         notifications: IAppearanceNotifications;
         entryVisibility: IEntryVisibility;
-    }
-
-    export interface IAppearanceTheme {
-        label: string;
-        name: string;
-        frontends?: string[];
-    }
-
-    export interface IEntryVisibilityProfile {
-        id: string;
-        name: string;
-        entries: Record<string, boolean>;
-        orders: Record<string, string[]>;
-    }
-
-    export interface IEntryVisibility {
-        version: number;
-        active: string;
-        profiles: IEntryVisibilityProfile[];
     }
 
     export interface IAppearanceStatusBar {
@@ -505,19 +521,19 @@ export namespace Config {
          */
         inlineStrikethrough: boolean;
         /**
-         * Whether to enable the full-width inline strikethrough
-         */
-        inlineFullWidthStrikethrough: boolean;
-        /**
-         * Whether to enable the full-width task list shortcut
-         */
-        blockFullWidthTaskList: boolean;
-        /**
          * Whether to enable the inline mark
          */
         inlineMark: boolean;
         /**
-         * Whether to enable the middle dot code block shortcut
+         * 是否启用全角行内删除线
+         */
+        inlineFullWidthStrikethrough: boolean;
+        /**
+         * 是否启用全角任务列表输入快捷方式
+         */
+        blockFullWidthTaskList: boolean;
+        /**
+         * 是否启用中点代码块输入快捷方式
          */
         codeBlockMiddleDot: boolean;
     }
@@ -576,16 +592,12 @@ export namespace Config {
         /** 反链面板是否隐藏传递型纯引用块 */
         backlinkHideReference: boolean;
         /**
-         * Whether to show backlinks at the bottom of the document
-         */
-        backlinkShowBottom: boolean;
-        /**
          * Backlink sort mode
          */
         backlinkSort: number;
-        /** 0 文档分组，1 全局锚文本自然升序，2 全局锚文本自然降序 */
+        /** 0 文档分组，1 全局锚文本自然升序，2 全局锚文本自然降序；仅接受 0、1、2，越界值在配置规范化时回退 0 */
         backlinkGlobalSort: number;
-        /** 文档内引用排序：0 正文顺序，1 锚文本自然升序，2 锚文本自然降序 */
+        /** 文档内引用排序：0 正文顺序，1 锚文本自然升序，2 锚文本自然降序；仅接受 0、1、2，越界值在配置规范化时回退 0 */
         backlinkBlockSort: number;
         /**
          * Backmention sort mode
@@ -614,6 +626,7 @@ export namespace Config {
         /**
          * The number of spaces generated by the Tab key in the code block, configured as 0 means no
          * conversion to spaces
+         * 仅接受 0、2、4、6、8，其他值回退 0；0 保留制表符
          */
         codeTabSpaces: number;
         /**
@@ -629,33 +642,12 @@ export namespace Config {
         /** 全局在图片标题下显示提示文本，默认关闭，不写入文档属性 */
         displayImgAlt: boolean;
         /**
-         * Whether to show database attributes at the top of the document
-         */
-        databaseAttrShow: boolean;
-        /**
-         * Behavior when clicking a database badge
-         * - `0`: Focus the block and expand the database panel
-         * - `1`: Open the block attribute panel
-         */
-        databaseAttrClickMode: number;
-        /**
          * Default state of database attributes
          * - `0`: Expanded
          * - `1`: Collapsed
+         * 仅接受 0、1，越界值在配置规范化时回退 0
          */
         databaseAttrViewMode: number;
-        /**
-         * Whether to hide empty database attributes
-         */
-        databaseAttrHideEmpty: boolean;
-        /**
-         * Whether to use tabs for database attributes
-         */
-        databaseAttrUseTabs: boolean;
-        /**
-         * Whether to retain dynamically loaded content blocks
-         */
-        keepLoadedContent: boolean;
         /**
          * The number of blocks loaded each time they are dynamically loaded
          */
@@ -665,18 +657,11 @@ export namespace Config {
          */
         embedBlockBreadcrumb: boolean;
         /**
-         * Whether to display automatic heading numbers
-         */
-        headingNumber: boolean;
-        /**
-         * The automatic heading numbering format preset
-         */
-        headingNumberFormat: string;
-        /**
          * Heading embed mode for embedded blocks
          * - `0`: Show title with blocks below (default)
          * - `1`: Show only title
          * - `2`: Show only blocks below title
+         * 仅接受 0、1、2，越界值在配置规范化时回退 0
          */
         headingEmbedMode: number;
         /**
@@ -688,6 +673,7 @@ export namespace Config {
          * - `0`: Hover over the cursor
          * - `1`: Hover over the cursor while holding down Ctrl
          * - `2`: Do not trigger the floating window
+         * 仅接受 0、1、2，越界值在配置规范化时回退 0
          */
         floatWindowMode: number;
         /**
@@ -761,10 +747,6 @@ export namespace Config {
          */
         pasteURLAutoConvert: boolean;
         /**
-         * Whether to embed dragged HTML files as IFrame blocks
-         */
-        dragHTMLFileToIframe: boolean;
-        /**
          * Whether to enable read-only mode
          */
         readOnly: boolean;
@@ -783,10 +765,6 @@ export namespace Config {
          */
         spellcheckLanguages: string[];
         /**
-         * Whether to search tags when typing `#`
-         */
-        hashTagSearch: boolean;
-        /**
          * Whether to enable virtual references
          */
         virtualBlockRef: boolean;
@@ -798,6 +776,49 @@ export namespace Config {
          * Virtual reference keyword inclusion list (separated by commas `,`)
          */
         virtualBlockRefInclude: string;
+        /**
+         * 是否在文档底部显示反向链接
+         */
+        backlinkShowBottom: boolean;
+        /**
+         * 是否在文档顶部显示数据库属性
+         */
+        databaseAttrShow: boolean;
+        /**
+         * 点击数据库标记的行为
+         * - `0`：聚焦区块并展开数据库面板
+         * - `1`：打开区块属性面板
+         * 仅接受 0、1，越界值在配置规范化时回退 0
+         */
+        databaseAttrClickMode: number;
+        /**
+         * 是否隐藏空数据库属性
+         */
+        databaseAttrHideEmpty: boolean;
+        /**
+         * 是否使用页签显示数据库属性
+         */
+        databaseAttrUseTabs: boolean;
+        /**
+         * 是否保留动态加载的内容区块
+         */
+        keepLoadedContent: boolean;
+        /**
+         * 是否显示自动标题编号
+         */
+        headingNumber: boolean;
+        /**
+         * 自动标题编号的格式预设
+         */
+        headingNumberFormat: string;
+        /**
+         * 是否将拖入的 HTML 文件嵌入为 IFrame 区块
+         */
+        dragHTMLFileToIframe: boolean;
+        /**
+         * 是否在输入 `#` 时搜索标签
+         */
+        hashTagSearch: boolean;
     }
 
     /**
@@ -813,6 +834,7 @@ export namespace Config {
          * Embedded block export mode
          * - `0`: Original block content
          * - `1`: Quotation block
+         * 仅接受 0、1，越界值在配置规范化时回退 1
          */
         blockEmbedMode: number;
         /**
@@ -837,6 +859,7 @@ export namespace Config {
          * File annotation reference export mode
          * - `0`: File name - page number - anchor text
          * - `1`: Anchor text only
+         * 仅接受 0、1，越界值在配置规范化时回退 0
          */
         fileAnnotationRefMode: number;
         /**
@@ -919,13 +942,15 @@ export namespace Config {
          */
         alwaysSelectOpenedFile: boolean;
         /**
-         * Whether clicking a document icon expands or collapses its child documents
+         * 桌面端单击文档图标的行为：0 修改图标，1 展开或折叠子文档；没有子文档时打开文档
+         * 桌面端笔记本图标始终用于修改图标；旧的布尔配置不迁移
          */
-        docIconClickExpand: boolean;
+        docIconClickMode: number;
         /**
-         * Whether clicking a parent document title expands or collapses its child documents
+         * 点击父文档标题的行为：0 打开文档，1 立即展开或折叠子文档，2 单击展开或折叠、双击打开父文档
+         * 取 2 时单击等待约 300 毫秒；没有子文档时直接打开；旧的布尔配置不迁移
          */
-        parentDocClickExpand: boolean;
+        parentDocTitleClickMode: number;
         /**
          * Whether to enable top-level notebook documents
          */
@@ -938,17 +963,13 @@ export namespace Config {
          * Whether to close all tabs when starting
          */
         closeTabsOnStart: boolean;
-        tabStartupMode: number;
         /**
          * The storage path of the new document
          */
         docCreateSavePath: string;
         /**
-         * The content template path of the new document
-         */
-        docCreateTemplatePath: string;
-        /**
          * The maximum number of documents listed
+         * 有效范围为 1–10240；小于 1 回退 512，大于 10240 截断至 10240
          */
         maxListCount: number;
         /**
@@ -1009,6 +1030,7 @@ export namespace Config {
         useSingleLineSave: boolean;
         /**
          * The .sy and database .json files larger than this value will prompt a warning (unit: MB)
+         * 有效范围为 2–10240 MB；小于 2 回退 8，大于 10240 截断至 10240
          */
         largeFileWarningSize: number;
         /**
@@ -1019,22 +1041,17 @@ export namespace Config {
          * The maximum number of recent documents listed
          */
         recentDocsMaxListCount: number;
+            tabStartupMode: number;
+        /**
+         * 新建文档的内容模板路径
+         */
+        docCreateTemplatePath: string;
     }
 
     /**
      * Flashcard related configuration
      */
     export interface IFlashCard {
-        /** 默认打开方式，0：弹窗，1：页签，2：右侧分屏，3：新窗口 */
-        openMode: number;
-        /**
-         * Whether to enable blockquote card making
-         */
-        blockquote: boolean;
-        /**
-         * Whether to enable callout card making
-         */
-        callout: boolean;
         /**
          * Whether to enable deck card making
          */
@@ -1072,6 +1089,7 @@ export namespace Config {
          * - `0`: New and old mixed
          * - `1`: New card priority
          * - `2`: Old card priority
+         * 仅接受 0、1、2，越界值在配置规范化时回退 0
          */
         reviewMode: number;
         /**
@@ -1082,6 +1100,14 @@ export namespace Config {
          * FSRS weight parameter list
          */
         weights: string;
+        /**
+         * 是否启用引述区块制卡
+         */
+        blockquote: boolean;
+        /**
+         * 是否启用提示区块制卡
+         */
+        callout: boolean;
     }
 
     /**
@@ -1292,6 +1318,8 @@ export namespace Config {
         scrollPageUpWithoutMovingCaret?: IKey;
         selectToPageEnd?: IKey;
         selectToPageStart?: IKey;
+        goToDocumentStart?: IKey;
+        goToDocumentEnd?: IKey;
         showInFolder?: IKey;
         spaceRepetition?: IKey;
         switchReadonly?: IKey;
@@ -1304,6 +1332,10 @@ export namespace Config {
      * SiYuan shortcut keys
      */
     export interface IKeys {
+        /**
+         * 索引签名包含 `undefined`，以便子接口声明可选快捷键。SiYuan 自身未开启 strictNullChecks，
+         * 若此处写成 `IKey`，开启 strict 的插件工程会在每个可选成员上报 TS2411
+         */
         [key: string]: IKey | undefined;
     }
 
@@ -1373,17 +1405,17 @@ export namespace Config {
      * SiYuan editor list shortcut keys
      */
     export interface IKeymapEditorList extends IKeys {
-        prependListItem?: IKey;
-        appendListItem?: IKey;
-        /** 在思维导图中添加同级节点，编辑时先保存当前内容。 */
-        mindmapAddSibling?: IKey;
-        /** 在思维导图中添加子节点，编辑时先保存当前内容。 */
-        mindmapAddChild?: IKey;
         checkToggle?: IKey;
         /** 切换任务完成状态，默认未绑定；待办和进行中变为完成，其他状态变为待办。 */
         taskCompletionToggle?: IKey;
         indent?: IKey;
         outdent?: IKey;
+            prependListItem?: IKey;
+            appendListItem?: IKey;
+        /** 在思维导图中添加同级节点，编辑时先保存当前内容。 */
+        mindmapAddSibling?: IKey;
+        /** 在思维导图中添加子节点，编辑时先保存当前内容。 */
+        mindmapAddChild?: IKey;
     }
 
     /**
@@ -1673,6 +1705,7 @@ export namespace Config {
         indexAssetPath: boolean;
         /**
          * Number of search results displayed
+         * 有效范围为 32–10240；小于 1 回退 64，1–31 提升至 32，大于 10240 截断至 10240
          */
         limit: number;
         /**
@@ -1749,10 +1782,6 @@ export namespace Config {
 
     /**
      * A named secret. The value is AES-encrypted at rest on the kernel side.
-     * The secret is only interpolated into HTTP outbound requests when the
-     * destination host is in the allowed hosts list; an empty list denies all
-     * HTTP requests. stdio MCP server environment variables are not restricted
-     * by this list.
      */
     export interface ISecret {
         name: string;
@@ -1857,6 +1886,7 @@ export namespace Config {
         generateConflictDoc: boolean;
         /**
          * 当前设备的资源下载模式，0：全部下载，1：按需下载。
+         * 仅接受 0、1；启动时越界值回退 0，写入 API 拒绝非法值并保留资源完整性检查
          */
         assetDownloadMode: number;
         /**
@@ -1895,17 +1925,6 @@ export namespace Config {
         webdav: ISyncWebDAV;
         local: ISyncLocal;
         lan: ISyncLAN;
-    }
-
-    export interface ISyncLAN {
-        /**
-         * Whether to enable LAN sync acceleration
-         */
-        enabled: boolean;
-        /**
-         * Maximum number of concurrent peer requests
-         */
-        maxConcurrentReqs: number;
     }
 
     /**
@@ -2015,6 +2034,7 @@ export namespace Config {
          * - `0`: Do not boot automatically
          * - `1`: Boot automatically
          * - `2`: Boot automatically + Minimize UI
+         * 仅接受 0、1、2，越界值在配置规范化时回退 0
          */
         autoLaunch2: number;
         /**
@@ -2039,10 +2059,6 @@ export namespace Config {
          */
         downloadInstallPkg: boolean;
         /**
-         * 更新通道
-         */
-        updateChannel?: string;
-        /**
          * The absolute path of the user's home directory for the current operating system user
          */
         homeDir: string;
@@ -2062,6 +2078,7 @@ export namespace Config {
          * Lock screen mode
          * - `0`: Manual
          * - `1`: Manual + Follow the operating system
+         * 仅接受 0、1，越界值在配置规范化时回退 0
          */
         lockScreenMode: number;
         encryptedNotebookFollowSystemLock: boolean;
@@ -2097,6 +2114,10 @@ export namespace Config {
          */
         safeMode: boolean;
         /**
+         * 是否在独立窗口中打开设置界面，仅桌面 Electron 客户端生效，默认 false。
+         */
+        settingsWindow: boolean;
+        /**
          * The absolute path of the workspace directory
          */
         workspaceDir: string;
@@ -2104,6 +2125,7 @@ export namespace Config {
          * Disabled features.
          */
         disabledFeatures: string[];
+            updateChannel?: string;
     }
 
     /**
@@ -2115,8 +2137,6 @@ export namespace Config {
      * - `std`: Desktop Electron environment
      */
     export type TSystemContainer = "docker" | "android" | "ios" | "harmony" | "std";
-
-    export type TUpdateChannel = "stable" | "beta" | "alpha";
 
     /**
      * SiYuan Network proxy configuration
@@ -2424,15 +2444,12 @@ export namespace Config {
          */
         rootId: string;
         /**
-         * (Backlink) Notebook ID
-         */
-        notebookId?: string;
-        /**
          * (Backlink) Tab type
          * - `pin`: Pinned panel
          * - `local`: The panel of the current document
          */
         type: TUILayoutTabBacklinkType;
+        notebookId?: string;
     }
 
     /**
@@ -2530,10 +2547,6 @@ export namespace Config {
          */
         blockId: string;
         /**
-         * (Graph) Notebook ID
-         */
-        notebookId?: string;
-        /**
          * Object name
          */
         instance: "Graph";
@@ -2548,6 +2561,7 @@ export namespace Config {
          * - `global`: Global graph
          */
         type: TUILayoutTabGraphType;
+        notebookId?: string;
     }
 
 
@@ -2568,10 +2582,6 @@ export namespace Config {
          */
         blockId: string;
         /**
-         * (Outline) Notebook ID
-         */
-        notebookId?: string;
-        /**
          * Object name
          */
         instance: "Outline";
@@ -2585,6 +2595,7 @@ export namespace Config {
          * - `local`: The outline panel of the current editor
          */
         type: TUILayoutTabOutlineType;
+        notebookId?: string;
     }
 
 
@@ -2620,10 +2631,6 @@ export namespace Config {
      * SiYuan search tab configuration
      */
     export interface IUILayoutTabSearchConfig {
-        /**
-         * Whether the search contains encrypted notebook data that must not be persisted
-         */
-        sensitive?: boolean;
         /**
          * 搜索传入的查询内容
          */
@@ -2690,6 +2697,10 @@ export namespace Config {
         sort?: number;
         types?: IUILayoutTabSearchConfigTypes;
         subTypes?: IUILayoutTabSearchConfigSubTypes;
+        /**
+         * 搜索是否包含禁止持久化的加密笔记本数据
+         */
+        sensitive?: boolean;
     }
 
     /**
@@ -2956,5 +2967,38 @@ export namespace Config {
      * - `right`: Right panel
      */
     export type TUILayoutType = "normal" | "center" | "top" | "bottom" | "left" | "right";
+    export interface ISyncLAN {
+        /**
+         * 是否启用局域网同步加速
+         */
+        enabled: boolean;
+        /**
+         * 对等节点请求的最大并发数
+         */
+        maxConcurrentReqs: number;
+    }
 
+
+    export interface IEntryVisibility {
+        version: number;
+        active: string;
+        profiles: IEntryVisibilityProfile[];
+    }
+
+
+    export interface IEntryVisibilityProfile {
+        id: string;
+        name: string;
+        /** 未覆盖的显隐跟随内置方案；缺省时保留旧方案的独立显隐行为。 */
+        defaults?: "simple" | "full";
+        entries: Record<string, boolean>;
+        orders: Record<string, string[]>;
+    }
+
+
+    export interface IAppearanceTheme {
+        label: string;
+        name: string;
+        frontends?: string[];
+    }
 }

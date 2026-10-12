@@ -27,7 +27,7 @@ import type {
     TProtyleAction,
 } from "./types";
 import {App, Config, Custom, Files, Lute, MobileCustom, Model, Protyle, subMenu, Tab, Toolbar,} from "./types";
-import type {FetchGet, FetchPost, FetchSyncPost} from "./types/api";
+import type {APIGETRoutes, APIPOSTRoutes, FetchGet, FetchPost, FetchSyncPost} from "./types/api";
 
 export * from "./types";
 export * from "./types/api";
@@ -120,7 +120,7 @@ export interface IEventBusMap {
     "before-search-results-render": {
         protyle: Protyle,
         config: Config.IUILayoutTabSearchConfig,
-        searchElement: HTMLInputElement,
+        searchElement: HTMLInputElement | HTMLTextAreaElement,
         blocks: IBlock[],
     };
     "before-show-tooltip": {
@@ -179,6 +179,7 @@ export interface IEventBusMap {
         protyle: IProtyle,
         event: MouseEvent,
     };
+    /** 仅在具备实际编辑器上下文时触发，关系图按文档信息构造的菜单不触发此事件 */
     "click-editortitleicon": {
         menu: subMenu,
         protyle: IProtyle,
@@ -211,7 +212,8 @@ export interface IEventBusMap {
         protyle: IProtyle,
     };
     "open-menu-av": IMenuBaseDetail & {
-        selectRowElements: HTMLElement[],
+        /** 选中的行或卡片元素，来自 `querySelectorAll`，不是数组。 */
+        selectRowElements: NodeListOf<Element>,
         selectRowIds: string[],
         selectRowPoints: { itemID: string, groupID: string }[],
     };
@@ -406,102 +408,21 @@ export function adjustEditorFontSize(action: TEditorFontSizeAction, options?: IE
 export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOptions): number;
 
 /**
- * `/api/setting/getCloudUser` 可传入 `cached: true`，仅返回内存中的账户，未登录时返回 null。
- * 此模式忽略 token，不联网、不等待同步或切换资源来源；缓存结果不代表云端凭据仍然有效。
- * 省略 cached 或传入 false 时保留账户恢复和令牌刷新行为；非管理员在两种模式下均得到 null。
- * 客户端可先读取缓存完成初始化，再刷新账户，并通过 setCloudUser 主通道事件接收账户变化。
- */
-/**
- * `/api/av/getAttributeViewRelationCandidates` 支持可选的 sort: {column, order}，order 为 ASC 或 DESC。
- * 按关联数据库字段的现有规则排序全部候选后分页，仅影响本次查询，不修改视图和 selectedRows 顺序。
- * 省略 sort 时保留创建时间倒序；不存在的字段或无效方向返回错误。
- * `/api/block/getBlockTreeInfos` 的标题结果包含可选的 `headingChildren` 布尔值，表示完整文档同一容器内是否有下辖块。
- * 空段落也算下辖块，结果不受折叠或分页影响；非标题及旧版内核省略该字段，省略不能视为空标题。
- * `/api/transactions` 的 move 操作支持 nextID，将块移到该同级锚点之前，优先于 previousID 和 parentID。
- * 移动保留折叠标题下辖块顺序及源块身份，不将整列表自动拆成列表项；公开 moveBlock 接口的参数保持不变。
- * `/api/repo/getRepoSnapshots` 可传入可选的 `id`，按 7 至 40 位十六进制 ID 前缀查询本地快照。
- * 前缀匹配多个快照时全部返回，按创建时间降序排列。
- * ID 忽略首尾空白和大小写；page 仍为必填，但按 ID 查询时不参与分页。
- * 省略或留空 ID 保留分页列表；未找到返回空列表，格式错误、损坏或读取失败返回错误。
- * 此接口保留管理员权限要求，返回已有的快照元数据及资源下载状态，不下载或回滚快照。
- * includeFiles 默认为 false；传入 true 时必须提供完整 ID，并返回该快照的文件元数据，不读取正文。
- * 本地快照结果的 tags 包含按名称排序的全部标记，未标记时为空数组；分页与 ID 查询均返回此字段。
- * `/api/repo/getRepoSnapshots` 和 `/api/repo/getCloudRepoSnapshots` 可传入 startTime、endTime，按创建时间筛选后分页。
- * 时间为非负整数 Unix 毫秒时间戳，包含起点、不包含终点；省略或为 0 表示该端无界，两端均非 0 时终点必须大于起点。
- * 本地 ID 查询也应用时间范围并继续忽略分页；云端筛选遍历索引页，读取失败不会返回部分结果。
- * `/api/repo/getRepoTagSnapshots` 仍按标记逐行返回，tag 是当前行供上传、移除使用的标记，tags 是全部别名。
- * `/api/history/getDocHistorySnapshots` 接收文档 id、最多 32 个 searchHistory 时间戳 created，以及可选 op。
- * op 默认为 all；每条结果包含 created、historyPath 和 snapshots，按快照创建时间倒序排列。
- * snapshots 的每项包含 id、fileID、tags、memo 和 created；同一快照的多个标记合并到 tags。
- * 仅匹配本地标记快照中认证解密后完整 .sy 数据相同的文件，不保证资源、数据库或引用内容相同。
- * 无仓库密钥时关联为空；缺失历史、格式错误、读取或认证失败返回错误，不冒充无匹配结果。
- * 此接口要求管理员权限，加密笔记本必须解锁，响应持有请求租约；不下载云端内容，不持久化摘要。
- * `/api/repo/getRepoDocHistory` 的每个文件版本还包含 snapshots，按文件 ID 关联全部本地标记快照。
- * snapshots 按快照创建时间倒序排列，同一快照的多个标记合并；无关联时为空数组，不读取文件正文。
- */
-/**
- * `/api/clipboard/preparePasteAssets` 接收已解锁的加密 notebook 和 assets 引用数组，返回原引用到新引用的映射。
- * 普通附件复制为独立加密副本，原文件保持不变；同一笔记本内复用已有附件，拒绝跨加密笔记本复制。
- * 引用仅限工作空间 assets/ 路径，可包含查询参数、片段和 PDF 标注 ID；PDF 标注文件随附件复制。
- * 整批准备成功后调用方再插入内容；失败返回 code=-1、data=null，并清理本批次新建附件。
- * 此接口要求管理员权限，禁止只读写入，响应持有加密笔记本请求租约。
- */
-/**
- * `/api/import/importStdMd`、`/api/import/importZipMd` 和 `/api/filetree/createDocWithMd` 自动转换标准脚注。
- * 脚注定义保存为独立列表项，正文引用转换为指向列表项的上标静态块引用，反链复用现有块引用索引。
- * 多段内容保留在同一列表项内；多次引用共享目标，标签匹配忽略大小写，重复定义引用第一个匹配项。
- * 未定义的脚注不生成块引用，代码和转义的脚注文本保持原样；请求、响应和笔记本权限规则保持不变。
+ * 异步发送 POST 请求，通过回调接收响应；请求参数和响应类型按接口路径推导。
+ * 具体接口说明见 {@link APIPOSTRoutes}。
  */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**
- * `/api/setting/resetSettings` 接收可选的 `exit`（默认 false），要求管理员权限并禁止只读写入。
- * 仅重置当前工作空间的普通偏好、内置快捷键和当前布局；保留笔记、历史、历史保留天数、学习进度、
- * 账号、认证、同步、加密及恢复材料、AI/MCP、插件和代码片段及其启用状态、已保存布局、语言及应用级设置。
- * 已连接的主客户端收到 `prepareSettingsReset` 后，须保存待提交内容并暂停布局保存，再用通知中的一次性
- * token 调用 `/api/setting/confirmSettingsReset`，传入 `saved: true`；保存失败传 false，15 秒未确认则取消。
- * 成功后 `settingsReset` 通知所有主客户端直接重载；`exit: true` 仅让管理本地内核的桌面主窗口重载后正常退出，
- * 不直接停止远程内核。失败时 `cancelSettingsReset` 携带此次操作 ID，客户端应恢复正常保存。
- * 插件调用前应先取得用户确认，并确保未保存内容已经提交；重复调用恢复同一组默认值。
- *
- * `/api/ai/agent/getInstructions` 返回工作空间 data/ai/AGENTS.md 的 content 和 revision，要求管理员权限。
- * 缺失文件返回空 content 和 missing 修订，不创建文件；非 UTF-8 文本、超出 32 KiB 或读取失败返回 code=-1。
- * `/api/ai/agent/setInstructions` 接收 content 和读取时的 revision，要求管理员权限且禁止只读写入。
- * 内容允许为空；修订冲突返回 code=-1 并保留原文。保存采用原子替换，并按工作空间同步忽略规则通知同步。
- * 指令在下一轮用户对话生效，同轮工具调用和压缩使用固定快照，且不能覆盖工具权限、审批或访问控制。
- *
- * 读取 `/api/template/manage` 的模板源码时，可选的 `sourceDocID` 表示导出模板末尾文档属性中的静态来源 ID。
- * 普通 Markdown、目录或未声明有效 ID 的模板不返回该字段；读取不会执行模板或检查源文档是否仍可访问。
- * 打开来源时需按当前工作空间的文档访问规则处理失败；该字段不是预览上下文，也不保证模板与源文档保持同步。
- * `/api/system/getWorkspaceStorage` 无需参数，要求管理员权限并允许只读模式，统计当前内核工作空间的本地文件大小。
- * `totalSize` 为普通文件字节数之和，`assetsSize` 是 `data` 的子集，不能重复累加；不含目录分配空间或链接目标。
- * `directories` 按 data、repo、history、temp、conf、other 排序，`calculatedAt` 为扫描完成的 Unix 毫秒时间。
- * 扫描不下载资源或解密文件，不返回绝对路径；并发请求共享扫描，完成后不缓存，也不保证扫描期间的快照一致性。
- * 扫描期间已删除的子文件或子目录不计入；根目录丢失、权限错误等仍返回失败。
- * 读取失败或扫描超时返回 code=-1、data=null；调用方应保留旧结果的时间标记，并允许用户重试。
- *
- * 导出图片或 PDF 预览时，/api/export/exportPreviewHTML 可选 keepJSEmbed: true 保留脚本嵌入占位。
- * 默认不保留；内核不执行脚本，调用方须遵守安全模式限制并等待异步渲染完成后再导出。
- *
- * 加密笔记本归档接口要求管理员权限；移出和恢复均禁止只读模式。
- * `/api/notebook/prepareNotebookArchive` 接收已锁定的笔记本 ID，返回归档 ID 和下载路径，不删除源数据。
- * 下载完成后，必须由用户确认已保存归档，再调用 `/api/notebook/commitNotebookArchive` 并传入 `saved: true`。
- * 提交前会重新检查源文件；内容变化需重新导出。重复提交同一归档不会重复移出，未选择的笔记本不受影响。
- * `/api/notebook/importNotebookArchive` 接收 multipart 的 `file`、旧 `password` 和可选密钥备份 `key`。
- * 恢复目标必须关闭同步，且没有加密密钥配置或加密数据；密文全部通过认证后才发布，恢复后仍保持锁定。
- *
- * 内置 MCP 服务端 OAuth 与思源连接外部 MCP 的客户端 OAuth 配置相互独立，默认关闭。
- * `/api/mcp/getOAuth` 返回公开地址、开关和预注册客户端列表，不返回凭证摘要或客户端密钥。
- * `/api/mcp/setOAuth` 接收 enabled 和不含路径的 HTTPS publicURL；启用需要锁屏密码或 OIDC 登录。
- * `/api/mcp/addOAuthClient` 接收 name 和精确匹配的 redirectURI，返回客户端 id 及仅显示一次的 secret。
- * `/api/mcp/removeOAuthClient` 接收 id 删除客户端并撤销授权，或传 all: true 撤销全部授权但保留注册。
- * 以上接口要求管理员权限，配置和注册变更禁止只读模式。关闭、修改地址或管理员认证配置会撤销已有授权。
- * OAuth 使用授权码与 PKCE S256，支持 client_secret_basic 和 client_secret_post，不支持动态注册。
- * 访问令牌最长有效一小时；offline_access 刷新令牌轮换并在授权后三十天过期，重放会撤销同一授权。
- * OAuth 令牌只用于 /mcp，不能用于上述管理接口或其他内核 API，且不会解锁加密笔记本。
+ * 发送 POST 请求并返回响应 Promise；请求参数和响应类型按接口路径推导。
+ * 具体接口说明见 {@link APIPOSTRoutes}。
  */
 export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 
+/**
+ * 发送 GET 请求，通过回调接收响应。
+ * 具体接口说明见 {@link APIGETRoutes}。
+ */
 export const fetchGet: FetchGet<IWebSocketData | IObject | string>;
 
 /**
@@ -530,7 +451,8 @@ export function openWindow(options: {
 export function getActiveTab(wndActive?: boolean): Tab | undefined;
 
 /**
- * @param {boolean} [wndActive=true] - 当前活动窗口是否为激活状态
+ * 移动端也可使用，返回当前文档的编辑器
+ * @param {boolean} [wndActive=true] - 当前活动窗口是否为激活状态，移动端忽略此参数
  * @returns 没有找到编辑器时返回 undefined
  */
 export function getActiveEditor(wndActive?: boolean): Protyle | undefined;
@@ -541,7 +463,7 @@ export function expandDocTree(options: {
 }): Promise<void>;
 
 /**
- * 仅移动端可用
+ * 以移动端的方式打开文档，桌面端也导出此函数，但只有移动端布局会生效
  * @param {TProtyleAction[]} [action=[Constants.CB_GET_HL]]
  * @param {boolean} [forceReload=false] - 文档已打开时是否仍重新加载
  */
@@ -633,7 +555,8 @@ export function getAllTabs(type?: TTab | string): Tab[]
 export function getAllModels(): IModels
 
 /**
- * 在当前窗口打开设置对话框并返回该对话框，不受独立设置窗口偏好影响；移动端打开主菜单并返回 undefined
+ * 在当前窗口打开设置对话框并返回该对话框，不受独立设置窗口偏好影响；移动端打开主菜单并返回 undefined。
+ * 插件 API 绑定的是 openPluginSetting，只接受 app，不支持指定设置页签。
  */
 export function openSetting(app: App): Dialog | undefined;
 
@@ -757,7 +680,15 @@ export function hideMessage(id?: string): void;
  *
  * 截止时间后，JavaScript Promise 无法取消，超时钩子可能继续运行。思源仍会尽力调用每个剩余的拆除钩子一次，但不再等待，
  * 随后拆除宿主管理的资源。这 5 秒只限制思源等待 Promise 的时间，无法中断同步 JavaScript。关闭窗口或退出思源时，
- * 该操作不会触发前端插件生命周期钩子。
+ * 普通前端窗口不会触发前端插件生命周期钩子。独立设置窗口销毁时会尽力调用 onunload 并立即释放宿主管理的资源，
+ * 不等待异步钩子完成；窗口关闭后不能继续操作其文档。
+ *
+ * plugin.json 可声明 settingsWindow: true，允许已启用且兼容 desktop 的插件在内置和插件的独立设置窗口中运行。
+ * 省略或 false 不加载；该声明不会启用已禁用的插件，也不改变主窗口、文档窗口和移动端的 frontends 兼容性。
+ * 每个设置窗口使用独立实例、事件总线和存储缓存，复用 onload、onLayoutReady、onDataChanged 和 onunload 生命周期。
+ * 主窗口的配置写入通过现有数据变更通知同步；未覆盖 onDataChanged 时重载实例。插件应自行清理其样式和事件监听。
+ * 设置窗口未提供编辑器、顶栏、状态栏和停靠栏，相关注册入口不生效，也不注册命令、全局快捷键或智能体能力。
+ * 插件的 openSetting 调用交由所属宿主窗口处理；设置窗口在打开后启用、停用和重载插件时也更新本地实例。
  */
 export abstract class Plugin {
     eventBus: EventBus;
@@ -853,7 +784,8 @@ export abstract class Plugin {
      * 操作显示在显隐控制之前，宿主在可见操作之后添加分隔线，并移除此组首尾及连续的分隔线。
      * 更新同一按钮时替换回调，省略此选项则清除回调。
      * 使用此选项时应移除阻止传播或单独打开菜单的 contextmenu 监听器。
-     * @returns 条目元素；插件已卸载、在移动端或独立窗口中传入 element、icon 无效，或 element 已注册到其他 id 时返回 undefined。
+     * @returns 条目元素；插件已卸载或运行在独立设置窗口中、在移动端或独立窗口中传入 element、未传 element 时 icon 无效，
+     * 或 element 已注册到其他 id 时返回 undefined。
      */
     addTopBar(options: {
         id?: string,
@@ -879,7 +811,7 @@ export abstract class Plugin {
 
     /**
      * Must be executed before the synchronous function.
-     * 移动端不支持状态栏，调用无效并返回 undefined。
+     * 移动端不支持状态栏，调用无效并返回 undefined；插件已卸载或运行在独立设置窗口中时不添加，直接返回传入的 element。
      * @param {string} [options.position=right]
      */
     addStatusBar(options: {
@@ -947,7 +879,7 @@ export abstract class Plugin {
 
     /**
      * Must be executed before the synchronous function.
-     * @returns 页签模型工厂；移动端不支持自定义页签，插件已卸载时也返回 undefined。
+     * @returns 页签模型工厂；移动端不支持自定义页签，插件已卸载或运行在独立设置窗口中时也返回 undefined。
      */
     addTab(options: {
         type: string,
@@ -962,7 +894,7 @@ export abstract class Plugin {
      * Add Custom to Dock.
      * Must be executed before the synchronous function.
      * @param {string} [options.id] - Unique ID within the plugin. Defaults to options.type.
-     * @returns 插件已卸载时返回 undefined。
+     * @returns 插件已卸载或运行在独立设置窗口中时返回 undefined。
      */
     addDock(options: {
         id?: string,
@@ -1047,8 +979,10 @@ export class Setting {
         confirmCallback?: () => void,
         /**
          * 桌面客户端使用独立原生窗口，默认 false，浏览器和移动端仍使用原有设置界面。
-         * 不重复加载插件；回调在插件所属窗口执行，原生窗口关闭或插件卸载时触发一次销毁回调。
+         * 原插件实例保持在所属窗口；声明 settingsWindow: true 的插件可在原生设置窗口另建独立实例。
+         * 控件回调在原插件所属窗口执行，原生窗口关闭或原插件卸载时触发一次销毁回调。
          * 控件会迁入独立窗口，应使用元素引用操作控件，避免依赖所属窗口的 document 查询或样式。
+         * 在设置窗口中再次打开 Setting 使用普通对话框，关闭该对话框不会关闭整个设置窗口。
          */
         openInWindow?: boolean,
     });
@@ -1164,6 +1098,19 @@ export class Dialog {
 }
 
 export class Menu {
+    /**
+     * 按触发元素切换共享菜单，在构造前判断归属；同一按钮关闭，其他按钮直接打开。
+     * target 省略或 toggle 为 false 时仅打开，不改变既有构造器及独立菜单的行为。
+     */
+    static toggle(options: {
+        target?: Element;
+        toggle?: boolean;
+        id?: string;
+        closeCB?: () => void;
+        build: (menu: Menu) => void;
+        show: (menu: Menu) => void;
+    }): void;
+
     private menu;
     isOpen: boolean;
     element: HTMLElement;
