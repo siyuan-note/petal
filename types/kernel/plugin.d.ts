@@ -69,8 +69,9 @@ export interface IEvent {
      * emitted to the `"runtime"` topic as-is. It is called with `this` set to `siyuan.event`;
      * a returned `Promise` is not awaited and errors thrown by the handler are not reported.
      * Set to `null` to stop receiving events.
+     * runtime 主题允许任意载荷，读取字段前必须验证事件结构；内置事件结构见 {@link TEventMessage}。
      */
-    handler: ((event: TEventMessage) => void | Promise<void>) | null;
+    handler: ((event: unknown) => void | Promise<void>) | null;
     /**
      * Publishes a payload to this plugin's in-process event bus.
      *

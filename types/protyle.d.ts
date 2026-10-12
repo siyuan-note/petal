@@ -509,11 +509,14 @@ export class Protyle {
 
 /** 标签页容器渲染选项 */
 export interface ITabsRenderOptions {
+    prepare?: () => void;
     readonly?: (tabs?: Element) => boolean;
     taskReadonly?: (tabs?: Element) => boolean;
     label?: string;
     addLabel?: string;
     select?: (tabs: HTMLElement, id: string) => void;
+    restore?: (tabs: HTMLElement) => string;
+    remember?: (tabs: HTMLElement, id: string) => void;
     activate?: (item: HTMLElement) => void;
     rename?: (item: HTMLElement) => void;
     add?: (tabs: HTMLElement) => void;

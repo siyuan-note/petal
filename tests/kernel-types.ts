@@ -1,4 +1,19 @@
-import type { IAgentCapabilityConfig, IFetchResponse, IResponseStream, TReadableStream, TWritableStream, TTransformStream } from "../kernel";
+import type { IAgentCapabilityConfig, IFetchResponse, IResponseStream, TEventMessage, TReadableStream, TWritableStream, TTransformStream } from "../kernel";
+
+siyuan.event.handler = event => {
+    // @ts-expect-error runtime 主题的载荷必须先验证，不能直接当作内置事件读取。
+    event.type.toUpperCase();
+    if (typeof event === "string") {
+        siyuan.logger.info(event.toUpperCase());
+    } else if (typeof event === "object" && event !== null && "type" in event && typeof event.type === "string") {
+        siyuan.logger.info(event.type.toUpperCase());
+    }
+};
+void siyuan.event.emit("runtime", "custom payload");
+void siyuan.event.emit("runtime", {custom: true});
+void siyuan.event.emit("runtime", {
+    id: "00000000-0000-4000-8000-000000000000", type: "start", detail: null,
+} satisfies TEventMessage);
 
 const capability: IAgentCapabilityConfig = {
     description: "test",

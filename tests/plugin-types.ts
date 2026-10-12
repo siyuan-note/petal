@@ -1,4 +1,4 @@
-import {Constants, Menu} from "../siyuan";
+import {Constants, Menu, ProtyleMethod} from "../siyuan";
 import type {APIPOSTRoutes, AVTable, AVValueLocation, AVView, Config, IBlock, IPosition, IScrollAttr, ISiyuan} from "../siyuan";
 
 declare const editor: Config.IEditor;
@@ -19,6 +19,22 @@ const number: string | undefined = block.number;
 declare const position: IPosition;
 const target: HTMLElement | undefined = position.target;
 declare const menuButton: HTMLButtonElement;
+ProtyleMethod.tabsRender(menuButton, {
+    prepare: () => {},
+    restore: tabs => {
+        const element: HTMLElement = tabs;
+        return element.dataset.active || "";
+    },
+    remember: (tabs, id) => {
+        const element: HTMLElement = tabs;
+        const activeID: string = id;
+        element.dataset.active = activeID;
+    },
+});
+ProtyleMethod.tabsRender(menuButton, {
+    // @ts-expect-error 恢复回调必须返回页签 ID 字符串。
+    restore: () => 1,
+});
 Menu.toggle({
     target: menuButton,
     build: menu => { menu.addItem({label: "Action"}); },
