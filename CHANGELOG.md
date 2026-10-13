@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare read-only third-party sync configuration rules shared by forms and kernel validation](https://github.com/siyuan-note/siyuan/issues/20427)
+
 * [Fix strict type checking errors in shortcut key declarations](https://github.com/siyuan-note/petal/pull/60)
 
 * [Synchronize block, database, and layout data declarations with SiYuan, including gallery cover positions, and remove the obsolete `viewNotFound` render target status](https://github.com/siyuan-note/petal/pull/60)
