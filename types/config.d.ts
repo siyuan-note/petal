@@ -42,6 +42,9 @@ export namespace Config {
          * /api/asset/ocr 使用所选 OCR 提供商；AI 返回保留换行和空格的 text 和空 ocrJSON，不虚构坐标。
          * reasoningEffort 独立控制手动和自动 AI OCR，省略或 null 保留已有值，空字符串沿用模型默认。
          * 可选 none、low、medium、high、xhigh、max；无表示关闭或尽量减少思考，支持情况依提供商及模型而定。
+         * showText、showEmpty、showError 独立控制图片悬浮提示，不受自动 OCR 开关影响，也不修改已有文本或索引。
+         * setOCRConfig 省略这些字段或传 null 时保留已有选择；默认开启文本预览，关闭无文本和失败提示。
+         * getImageOCRText 的 failed 表示当前内核运行期间的实际识别失败，成功识别或保存文本后清除。
          */
         ocr: import("./api").SettingOCR;
         api: IAPI;
