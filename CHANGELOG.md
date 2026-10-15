@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Add `insertContent` for Markdown or HTML insertion at the current or remembered document selection, with explicit editor/range targeting and failure states](https://github.com/siyuan-note/siyuan/issues/20566)
+
 * [Declare read-only third-party sync configuration rules shared by forms and kernel validation](https://github.com/siyuan-note/siyuan/issues/20427)
 
 * [Fix strict type checking errors in shortcut key declarations](https://github.com/siyuan-note/petal/pull/60)

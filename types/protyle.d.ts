@@ -447,6 +447,8 @@ export class Protyle {
     public reload(focus: boolean, updateReadonly?: boolean): void
 
     /**
+     * 低层块 DOM 插入接口；Markdown 或普通 HTML 请使用 insertContent。
+     * useProtyleRange 为 true 时使用工具栏缓存选区，否则读取浏览器选区。
      * @param {boolean} [isBlock=false]
      * @param {boolean} [useProtyleRange=false]
      */

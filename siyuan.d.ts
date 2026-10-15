@@ -457,6 +457,34 @@ export function getActiveTab(wndActive?: boolean): Tab | undefined;
  */
 export function getActiveEditor(wndActive?: boolean): Protyle | undefined;
 
+export interface IInsertContentOptions {
+    /** 待插入的内容，不是思源块 DOM；不自动上传其中的资源 */
+    data: string;
+    /** 默认 markdown */
+    dataType?: "markdown" | "html";
+    /** 默认选择当前窗口最近活动的可见文档正文，不自动选择搜索、反链或辅助输入框 */
+    editor?: Protyle;
+    /** 指定编辑器内的选区；异步操作可使用 resolveTrackedRange 得到的有效 Range */
+    range?: Range;
+}
+
+export interface IInsertContentResult {
+    status: "inserted" | "no-editor" | "readonly" | "invalid-range" | "unsupported-range" |
+        "unsupported-content" | "empty-content";
+}
+
+/**
+ * 在调用时确定目标编辑器和选区，支持桌面端和移动端；显式 editor 可以指定辅助编辑器。
+ * 优先使用正文当前选区，否则使用离开正文前记忆的选区，不回退到文档开头。
+ * 有选区时替换选区，无选区时插入；插入后聚焦正文，光标位于插入内容末尾，块级内容遵循编辑器粘贴规则。
+ * 代码上下文中的内容作为原文插入；嵌入块、数据库和非正文边界返回 unsupported-range。
+ * 受限编辑器沿用其粘贴内容约束；不支持的块返回 unsupported-content，不修改正文。
+ * 无目标、只读、位置失效或空内容分别返回对应状态；无效参数抛出 TypeError。
+ * inserted 表示已交给编辑器处理，不表示内核持久化已经完成；沿用编辑器事务和撤销行为。
+ * 记忆位置仅在当前编辑器实例内有效，DOM 重建或边界内容变化后可能失效；异步固定原位置请使用 trackRange。
+ */
+export function insertContent(options: IInsertContentOptions): IInsertContentResult;
+
 export function expandDocTree(options: {
     id: string,
     isSetCurrent?: boolean
