@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document device-local ChatGPT account bindings excluded from workspace configuration and settings exports](https://github.com/siyuan-note/siyuan/issues/20572)
+
 * [Declare guarded forced recovery of a previous desktop kernel exit](https://github.com/siyuan-note/siyuan/issues/20599)
 
 * Synchronize generated marketplace choice declarations with the existing kernel contracts

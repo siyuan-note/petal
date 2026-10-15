@@ -277,6 +277,7 @@ export namespace Config {
     export interface IProvider {
         /** 账户认证只保存本机账户引用；省略时使用 API Key */
         authType?: string;
+        /** 本机按工作空间路径和服务商 ID 保存的账号绑定，不随 conf.json 或设置导出保存；清空或省略时解除绑定 */
         accountID?: string;
         headers?: Record<string, string>;
         id: string;
