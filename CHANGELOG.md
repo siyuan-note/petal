@@ -2,6 +2,30 @@
 
 ## v1.3.0 2026
 
+* [Replace bazaar deprecation alternatives with choices carrying the package type](https://github.com/siyuan-note/bazaar/issues/2347)
+
+* [Declare database block collection automations](https://github.com/siyuan-note/siyuan/issues/20547)
+
+* [Declare sync provider configuration rules and the explicit save and clear actions](https://github.com/siyuan-note/siyuan/issues/20427)
+
+* [Declare unified kernel and frontend configuration patches](https://github.com/siyuan-note/siyuan/issues/20443)
+
+* [Declare image OCR tooltip content and visibility](https://github.com/siyuan-note/siyuan/issues/20528)
+
+* [Declare safe automatic block reference completion](https://github.com/siyuan-note/siyuan/issues/20524)
+
+* [Declare excluding title images from image exports](https://github.com/siyuan-note/siyuan/issues/20583)
+
+* [Declare resuming abandoned workspace shutdowns](https://github.com/siyuan-note/siyuan/issues/20508)
+
+* [Declare visibility defaults for custom entry profiles](https://github.com/siyuan-note/siyuan/issues/20432)
+
+* Remove the database map view declarations, keeping database location values and coordinates
+
+* [Remove the no-body request types of dynamic icons, the OIDC callback, and the UI process](https://github.com/siyuan-note/siyuan/issues/20375)
+
+* [Remove the keyboard log endpoint types](https://github.com/siyuan-note/siyuan/issues/20006)
+
 * [Declare database map views and device-local map service configuration](https://github.com/siyuan-note/siyuan/issues/20129)
 
 * [Declare field-level lunar date input and display while preserving stored timestamps](https://github.com/siyuan-note/siyuan/issues/20322)
