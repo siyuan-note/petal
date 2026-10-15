@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare cross-type bazaar package deprecation alternatives, carrying the package type of each choice](https://github.com/siyuan-note/bazaar/issues/2347)
+
 * [Declare the optional title image exclusion for image export previews](https://github.com/siyuan-note/siyuan/issues/20583)
 
 * [Declare block collection automation, matching-block previews, explicit collection, and collected-row provenance](https://github.com/siyuan-note/siyuan/issues/20547)
