@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare Gemini Interactions provider support, native model discovery, and local conversation history](https://github.com/siyuan-note/siyuan/issues/20560)
+
 * [Add `insertContent` for Markdown or HTML insertion at the current or remembered selection of a visible editor, with explicit editor/range targeting and failure states](https://github.com/siyuan-note/siyuan/issues/20566)
 
 * [Declare read-only third-party sync configuration rules shared by forms and kernel validation](https://github.com/siyuan-note/siyuan/issues/20427)
