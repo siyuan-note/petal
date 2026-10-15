@@ -726,6 +726,12 @@ interface IAVCalc {
  * data.recursively 仅展开同类型子列表；列表项绑定迁移到首块并保留行身份和字段，歧义绑定整批拒绝。
  * 成功后 retData 返回 rootIDs、removedIDs 和 focusID；撤销状态由内核管理，无需提交 undoOperations。
  */
+/**
+ * `setAttrViewAutomations` saves database rules; `trigger: "block"` collects matching source blocks into the current database.
+ * `collectAttrViewBlocks` explicitly collects the supplied block IDs using a saved, enabled rule and rechecks its conditions.
+ * Automatically collected entries are removed on a match-to-mismatch transition without deleting their source blocks.
+ * Undo restores the original row and fields; matching again creates a new initialized row. Existing manual rows are preserved.
+ */
 export type IOperation = Exclude<import("./api").TransactionOperationRequest, {action: import("./api").UnknownTransactionAction}>;
 
 export interface IRefDefs {

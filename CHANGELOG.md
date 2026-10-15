@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare block collection automation, matching-block previews, explicit collection, and collected-row provenance](https://github.com/siyuan-note/siyuan/issues/20547)
+
 * [Declare Gemini Interactions provider support, native model discovery, and local conversation history](https://github.com/siyuan-note/siyuan/issues/20560)
 
 * [Add `insertContent` for Markdown or HTML insertion at the current or remembered selection of a visible editor, with explicit editor/range targeting and failure states](https://github.com/siyuan-note/siyuan/issues/20566)
