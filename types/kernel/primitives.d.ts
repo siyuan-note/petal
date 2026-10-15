@@ -45,10 +45,12 @@ export interface IStorageEntry {
 /**
  * A lazy data accessor returned by {@link IStorage.get} and {@link IFetchResponse}.
  *
- * @remarks Each method decodes the same underlying byte slice; call at most once per method per
- * instance. The results of {@link IDataObject.buffer}, {@link IDataObject.arrayBuffer}, and
- * {@link IDataObject.bytes} share that memory, so changes made through one of them are visible to the
- * others and to later calls, whereas {@link IDataObject.blob} returns a copy.
+ * @remarks Each method decodes the same underlying byte slice and may be called any number of
+ * times, including the same method more than once. The results of {@link IDataObject.buffer},
+ * {@link IDataObject.arrayBuffer}, and {@link IDataObject.bytes} are views over that memory rather
+ * than copies, so changes made through one of them are visible to the others and to later calls,
+ * whereas {@link IDataObject.blob} returns a copy. A fetch response body is the one exception: it
+ * can be claimed only once, see {@link IFetchResponse}.
  */
 export interface IDataObject {
     /**
@@ -60,7 +62,7 @@ export interface IDataObject {
     /**
      * Parses the data as JSON.
      *
-     * @returns The parsed value.
+     * @returns The parsed value; rejects when the data is not valid JSON.
      */
     json(): Promise<any>;
     /**
@@ -125,13 +127,13 @@ export interface IDataObject {
  * instead of replaying cached bytes.
  */
 export interface IFetchResponse extends IDataObject {
-    /** The final URL after any redirects. */
+    /** The path passed to {@link IClient.fetch}; redirects followed by the kernel are not reflected. */
     url: string;
     /** `true` when `status` is in the range 200–299. */
     ok: boolean;
     /** HTTP status code, e.g. `200`. */
     status: number;
-    /** HTTP status text, e.g. `"OK"`. */
+    /** HTTP status line text including the code, e.g. `"200 OK"`. */
     statusText: string;
     /** Response headers as a flat string-to-string map. */
     headers: Record<string, string>;

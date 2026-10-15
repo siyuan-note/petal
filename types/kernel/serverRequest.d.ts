@@ -37,6 +37,9 @@ export interface IRequestUrl {
 
 /**
  * An uploaded file part within a `multipart/form-data` request.
+ *
+ * @remarks A part the kernel cannot read is answered with `400` before the handler runs, which
+ * also happens for an empty file part because reading zero bytes reports the end of the part.
  */
 export interface IRequestFile {
     /** Original filename provided by the client. */
@@ -45,17 +48,12 @@ export interface IRequestFile {
     headers: Record<string, string[]>;
     /** File size in bytes. */
     size: number;
-    /**
-     * File contents as a lazy {@link IDataObject}.
-     *
-     * @remarks `null` if the file could not be read during request parsing.
-     */
-    data: IDataObject | null;
+    /** File contents as a lazy {@link IDataObject}. */
+    data: IDataObject;
 }
 
 /**
- * Parsed form data from an `application/x-www-form-urlencoded` or
- * `multipart/form-data` request.
+ * Parsed form data from a `multipart/form-data` request.
  */
 export interface IRequestForm {
     /**
@@ -72,22 +70,24 @@ export interface IRequestForm {
 /**
  * Body of an incoming server request.
  *
- * @remarks Exactly one of `form` or `data` is non-null:
- * `form` is set for `application/x-www-form-urlencoded` and
- * `multipart/form-data`; `data` is set for all other content types and is
- * `null` when the request carries no body.
+ * @remarks Exactly one of `form` or `data` is non-null: `form` is set only for
+ * `multipart/form-data`; `data` is set for every other request and yields empty
+ * content when the request carries no body. An
+ * `application/x-www-form-urlencoded` body is consumed while the kernel parses it,
+ * so `form` is `null`, `data` is empty, and the fields are not available to the
+ * handler; read such requests as raw bodies instead.
  */
 export interface IRequestBody {
     /**
      * Parsed form data.
      *
-     * @remarks `null` for non-form requests.
+     * @remarks `null` for requests other than `multipart/form-data`.
      */
     form: IRequestForm | null;
     /**
      * Raw request body as a lazy {@link IDataObject}.
      *
-     * @remarks `null` when `form` is non-null or the request carries no body.
+     * @remarks `null` only when `form` is non-null.
      */
     data: IDataObject | null;
 }

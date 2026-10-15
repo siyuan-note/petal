@@ -42,7 +42,8 @@ export interface IEventSourcePort {
      *
      * @remarks
      * `send` is synchronous — no `await` required. It enqueues the event in
-     * the kernel's SSE write buffer; the actual flush is asynchronous.
+     * the kernel's SSE write buffer; the actual flush is asynchronous. It throws if
+     * `event` is not an object or `event.data` is `undefined`.
      *
      * @param event - The SSE event to send.
      */
@@ -88,7 +89,7 @@ export interface IServerEventSourceRequest extends IServerRequest {
      *
      * @remarks
      * Assign `onopen` and `onclose` callbacks in the handler body. Call
-     * `port.send(eventType, data)` inside `onopen` to emit SSE events.
+     * `port.send({ event, data })` inside `onopen` to emit SSE events.
      */
     readonly port: IEventSourcePort;
 }
@@ -99,7 +100,11 @@ export interface IServerEventSourceRequest extends IServerRequest {
  * @remarks
  * The object is sealed by the kernel; only the `handler` property may be
  * reassigned. Set `handler` to `null` to leave the slot empty — the kernel
- * will return `500 Internal Server Error` for any unhandled request.
+ * will return `500 Internal Server Error` for any unhandled HTTP request, and
+ * closes an unhandled WebSocket right after the upgrade.
+ *
+ * WebSocket upgrade requests are routed to `ws`, requests whose `Accept` header is
+ * exactly `text/event-stream` to `es`, and all other requests to `http`.
  *
  * @typeParam TRes - Expected return type of the handler function.
  * @typeParam TReq - Request object type passed to the handler. Defaults to
@@ -166,8 +171,10 @@ export interface IServer {
      * Private-scope handler group.
      *
      * @remarks Routes under `/plugin/private/<name>/*path` require kernel
-     * authentication and admin role before the request reaches the handler.
-     * The `<name>` segment must match the running plugin's `name`.
+     * authentication and admin role before the request reaches the handler, and
+     * are rejected in read-only mode; WebSocket upgrades must also pass the session
+     * Origin check. The `<name>` segment must match the running plugin's `name`:
+     * an unknown plugin is answered with `404`, and a plugin that is not running with `503`.
      */
     readonly private: IServerScope;
 }

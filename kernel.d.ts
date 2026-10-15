@@ -1,6 +1,8 @@
 /// <reference types="@dop251/types-goja_nodejs-buffer" />
 /// <reference types="@dop251/types-goja_nodejs-global" />
 /// <reference types="@dop251/types-goja_nodejs-url" />
+/// <reference lib="es2020.bigint" />
+/// <reference lib="es2018.asynciterable" />
 
 // ── ECMAScript conformance ────────────────────────────────────────────────────
 //
