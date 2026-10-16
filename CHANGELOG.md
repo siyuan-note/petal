@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare typed database automation templates, saved time zones, and read-only previews](https://github.com/siyuan-note/siyuan/issues/20611)
+
 * [Document portable preferences restored by settings import and local configuration preserved during transfer](https://github.com/siyuan-note/siyuan/issues/20610)
 
 * [Declare configurable embedding concurrency and batch size with defaults and bounds](https://github.com/siyuan-note/siyuan/pull/20609)
