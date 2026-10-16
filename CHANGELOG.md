@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare title image exclusion for PDF export previews](https://github.com/siyuan-note/siyuan/issues/20583)
+
 * [Declare always-present effect flags in generated AI capability and action responses](https://github.com/siyuan-note/siyuan/pull/20616)
 
 * [Declare typed database automation templates, saved time zones, and read-only previews](https://github.com/siyuan-note/siyuan/issues/20611)
