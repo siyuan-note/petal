@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare optional, non-persistent database render sorting applied before pagination](https://github.com/siyuan-note/siyuan/issues/20608)
+
 * [Remove expired deprecated kernel fields and endpoints from generated API declarations and remove `Protyle.updateTransaction`; use `updateTransactionElement` instead](https://github.com/siyuan-note/siyuan/issues/20605)
 * [Align CSS Highlight declarations with the standard range set API](https://github.com/siyuan-note/siyuan/issues/20605)
 * [Synchronize UI density, compact mode and mobile menu constants and remove the retired page button storage constant](https://github.com/siyuan-note/siyuan/issues/20605)
