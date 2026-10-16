@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare configurable embedding concurrency and batch size with defaults and bounds](https://github.com/siyuan-note/siyuan/pull/20609)
+
 * Keep legacy calendar row order optional in generated API responses, matching empty layout serialization
 
 * [Declare optional, non-persistent database render sorting applied before pagination](https://github.com/siyuan-note/siyuan/issues/20608)
