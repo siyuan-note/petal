@@ -1451,6 +1451,8 @@ export namespace Config {
      * SiYuan general shortcut keys
      */
     export interface IKeymapGeneral extends IKeys {
+        previousDatabaseRow?: IKey;
+        nextDatabaseRow?: IKey;
         /** 打开当前焦点的上下文菜单，默认 ⌘/，支持多绑定和解绑。 */
         openContextMenu?: IKey;
         mainMenu?: IKey;
@@ -2516,6 +2518,28 @@ export namespace Config {
          * 数据库行预览块 ID
          */
         databaseRowId?: string;
+        /** 数据库条目页签的恢复上下文 */
+        databaseRow?: {
+            avID: string;
+            databaseBlockID: string;
+            notebookID: string;
+            itemID: string;
+            valueID: string;
+            title: string;
+            boundBlockID?: string;
+            isDetached: boolean;
+            matchedValueID?: string;
+            matchedKeyID?: string;
+            keywords?: string[];
+            focusPrimary?: boolean;
+            bindPrimary?: boolean;
+            navigation?: {
+                viewID: string;
+                query: string;
+                groupID?: string;
+                calendarRange?: {start: number; end: number; timeZone: string};
+            };
+        };
         /**
          * Object name
          */

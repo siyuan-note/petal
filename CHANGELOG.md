@@ -2,6 +2,11 @@
 
 ## v1.3.0 2026
 
+* [Remove expired deprecated kernel fields and endpoints from generated API declarations and remove `Protyle.updateTransaction`; use `updateTransactionElement` instead](https://github.com/siyuan-note/siyuan/issues/20605)
+* [Align CSS Highlight declarations with the standard range set API](https://github.com/siyuan-note/siyuan/issues/20605)
+* [Synchronize UI density, compact mode and mobile menu constants and remove the retired page button storage constant](https://github.com/siyuan-note/siyuan/issues/20605)
+* [Complete existing database row navigation shortcut and restored tab context declarations](https://github.com/siyuan-note/siyuan/issues/20605)
+
 * [Declare the editor page scroll button preference, disabled by default without migrating the old local preference](https://github.com/siyuan-note/siyuan/issues/20603)
 
 * [Document device-local ChatGPT account bindings excluded from workspace configuration and settings exports](https://github.com/siyuan-note/siyuan/issues/20572)

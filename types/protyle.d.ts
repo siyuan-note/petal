@@ -13,14 +13,10 @@ import {
 } from "./../siyuan";
 import {Model} from "./layout/Model";
 
-declare class Highlight {
-    constructor(...range: Range[]);
-
-    add(range: Range): void;
-
-    clear(): void;
-
-    forEach(callbackfn: (value: Range, key: number) => void): void;
+declare class Highlight extends Set<AbstractRange> {
+    constructor(...range: AbstractRange[]);
+    priority: number;
+    type: "grammar-error" | "highlight" | "spelling-error";
 }
 
 declare class AVAttributePanel {
@@ -472,11 +468,6 @@ export class Protyle {
      * @param {number} [subType] type 为 "Blocks2Hs" 时必传
      */
     public turnIntoTransaction(nodeElement: Element, type: TTurnInto, subType?: number): void
-
-    /**
-     * @deprecated 请改用 {@link updateTransactionElement}。
-     */
-    public updateTransaction(id: string, newHTML: string, html: string): void
 
     public updateTransactionElement(element: Element, oldHTML: string): void;
 
