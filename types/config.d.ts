@@ -814,6 +814,8 @@ export namespace Config {
          * 是否保留动态加载的内容区块
          */
         keepLoadedContent: boolean;
+        /** 是否显示翻屏按钮，默认关闭，不迁移旧的本地偏好 */
+        pageScrollButtons: boolean;
         /**
          * 是否显示自动标题编号
          */

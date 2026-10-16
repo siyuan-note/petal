@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare the editor page scroll button preference, disabled by default without migrating the old local preference](https://github.com/siyuan-note/siyuan/issues/20603)
+
 * [Document device-local ChatGPT account bindings excluded from workspace configuration and settings exports](https://github.com/siyuan-note/siyuan/issues/20572)
 
 * [Declare guarded forced recovery of a previous desktop kernel exit](https://github.com/siyuan-note/siyuan/issues/20599)
