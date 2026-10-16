@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Keep legacy calendar row order optional in generated API responses, matching empty layout serialization
+
 * [Declare optional, non-persistent database render sorting applied before pagination](https://github.com/siyuan-note/siyuan/issues/20608)
 
 * [Remove expired deprecated kernel fields and endpoints from generated API declarations and remove `Protyle.updateTransaction`; use `updateTransactionElement` instead](https://github.com/siyuan-note/siyuan/issues/20605)
