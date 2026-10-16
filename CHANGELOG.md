@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare pinned document tooltip metadata matching the document tree, with empty details for closed notebooks
+
 * [Declare title image exclusion for PDF export previews](https://github.com/siyuan-note/siyuan/issues/20583)
 
 * [Declare always-present effect flags in generated AI capability and action responses](https://github.com/siyuan-note/siyuan/pull/20616)
