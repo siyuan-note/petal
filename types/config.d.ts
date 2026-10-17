@@ -644,7 +644,7 @@ export namespace Config {
          * Whether to display the bookmark icon
          */
         displayBookmarkIcon: boolean;
-        /** 是否显示完整块标，默认 false；输入兼容旧整数，1 为启用，其他整数为关闭 */
+        /** 是否显示完整块标，默认 false */
         blockGutterMode: boolean;
         /**
          * Whether to display the network image mark
