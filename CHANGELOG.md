@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Use a boolean full block indicator setting while accepting legacy integer input](https://github.com/siyuan-note/siyuan/issues/20647)
+
 * [Declare draft-only S3 connection probes and endpoint path warnings](https://github.com/siyuan-note/siyuan/pull/20654)
 
 * [Declare append-only block collection and confirmed cleanup with review, revalidation, and undo](https://github.com/siyuan-note/siyuan/issues/20645)
