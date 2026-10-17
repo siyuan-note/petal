@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare PDF resource export that preserves existing files and copies only linked assets](https://github.com/siyuan-note/siyuan/issues/20583)
+
 * Declare pinned document tooltip metadata matching the document tree, with empty details for closed notebooks
 
 * [Declare title image exclusion for PDF export previews](https://github.com/siyuan-note/siyuan/issues/20583)
