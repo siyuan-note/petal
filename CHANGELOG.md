@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare versioned database automation block subtype filters](https://github.com/siyuan-note/siyuan/issues/20644)
+
 * [Declare scoped unused-asset cleanup for unlocked encrypted notebooks with ciphertext history recovery](https://github.com/siyuan-note/siyuan/issues/20633)
 
 * [Declare PDF resource export that preserves existing files and copies only linked assets](https://github.com/siyuan-note/siyuan/issues/20583)
