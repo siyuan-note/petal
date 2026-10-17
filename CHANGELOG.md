@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare scoped unused-asset cleanup for unlocked encrypted notebooks with ciphertext history recovery](https://github.com/siyuan-note/siyuan/issues/20633)
+
 * [Declare PDF resource export that preserves existing files and copies only linked assets](https://github.com/siyuan-note/siyuan/issues/20583)
 
 * Declare pinned document tooltip metadata matching the document tree, with empty details for closed notebooks
