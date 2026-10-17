@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare per-group AND/OR matching for block collection tags and attributes](https://github.com/siyuan-note/siyuan/issues/20641)
+
 * [Declare versioned database automation block subtype filters](https://github.com/siyuan-note/siyuan/issues/20644)
 
 * [Declare scoped unused-asset cleanup for unlocked encrypted notebooks with ciphertext history recovery](https://github.com/siyuan-note/siyuan/issues/20633)
