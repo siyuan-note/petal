@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare versioned tag collection targets for direct blocks and nearest matching containers](https://github.com/siyuan-note/siyuan/issues/20646)
+
 * [Declare per-rule success notifications for committed database automation results](https://github.com/siyuan-note/siyuan/issues/20642)
 
 * [Declare per-group AND/OR matching for block collection tags and attributes](https://github.com/siyuan-note/siyuan/issues/20641)
