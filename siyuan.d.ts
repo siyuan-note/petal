@@ -12,6 +12,7 @@ import type {
     IFlashcardReviewStateSnapshot,
     IKernelPlugin,
     IKernelPluginState,
+    ILocalFiles,
     IMenu,
     IMenuBaseDetail,
     IMenuItem,
@@ -29,10 +30,54 @@ import type {
     TProtyleAction,
 } from "./types";
 import {App, Config, Custom, Files, Lute, MobileCustom, Model, Protyle, subMenu, Tab, Toolbar,} from "./types";
-import type {FetchGet, FetchPost, FetchSyncPost, JSONValue} from "./types/api";
+import type {APIGETRoutes, APIPOSTRoutes, FetchGet, FetchPost, FetchSyncPost, JSONValue} from "./types/api";
 
 export * from "./types";
 export * from "./types/api";
+/**
+ * 以下类只描述运行时对象的形状，`siyuan` 模块在运行时不导出它们，因此只能作为类型使用。
+ * 需要实例时请通过已有对象获取，例如 `window.Lute`、`plugin.app`、`window.siyuan.layout`。
+ */
+export type {
+    App,
+    AVAttributePanel,
+    Background,
+    BlockPanel,
+    Breadcrumb,
+    Custom,
+    Dock,
+    Editor,
+    Files,
+    Gutter,
+    Highlight,
+    Hint,
+    Inbox,
+    Layout,
+    LocalUndo,
+    Lute,
+    Menus,
+    MobileBacklinks,
+    MobileBookmarks,
+    MobileCustom,
+    MobileFiles,
+    MobileOutline,
+    MobileTags,
+    Model,
+    Preview,
+    Scroll,
+    subMenu,
+    Tab,
+    Title,
+    Toolbar,
+    Tree,
+    Undo,
+    Upload,
+    Viewer,
+    Viz,
+    webkitAudioContext,
+    Wnd,
+    WYSIWYG,
+} from "./types";
 
 /**
  * `/api/flashcard/setCardEditLater` 只设置当前卡片的编辑待办，不修改排期、暂停、埋藏或同源卡片。
@@ -87,7 +132,7 @@ export interface IEventBusMap {
     "before-search-results-render": {
         protyle: Protyle,
         config: Config.IUILayoutTabSearchConfig,
-        searchElement: HTMLInputElement,
+        searchElement: HTMLInputElement | HTMLTextAreaElement,
         blocks: IBlock[],
     };
     "before-show-tooltip": {
@@ -185,6 +230,7 @@ export interface IEventBusMap {
         protyle: IProtyle,
         event: MouseEvent,
     };
+    /** 仅在具备实际编辑器上下文时触发，关系图按文档信息构造的菜单不触发此事件 */
     "click-editortitleicon": {
         menu: subMenu,
         protyle: IProtyle,
@@ -216,7 +262,12 @@ export interface IEventBusMap {
     "switch-protyle-mode": {
         protyle: IProtyle,
     };
-    "open-menu-av": IMenuBaseDetail & { selectRowElements: HTMLElement[] };
+    "open-menu-av": IMenuBaseDetail & {
+        /** 选中的行或卡片元素，来自 `querySelectorAll`，不是数组。 */
+        selectRowElements: NodeListOf<Element>,
+        selectRowIds: string[],
+        selectRowPoints: { itemID: string, groupID: string }[],
+    };
     "open-menu-blockref": IMenuBaseDetail;
     "open-menu-breadcrumbmore": {
         menu: subMenu,
@@ -239,13 +290,7 @@ export interface IEventBusMap {
         element: HTMLElement,
         ids: string[],
     };
-    /**
-     * 桌面端和桌面浏览器顶栏右键菜单事件，支持自定义顶栏元素，不扩展停靠栏或状态栏菜单。
-     * 所有订阅者都会收到事件，插件应按自己的顶栏元素过滤；空白处的 element 和 entryPath 均为 null。
-     * 必须在同步回调中添加项目，异步数据应提前准备；项目显示在内置显隐操作之前。
-     * 宿主在可见插件项目之后添加分隔线，并移除此组首尾及连续的分隔线。
-     * 使用此事件时应移除自行打开菜单或阻止传播的 contextmenu 监听器，宿主不会强制拦截已有监听器。
-     */
+    /** 打开资源文件前按插件顺序触发；调用 `preventDefault()` 会取消默认打开方式，后续插件不再收到该事件。 */
     "open-asset": {
         path: string,
         action: Config.TAssetOpenAction,
@@ -279,11 +324,10 @@ export interface IEventBusMap {
         textHTML: string,
         textPlain: string,
         siyuanHTML: string,
-        localFiles: {
-            path: string,
-            size: number
-        }[]
-        files: FileList | DataTransferItemList
+        /** 粘贴本地文件路径时提供，此时 textHTML、textPlain 和 siyuanHTML 为空字符串且没有 files。 */
+        localFiles?: ILocalFiles[],
+        /** 其他粘贴场景提供，此时没有 localFiles。 */
+        files?: FileList | DataTransferItemList,
     };
     "ws-main": IWebSocketData;
     "sync-start": IWebSocketData;
@@ -291,7 +335,17 @@ export interface IEventBusMap {
     "sync-fail": IWebSocketData;
     "mobile-keyboard-show": void;
     "mobile-keyboard-hide": void;
-    "code-language-update": { languages: string[], type: "init" | "match", listElement: HTMLElement, value: string };
+    /** 可替换 detail.languages 来调整候选语言列表；init 为打开列表时触发，match 为输入筛选时触发。 */
+    "code-language-update": {
+        languages: string[],
+        type: "init",
+        listElement: HTMLElement,
+    } | {
+        languages: string[],
+        type: "match",
+        listElement: HTMLElement,
+        value: string,
+    };
     "code-language-change": {
         language: string,
         languageElements: HTMLElement[],
@@ -338,8 +392,16 @@ export interface ICommand {
     hotkeys?: string[], // 默认快捷键列表，优先于 hotkey
     when?: (context: ICommandContext) => boolean,
     enabled?: (context: ICommandContext) => boolean,
+    /**
+     * 设置后，命令被任一方式触发时都改为执行此函数；命令能否被某种方式触发仍取决于下列回调是否存在。
+     * 未设置其他回调时，可通过快捷键和命令面板触发。
+     */
     execute?: (context: ICommandContext) => void | Promise<void>
-    callback?: (context?: ICommandContext) => void   // 其余回调存在时将不会触发
+    /**
+     * 快捷键触发时，存在 globalCallback、fileTreeCallback、editorCallback 或 dockCallback 则不会执行；
+     * 在命令面板中优先于其他回调执行。
+     */
+    callback?: (context?: ICommandContext) => void
     globalCallback?: (context?: ICommandContext) => void // 焦点不在应用内时执行的回调
     fileTreeCallback?: (
         file: Files,
@@ -376,7 +438,15 @@ export interface ICardData {
 
 export function adaptHotkey(hotkey: string): string
 
-export function confirm(title: string, text: string, confirmCallback?: (dialog: Dialog) => void, cancelCallback?: (dialog: Dialog) => void): void;
+/**
+ * title 和 text 均为空时不打开对话框，直接以无参数形式调用 confirmCallback。
+ * @param {boolean} [isDelete=false] - 为 true 时确认按钮使用删除样式和删除文案
+ * @param extraAction - 在按钮区额外添加的操作按钮
+ * @param confirmLabel - 确认按钮文字，优先于 isDelete 的默认文案
+ */
+export function confirm(title: string, text: string, confirmCallback?: (dialog?: Dialog) => void,
+                        cancelCallback?: (dialog: Dialog) => void, isDelete?: boolean,
+                        extraAction?: { label: string, callback: () => void }, confirmLabel?: string): void;
 
 export type TEditorFontSizeAction = "increase" | "decrease" | "reset";
 
@@ -389,38 +459,27 @@ export function adjustEditorFontSize(action: TEditorFontSizeAction, options?: IE
 export function setEditorFontSize(fontSize: number, options?: IEditorFontSizeOptions): number;
 
 /**
- * `/api/setting/getCloudUser` 可传入 `cached: true`，仅返回内存中的账户，未登录时返回 null。
- * 此模式忽略 token，不联网、不等待同步或切换资源来源；缓存结果不代表云端凭据仍然有效。
- * 省略 cached 或传入 false 时保留账户恢复和令牌刷新行为；非管理员在两种模式下均得到 null。
- * 客户端可先读取缓存完成初始化，再刷新账户，并通过 setCloudUser 主通道事件接收账户变化。
+ * 异步发送 POST 请求，通过回调接收响应；请求参数和响应类型按接口路径推导。
+ * 具体接口说明见 {@link APIPOSTRoutes}。
  */
 export const fetchPost: FetchPost<IWebSocketData>;
 
 /**
- * 读取 `/api/template/manage` 的模板源码时，可选的 `sourceDocID` 表示导出模板末尾文档属性中的静态来源 ID。
- * 普通 Markdown、目录或未声明有效 ID 的模板不返回该字段；读取不会执行模板或检查源文档是否仍可访问。
- * 打开来源时需按当前工作空间的文档访问规则处理失败；该字段不是预览上下文，也不保证模板与源文档保持同步。
- * `/api/system/getWorkspaceStorage` 无需参数，要求管理员权限并允许只读模式，统计当前内核工作空间的本地文件大小。
- * `totalSize` 为普通文件字节数之和，`assetsSize` 是 `data` 的子集，不能重复累加；不含目录分配空间或链接目标。
- * `directories` 按 data、repo、history、temp、conf、other 排序，`calculatedAt` 为扫描完成的 Unix 毫秒时间。
- * 扫描不下载资源或解密文件，不返回绝对路径；并发请求共享扫描，完成后不缓存，也不保证扫描期间的快照一致性。
- * 扫描期间已删除的子文件或子目录不计入；根目录丢失、权限错误等仍返回失败。
- * 读取失败或扫描超时返回 code=-1、data=null；调用方应保留旧结果的时间标记，并允许用户重试。
- *
- * 导出图片或 PDF 预览时，/api/export/exportPreviewHTML 可选 keepJSEmbed: true 保留脚本嵌入占位。
- * 默认不保留；内核不执行脚本，调用方须遵守安全模式限制并等待异步渲染完成后再导出。
- *
- * 加密笔记本归档接口要求管理员权限；移出和恢复均禁止只读模式。
- * `/api/notebook/prepareNotebookArchive` 接收已锁定的笔记本 ID，返回归档 ID 和下载路径，不删除源数据。
- * 下载完成后，必须由用户确认已保存归档，再调用 `/api/notebook/commitNotebookArchive` 并传入 `saved: true`。
- * 提交前会重新检查源文件；内容变化需重新导出。重复提交同一归档不会重复移出，未选择的笔记本不受影响。
- * `/api/notebook/importNotebookArchive` 接收 multipart 的 `file`、旧 `password` 和可选密钥备份 `key`。
- * 恢复目标必须关闭同步，且没有加密密钥配置或加密数据；密文全部通过认证后才发布，恢复后仍保持锁定。
+ * 发送 POST 请求并返回响应 Promise；请求参数和响应类型按接口路径推导。
+ * 具体接口说明见 {@link APIPOSTRoutes}。
  */
 export const fetchSyncPost: FetchSyncPost<IWebSocketData>;
 
+/**
+ * 发送 GET 请求，通过回调接收响应。
+ * 具体接口说明见 {@link APIGETRoutes}。
+ */
 export const fetchGet: FetchGet<IWebSocketData | IObject | string>;
 
+/**
+ * 在新窗口中打开文档或页签，同时传入 doc 和 tab 时只处理 doc。
+ * 仅桌面客户端会打开新窗口：移动端为空操作；浏览器中不会打开窗口，但传入 tab 时仍会将该页签从当前布局移除。
+ */
 export function openWindow(options: {
     position?: {
         x: number,
@@ -436,25 +495,66 @@ export function openWindow(options: {
 }): void;
 
 /**
- * 不支持移动端
+ * 不支持移动端，移动端未导出此函数
  * @param {boolean} [wndActive=true] - 当前活动窗口是否为激活状态
+ * @returns 没有找到页签时返回 undefined
  */
-export function getActiveTab(wndActive?: boolean): Tab;
+export function getActiveTab(wndActive?: boolean): Tab | undefined;
 
 /**
- * @param {boolean} [wndActive=true] - 当前活动窗口是否为激活状态
+ * 移动端也可使用，返回当前文档的编辑器
+ * @param {boolean} [wndActive=true] - 当前活动窗口是否为激活状态，移动端忽略此参数
+ * @returns 没有找到编辑器时返回 undefined
  */
-export function getActiveEditor(wndActive?: boolean): Protyle;
+export function getActiveEditor(wndActive?: boolean): Protyle | undefined;
+
+export interface IInsertContentOptions {
+    /** 待插入的内容，不是思源块 DOM；不自动上传其中的资源 */
+    data: string;
+    /** 默认 markdown */
+    dataType?: "markdown" | "html";
+    /** 默认选择当前窗口最近活动的可见文档正文，不自动选择搜索、反链或辅助输入框 */
+    editor?: Protyle;
+    /** 指定编辑器内的选区；异步操作可使用 resolveTrackedRange 得到的有效 Range */
+    range?: Range;
+}
+
+export interface IInsertContentResult {
+    status: "inserted" | "no-editor" | "readonly" | "invalid-range" | "unsupported-range" |
+        "unsupported-content" | "empty-content";
+}
+
+/**
+ * 在调用时确定目标编辑器和选区，支持桌面端和移动端；显式 editor 可以指定辅助编辑器。
+ * 目标正文必须属于当前窗口且可见，隐藏页签、预览模式或已销毁的编辑器返回 no-editor。
+ * 优先使用正文当前选区，否则使用离开正文前记忆的选区，不回退到文档开头。
+ * 有选区时替换选区，无选区时插入；插入后聚焦正文，光标位于插入内容末尾，块级内容遵循编辑器粘贴规则。
+ * 代码上下文中的内容作为原文插入；嵌入块、数据库和非正文边界返回 unsupported-range。
+ * 受限编辑器沿用其粘贴内容约束；不支持的块返回 unsupported-content，不修改正文。
+ * 无目标、只读、位置失效或空内容分别返回对应状态；无效参数抛出 TypeError。
+ * inserted 表示已交给编辑器处理，不表示内核持久化已经完成；沿用编辑器事务和撤销行为。
+ * 记忆位置仅在当前编辑器实例内有效，DOM 重建或边界内容变化后可能失效；异步固定原位置请使用 trackRange。
+ */
+export function insertContent(options: IInsertContentOptions): IInsertContentResult;
 
 export function expandDocTree(options: {
     id: string,
     isSetCurrent?: boolean
-}): void;
-
-export function openMobileFileById(app: App, id: string, action?: TProtyleAction[]): void;
+}): Promise<void>;
 
 /**
+ * 以移动端的方式打开文档，桌面端也导出此函数，但只有移动端布局会生效
+ * @param {TProtyleAction[]} [action=[Constants.CB_GET_HL]]
+ * @param {boolean} [forceReload=false] - 文档已打开时是否仍重新加载
+ */
+export function openMobileFileById(app: App, id: string, action?: TProtyleAction[], scrollPosition?: ScrollLogicalPosition,
+                                   notebookId?: string, afterOpen?: (protyle: IProtyle) => void,
+                                   forceReload?: boolean): void;
+
+/**
+ * 移动端为空操作，直接返回 undefined 而非 Promise。
  * @param {string} [options.doc.mode="wysiwyg"] - 只在首次打开时生效，切换可调用 switchMode 方法
+ * @returns 打开或切换到的页签；未产生页签时为 undefined
  */
 export function openTab(options: {
     app: App,
@@ -501,26 +601,43 @@ export function openTab(options: {
     position?: "right" | "bottom";
     keepCursor?: boolean; // 是否跳转到新 tab 上
     removeCurrentTab?: boolean; // 在当前页签打开时需移除原有页签
-    openNewTab?: boolean // 使用新页签打开
-    afterOpen?: () => void; // 打开后回调
-}): Promise<Tab>
+    openNewTab?: boolean // 使用新页签打开，仅对 custom 生效
+    afterOpen?: (model?: Model) => void; // 打开后回调，参数为页签内的模型
+}): Promise<Tab | undefined> | undefined
 
 export function getFrontend(): "desktop" | "desktop-window" | "mobile" | "browser-desktop" | "browser-mobile";
 
 export function getBackend(): "windows" | "linux" | "darwin" | "docker" | "android" | "ios" | "harmony";
 
-export function lockScreen(app: App): void
+/**
+ * 只读模式或发布服务下不执行。
+ * @param app - 已不再使用，仅为兼容旧调用保留
+ */
+export function lockScreen(app?: App): Promise<void>
 
-export function exitSiYuan(): void
+/**
+ * @param {boolean} [setCurrentWorkspace=true] - 是否将当前工作空间设为下次启动时打开的工作空间
+ */
+export function exitSiYuan(setCurrentWorkspace?: boolean): Promise<void>
 
 export function getAllEditor(): Protyle[]
 
-export function saveExportFile(uri: string, msgId?: string): Promise<void>;
+export function saveExportFile(uri: string, msgId?: string): Promise<{
+    status: "success" | "canceled" | "error",
+    name?: string,
+    message?: string,
+}>;
 
+/** 不支持移动端，移动端未导出此函数 */
 export function getAllTabs(type?: TTab | string): Tab[]
 
+/** 不支持移动端，移动端未导出此函数 */
 export function getAllModels(): IModels
 
+/**
+ * 在当前窗口打开设置对话框并返回该对话框，不受独立设置窗口偏好影响；移动端打开主菜单并返回 undefined。
+ * 插件 API 绑定的是 openPluginSetting，只接受 app，不支持指定设置页签。
+ */
 export function openSetting(app: App): Dialog | undefined;
 
 export function openEmoji(options: {
@@ -529,6 +646,8 @@ export function openEmoji(options: {
     dynamicIconURL?: string
     hideDynamicIcon?: boolean
     hideCustomIcon?: boolean
+    /** 选择需要绑定块的动态图标时使用的目标块 ID */
+    targetID?: string
 }): void ;
 
 export interface IAssetPickerOptions {
@@ -548,6 +667,7 @@ export interface IAssetPickerOptions {
 /**
  * 打开原生资源选择界面，无需活动文档或编辑器。选中后返回 assets/ 相对路径，取消时返回 null。
  * 搜索结果可逐页加载；选择操作不插入文档或修改资源。搜索沿用内核接口的管理员和非只读权限。
+ * 关键词匹配文件名、路径以及普通笔记本中图片的标题、提示文本和已有 OCR 文本，不搜索加密笔记本。
  */
 export function openAssetPicker(options?: IAssetPickerOptions): Promise<{path: string} | null>;
 
@@ -593,13 +713,13 @@ export function isRightDockVisible(): boolean;
 export function isBottomDockVisible(): boolean;
 
 /**
- * @param {IObject} [options.data] - 块属性值
+ * @param {Record<string, string>} [options.data] - 块属性值，提供时忽略 nodeElement
  * @param {HTMLElement} [options.nodeElement] - 块元素
  * @param {"bookmark" | "name" | "alias" | "memo" | "av" | "custom"} [options.focusName="bookmark"] - av 为数据库页签，custom 为自定义页签，其余为内置输入框
  * @param {IProtyle} [options.protyle] - 有数据库时需要传入 protyle
  */
 export function openAttributePanel(options: {
-    data?: IObject
+    data?: Record<string, string>,
     nodeElement?: HTMLElement,
     focusName: "bookmark" | "name" | "alias" | "memo" | "av" | "custom",
     protyle?: IProtyle,
@@ -615,14 +735,17 @@ export function saveLayout(cb: () => void): void;
  * 全局命令
  * @param {string} command - 命令名称 https://github.com/siyuan-note/siyuan/blob/master/app/src/boot/globalEvent/command/global.ts#L71
  * @param {App} app
+ * @param {Range} [range] - 需要选区的命令使用的范围
+ * @returns 命令是否已处理
  */
-export function globalCommand(command: string, app: App): void;
+export function globalCommand(command: string, app: App, range?: Range): boolean;
 
 /**
  * @param {number} [timeout=6000] - ms. 0: manual close；-1: always show;
  * @param {string} [type=info]
+ * @returns 消息 id，可传给 hideMessage；未显示消息（如 text 为空）时为 undefined
  */
-export function showMessage(text: string, timeout?: number, type?: "info" | "error", id?: string): void;
+export function showMessage(text: string, timeout?: number, type?: "info" | "error", id?: string): string | undefined;
 
 export function hideMessage(id?: string): void;
 
@@ -637,12 +760,24 @@ export function hideMessage(id?: string): void;
  *
  * 截止时间后，JavaScript Promise 无法取消，超时钩子可能继续运行。思源仍会尽力调用每个剩余的拆除钩子一次，但不再等待，
  * 随后拆除宿主管理的资源。这 5 秒只限制思源等待 Promise 的时间，无法中断同步 JavaScript。关闭窗口或退出思源时，
- * 该操作不会触发前端插件生命周期钩子。
+ * 普通前端窗口不会触发前端插件生命周期钩子。独立设置窗口销毁时会尽力调用 onunload 并立即释放宿主管理的资源，
+ * 不等待异步钩子完成；窗口关闭后不能继续操作其文档。
+ *
+ * plugin.json 可声明 settingsWindow: true，允许已启用且兼容 desktop 的插件在内置和插件的独立设置窗口中运行。
+ * 省略或 false 不加载；该声明不会启用已禁用的插件，也不改变主窗口、文档窗口和移动端的 frontends 兼容性。
+ * 每个设置窗口使用独立实例、事件总线和存储缓存，复用 onload、onLayoutReady、onDataChanged 和 onunload 生命周期。
+ * 主窗口的配置写入通过现有数据变更通知同步；未覆盖 onDataChanged 时重载实例。插件应自行清理其样式和事件监听。
+ * 设置窗口未提供编辑器、顶栏、状态栏和停靠栏，相关注册入口不生效，也不注册命令、全局快捷键或智能体能力。
+ * 插件的 openSetting 调用交由所属宿主窗口处理；设置窗口在打开后启用、停用和重载插件时也更新本地实例。
  */
 export abstract class Plugin {
     eventBus: EventBus;
     i18n: Record<string, import("./types/api").JSONValue>;
     kernel: IKernelPlugin;
+    /**
+     * 当前插件实例的存储数据会话缓存，以传入的 storageName 为键，也是 loadData 读取失败时的回退值。
+     * 直接修改此对象不会写入磁盘；其他前端实例删除文件不会自动清除此实例中对应的缓存。
+     */
     data: any;
     displayName: string;
     readonly name: string;
@@ -665,7 +800,7 @@ export abstract class Plugin {
     };
     topBarIcons: Element[];
     statusBarIcons: Element[];
-    agentActions: string[];
+    agentCapabilities: Array<{ id: string, generation: number }>;
     models: {
         [key: string]: (options: { tab: Tab, data: any }) => Custom
     };
@@ -729,6 +864,8 @@ export abstract class Plugin {
      * 操作显示在显隐控制之前，宿主在可见操作之后添加分隔线，并移除此组首尾及连续的分隔线。
      * 更新同一按钮时替换回调，省略此选项则清除回调。
      * 使用此选项时应移除阻止传播或单独打开菜单的 contextmenu 监听器。
+     * @returns 条目元素；插件已卸载或运行在独立设置窗口中、在移动端或独立窗口中传入 element、未传 element 时 icon 无效，
+     * 或 element 已注册到其他 id 时返回 undefined。
      */
     addTopBar(options: {
         id?: string,
@@ -739,7 +876,7 @@ export abstract class Plugin {
         title: string,
         callback?: (event: MouseEvent) => void
         position?: "right" | "left"
-    }): HTMLElement;
+    }): HTMLElement | undefined;
 
     removeTopBar(id: string): void;
 
@@ -754,15 +891,27 @@ export abstract class Plugin {
 
     /**
      * Must be executed before the synchronous function.
+     * 移动端不支持状态栏，调用无效并返回 undefined；插件已卸载或运行在独立设置窗口中时不添加，直接返回传入的 element。
      * @param {string} [options.position=right]
      */
     addStatusBar(options: {
         element: HTMLElement,
         position?: "right" | "left",
-    }): HTMLElement;
+    }): HTMLElement | undefined;
 
     openSetting(): void;
 
+    /**
+     * 读取 /data/storage/petal/ 插件私有目录中的文件，成功回调会更新 data[storageName]。
+     * 缓存值为 undefined 时先初始化为 ""；文件不存在（HTTP 202）或触发请求失败回调时，
+     * Promise 会兑现为当前缓存值，而非拒绝，因此可能返回其他窗口删除文件前的旧内容。
+     * 如需避免旧缓存回退，应在调用前执行 delete this.data[storageName]；
+     * 此时读取失败会返回 ""，仍无法区分文件缺失、读取失败与空文件，也不能据此确认磁盘状态。
+     * 负数错误码被请求层拦截等未触发回调的情况会使 Promise 持续等待，需要调用方自行设置超时。
+     * 只读或发布会话不会在此方法中直接拒绝，但私有文件读取仍受内核权限限制；公开快照应使用 loadPublishData。
+     * @returns 文件内容（解析后的 JSON 值或文本），或读取失败时的缓存值，不是统一的内核响应封装。
+     * @throws 调用时插件实例已销毁则拒绝 Promise，值为 {code: 410, msg, data: null}。
+     */
     loadData(storageName: string): Promise<any>;
 
     /**
@@ -782,8 +931,26 @@ export abstract class Plugin {
      */
     savePublishData(data: Record<string, string | number | boolean | null>): Promise<void>;
 
+    /**
+     * 写入 /data/storage/petal/ 插件私有目录中的文件；对象会序列化为 JSON，其他值作为文件内容写入。
+     * 写入回调会将传入值存入 data[storageName] 并兑现 Promise；回调本身不检查响应 code。
+     * 未设置请求失败回调，网络异常或内核负数错误码（如 -1、-3）可能使 Promise 持续等待；
+     * 调用方需要自行设置超时，不能仅依赖捕获拒绝来处理写入失败。
+     * @returns 内核响应 {code, msg, data}，调用方仍需检查 code，不能将兑现视为写入成功。
+     * @throws 调用时插件实例已销毁为 410，只读或发布会话为 403，序列化或创建文件失败为 400；
+     * 拒绝值均为 {code, msg, data: null}，生命周期检查优先于只读或发布会话检查。
+     */
     saveData(storageName: string, content: any): Promise<any | IWebSocketData>;
 
+    /**
+     * 删除 /data/storage/petal/ 插件私有目录中的文件。
+     * 删除回调会清除当前实例的 data[storageName] 并兑现 Promise；回调本身不检查响应 code。
+     * 不会直接清除其他前端实例的缓存，这些实例再次 loadData 时可能回退到旧内容。
+     * 未设置请求失败回调，网络异常或内核负数错误码可能使 Promise 持续等待，调用方需要自行设置超时。
+     * @returns 内核响应 {code, msg, data}，调用方仍需检查 code，不能将兑现视为删除成功。
+     * @throws 调用时插件实例已销毁为 410，只读或发布会话为 403，拒绝值为 {code, msg, data: null}；
+     * 生命周期检查优先于只读或发布会话检查。
+     */
     removeData(storageName: string): Promise<IWebSocketData>;
 
     addIcons(svg: string): void;
@@ -792,6 +959,7 @@ export abstract class Plugin {
 
     /**
      * Must be executed before the synchronous function.
+     * @returns 页签模型工厂；移动端不支持自定义页签，插件已卸载或运行在独立设置窗口中时也返回 undefined。
      */
     addTab(options: {
         type: string,
@@ -800,12 +968,13 @@ export abstract class Plugin {
         resize?: (this: Custom) => void,
         update?: (this: Custom) => void,
         init: (this: Custom, custom: Custom) => void,
-    }): (options: { tab: Tab, data: any }) => Custom;
+    }): ((options: { tab: Tab, data: any }) => Custom) | undefined;
 
     /**
      * Add Custom to Dock.
      * Must be executed before the synchronous function.
      * @param {string} [options.id] - Unique ID within the plugin. Defaults to options.type.
+     * @returns 插件已卸载或运行在独立设置窗口中时返回 undefined。
      */
     addDock(options: {
         id?: string,
@@ -821,7 +990,7 @@ export abstract class Plugin {
         config: IPluginDockTab,
         model?: (options: { tab: Tab }) => Custom,
         mobileModel?: (element: Element) => MobileCustom
-    };
+    } | undefined;
 
     removeDock(id: string): void;
 
@@ -880,11 +1049,22 @@ export abstract class Plugin {
 }
 
 export class Setting {
+    /** 最近一次打开时创建的对话框；首次打开前为 undefined，使用独立窗口时在窗口创建对话框前和窗口关闭后也为 undefined */
+    dialog?: Dialog;
+
     constructor(options: {
         height?: string,
         width?: string,
         destroyCallback?: () => void,
         confirmCallback?: () => void,
+        /**
+         * 桌面客户端使用独立原生窗口，默认 false，浏览器和移动端仍使用原有设置界面。
+         * 原插件实例保持在所属窗口；声明 settingsWindow: true 的插件可在原生设置窗口另建独立实例。
+         * 控件回调在原插件所属窗口执行，原生窗口关闭或原插件卸载时触发一次销毁回调。
+         * 控件会迁入独立窗口，应使用元素引用操作控件，避免依赖所属窗口的 document 查询或样式。
+         * 在设置窗口中再次打开 Setting 使用普通对话框，关闭该对话框不会关闭整个设置窗口。
+         */
+        openInWindow?: boolean,
     });
 
     addItem(options: {
@@ -896,9 +1076,13 @@ export class Setting {
     }): void;
 
     open(name: string): void;
+
+    /** 关闭设置并释放控件；独立窗口尚未创建时也会取消打开请求 */
+    close(): void;
 }
 
-export class EventBus {
+/** 插件事件总线，通过 `plugin.eventBus` 访问；`siyuan` 模块在运行时不导出该类，不能直接实例化。 */
+export interface EventBus {
     on<
         K extends TEventBus,
         D = IEventBusMap[K],
@@ -933,7 +1117,7 @@ export function openInputDialog(options: {
     width?: string,
     positionId?: string,
     maxLength?: number,
-    type?: "text" | "number" | "password",
+    type?: "text" | "number" | "password" | "date",
     /** 使用多行文本框，默认使用单行输入框。 */
     multiline?: boolean,
     resize?: "none" | "vertical",
@@ -943,6 +1127,8 @@ export function openInputDialog(options: {
     placeholder?: string,
     /** 输入框下方的 HTML 说明，调用方应确保内容可信。 */
     description?: string,
+    /** 显示在输入框上方的可信 HTML，调用方负责绑定交互。 */
+    prefixContent?: string,
     /** 附加控件的可信 HTML，调用方负责绑定交互。 */
     extraContent?: string,
     confirmText?: string,
@@ -975,30 +1161,58 @@ export class Dialog {
         disableClose?: boolean,
         hideCloseIcon?: boolean,
         disableAnimation?: boolean,
-        resizeCallback?: (type: string) => void
+        resizeCallback?: (type: string) => void,
+        /** 追加到 .b3-dialog__container 上的类名 */
+        containerClassName?: string,
     });
+
+    /** 窗口尺寸变化时调用；对话框未被手动调整宽度时以 "l" 调用 resizeCallback */
+    resize(): void;
 
     destroy(options?: IObject): void;
 
-    bindInput(inputElement: HTMLInputElement | HTMLTextAreaElement, enterEvent?: () => void): void;
+    /**
+     * @param {boolean} [bindEnter=true] - 为 false 时按 Enter 不调用 enterEvent
+     */
+    bindInput(inputElement: HTMLInputElement | HTMLTextAreaElement, enterEvent?: () => void, bindEnter?: boolean): void;
 }
 
 export class Menu {
+    /**
+     * 按触发元素切换共享菜单，在构造前判断归属；同一按钮关闭，其他按钮直接打开。
+     * target 省略或 toggle 为 false 时仅打开，不改变既有构造器及独立菜单的行为。
+     */
+    static toggle(options: {
+        target?: Element;
+        toggle?: boolean;
+        id?: string;
+        closeCB?: () => void;
+        build: (menu: Menu) => void;
+        show: (menu: Menu) => void;
+    }): void;
+
     private menu;
     isOpen: boolean;
     element: HTMLElement;
 
-    constructor(id?: string, closeCB?: () => void);
+    /**
+     * @param {boolean} [independent=false] - 是否创建独立的菜单元素，而不是复用共享的 `window.siyuan.menus.menu`
+     */
+    constructor(id?: string, closeCB?: () => void, independent?: boolean);
 
     showSubMenu(subMenuElement: HTMLElement): void;
 
-    addItem(option: IMenu): HTMLElement;
+    /** 菜单已打开时不添加并返回 undefined */
+    addItem(option: IMenu): HTMLElement | undefined;
 
+    /** ignore 为 true 或菜单已打开时不添加并返回 undefined */
     addSeparator(options?: {
         index?: number,
         id?: string,
         ignore?: boolean
-    }): HTMLElement;
+    }): HTMLElement | undefined;
+    /** @deprecated 请改用对象参数 */
+    addSeparator(index?: number, ignore?: boolean): HTMLElement | undefined;
 
     open(options: IPosition): void;
 

@@ -1,6 +1,7 @@
 import {
     Config, Dialog,
     IProtyle,
+    IScrollAttr,
     Menu,
     Plugin,
     Protyle,
@@ -22,6 +23,7 @@ import {MobileBacklinks} from "./mobile/dock/MobileBacklinks";
 
 export * from "./config";
 export * from "./api";
+export * from "./av";
 export * from "./events";
 export * from "./kernel";
 export * from "./protyle";
@@ -48,40 +50,8 @@ type TRecentDocsSort = "viewedAt" | "closedAt" | "openAt" | "updated"
 type TPublishAccessLevel = "public" | "protected" | "hidden" | "private" | "forbidden"
 type TAVView = "table" | "list" | "gallery" | "kanban" | "calendar";
 export type TAVAlign = "" | "left" | "center" | "right"
-type TAVFilterOperator =
-    "="
-    | "!="
-    | ">"
-    | ">="
-    | "<"
-    | "<="
-    | "Contains"
-    | "Does not contains"
-    | "Is empty"
-    | "Is not empty"
-    | "Starts with"
-    | "Ends with"
-    | "Is between"
-    | "Is true"
-    | "Is false"
-export type TAVCol =
-    "text"
-    | "date"
-    | "number"
-    | "relation"
-    | "rollup"
-    | "select"
-    | "block"
-    | "mSelect"
-    | "url"
-    | "email"
-    | "phone"
-    | "mAsset"
-    | "template"
-    | "created"
-    | "updated"
-    | "checkbox"
-    | "lineNumber"
+export type TAVFilterOperator = import("./av").AVFilterOperator;
+export type TAVCol = import("./av").AVKeyType;
 
 interface ILayoutOptions {
     direction?: Config.TUILayoutDirection;
@@ -210,14 +180,18 @@ export interface IClipboardData {
     siyuanHTML?: string;
     files?: FileList | DataTransferItemList | File[];
     localFiles?: ILocalFiles[];
+    preserveSourceFormat?: boolean,
 }
 
 export interface IBlockTree {
     box?: string,
+    number?: string,
+    revision?: string,
     nodeType?: string,
     hPath?: string,
     subType?: string,
     name: string,
+    nameIsHTML?: boolean,
     type: string,
     depth: number,
     url?: string,
@@ -251,6 +225,7 @@ export interface IBlock {
     length?: number
     ial: Record<string, string>
     refCount?: number
+    number?: string;
 }
 
 export interface IRiffCard {
@@ -306,6 +281,7 @@ export interface IAVColor {
 
 export interface IAVCustomColor extends IAVColor {
     index: number;
+    hidden?: boolean;
 }
 
 export interface IAV {
@@ -317,8 +293,10 @@ export interface IAV {
     views: IAVView[];
     isMirror?: boolean;
     newItemTemplates?: IAVNewItemTemplate[];
+    /** 关联选择面板新建也使用此默认模板；名称不同时可选择模板名称或输入名称，其他模板配置均保留。 */
     defaultTemplateID?: string;
     customColors?: IAVCustomColor[];
+    colorOrder?: string[];
     usedCustomColorIndexes?: number[];
     contextFilter?: IAVContextFilter | null;
     contextFilterFields?: IAVContextFilterField[];
@@ -327,6 +305,7 @@ export interface IAV {
 
 export interface IAVContextFilter {
     spec: 1;
+    /** 直接关联或目标为关联且显示原值/唯一值的汇总字段；汇总仅用于筛选，不回填新增条目 */
     keyID: string;
 }
 
@@ -334,14 +313,16 @@ export interface IAVContextFilterField {
     id: string;
     name: string;
     icon: string;
+    /** 最终关联目标数据库的 ID；汇总字段返回关联目标，而非中间数据库 */
     targetAvID: string;
 }
 
 export interface IAVRenderTarget {
-    status: "visible" | "filtered" | "itemNotFound" | "viewNotFound" | "groupHidden";
+    status: "visible" | "filtered" | "itemNotFound" | "groupHidden";
     itemID: string;
     groupID?: string;
     index: number;
+    offset: number;
     pageSize: number;
 }
 
@@ -361,14 +342,33 @@ export interface IAVNewItemFieldValue {
 export interface IAVNewItemTemplate {
     id: string;
     name: string;
+    /** 游离条目和文档条目均支持预设图标。 */
+    icon?: string;
     targetType: TAVNewItemTarget;
     primaryKeyTemplate?: string;
     fieldValues?: Record<string, IAVNewItemFieldValue>;
     saveLocation?: IAVNewItemSaveLocation;
     contentTemplatePath?: string;
+    hideInFileTree?: boolean;
+}
+
+/** 单字段条件颜色规则按顺序匹配，默认背景同样占据优先级。 */
+interface IAVConditionalColorRule {
+    id: string;
+    filter: IAVFilter;
+    target: "item" | "property";
+    color: IAVCellSelectValue | null;
+    matchOption: boolean;
+}
+
+/** 渲染结果附在条目上，不写回字段值；前面的属性色优先于后面的整条目色。 */
+interface IAVItemConditionalColors {
+    background?: IAVCellSelectValue;
+    properties?: {[key: string]: IAVCellSelectValue};
 }
 
 interface IAVView {
+    conditionalColors?: IAVConditionalColorRule[];
     name?: string;
     desc?: string;
     id?: string;
@@ -396,10 +396,14 @@ interface IAVView {
 interface IAVCalendarSettings {
     /**
      * 绑定一个 date、created 或 updated 字段；系统时间不支持通过日历拖动修改。
+     * date 字段设置显示模板时按模板结果排布，原始日期保持不变。
+     * 支持 YYYY-MM-DD、字段 dateFormat 指定的数字日期格式，以及当前语言的本地日期格式。
+     * 可附加 HH:mm[:ss]（以空格或 T 分隔），按日历请求时区解析，忽略首尾空白；斜杠日期不猜测日月顺序。
+     * 空值或无效结果不显示，也不进入待安排列表；计算日期不支持拖动、清空或按日期新建。
      * 空字符串表示未绑定；字段缺失或类型变化时保留绑定，日历返回空行，不自动改绑或回填日期。
      * createAttributeViewItem 的可选 calendarDate 是毫秒时间戳，仅支持绑定普通 date 字段的日历。
      * 指定时按全天日期覆盖模板中该字段的值，与模板其他字段及条目创建共用一个可撤销事务。
-     * 系统时间源拒绝指定 calendarDate；省略或传 null 时沿用常规创建流程。
+     * 系统时间源或带显示模板的日期字段拒绝指定 calendarDate；省略或传 null 时沿用常规创建流程。
      */
     dateKeyID: string;
     /** 可选单选字段，使用已有选项颜色；空字符串表示不使用字段颜色。 */
@@ -449,14 +453,21 @@ interface IAVVirtualData {
     renderedStart: number;
     renderedEnd: number;
     topSpacerHeight: number;
+    locate?: boolean;
+    rowOffset?: number;
 }
 
 interface IAVGallery extends IAVView {
     coverFrom: number;    // 0：无，1：内容图，2：资源字段，3：内容块
     coverFromAssetKeyID?: string;
-    cardSize: number;   // 0：小卡片，1：中卡片，2：大卡片
+    cardSize: number;
+    cardLayout: number;
+   // 0：小卡片，1：中卡片，2：大卡片
+    cardWidth: number;   // 0：小卡片，1：中卡片，2：大卡片
     cardAspectRatio: number;
+    cardAspectRatioValue: number;
     displayFieldName: boolean;
+    displayEmptyFields: boolean;
     fitImage: boolean;
     cards: IAVGalleryItem[],
     desc?: string
@@ -467,9 +478,14 @@ interface IAVGallery extends IAVView {
 interface IAVKanban extends IAVView {
     coverFrom: number;    // 0：无，1：内容图，2：资源字段，3：内容块
     coverFromAssetKeyID?: string;
-    cardSize: number;   // 0：小卡片，1：中卡片，2：大卡片
+    cardSize: number;
+    cardLayout: number;
+   // 0：小卡片，1：中卡片，2：大卡片
+    cardWidth: number;   // 0：小卡片，1：中卡片，2：大卡片
     cardAspectRatio: number;
+    cardAspectRatioValue: number;
     displayFieldName: boolean;
+    displayEmptyFields: boolean;
     fitImage: boolean;
     cards: IAVGalleryItem[],
     desc?: string
@@ -485,7 +501,9 @@ interface IAVFilter {
     quantifier?: string,                              // 叶子节点：量词
     value?: IAVCellValue,                             // 叶子节点：过滤值
     relativeDate?: IAVRelativeDate,                   // 叶子节点：相对时间
-    relativeDate2?: IAVRelativeDate,                  // 叶子节点：第二个相对时间
+    relativeDate2?: IAVRelativeDate,
+                  // 叶子节点：第二个相对时间
+    dateEndpoint?: "start" | "end",                  // 叶子节点：第二个相对时间
     combination?: "and" | "or",                       // 分组节点：子条件组合方式
     filters?: IAVFilter[],                            // 分组节点：子节点（递归）
 }
@@ -513,9 +531,12 @@ interface IAVSort {
     column: string,
     valueSource?: "stored" | "rendered",             // 值来源，默认为存储值
     order: "ASC" | "DESC" | ""
+    dateEndpoint?: "start" | "end"
 }
 
 interface IAVColumn {
+    /** 属性面板可见性；空值沿用全局设置，不影响数据库各视图的字段显隐 */
+    attributePanelVisibility?: "" | "always" | "hide-empty" | "hide",
     width?: string,
     align?: TAVAlign,
     icon?: string,
@@ -525,8 +546,11 @@ interface IAVColumn {
     wrap?: boolean,
     pin?: boolean,
     hidden?: boolean,
+    fullRow?: boolean,
     type?: TAVCol,
     numberFormat?: string,
+    /** 日期字段的整列显示格式；lunar 使用农历录入和显示，时间戳不变，公历覆盖范围为 1901-02-19 - 2100-12-31 */
+    dateFormat?: "" | "full" | "month-day-year" | "day-month-year" | "year-month-day" | "lunar",
     template?: string,
     renderTemplate?: string,
     calc?: IAVCalc,
@@ -552,15 +576,24 @@ interface IAVColumn {
 }
 
 interface IAVRow {
+    conditionalColors?: IAVItemConditionalColors;
     id: string,
     cells: IAVCell[]
 }
 
 interface IAVGalleryItem {
+    conditionalColors?: IAVItemConditionalColors;
     coverURL?: string;
     coverContent?: string;
+    coverPosition?: IAVCardCoverPosition;
     id: string;
     values: IAVCell[];
+}
+
+interface IAVCardCoverPosition {
+    image: string;
+    x: number;
+    y: number;
 }
 
 interface IAVCell {
@@ -599,6 +632,7 @@ interface IAVCellValue {
     block?: {
         content: string,
         id?: string,
+        /** 游离条目可独立设置图标；绑定条目与目标块共享图标，无图标的普通块在绑定时继承条目图标。 */
         icon?: string
     }
     url?: {
@@ -607,6 +641,7 @@ interface IAVCellValue {
     phone?: {
         content: string
     }
+    location?: IAVCellLocationValue
     email?: {
         content: string
     }
@@ -624,6 +659,18 @@ interface IAVCellValue {
     date?: IAVCellDateValue
     created?: IAVCellDateValue
     updated?: IAVCellDateValue
+}
+
+/**
+ * 坐标统一使用 WGS84，不自动转换；界面按经度、纬度显示，规范复制与导出文本按纬度、经度排列。
+ * 位置字段的文本筛选条件使用 IAVCellValue.text.content，不把查询词解析成坐标。
+ */
+interface IAVCellLocationValue {
+    name?: string;
+    latitude?: number | null;
+    longitude?: number | null;
+    /** 原始坐标输入仅作为来源信息，不参与判空、筛选和排序。 */
+    originalInput?: string;
 }
 
 interface IAVCellRelationValue {
@@ -657,12 +704,14 @@ interface IAVColumnRelation {
     avID?: string;
     backKeyID?: string;
     isTwoWay?: boolean;
+    candidateFilters?: IAVFilter[];
 }
 
 interface IAVCellRollupValue {
     relationKeyID?: string;  // 关联列 ID
     keyID?: string;
     calc?: IAVCalc;
+    filters?: IAVFilter[];
 }
 
 interface IAVCalc {
@@ -671,11 +720,28 @@ interface IAVCalc {
     result?: IAVCellValue
 }
 
+/**
+ * convertList 必须通过 /api/transactions 作为单笔、单操作事务提交，blockIDs 为选中的列表、列表项或文本块。
+ * data.type 为 heading、paragraph 或 remove；heading 的 level 为 1 至 6，其他类型忽略 level。
+ * data.recursively 仅展开同类型子列表；列表项绑定迁移到首块并保留行身份和字段，歧义绑定整批拒绝。
+ * 成功后 retData 返回 rootIDs、removedIDs 和 focusID；撤销状态由内核管理，无需提交 undoOperations。
+ */
+/**
+ * `setAttrViewAutomations` saves database rules; `trigger: "block"` collects matching source blocks into the current database.
+ * `collectAttrViewBlocks` explicitly collects the supplied block IDs using a saved, enabled rule and rechecks its conditions.
+ * Automatic collection only adds entries; source or rule changes preserve existing entries and all fields, including later matches.
+ * `cleanupAttrViewBlocks` explicitly removes confirmed unmatched entries after reviewing all enabled block collection rules.
+ * Cleanup treats manual and automatic bindings alike, preserves matching or indeterminate entries, and rechecks rules and bindings.
+ * Source blocks remain; undo restores the original row and all fields. Replay uses the first execution's concrete operations.
+ */
 export type IOperation = Exclude<import("./api").TransactionOperationRequest, {action: import("./api").UnknownTransactionAction}>;
 
 export interface IRefDefs {
     refID: string,
     defIDs?: string[]
+    avGroupID?: string,
+    avViewID?: string,
+    avItemID?: string,
 }
 
 export interface IPosition {
@@ -684,6 +750,7 @@ export interface IPosition {
     w?: number,
     h?: number,
     isLeft?: boolean
+    target?: HTMLElement
 }
 
 export interface ISiyuan {
@@ -800,6 +867,17 @@ export interface ISiyuan {
      * 是否在发布服务下访问
      */
     isPublish?: boolean;
+    isReady?: boolean
+    dragTab?: ITabDragData,
+}
+
+export interface ITabDragData {
+    title?: string;
+    icon?: string;
+    docIcon?: string;
+    pin: boolean;
+    focus: boolean;
+    unupdate: boolean;
 }
 
 export interface IMenu {
@@ -810,8 +888,10 @@ export interface IMenu {
     type?: "separator" | "submenu" | "readonly" | "empty",
     accelerator?: string,
     action?: string,
+    actionLabel?: string,
     id?: string,
     submenu?: IMenu[]
+    loadSubmenu?: () => Promise<IMenu[]>
     disabled?: boolean
     icon?: string
     iconHTML?: string
@@ -843,10 +923,12 @@ interface ILayoutJSON extends ILayoutOptions {
     page?: string
     path?: string
     blockId?: string
+    notebookId?: string
     mode?: TEditorMode
     action?: TProtyleAction
     icon?: string
     rootId?: string
+    databaseRowId?: string
     active?: boolean
     pin?: boolean
     isPreview?: boolean
@@ -923,6 +1005,8 @@ declare class Viewer {
     public destroy(): void
 
     public show(): void
+
+    public hide(): void
 }
 
 export declare class Layout {
@@ -937,9 +1021,15 @@ export declare class Layout {
 
     constructor(options?: ILayoutOptions);
 
-    addLayout(child: Layout, id?: string): void;
+    /**
+     * @param {boolean} [after=true] - 指定 id 时插入到该子项之后或之前；未指定 id 时始终追加到末尾
+     */
+    addLayout(child: Layout, id?: string, after?: boolean): void;
 
-    addWnd(child: Wnd, id?: string): void;
+    /**
+     * @param {boolean} [after=true] - 指定 id 时插入到该子项之后或之前；未指定 id 时始终追加到末尾
+     */
+    addWnd(child: Wnd, id?: string, after?: boolean): void;
 }
 
 export declare class Editor extends Model {
@@ -952,22 +1042,39 @@ export declare class Editor extends Model {
         tab: Tab;
         blockId: string;
         rootId: string;
+        notebookId?: string;
         mode?: TEditorMode;
         action?: TProtyleAction[];
+        afterInitProtyle?: (editor: Protyle) => void;
+        scrollPosition?: ScrollLogicalPosition;
+        scrollAttr?: IScrollAttr;
     });
 
     private initProtyle;
+
+    /**
+     * @param {boolean} [reset=false] - 为 true 时重置反链面板的筛选和展开状态
+     */
+    updateBacklinkPanel(reset?: boolean): void;
+
+    refreshBottomBacklinkPanel(): void;
+
+    destroy(): void;
+
+    /** 返回当前获得焦点的编辑器，没有时返回主编辑器 */
+    getCurrentProtyle(range?: Range): IProtyle;
 }
 
 export declare class Dock {
-    element: HTMLElement;
+    /** 停靠栏的两组按钮容器 */
+    elements: HTMLElement[];
     layout: Layout;
     private position;
     private app;
     resizeElement: HTMLElement;
     pin: boolean;
     data: {
-        [key in TDock | string]: Model | boolean;
+        [key in TDock | string]?: Model | boolean;
     };
     private hideResizeTimeout;
 
@@ -980,25 +1087,57 @@ export declare class Dock {
         position: TDockPosition;
     });
 
+    isFloating(): boolean;
+
+    isResponsiveFloating(): boolean;
+
+    hasResponsiveManualOverride(): boolean;
+
+    clearResponsiveManualOverride(): void;
+
+    setResponsiveFloating(value: boolean, preferredSize: number): boolean;
+
+    adjustResponsiveCenterLayout(): void;
+
+    prepareForManualResize(): void;
+
+    getResponsivePreferredSize(): number;
+
+    getResponsiveMinimumSize(): 232 | 320 | 64;
+
+    isPanelVisible(): boolean;
+
+    getCollapsedPanelSize(): string;
+
+    togglePanel(visible?: boolean): boolean;
+
     togglePin(): void;
 
-    resetDockPosition(show: boolean): void;
+    showDockByHover(): void;
+
+    hideDockByHover(): void;
+
+    clearDockHoverTimeout(): void;
 
     showDock(reset?: boolean): void;
 
-    hideDock(reset?: boolean): void;
+    hideDock(reset?: boolean, preferredSize?: number): void;
 
-    toggleModel(type: string, show?: boolean, close?: boolean, hide?: boolean, isSaveLayout?: boolean): void;
+    toggleModel(type: TDock | string, show?: boolean, close?: boolean, removeDock?: boolean, isSaveLayout?: boolean, restorePanel?: boolean): void;
 
-    add(index: number, sourceElement: Element, previousType?: string): void;
+    add(index: number, sourceElement: Element, previousType?: string, options?: {
+        syncEntryOrders?: boolean;
+    }): void;
 
-    remove(key: string): void;
+    remove(key: TDock | string): void;
 
     setSize(): void;
 
+    hasActive(): boolean;
+
     private getMaxSize;
 
-    genButton(data: Config.IUILayoutDockTab[], index: number, tabIndex?: number): void;
+    genButton(data: Array<Config.IUILayoutDockTab & { entryId?: string }>, index: number, tabIndex?: number): void;
 }
 
 export declare class MobileCustom {
@@ -1060,8 +1199,42 @@ export declare class App {
     appId: string;
 }
 
+/**
+ * 思源内置的弹出菜单实现，`window.siyuan.menus.menu` 即为其共享实例；插件 `Menu` 封装的也是该对象。
+ * 它不是插件 `Menu`，没有 `open`、`close`、`isOpen` 和 `addSeparator`。
+ */
+export interface IPopupMenu {
+    element: HTMLElement;
+    /** 记录当前菜单的数据 */
+    data: any;
+    removeCB: () => void;
+
+    showSubMenu(subMenuElement: HTMLElement): void;
+
+    addItem(option: IMenu): HTMLElement;
+
+    append(element?: HTMLElement, index?: number): void;
+
+    popup(options: IPosition): void;
+
+    resetPosition(): void;
+
+    remove(isKeyEvent?: boolean): void;
+
+    /**
+     * @param {string} [position=all]
+     */
+    fullscreen(position?: "bottom" | "all", restoreKeyboard?: () => void, options?: {
+        preserveKeyboard?: boolean,
+    }): void;
+
+    closeSheet(): void;
+
+    setSheetDragPreview(active: boolean): void;
+}
+
 export declare class Menus {
-    menu: Menu;
+    menu: IPopupMenu;
 
     constructor(app: App);
 

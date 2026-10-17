@@ -1,12 +1,19 @@
 {
   "name": "siyuan",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "contributors": [
     "zuoez02",
     "Vanessa",
     "Zuoqiu-Yingyi"
   ],
   "types": "siyuan.d.ts",
+  "scripts": {
+    "test:kernel-types": "node tests/kernel-types.cjs",
+    "test:mirrors": "node tests/mirror-types.cjs"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  },
   "exports": {
     ".": {
       "import": {

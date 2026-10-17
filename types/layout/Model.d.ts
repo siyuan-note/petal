@@ -23,4 +23,8 @@ export declare class Model {
      * @param {boolean} [process=false]
      */
     public send(cmd: string, param: Record<string, unknown>, process?: boolean): void;
+
+    public flushMainMessages(): void;
+
+    public destroy(): void;
 }

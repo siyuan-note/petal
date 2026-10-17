@@ -3,23 +3,20 @@ import {
     Config,
     Editor,
     IAV,
+    IMenu,
     IObject,
     IOperation,
+    IPopupMenu,
     IPosition,
     IWebSocketData,
-    Menu,
     Plugin,
 } from "./../siyuan";
 import {Model} from "./layout/Model";
 
-declare class Highlight {
-    constructor(...range: Range[]);
-
-    add(range: Range): void;
-
-    clear(): void;
-
-    forEach(callbackfn: (value: Range, key: number) => void): void;
+declare class Highlight extends Set<AbstractRange> {
+    constructor(...range: AbstractRange[]);
+    priority: number;
+    type: "grammar-error" | "highlight" | "spelling-error";
 }
 
 declare class AVAttributePanel {
@@ -33,9 +30,24 @@ declare class AVAttributePanel {
 
     hasDatabase(avID: string): boolean;
 
-    expand(): void;
+    /**
+     * @param {boolean} [animate=false]
+     */
+    expand(avID?: string, animate?: boolean): void;
 
     toggle(): void;
+
+    afterRender(callback: (element: HTMLElement) => void): void;
+
+    updateDisplayConfig(): void;
+
+    updateReadonly(): void;
+
+    hasItem(itemID: string): boolean;
+
+    refreshForOperation(operation: IOperation): void;
+
+    displayEmptyFields(): void;
 }
 
 declare class Breadcrumb {
@@ -45,11 +57,14 @@ declare class Breadcrumb {
 
     toggleExit(hide: boolean): void;
 
-    showMenu(protyle: IProtyle, position: IPosition): void;
+    showMenu(protyle: IProtyle, position: IPosition, restoreKeyboard?: () => void): Promise<void>;
 
-    render(protyle: IProtyle, update?: boolean, nodeElement?: Element | false): void;
+    render(protyle: IProtyle, update?: boolean, nodeElement?: Element | false): Promise<void>;
 
     hide(): void;
+
+    /** @returns 是否已将焦点移到面包屑 */
+    focus(range?: Range): boolean;
 }
 
 declare class Scroll {
@@ -57,15 +72,37 @@ declare class Scroll {
     private parentElement;
     private inputElement;
     lastScrollTop: number;
-    keepLazyLoad: boolean;
+    /** 是否保持动态加载的内容 */
+    keepLoadedContent: boolean;
 
     constructor(protyle: IProtyle);
 
     private setIndex;
 
-    updateIndex(protyle: IProtyle, id: string, cb?: (index: number) => void): void;
+    updateIndex(protyle: IProtyle, id: string, cb?: (index: number) => void): Promise<void>;
+
+    /** 刷新滚动条上下按钮的快捷键提示 */
+    updateHotkeyLabels(): void;
 
     update(protyle: IProtyle): void;
+
+    /**
+     * @param mode - 1 加载当前内容之前的块，2 加载之后的块
+     * @returns 是否发起了加载请求
+     */
+    loadDynamic(protyle: IProtyle, mode: 1 | 2, options?: {
+        beforeApply?: () => void;
+        onFinish?: (success: boolean) => void;
+        size?: number;
+    }): boolean;
+
+    loadAll(protyle: IProtyle): Promise<boolean>;
+
+    shouldKeepLoadedContent(): boolean;
+
+    invalidateDynamicLoad(protyle: IProtyle): void;
+
+    setCurrentIndex(protyle: IProtyle, index: number, cancelPending?: boolean): void;
 }
 
 declare class WYSIWYG {
@@ -74,12 +111,22 @@ declare class WYSIWYG {
     };
     element: HTMLDivElement;
     preventKeyup: boolean;
-    private shiftStartElement;
     private preventClick;
 
     constructor(protyle: IProtyle);
 
-    renderCustom(ial: IObject): void;
+    renderCustom(ial: Record<string, string>): void;
+
+    flushPendingInput(): Promise<void>;
+
+    copyRichText(): void;
+
+    selectByShiftClick(protyle: IProtyle, event: MouseEvent, targetBlockElement?: HTMLElement,
+                       resolveTargetByPoint?: boolean): boolean;
+
+    destroy(): void;
+
+    prepareBlockVirtualization(contentElement: Element, replace: boolean): void;
 
     private escapeInline;
     private setEmptyOutline;
@@ -94,15 +141,16 @@ declare class Gutter {
 
     constructor(protyle: IProtyle);
 
-    private isMatchNode;
+    isMatchNode(item: Element): boolean;
+
     private turnsOneInto;
     private turnsIntoOne;
     private turnsInto;
     private showMobileAppearance;
 
-    renderMultipleMenu(protyle: IProtyle, selectsElement: Element[]): Menu;
+    renderMultipleMenu(protyle: IProtyle, selectsElement: Element[]): IPopupMenu;
 
-    renderMenu(protyle: IProtyle, buttonElement: Element): Menu;
+    renderMenu(protyle: IProtyle, buttonElement: Element): IPopupMenu;
 
     private genHeadingTransform;
     private genClick;
@@ -112,7 +160,9 @@ declare class Gutter {
     private genHeights;
     private genCopyTextRef;
 
-    render(protyle: IProtyle, element: Element, wysiwyg: HTMLElement, target?: Element): void;
+    render(protyle: IProtyle, element: Element, target?: Element): void;
+
+    getNodeElement(protyle: IProtyle, element: Element): Element | undefined;
 }
 
 declare class Title {
@@ -124,14 +174,23 @@ declare class Title {
 
     private rename;
 
-    setTitle(title: string): void;
+    /** 立即提交待处理的标题输入，例如保存或切换文档前 */
+    flushPendingInput(): void;
+
+    /** 丢弃待处理的标题输入 */
+    cancelPendingInput(): void;
+
+    /**
+     * @param {boolean} [empty=false] - 为 true 时标题编辑区显示为空
+     */
+    setTitle(title: string, empty?: boolean): void;
 
     render(protyle: IProtyle, response: IWebSocketData): boolean;
 }
 
 declare class Background {
     element: HTMLElement;
-    ial: IObject;
+    ial: Record<string, string>;
     private imgElement;
     private iconElement;
     private actionElements;
@@ -142,7 +201,7 @@ declare class Background {
 
     private removeTag;
 
-    render(ial: IObject, rootId: string): void;
+    render(ial: Record<string, string>, rootId: string): void;
 
     private openTag;
     private getTags;
@@ -158,16 +217,18 @@ declare class Preview {
 
     render(protyle: IProtyle): void;
 
+    destroy(): void;
+
+    updatePadding(padding: { left: number; right: number; bottom: number; top: number; }): void;
+
     private link2online;
     private copyToX;
-    private processZHBlockquote;
-    private processZHTable;
 }
 
 interface IUndo {
-    undo(protyle: IProtyle): void;
+    undo(protyle: IProtyle): void | Promise<void>;
 
-    redo(protyle: IProtyle): void;
+    redo(protyle: IProtyle): void | Promise<void>;
 
     add(doOperations: IOperation[], undoOperations: IOperation[], protyle: IProtyle): void;
 
@@ -182,9 +243,9 @@ interface IOperations {
 }
 
 declare class Undo implements IUndo {
-    undo(protyle: IProtyle): void;
+    undo(protyle: IProtyle): Promise<void>;
 
-    redo(protyle: IProtyle): void;
+    redo(protyle: IProtyle): Promise<void>;
 
     renderLocal(protyle: IProtyle, operations: IOperation[]): void;
 
@@ -234,7 +295,8 @@ declare class Hint {
 
     render(protyle: IProtyle): void;
 
-    genLoading(protyle: IProtyle): void;
+    /** 加载阶段可指定候选来源，数据库候选使用当前单元格或主键字段定位 */
+    genLoading(protyle: IProtyle, delay?: number, source?: THintSource): void;
 
     bindUploadEvent(protyle: IProtyle, element: HTMLElement): void;
 
@@ -245,12 +307,31 @@ declare class Hint {
     private genSearchHTML;
     private genEmojiHTML;
 
+    /** 直接插入命令会清理候选来源和触发位置；updateRange 为 false 时使用已保存的正文选区 */
+    fillCommand(value: string, protyle: IProtyle, updateRange?: boolean): void;
+
     fill(value: string, protyle: IProtyle, updateRange?: boolean, refIsS?: boolean): void;
 
     select(event: KeyboardEvent, protyle: IProtyle): boolean;
 
     private fixImageCursor;
     private getKey;
+
+    hashTagSearchElement?: HTMLElement;
+
+    deactivateEmojiPanel(): void;
+
+    destroy(): void;
+
+    startHashTagSearch(protyle: IProtyle, tagElement: HTMLElement): void;
+
+    prepareCreateTarget(protyle: IProtyle, type: "doc" | "ref"): {
+        result: boolean;
+        promise: Promise<boolean>;
+        isCurrent: () => boolean;
+    };
+
+    canResumeBlockHint(protyle: IProtyle, range: Range): boolean;
 }
 
 export declare class Toolbar {
@@ -265,16 +346,20 @@ export declare class Toolbar {
 
     public update(protyle: IProtyle): void
 
-    public render(protyle: IProtyle, range: Range, event?: KeyboardEvent): void
+    public render(protyle: IProtyle, range: Range, position?: IPosition & { detail?: number }): void
 
     public getCurrentType(range?: Range): string[]
 
+    /**
+     * @param {boolean} [focusRange=true]
+     */
     public setInlineMark(protyle: IProtyle, type: string, action: "range" | "toolbar", textObj?: {
         color?: string,
         type: string
-    }): Node[]
+    }, focusRange?: boolean, undoContext?: Record<string, string>): Node[] | undefined
 
-    public showRender(protyle: IProtyle, renderElement: Element, updateElements?: Element[], oldHTML?: string): void
+    public showRender(protyle: IProtyle, renderElement: Element, updateElements?: Element[],
+                      oldHTML?: string | Map<string, string>): void
 
     public showCodeLanguage(protyle: IProtyle, languageElements: HTMLElement[]): void
 
@@ -284,9 +369,30 @@ export declare class Toolbar {
 
     public showWidget(protyle: IProtyle, nodeElement: HTMLElement, range: Range): void
 
-    public showContent(protyle: IProtyle, range: Range, nodeElement: Element): void
+    public showContent(protyle: IProtyle, range: Range, nodeElement: Element, pluginMenus?: IMenu[]): void
 
     public isMultiSelectMode(): boolean
+
+    /**
+     * 将浮动元素定位到选区附近
+     * @returns 定位后的纵坐标；没有选区位置时不调整并返回 undefined
+     */
+    public setSelectionElementPosition(protyle: IProtyle, element: HTMLElement, triggerRect?: DOMRect,
+                                       scrollElement?: HTMLElement): number | undefined
+
+    public getCurrentToolbarType(protyle: IProtyle, range?: Range): string[]
+
+    public hasTableCellsInlineMark(cellElements: HTMLTableCellElement[], type: string): boolean
+
+    public setTableCellsInlineMark(protyle: IProtyle, cellElements: HTMLTableCellElement[], type: string, textObj?: {
+        color?: string,
+        type: string
+    }): Node[] | undefined
+
+    public setBlockElementsInlineMark(protyle: IProtyle, blockElements: Element[], type: string, textObj?: {
+        color?: string,
+        type: string
+    }, clearBlockStyle?: boolean): Node[] | undefined
 }
 
 export interface ITrackedRangeHandle {
@@ -337,10 +443,15 @@ export class Protyle {
     public reload(focus: boolean, updateReadonly?: boolean): void
 
     /**
+     * 低层块 DOM 插入接口；Markdown 或普通 HTML 请使用 insertContent。
+     * useProtyleRange 为 true 时使用工具栏缓存选区，否则读取浏览器选区。
      * @param {boolean} [isBlock=false]
      * @param {boolean} [useProtyleRange=false]
      */
     public insert(html: string, isBlock?: boolean, useProtyleRange?: boolean): void
+
+    /** 立即处理尚未提交的输入，并等待该编辑器已排队的事务结束 */
+    public flushPendingTransactions(): Promise<void>
 
     public transaction(doOperations: IOperation[], undoOperations?: IOperation[]): void;
 
@@ -357,11 +468,6 @@ export class Protyle {
      * @param {number} [subType] type 为 "Blocks2Hs" 时必传
      */
     public turnIntoTransaction(nodeElement: Element, type: TTurnInto, subType?: number): void
-
-    /**
-     * @deprecated 将在 3.7.1 版本中移除。请改用 {@link updateTransactionElement}。
-     */
-    public updateTransaction(id: string, newHTML: string, html: string): void
 
     public updateTransactionElement(element: Element, oldHTML: string): void;
 
@@ -394,8 +500,31 @@ export class Protyle {
     public switchMode(mode: TEditorMode): void
 }
 
+/** 标签页容器渲染选项 */
+export interface ITabsRenderOptions {
+    prepare?: () => void;
+    readonly?: (tabs?: Element) => boolean;
+    taskReadonly?: (tabs?: Element) => boolean;
+    label?: string;
+    addLabel?: string;
+    select?: (tabs: HTMLElement, id: string) => void;
+    restore?: (tabs: HTMLElement) => string;
+    remember?: (tabs: HTMLElement, id: string) => void;
+    activate?: (item: HTMLElement) => void;
+    rename?: (item: HTMLElement) => void;
+    add?: (tabs: HTMLElement) => void;
+    menu?: (tabs: HTMLElement, item: HTMLElement, anchor: HTMLElement) => void;
+    move?: (source: HTMLElement, target: HTMLElement, after?: boolean) => void;
+    shown?: (item: HTMLElement) => void;
+    task?: (item: HTMLElement) => void;
+    taskMenu?: (item: HTMLElement) => void;
+    taskLabel?: string;
+    endEdit?: () => void;
+    attributes?: { label: string, open: (block: HTMLElement, focus: string) => void };
+}
+
 export class ProtyleMethod {
-    public static tabsRender(element: Element): void;
+    public static tabsRender(element: Element, options?: ITabsRenderOptions): void;
     /**
      * @description 使用 graphviz 进行渲染
      * @param {string} [cdn=Constants.PROTYLE_CDN]
@@ -413,8 +542,9 @@ export class ProtyleMethod {
      * @description 对数学公式进行渲染
      * @param {string} [cdn=Constants.PROTYLE_CDN]
      * @param {boolean} [maxWidth=false]
+     * @returns 渲染完成后兑现的 Promise，maxWidth 为 true 时还会等待公式宽度适配；没有待渲染的公式时返回 undefined
      */
-    public static mathRender(element: Element, cdn?: string, maxWidth?: boolean): void;
+    public static mathRender(element: Element, cdn?: string, maxWidth?: boolean): Promise<void> | void;
 
     /**
      * @description mermaid.js 渲染，支持流程图/时序图/甘特图渲染等
@@ -583,7 +713,8 @@ interface IBreadcrumb {
     name: string,
     type: string,
     subType: string,
-    children: []
+    children: IBreadcrumb[],
+    hasChildren?: boolean
 }
 
 interface ILuteOptions extends IMarkdownConfig {
@@ -638,6 +769,8 @@ declare class Viewer {
     public destroy(): void
 
     public show(): void
+
+    public hide(): void
 }
 
 export class Lute {
@@ -703,6 +836,8 @@ export class Lute {
 
     public SetTabs(enable: boolean): void;
 
+    public SetCustomBlock(enable: boolean): void;
+
     public SetTag(enable: boolean): void;
 
     public SetInlineMath(enable: boolean): void;
@@ -710,6 +845,8 @@ export class Lute {
     public SetGFMStrikethrough(enable: boolean): void;
 
     public SetGFMStrikethrough1(enable: boolean): void;
+
+    public SetFullWidthStrikethrough(enable: boolean): void;
 
     public SetMark(enable: boolean): void;
 
@@ -764,6 +901,12 @@ export class Lute {
     public BlockDOM2InlineBlockDOM(html: string): string;
 
     public BlockDOM2HTML(html: string): string;
+
+    public BlockDOM2RichHTML(html: string): string;
+
+    public CancelListRecursively(html: string): string;
+
+    public ConvertListType(html: string, targetType: "u" | "o" | "t"): string;
 
     public HTML2Md(html: string): string;
 
@@ -834,7 +977,7 @@ interface IUpload {
     linkToImgCallback?(responseText: string): void;
 }
 
-interface IScrollAttr {
+export interface IScrollAttr {
     rootId: string,
     startId?: string,
     endId?: string
@@ -940,6 +1083,8 @@ interface IProtyleOptions {
     },
     backlinkData?: {
         referenceBlockID?: string,
+        id?: string,
+        revision?: string,
         blockPaths: IBreadcrumb[],
         dom: string
         expand: boolean
@@ -1030,6 +1175,8 @@ export interface IProtyle {
         mode?: number
         blockCount?: number
         action?: TProtyleAction[]
+        headingNumbers?: Record<string, string>
+        headingNumberLevels?: Record<string, string>
     },
     disabled: boolean,
     lite?: boolean,
