@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare per-rule success notifications for committed database automation results](https://github.com/siyuan-note/siyuan/issues/20642)
+
 * [Declare per-group AND/OR matching for block collection tags and attributes](https://github.com/siyuan-note/siyuan/issues/20641)
 
 * [Declare versioned database automation block subtype filters](https://github.com/siyuan-note/siyuan/issues/20644)
