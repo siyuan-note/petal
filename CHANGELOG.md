@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare append-only block collection and confirmed cleanup with review, revalidation, and undo](https://github.com/siyuan-note/siyuan/issues/20645)
+
 * [Unify tag collection target selection and avoid duplicate list-item paragraphs](https://github.com/siyuan-note/siyuan/issues/20646)
 
 * [Declare compact and full editor block indicator modes, with compact as the default](https://github.com/siyuan-note/siyuan/issues/20647)

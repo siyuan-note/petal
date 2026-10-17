@@ -729,8 +729,10 @@ interface IAVCalc {
 /**
  * `setAttrViewAutomations` saves database rules; `trigger: "block"` collects matching source blocks into the current database.
  * `collectAttrViewBlocks` explicitly collects the supplied block IDs using a saved, enabled rule and rechecks its conditions.
- * Automatically collected entries are removed on a match-to-mismatch transition without deleting their source blocks.
- * Undo restores the original row and fields; matching again creates a new initialized row. Existing manual rows are preserved.
+ * Automatic collection only adds entries; source or rule changes preserve existing entries and all fields, including later matches.
+ * `cleanupAttrViewBlocks` explicitly removes confirmed unmatched entries after reviewing all enabled block collection rules.
+ * Cleanup treats manual and automatic bindings alike, preserves matching or indeterminate entries, and rechecks rules and bindings.
+ * Source blocks remain; undo restores the original row and all fields. Replay uses the first execution's concrete operations.
  */
 export type IOperation = Exclude<import("./api").TransactionOperationRequest, {action: import("./api").UnknownTransactionAction}>;
 
