@@ -156,6 +156,7 @@ export namespace Config {
      * Artificial Intelligence (AI) related configuration
      */
     export interface IAI {
+        web: IAIWeb;
         providers: IProvider[];
         editing: IEditing;
         agent: IAgent;
@@ -164,6 +165,18 @@ export namespace Config {
         embedding: IEmbedding;
         rerank: IRerank;
         decision: IDecision;
+    }
+
+    /** 网页服务独立于对话模型；省略配置时搜索使用 Exa、抓取使用直接请求。 */
+    export interface IAIWeb {
+        /** exa 或 deepseek；DeepSeek 固定请求 5 条结果且不包含正文。 */
+        searchProvider: string;
+        /** direct 或 deepseek；DeepSeek 只获取网页正文，direct 还支持下载文件。 */
+        fetchProvider: string;
+        /** DeepSeek Search 与 Fetch 共用的凭证，由内核加密保存；服务失败不自动切换后端。 */
+        apiKey: string;
+        /** DeepSeek 请求超时秒数，默认 30，范围 1–600。 */
+        timeout: number;
     }
 
     /**

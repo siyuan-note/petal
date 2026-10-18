@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare independent web search and fetch providers with shared DeepSeek credentials](https://github.com/siyuan-note/siyuan/issues/20659)
+
 * [Declare a native boolean full block indicator setting](https://github.com/siyuan-note/siyuan/issues/20647)
 
 * [Declare draft-only S3 connection probes and endpoint path warnings](https://github.com/siyuan-note/siyuan/pull/20654)
