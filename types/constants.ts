@@ -941,6 +941,7 @@ export abstract class Constants {
     public static readonly LOCAL_AV_CALENDAR_MODES: string;
     public static readonly LOCAL_TABS_READING: string;
     public static readonly LOCAL_COMPACT_MODE: string;
+    public static readonly LOCAL_MENU_MOUSE_SCROLL: string;
     public static readonly DIALOG_AIPROVIDER: string;
     public static readonly DIALOG_AIMODEL: string;
     public static readonly DIALOG_AIMCPSERVER: string;
