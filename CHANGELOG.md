@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare collection review categories, filtered pagination, and indeterminate reasons](https://github.com/siyuan-note/siyuan/issues/20664)
+
 * [Declare the optional menu mouse scrolling preference key](https://github.com/siyuan-note/siyuan/issues/20663)
 
 * [Declare independent web search and fetch providers with shared DeepSeek credentials](https://github.com/siyuan-note/siyuan/issues/20659)
