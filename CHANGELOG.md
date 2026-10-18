@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare iOS Live Photo image attributes and cancellable local preview conversion](https://github.com/siyuan-note/siyuan/issues/20675)
+
 * [Declare collection review categories, filtered pagination, and indeterminate reasons](https://github.com/siyuan-note/siyuan/issues/20664)
 
 * [Declare the optional menu mouse scrolling preference key](https://github.com/siyuan-note/siyuan/issues/20663)
