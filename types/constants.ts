@@ -161,6 +161,7 @@ export abstract class Constants {
     public static readonly LOCAL_EXPORTWORD = "local-exportword";
     public static readonly LOCAL_EXPORTIMG = "local-exportimg";
     public static readonly LOCAL_BAZAAR = "local-bazaar";
+    /** @deprecated 内置偏好改用 config.appearance.pdfTheme，不再读取此旧键 */
     public static readonly LOCAL_PDFTHEME = "local-pdftheme";
     public static readonly LOCAL_LAYOUTS = "local-layouts";
     public static readonly LOCAL_WINDOW_WORKSPACE = "local-window-workspace-";
@@ -170,11 +171,13 @@ export abstract class Constants {
     public static readonly LOCAL_FILESPATHS = "local-filespaths";
     public static readonly LOCAL_DIALOGPOSITION = "local-dialogposition";
     public static readonly LOCAL_SESSION_FIRSTLOAD = "local-session-firstload";
+    /** @deprecated 内置偏好改用 config.appearance.outlineKeepCurrentExpand，不再读取此旧键 */
     public static readonly LOCAL_OUTLINE = "local-outline";
     public static readonly LOCAL_PLUGIN_DOCKS = "local-plugin-docks";
     public static readonly LOCAL_IMAGES = "local-images";
     public static readonly LOCAL_EMOJIS = "local-emojis";
     public static readonly LOCAL_MOVE_PATH = "local-move-path";
+    /** @deprecated 内置偏好改用 config.fileTree.recentDocsSort，不再读取此旧键 */
     public static readonly LOCAL_RECENT_DOCS = "local-recent-docs";
 
     // dialog
@@ -942,7 +945,9 @@ export abstract class Constants {
     public static readonly LOCAL_CLOSED_TABS: string;
     public static readonly LOCAL_AV_CALENDAR_MODES: string;
     public static readonly LOCAL_TABS_READING: string;
+    /** @deprecated 内置偏好改用 config.appearance.compactMode，不再读取此旧键 */
     public static readonly LOCAL_COMPACT_MODE: string;
+    /** @deprecated 内置偏好改用 config.appearance.menuMouseScroll，不再读取此旧键 */
     public static readonly LOCAL_MENU_MOUSE_SCROLL: string;
     public static readonly DIALOG_AIPROVIDER: string;
     public static readonly DIALOG_AIMODEL: string;

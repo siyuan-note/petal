@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare reader, outline, recent document, mobile control and agent rendering preferences persisted in configuration](https://github.com/siyuan-note/siyuan/issues/20685)
+
 * [Declare iOS Live Photo image attributes and cancellable local preview conversion](https://github.com/siyuan-note/siyuan/issues/20675)
 
 * [Declare collection review categories, filtered pagination, and indeterminate reasons](https://github.com/siyuan-note/siyuan/issues/20664)
