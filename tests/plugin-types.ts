@@ -76,3 +76,9 @@ declare const removedMapSettings: AVTable["map"];
 declare const removedMapRuntime: APIPOSTRoutes["/api/map/getRuntime"];
 // @ts-expect-error 内核不再提供地图未定位条目接口。
 declare const removedMapUnplaced: APIPOSTRoutes["/api/av/getAttributeViewMapUnplaced"];
+
+const groupedImages: APIPOSTRoutes["/api/av/getCurrentAttrViewImages"]["request"] = {id: "av", groupID: "group"};
+const allImages: APIPOSTRoutes["/api/av/getCurrentAttrViewImages"]["request"] = {id: "av"};
+const nullImageGroup: APIPOSTRoutes["/api/av/getCurrentAttrViewImages"]["request"] = {id: "av", groupID: null};
+// @ts-expect-error 分组 ID 必须为字符串。
+const invalidImageGroup: APIPOSTRoutes["/api/av/getCurrentAttrViewImages"]["request"] = {id: "av", groupID: 1};

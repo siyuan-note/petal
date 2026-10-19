@@ -2,6 +2,10 @@
 
 ## v1.3.0 2026
 
+* [Synchronize current setting input compatibility and notification contract documentation](https://github.com/siyuan-note/siyuan/pull/20710)
+
+* [Declare optional database image preview groups with group ordering and unpaged results](https://github.com/siyuan-note/siyuan/issues/20707)
+
 * Preserve complete appearance preferences, including nullable PDF and mobile settings, in marketplace theme and icon responses
 
 * [Document URL-encoded Live Photo preview paths, resource boundaries and notebook scoping](https://github.com/siyuan-note/siyuan/issues/20675)
