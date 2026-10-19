@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document URL-encoded Live Photo preview paths, resource boundaries and notebook scoping](https://github.com/siyuan-note/siyuan/issues/20675)
+
 * [Document cancellation before marketplace package installation is committed](https://github.com/siyuan-note/siyuan/issues/20687)
 
 * [Declare reader, outline, recent document, mobile control and agent rendering preferences persisted in configuration](https://github.com/siyuan-note/siyuan/issues/20685)
