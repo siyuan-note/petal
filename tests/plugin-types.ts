@@ -9,6 +9,20 @@ declare const sync: Config.ISync;
 const lan: boolean = sync.lan.enabled;
 declare const appearance: Config.IAppearance;
 const activeProfile: string = appearance.entryVisibility.active;
+declare const bazaarAppearanceResponse: APIPOSTRoutes[
+    "/api/bazaar/installBazaarIcon" | "/api/bazaar/uninstallBazaarIcon" |
+    "/api/bazaar/installBazaarTheme" | "/api/bazaar/uninstallBazaarTheme"
+]["response"];
+if (bazaarAppearanceResponse.code === 0 && bazaarAppearanceResponse.data.appearance) {
+    const bazaarAppearance = bazaarAppearanceResponse.data.appearance;
+    const compactMode: boolean = bazaarAppearance.compactMode;
+    const menuMouseScroll: boolean = bazaarAppearance.menuMouseScroll;
+    const outlineKeepCurrentExpand: boolean = bazaarAppearance.outlineKeepCurrentExpand;
+    const pdfTheme: {light: string; dark: string; annoColor: string} | null = bazaarAppearance.pdfTheme;
+    const mobileBars: {autoHide: boolean | null; sidebarSwipe: boolean | null; sidebarButtons: boolean | null} | null = bazaarAppearance.mobileBars;
+    // @ts-expect-error Appearance preferences retain boolean response types.
+    const numericCompactMode: number = bazaarAppearance.compactMode;
+}
 declare const tab: Config.IUILayoutTabEditor;
 const scroll: IScrollAttr | undefined = tab.scrollAttr;
 declare const siyuan: ISiyuan;

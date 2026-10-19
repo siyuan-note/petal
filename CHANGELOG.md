@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Preserve complete appearance preferences, including nullable PDF and mobile settings, in marketplace theme and icon responses
+
 * [Document URL-encoded Live Photo preview paths, resource boundaries and notebook scoping](https://github.com/siyuan-note/siyuan/issues/20675)
 
 * [Document cancellation before marketplace package installation is committed](https://github.com/siyuan-note/siyuan/issues/20687)
