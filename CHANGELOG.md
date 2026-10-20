@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare the default-enabled setting to close detached windows after their last tab is closed or moved out](https://github.com/siyuan-note/siyuan/issues/20736)
+
 * [Synchronize current setting input compatibility and notification contract documentation](https://github.com/siyuan-note/siyuan/pull/20710)
 
 * [Declare optional database image preview groups with group ordering and unpaged results](https://github.com/siyuan-note/siyuan/issues/20707)

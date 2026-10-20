@@ -1029,6 +1029,11 @@ export namespace Config {
          */
         closeTabOnDoubleClick: boolean;
         /**
+         * Close a detached desktop window after its last tab is closed or moved out.
+         * Defaults to true; does not affect the main window.
+         */
+        closeWindowOnLastTabClosed: boolean;
+        /**
          * The storage path of the new document created using block references
          */
         refCreateSavePath: string;
