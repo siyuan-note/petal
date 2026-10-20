@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document unified AI instruction storage under data/storage/ai and compatible migration from data/ai on save](https://github.com/siyuan-note/siyuan/issues/20768)
+
 * [Declare cooperative sync checkout cancellation that retains completed files](https://github.com/siyuan-note/siyuan/issues/20763)
 
 * [Declare dialog close guards and clarify expired Data.zip preparation cleanup](https://github.com/siyuan-note/siyuan/issues/20758)
