@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare cooperative sync checkout cancellation that retains completed files](https://github.com/siyuan-note/siyuan/issues/20763)
+
 * [Declare dialog close guards and clarify expired Data.zip preparation cleanup](https://github.com/siyuan-note/siyuan/issues/20758)
 
 * [Declare draft WebDAV and local sync connection tests with isolated probe cleanup](https://github.com/siyuan-note/siyuan/issues/20760)
