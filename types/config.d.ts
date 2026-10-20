@@ -156,6 +156,7 @@ export namespace Config {
      * Artificial Intelligence (AI) related configuration
      */
     export interface IAI {
+        web: IAIWeb;
         providers: IProvider[];
         editing: IEditing;
         agent: IAgent;
@@ -166,10 +167,22 @@ export namespace Config {
         decision: IDecision;
     }
 
+    /** 网页服务独立于对话模型；省略配置时搜索使用 Exa、抓取使用直接请求。 */
+    export interface IAIWeb {
+        searchProvider: string;
+        fetchProvider: string;
+        /** DeepSeek Search 与 Fetch 共用的凭证，由内核加密保存。 */
+        apiKey: string;
+        /** DeepSeek 请求超时秒数，默认 30，范围 1–600。 */
+        timeout: number;
+    }
+
     /**
      * AI agent global settings
      */
     export interface IAgent {
+        /** 流式输出渲染 Markdown，默认关闭，重置普通设置时随 AI 配置保留 */
+        streamingMarkdown: boolean;
         /**
          * 未保存独立 OCR AI 模型且选用本地 OCR 提供商时，图片菜单的手动 AI OCR 兼容此模型。
          * 独立模型保存在 config.ocr.aiModelId，失效时返回错误，不回退到智能体或其他模型。
@@ -348,6 +361,14 @@ export namespace Config {
      * SiYuan appearance related configuration
      */
     export interface IAppearance {
+        /** 用户偏好保存在 conf.json；升级不读取旧 local.json 键，外观重置时恢复默认值 */
+        compactMode: boolean;
+        /** 默认关闭；新建空工作空间默认开启 */
+        menuMouseScroll: boolean;
+        pdfTheme: {light: string; dark: string; annoColor: string};
+        outlineKeepCurrentExpand: boolean;
+        /** 三项默认开启，侧栏滑动与按钮至少保留一种 */
+        mobileBars: {autoHide: boolean; sidebarSwipe: boolean; sidebarButtons: boolean};
         /** 背景渐变，未配置时根据工作空间名称自动配色 */
         bodyGradient?: {
             mode: string;
@@ -948,6 +969,8 @@ export namespace Config {
      * Document tree related configuration
      */
     export interface IFileTree {
+        /** 默认 viewedAt，未知值回落默认值；文档树设置重置时恢复默认 */
+        recentDocsSort: string;
         /**
          * Whether to allow the creation of sub-documents deeper than 7 levels
          */

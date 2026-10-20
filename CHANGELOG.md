@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Synchronize API contracts, configuration preferences, and Live Photo constants after merging SiYuan dev into the flashcard branch
+
 * Migrate flashcard APIs to complete typed route contracts while preserving request and response compatibility
 * Synchronize merged SiYuan dev API contracts, route authorization, and attribute-view declarations with the flashcard branch
 
