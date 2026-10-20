@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare draft WebDAV and local sync connection tests with isolated probe cleanup](https://github.com/siyuan-note/siyuan/issues/20760)
+
 * [Declare staged Data.zip imports with encrypted notebook conflict choices, authentication and recoverable path-based overwrite](https://github.com/siyuan-note/siyuan/issues/20758)
 
 * [Declare optional relative subdocument depth limits for database automation scopes](https://github.com/siyuan-note/siyuan/issues/20753)
