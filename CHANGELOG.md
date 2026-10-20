@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare optional relative subdocument depth limits for database automation scopes](https://github.com/siyuan-note/siyuan/issues/20753)
+
 * [Declare persisted agent session pinning and pin-first session pagination](https://github.com/siyuan-note/siyuan/issues/20699)
 
 * [Declare the default-enabled setting to close detached windows after their last tab is closed or moved out](https://github.com/siyuan-note/siyuan/issues/20736)
