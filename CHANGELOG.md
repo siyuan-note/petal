@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare staged sync editing protection, client preparation, reconnect state, cooperative cancellation and preview render completion callbacks](https://github.com/siyuan-note/siyuan/issues/20763)
+
 * [Document missing asset scan errors and incomplete document scans without changing successful list responses](https://github.com/siyuan-note/siyuan/issues/20767)
 
 * [Document unified AI instruction storage under data/storage/ai and compatible migration from data/ai on save](https://github.com/siyuan-note/siyuan/issues/20768)

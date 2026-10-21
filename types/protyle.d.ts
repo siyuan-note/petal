@@ -215,7 +215,8 @@ declare class Preview {
 
     constructor(protyle: IProtyle);
 
-    render(protyle: IProtyle): void;
+    /** 在预览内容及数据库渲染完成后调用 callback，读取或渲染失败时调用 onError。 */
+    render(protyle: IProtyle, callback?: () => void, onError?: () => void): void;
 
     destroy(): void;
 
