@@ -730,6 +730,9 @@ interface IAVCalc {
  * `setAttrViewAutomations` saves database rules; `trigger: "block"` collects matching source blocks into the current database.
  * `collectAttrViewBlocks` explicitly collects the supplied block IDs using a saved, enabled rule and rechecks its conditions.
  * Automatic collection only adds entries; source or rule changes preserve existing entries and all fields, including later matches.
+ * Automation spec 6 supports attribute `nameOperator: "contains" | "regex"`; omitted, empty or `"equals"` retains exact matching.
+ * Name matching applies only to `custom-` attributes; contains accepts a substring without that prefix, while Go regex sees the full name.
+ * Name and value conditions must match the same attribute; `exists` requires any name match and `notExists` requires none.
  * `cleanupAttrViewBlocks` explicitly removes confirmed unmatched entries after reviewing all enabled block collection rules.
  * Cleanup treats manual and automatic bindings alike, preserves matching or indeterminate entries, and rechecks rules and bindings.
  * Source blocks remain; undo restores the original row and all fields. Replay uses the first execution's concrete operations.
