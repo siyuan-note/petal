@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document cancellation for single and batch marketplace updates, retaining committed packages](https://github.com/siyuan-note/siyuan/issues/20687)
+
 * [Declare version-bound manual update downloads without changing automatic download settings](https://github.com/siyuan-note/siyuan/issues/20771)
 
 * [Declare staged sync editing protection, client preparation, reconnect state, cooperative cancellation and preview render completion callbacks](https://github.com/siyuan-note/siyuan/issues/20763)
