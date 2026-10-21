@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare version-bound manual update downloads without changing automatic download settings](https://github.com/siyuan-note/siyuan/issues/20771)
+
 * [Declare staged sync editing protection, client preparation, reconnect state, cooperative cancellation and preview render completion callbacks](https://github.com/siyuan-note/siyuan/issues/20763)
 
 * [Document missing asset scan errors and incomplete document scans without changing successful list responses](https://github.com/siyuan-note/siyuan/issues/20767)
