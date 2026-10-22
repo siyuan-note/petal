@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare backlink filtering by fields in a selected database and metadata-only database candidates, retaining pagination and encrypted-notebook access boundaries](https://github.com/siyuan-note/siyuan/issues/20802)
+
 * [Declare single workspace lock screen wallpaper uploads, public image reads and removal, with a separate appearance preference](https://github.com/siyuan-note/siyuan/issues/20797)
 
 * [Declare optional exclusion of selected documents from automation scopes while retaining descendant depth and scope unions](https://github.com/siyuan-note/siyuan/issues/20792)
