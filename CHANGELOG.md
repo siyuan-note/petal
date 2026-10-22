@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare optional exclusion of selected documents from automation scopes while retaining descendant depth and scope unions](https://github.com/siyuan-note/siyuan/issues/20792)
+
 * [Declare clearing local recent document browsing, opening and closing records while retaining documents and subsequent activity recording](https://github.com/siyuan-note/siyuan/issues/20785)
 
 * [Declare literal substring and Go regular expression matching for auto-collection attribute names, retaining exact defaults](https://github.com/siyuan-note/siyuan/issues/20781)
