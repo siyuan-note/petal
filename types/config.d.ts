@@ -363,6 +363,8 @@ export namespace Config {
      * SiYuan appearance related configuration
      */
     export interface IAppearance {
+        /** Whether to display the workspace's single wallpaper before authentication; the image is stored separately and is not synced or exported with settings. */
+        lockScreenWallpaper: boolean;
         /** 用户偏好保存在 conf.json；升级不读取旧 local.json 键，外观重置时恢复默认值 */
         compactMode: boolean;
         /** 默认关闭；新建空工作空间默认开启 */

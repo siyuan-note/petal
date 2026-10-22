@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare single workspace lock screen wallpaper uploads, public image reads and removal, with a separate appearance preference](https://github.com/siyuan-note/siyuan/issues/20797)
+
 * [Declare optional exclusion of selected documents from automation scopes while retaining descendant depth and scope unions](https://github.com/siyuan-note/siyuan/issues/20792)
 
 * [Declare clearing local recent document browsing, opening and closing records while retaining documents and subsequent activity recording](https://github.com/siyuan-note/siyuan/issues/20785)
