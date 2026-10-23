@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document structured titles as the default in ordinary builds, independent of verified minimum reader release metadata](https://github.com/siyuan-note/siyuan/issues/19938)
+
 * [Document SQL write execution, read-only mode and sequential multi-statement results](https://github.com/siyuan-note/siyuan/issues/20823)
 
 * [Declare automatic structured-title migration without a user setting, read-only runtime capabilities and notebook-wide legacy path errors in the feature release](https://github.com/siyuan-note/siyuan/issues/19938)
