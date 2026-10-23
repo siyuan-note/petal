@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document SQL write execution, read-only mode and sequential multi-statement results](https://github.com/siyuan-note/siyuan/issues/20823)
+
 * [Declare automatic structured-title migration without a user setting, read-only runtime capabilities and notebook-wide legacy path errors in the feature release](https://github.com/siyuan-note/siyuan/issues/19938)
 
 * [Declare document capability discovery, structured paths, exact title resolution, fixed-ID creation plans and parent-ID creation with recoverable commit states; preserve versioned encrypted creation targets and source-format checks on raw files and archives](https://github.com/siyuan-note/siyuan/issues/19938)
