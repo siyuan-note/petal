@@ -846,6 +846,8 @@ export interface ISiyuan {
         bottomDock?: Dock,
     }
     config?: Config.IConf;
+    /** Read-only release capability; not a user setting. Check notebook documentCapabilities before structured writes. */
+    documentAddressingVersion?: number;
     ws: Model,
     ctrlIsPressed?: boolean,
     altIsPressed?: boolean,
