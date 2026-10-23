@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare document capability discovery, structured paths, exact title resolution, fixed-ID creation plans and parent-ID creation with recoverable commit states; preserve versioned encrypted creation targets and source-format checks on raw files and archives](https://github.com/siyuan-note/siyuan/issues/19938)
+
 * [Document notebook addressing preflight for raw file writes and monotonic capability records in settings backups](https://github.com/siyuan-note/siyuan/issues/19938)
 
 * [Declare backlink filtering by fields in a selected database and metadata-only database candidates, retaining pagination and encrypted-notebook access boundaries](https://github.com/siyuan-note/siyuan/issues/20802)
