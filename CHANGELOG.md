@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Document per-method RPC write admission without retaining leases on idle WebSockets](https://github.com/siyuan-note/siyuan/issues/20855)
+
 * [Declare embedded breadcrumb parent-path defaults, document titles and the persisted block override attribute](https://github.com/siyuan-note/siyuan/issues/20698)
 
 * [Clarify that all sync devices must support structured titles and that minimum reader release metadata does not permit mixing with older clients](https://github.com/siyuan-note/siyuan/issues/19938)
