@@ -55,6 +55,7 @@ export abstract class Constants {
 
     // custom
     public static readonly CUSTOM_SY_READONLY: string = "custom-sy-readonly";
+    public static readonly CUSTOM_SY_EMBED_BREADCRUMB_PARENT_PATH: string = "custom-sy-embed-breadcrumb-parent-path";
     public static readonly CUSTOM_SY_SUBDOC_SORT_MODE: string = "custom-sy-subdoc-sort-mode";
     public static readonly CUSTOM_SY_FULLWIDTH: string = "custom-sy-fullwidth";
     public static readonly CUSTOM_SY_TABLE_RICH: string = "custom-sy-table-rich";

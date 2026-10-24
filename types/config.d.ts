@@ -694,6 +694,8 @@ export namespace Config {
          * Whether the embedded block displays breadcrumbs
          */
         embedBlockBreadcrumb: boolean;
+        /** 默认显示文档上层路径；块级设置为默认时继承此值 */
+        embedBlockBreadcrumbParentPath: boolean;
         /**
          * Heading embed mode for embedded blocks
          * - `0`: Show title with blocks below (default)

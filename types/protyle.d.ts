@@ -712,6 +712,8 @@ interface ILuteRender {
 interface IBreadcrumb {
     id: string,
     name: string,
+    /** 嵌入块文档项的独立标题；name 保留完整路径 */
+    documentTitle?: string,
     type: string,
     subType: string,
     children: IBreadcrumb[],
