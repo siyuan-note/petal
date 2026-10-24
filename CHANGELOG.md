@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare the optional per-view field name display setting for database calendars
+
 * [Declare optional full content checks when creating snapshots and clarify local file change detection](https://github.com/siyuan-note/siyuan/issues/20861)
 
 * [Document per-method RPC write admission without retaining leases on idle WebSockets](https://github.com/siyuan-note/siyuan/issues/20855)
