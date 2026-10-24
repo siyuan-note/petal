@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare optional full content checks when creating snapshots and clarify local file change detection](https://github.com/siyuan-note/siyuan/issues/20861)
+
 * [Document per-method RPC write admission without retaining leases on idle WebSockets](https://github.com/siyuan-note/siyuan/issues/20855)
 
 * [Declare embedded breadcrumb parent-path defaults, document titles and the persisted block override attribute](https://github.com/siyuan-note/siyuan/issues/20698)
