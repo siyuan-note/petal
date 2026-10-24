@@ -361,6 +361,8 @@ export namespace Config {
      * SiYuan appearance related configuration
      */
     export interface IAppearance {
+        /** 使用当前工作空间的单张锁屏壁纸；图片独立存储，登录前可见，不参与同步或设置导出 */
+        lockScreenWallpaper: boolean;
         /** 用户偏好保存在 conf.json；升级不读取旧 local.json 键，外观重置时恢复默认值 */
         compactMode: boolean;
         /** 默认关闭；新建空工作空间默认开启 */
@@ -1026,6 +1028,8 @@ export namespace Config {
          * Whether to close tabs by double-clicking
          */
         closeTabOnDoubleClick: boolean;
+        /** 分离的桌面窗口在最后一个页签关闭或移出后关闭，默认开启，不影响主窗口 */
+        closeWindowOnLastTabClosed: boolean;
         /**
          * The storage path of the new document created using block references
          */

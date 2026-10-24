@@ -843,6 +843,8 @@ export interface ISiyuan {
         bottomDock?: Dock,
     }
     config?: Config.IConf;
+    /** 当前内核的只读文档标题能力，普通构建默认为 2；结构化写入前应检查笔记本的 documentCapabilities */
+    documentAddressingVersion?: number;
     ws: Model,
     ctrlIsPressed?: boolean,
     altIsPressed?: boolean,

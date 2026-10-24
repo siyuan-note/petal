@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Synchronize merged dev API contracts, lock screen and detached-window preferences, and document addressing capabilities with the flashcard branch
+
 * Synchronize API contracts, configuration preferences, and Live Photo constants after merging SiYuan dev into the flashcard branch
 
 * Migrate flashcard APIs to complete typed route contracts while preserving request and response compatibility
