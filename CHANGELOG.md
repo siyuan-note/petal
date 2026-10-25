@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare ancestor-checked legacy document paths, typed ambiguity candidates and fixed structured-title capabilities; retire addressing floors in settings backups](https://github.com/siyuan-note/siyuan/issues/20892)
+
 * [Declare per-template automatic split opening for bound and detached database items, preserving legacy calendar behavior when omitted](https://github.com/siyuan-note/siyuan/issues/20880)
 
 * Declare optional filename filtering and complete unused asset lists for local search, retaining the default result limit
