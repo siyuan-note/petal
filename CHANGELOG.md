@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare optional filename filtering and complete unused asset lists for local search, retaining the default result limit
+
 * [Declare metadata-only file traversal diagnostics in the kernel process](https://github.com/siyuan-note/siyuan/issues/20874)
 
 * Declare the optional per-view field name display setting for database calendars
