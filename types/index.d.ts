@@ -350,6 +350,8 @@ export interface IAVNewItemTemplate {
     saveLocation?: IAVNewItemSaveLocation;
     contentTemplatePath?: string;
     hideInFileTree?: boolean;
+    /** Split-open the bound or detached item after interactive creation. Omission preserves legacy behavior (calendar only); false disables opening. API calls never open the UI. Mobile uses the existing page or dialog. */
+    openAfterCreate?: boolean;
 }
 
 /** 单字段条件颜色规则按顺序匹配，默认背景同样占据优先级。 */
