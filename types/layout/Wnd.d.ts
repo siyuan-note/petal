@@ -29,7 +29,8 @@ export declare class Wnd {
     private destroyModel;
     private removeTabAction;
 
-    removeTab(id: string, isBatchClose?: boolean, animate?: boolean, isSaveLayout?: boolean): void;
+    /** sourceRemoved 仅用于内核已关闭、锁定或删除源的清理，跳过保存和上传等待 */
+    removeTab(id: string, isBatchClose?: boolean, animate?: boolean, isSaveLayout?: boolean, sourceRemoved?: boolean): void;
 
     moveTab(tab: Tab, nextId?: string): void;
 

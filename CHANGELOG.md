@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare rich document title sources, revision-checked title transactions, inline fragment normalization and tab cleanup after source removal](https://github.com/siyuan-note/siyuan/issues/20837)
+
 * [Declare metadata-only file traversal diagnostics in the kernel process](https://github.com/siyuan-note/siyuan/issues/20874)
 
 * Declare the optional per-view field name display setting for database calendars

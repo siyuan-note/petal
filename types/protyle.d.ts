@@ -174,8 +174,11 @@ declare class Title {
 
     private rename;
 
-    /** 立即提交待处理的标题输入，例如保存或切换文档前 */
-    flushPendingInput(): void;
+    /** 提交待处理的标题输入；富文本返回保存确认 Promise，失败时保留草稿，切换或关闭前应等待它 */
+    flushPendingInput(): Promise<void> | void;
+
+    /** 切换文档前保存原标题与正文，失败时调用方须保留当前编辑器和文档上下文 */
+    prepareForDocumentSwitch(rootID: string): Promise<void> | void;
 
     /** 丢弃待处理的标题输入 */
     cancelPendingInput(): void;
@@ -184,6 +187,23 @@ declare class Title {
      * @param {boolean} [empty=false] - 为 true 时标题编辑区显示为空
      */
     setTitle(title: string, empty?: boolean): void;
+
+    /** 读取纯文本摘要，避免从包含公式和图片的编辑 DOM 提取展示文字 */
+    getText(): string;
+
+    /** 标题行级编辑器是否仍在上传资源 */
+    isUploading(): boolean;
+
+    /** 刷新完整标题源，保留尚未保存的本地输入 */
+    refresh(): Promise<void>;
+
+    setReadonly(readonly: boolean): void;
+
+    /** 打开或聚焦完整标题编辑器，移动端精简标题会打开对话框 */
+    openEditor(): Promise<void>;
+
+    /** 释放编辑器前，调用方必须完成待处理保存 */
+    destroy(): void;
 
     render(protyle: IProtyle, response: IWebSocketData): boolean;
 }
@@ -886,6 +906,9 @@ export class Lute {
     public PutEmojis(emojis: IObject): void;
 
     public SpinBlockDOM(html: string): string;
+
+    /** Normalize one native inline paragraph without promoting Markdown block syntax. */
+    public SpinInlineBlockDOM(html: string): string;
 
     public Md2BlockDOM(html: string): string;
 
