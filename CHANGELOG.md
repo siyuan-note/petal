@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare metadata-only file traversal diagnostics in the kernel process](https://github.com/siyuan-note/siyuan/issues/20874)
+
 * Declare the optional per-view field name display setting for database calendars
 
 * [Declare optional full content checks when creating snapshots and clarify local file change detection](https://github.com/siyuan-note/siyuan/issues/20861)
