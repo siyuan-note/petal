@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Clarify database block collection for document copies and moves, preserved row values, and move failures after relocation](https://github.com/siyuan-note/siyuan/issues/20923)
+
 * [Clarify exact block ID filters, literal multi-keyword matching, and grouped search pagination](https://github.com/siyuan-note/siyuan/issues/20919)
 
 * [Clarify asset content search relevance, per-method previews, and asynchronous index rebuild completion](https://github.com/siyuan-note/siyuan/issues/20918)
