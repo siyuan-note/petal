@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Clarify asset content search relevance, per-method previews, and asynchronous index rebuild completion](https://github.com/siyuan-note/siyuan/issues/20918)
+
 * [Remove prerelease addressing-mode fields and unused failure variants; retain structured path capabilities and index readiness](https://github.com/siyuan-note/siyuan/issues/20892)
 
 * [Clarify cancellation and safe cleanup of pending exit synchronization](https://github.com/siyuan-note/siyuan/issues/20908)
