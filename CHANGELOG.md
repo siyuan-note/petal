@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare document tree batch loading and virtual row lifetimes while preserving selection metadata and existing APIs](https://github.com/siyuan-note/siyuan/issues/20884)
+
 * [Clarify cancellation and safe cleanup of pending exit synchronization](https://github.com/siyuan-note/siyuan/issues/20908)
 
 * [Declare block-reference collection targets with document content matching and backlink grouping in database automation format 8](https://github.com/siyuan-note/siyuan/issues/20907)

@@ -230,8 +230,10 @@ export interface IEventBusMap {
     "open-menu-tag": IMenuBaseDetail;
     "open-menu-doctree": {
         menu: subMenu,
+        /** 完整选择的行快照，可能包含离屏或已脱离文档的元素；不要依赖 DOM 祖先结构或修改快照更新树。 */
         elements: NodeListOf<HTMLElement>,
         type: "doc" | "docs" | "notebook" | "notebooks" | "items",
+        /** 完整选择的标识与路径；文档操作优先使用此字段。 */
         items: { id: string, path: string, notebookId: string }[],
     };
     "open-menu-inbox": {
@@ -352,6 +354,7 @@ export interface ICommand {
      */
     callback?: (context?: ICommandContext) => void
     globalCallback?: (context?: ICommandContext) => void // 焦点不在应用内时执行的回调
+    /** 文档树命令接收 Files 实例；通过 getSelectedItems() 获取完整选择，避免通过可视区 DOM 枚举。 */
     fileTreeCallback?: (
         file: Files,
         context?: ICommandContext
