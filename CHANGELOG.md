@@ -2,6 +2,18 @@
 
 ## v1.3.0 2026
 
+* [Synchronize merged API contracts and public declarations, including mind map viewport storage and guarded rich title focus](https://github.com/siyuan-note/siyuan/issues/20837)
+
+* [Clarify cancellation and safe cleanup of pending exit synchronization](https://github.com/siyuan-note/siyuan/issues/20908)
+
+* [Declare block-reference collection targets with document content matching and backlink grouping in database automation format 8](https://github.com/siyuan-note/siyuan/issues/20907)
+
+* [Declare ancestor-checked legacy document paths, typed ambiguity candidates and fixed structured-title capabilities; retire addressing floors in settings backups](https://github.com/siyuan-note/siyuan/issues/20892)
+
+* [Declare per-template automatic split opening for bound and detached database items, preserving legacy calendar behavior when omitted](https://github.com/siyuan-note/siyuan/issues/20880)
+
+* Declare optional filename filtering and complete unused asset lists for local search, retaining the default result limit
+
 * [Declare rich document title sources, revision-checked title transactions, inline fragment normalization and tab cleanup after source removal](https://github.com/siyuan-note/siyuan/issues/20837)
 
 * [Declare metadata-only file traversal diagnostics in the kernel process](https://github.com/siyuan-note/siyuan/issues/20874)

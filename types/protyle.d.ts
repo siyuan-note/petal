@@ -199,8 +199,8 @@ declare class Title {
 
     setReadonly(readonly: boolean): void;
 
-    /** 打开或聚焦完整标题编辑器，移动端精简标题会打开对话框 */
-    openEditor(): Promise<void>;
+    /** 打开或聚焦完整标题编辑器，移动端精简标题会打开对话框；异步加载完成后仅在 isValid 仍成立时聚焦 */
+    openEditor(isValid?: () => boolean): Promise<void>;
 
     /** 释放编辑器前，调用方必须完成待处理保存 */
     destroy(): void;
