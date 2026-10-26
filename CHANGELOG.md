@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare block-reference collection targets with document content matching and backlink grouping in database automation format 8](https://github.com/siyuan-note/siyuan/issues/20907)
+
 * [Declare ancestor-checked legacy document paths, typed ambiguity candidates and fixed structured-title capabilities; retire addressing floors in settings backups](https://github.com/siyuan-note/siyuan/issues/20892)
 
 * [Declare per-template automatic split opening for bound and detached database items, preserving legacy calendar behavior when omitted](https://github.com/siyuan-note/siyuan/issues/20880)
