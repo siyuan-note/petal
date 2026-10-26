@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Remove prerelease addressing-mode fields and unused failure variants; retain structured path capabilities and index readiness](https://github.com/siyuan-note/siyuan/issues/20892)
+
 * [Clarify cancellation and safe cleanup of pending exit synchronization](https://github.com/siyuan-note/siyuan/issues/20908)
 
 * [Declare block-reference collection targets with document content matching and backlink grouping in database automation format 8](https://github.com/siyuan-note/siyuan/issues/20907)
