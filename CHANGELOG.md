@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare optional PDF annotation save baselines, per-annotation merging, and stale-edit conflicts while preserving legacy replacement calls](https://github.com/siyuan-note/siyuan/issues/20990)
+
 * [Clarify flashcard add/remove transaction failures and persistent deck rollback](https://github.com/siyuan-note/siyuan/issues/20987)
 
 * [Clarify database block collection for document copies and moves, preserved row values, and move failures after relocation](https://github.com/siyuan-note/siyuan/issues/20923)
