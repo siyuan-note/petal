@@ -215,7 +215,8 @@ declare class Preview {
 
     constructor(protyle: IProtyle);
 
-    render(protyle: IProtyle): void;
+    /** 在预览内容及数据库渲染完成后调用 callback，读取或渲染失败时调用 onError。 */
+    render(protyle: IProtyle, callback?: () => void, onError?: () => void): void;
 
     destroy(): void;
 
@@ -711,6 +712,8 @@ interface ILuteRender {
 interface IBreadcrumb {
     id: string,
     name: string,
+    /** 嵌入块文档项的独立标题；name 保留完整路径 */
+    documentTitle?: string,
     type: string,
     subType: string,
     children: IBreadcrumb[],

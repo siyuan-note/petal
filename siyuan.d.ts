@@ -1158,6 +1158,8 @@ export class Dialog {
         width?: string,
         height?: string,
         destroyCallback?: (options?: IObject) => void,
+        /** 每次关闭前检查；返回 false 保留对话框，包括 Esc、移动端返回和直接 destroy 调用 */
+        beforeClose?: () => boolean,
         disableClose?: boolean,
         hideCloseIcon?: boolean,
         disableAnimation?: boolean,

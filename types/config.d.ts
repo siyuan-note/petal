@@ -169,9 +169,11 @@ export namespace Config {
 
     /** 网页服务独立于对话模型；省略配置时搜索使用 Exa、抓取使用直接请求。 */
     export interface IAIWeb {
+        /** exa 或 deepseek；DeepSeek 固定请求 5 条结果且不包含正文。 */
         searchProvider: string;
+        /** direct 或 deepseek；DeepSeek 只获取网页正文，direct 还支持下载文件。 */
         fetchProvider: string;
-        /** DeepSeek Search 与 Fetch 共用的凭证，由内核加密保存。 */
+        /** DeepSeek Search 与 Fetch 共用的凭证，由内核加密保存；服务失败不自动切换后端。 */
         apiKey: string;
         /** DeepSeek 请求超时秒数，默认 30，范围 1–600。 */
         timeout: number;
@@ -361,7 +363,7 @@ export namespace Config {
      * SiYuan appearance related configuration
      */
     export interface IAppearance {
-        /** 使用当前工作空间的单张锁屏壁纸；图片独立存储，登录前可见，不参与同步或设置导出 */
+        /** Whether to display the workspace's single wallpaper before authentication; the image is stored separately and is not synced or exported with settings. */
         lockScreenWallpaper: boolean;
         /** 用户偏好保存在 conf.json；升级不读取旧 local.json 键，外观重置时恢复默认值 */
         compactMode: boolean;
@@ -692,6 +694,8 @@ export namespace Config {
          * Whether the embedded block displays breadcrumbs
          */
         embedBlockBreadcrumb: boolean;
+        /** 默认显示文档上层路径；块级设置为默认时继承此值 */
+        embedBlockBreadcrumbParentPath: boolean;
         /**
          * Heading embed mode for embedded blocks
          * - `0`: Show title with blocks below (default)
@@ -1028,7 +1032,10 @@ export namespace Config {
          * Whether to close tabs by double-clicking
          */
         closeTabOnDoubleClick: boolean;
-        /** 分离的桌面窗口在最后一个页签关闭或移出后关闭，默认开启，不影响主窗口 */
+        /**
+         * Close a detached desktop window after its last tab is closed or moved out.
+         * Defaults to true; does not affect the main window.
+         */
         closeWindowOnLastTabClosed: boolean;
         /**
          * The storage path of the new document created using block references

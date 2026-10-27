@@ -9,6 +9,20 @@ declare const sync: Config.ISync;
 const lan: boolean = sync.lan.enabled;
 declare const appearance: Config.IAppearance;
 const activeProfile: string = appearance.entryVisibility.active;
+declare const bazaarAppearanceResponse: APIPOSTRoutes[
+    "/api/bazaar/installBazaarIcon" | "/api/bazaar/uninstallBazaarIcon" |
+    "/api/bazaar/installBazaarTheme" | "/api/bazaar/uninstallBazaarTheme"
+]["response"];
+if (bazaarAppearanceResponse.code === 0 && bazaarAppearanceResponse.data.appearance) {
+    const bazaarAppearance = bazaarAppearanceResponse.data.appearance;
+    const compactMode: boolean = bazaarAppearance.compactMode;
+    const menuMouseScroll: boolean = bazaarAppearance.menuMouseScroll;
+    const outlineKeepCurrentExpand: boolean = bazaarAppearance.outlineKeepCurrentExpand;
+    const pdfTheme: {light: string; dark: string; annoColor: string} | null = bazaarAppearance.pdfTheme;
+    const mobileBars: {autoHide: boolean | null; sidebarSwipe: boolean | null; sidebarButtons: boolean | null} | null = bazaarAppearance.mobileBars;
+    // @ts-expect-error Appearance preferences retain boolean response types.
+    const numericCompactMode: number = bazaarAppearance.compactMode;
+}
 declare const tab: Config.IUILayoutTabEditor;
 const scroll: IScrollAttr | undefined = tab.scrollAttr;
 declare const siyuan: ISiyuan;
@@ -62,3 +76,9 @@ declare const removedMapSettings: AVTable["map"];
 declare const removedMapRuntime: APIPOSTRoutes["/api/map/getRuntime"];
 // @ts-expect-error 内核不再提供地图未定位条目接口。
 declare const removedMapUnplaced: APIPOSTRoutes["/api/av/getAttributeViewMapUnplaced"];
+
+const groupedImages: APIPOSTRoutes["/api/av/getCurrentAttrViewImages"]["request"] = {id: "av", groupID: "group"};
+const allImages: APIPOSTRoutes["/api/av/getCurrentAttrViewImages"]["request"] = {id: "av"};
+const nullImageGroup: APIPOSTRoutes["/api/av/getCurrentAttrViewImages"]["request"] = {id: "av", groupID: null};
+// @ts-expect-error 分组 ID 必须为字符串。
+const invalidImageGroup: APIPOSTRoutes["/api/av/getCurrentAttrViewImages"]["request"] = {id: "av", groupID: 1};

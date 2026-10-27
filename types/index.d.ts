@@ -350,6 +350,8 @@ export interface IAVNewItemTemplate {
     saveLocation?: IAVNewItemSaveLocation;
     contentTemplatePath?: string;
     hideInFileTree?: boolean;
+    /** Split-open the bound or detached item after interactive creation. Omission preserves legacy behavior (calendar only); false disables opening. API calls never open the UI. Mobile uses the existing page or dialog. */
+    openAfterCreate?: boolean;
 }
 
 /** 单字段条件颜色规则按顺序匹配，默认背景同样占据优先级。 */
@@ -412,6 +414,8 @@ interface IAVCalendarSettings {
     weekStart: number;
     /** 月视图折叠前的条目行数：3、5、10 或 -1（全部）；省略或 0 使用 3，周视图显示全部，不影响查询范围。 */
     rowLimit?: number;
+    /** 在日历条目中显示非主键字段的名称，默认关闭；按视图保存，支持撤销和重做。 */
+    displayFieldName?: boolean;
 }
 
 /**
@@ -730,6 +734,9 @@ interface IAVCalc {
  * `setAttrViewAutomations` saves database rules; `trigger: "block"` collects matching source blocks into the current database.
  * `collectAttrViewBlocks` explicitly collects the supplied block IDs using a saved, enabled rule and rechecks its conditions.
  * Automatic collection only adds entries; source or rule changes preserve existing entries and all fields, including later matches.
+ * Automation spec 6 supports attribute `nameOperator: "contains" | "regex"`; omitted, empty or `"equals"` retains exact matching.
+ * Name matching applies only to `custom-` attributes; contains accepts a substring without that prefix, while Go regex sees the full name.
+ * Name and value conditions must match the same attribute; `exists` requires any name match and `notExists` requires none.
  * `cleanupAttrViewBlocks` explicitly removes confirmed unmatched entries after reviewing all enabled block collection rules.
  * Cleanup treats manual and automatic bindings alike, preserves matching or indeterminate entries, and rechecks rules and bindings.
  * Source blocks remain; undo restores the original row and all fields. Replay uses the first execution's concrete operations.
@@ -843,8 +850,7 @@ export interface ISiyuan {
         bottomDock?: Dock,
     }
     config?: Config.IConf;
-    /** 当前内核的只读文档标题能力，普通构建默认为 2；结构化写入前应检查笔记本的 documentCapabilities */
-    documentAddressingVersion?: number;
+    /** Read-only runtime capability, defaulting to 2 in ordinary builds; not a user setting. Check notebook documentCapabilities before structured writes. */
     ws: Model,
     ctrlIsPressed?: boolean,
     altIsPressed?: boolean,

@@ -204,6 +204,12 @@ export type TAgentCapabilityHandler = (input: Record<string, any>) => any | Prom
  * An array `params` is spread into handler arguments, an object is passed as the single
  * argument, and a missing or `null` value passes no arguments. A handler that throws or
  * rejects produces error `-32603`.
+ *
+ * Idle RPC WebSockets do not hold a workspace write lease. Each handler execution,
+ * including notifications, obtains its own lease and keeps it until its return value or
+ * Promise settles, or the plugin runtime stops. Canceling an HTTP waiter does not release
+ * an unfinished handler's lease. Sync application, data import, read-only mode or failed
+ * import recovery may reject invocation with `-32603`; notifications still produce no reply.
  */
 export interface IRpc {
     /**
