@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Synchronize rich-title branch contracts with current daily-note reuse behavior and math delimiter compatibility](https://github.com/siyuan-note/siyuan/issues/20837)
+
 * Synchronize current API contracts with rich document titles and remove retired addressing-mode declarations
 
 * [Synchronize merged API contracts and public declarations, including mind map viewport storage and guarded rich title focus](https://github.com/siyuan-note/siyuan/issues/20837)
