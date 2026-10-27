@@ -350,7 +350,7 @@ export interface IAVNewItemTemplate {
     saveLocation?: IAVNewItemSaveLocation;
     contentTemplatePath?: string;
     hideInFileTree?: boolean;
-    /** 创建后分屏打开条目；省略时保留旧行为（仅日历自动打开），false 表示不打开。API 本身不打开界面，移动端使用已有页面或对话框。 */
+    /** Split-open the bound or detached item after interactive creation. Omission preserves legacy behavior (calendar only); false disables opening. API calls never open the UI. Mobile uses the existing page or dialog. */
     openAfterCreate?: boolean;
 }
 
@@ -851,7 +851,6 @@ export interface ISiyuan {
     }
     config?: Config.IConf;
     /** Read-only runtime capability, defaulting to 2 in ordinary builds; not a user setting. Check notebook documentCapabilities before structured writes. */
-    documentAddressingVersion?: number;
     ws: Model,
     ctrlIsPressed?: boolean,
     altIsPressed?: boolean,
