@@ -2,7 +2,23 @@
 
 ## v1.3.0 2026
 
+* Synchronize current API contracts and mind map viewport storage with virtual document trees
+
 * [Declare document tree batch loading and virtual row lifetimes while preserving selection metadata and existing APIs](https://github.com/siyuan-note/siyuan/issues/20884)
+
+* [Clarify the 32-entry block collection scope limit and compatibility with existing larger scopes](https://github.com/siyuan-note/siyuan/issues/20997)
+
+* [Declare optional PDF annotation save baselines, per-annotation merging, and stale-edit conflicts while preserving legacy replacement calls](https://github.com/siyuan-note/siyuan/issues/20990)
+
+* [Clarify flashcard add/remove transaction failures and persistent deck rollback](https://github.com/siyuan-note/siyuan/issues/20987)
+
+* [Clarify database block collection for document copies and moves, preserved row values, and move failures after relocation](https://github.com/siyuan-note/siyuan/issues/20923)
+
+* [Clarify exact block ID filters, literal multi-keyword matching, and grouped search pagination](https://github.com/siyuan-note/siyuan/issues/20919)
+
+* [Clarify asset content search relevance, per-method previews, and asynchronous index rebuild completion](https://github.com/siyuan-note/siyuan/issues/20918)
+
+* [Remove prerelease addressing-mode fields and unused failure variants; retain structured path capabilities and index readiness](https://github.com/siyuan-note/siyuan/issues/20892)
 
 * [Clarify cancellation and safe cleanup of pending exit synchronization](https://github.com/siyuan-note/siyuan/issues/20908)
 

@@ -938,6 +938,7 @@ export abstract class Constants {
     public static readonly SIZE_UPLOAD_TIP_SIZE: number;
     public static readonly CB_GET_AV_NO_CREATE: string;
     public static readonly LOCAL_MOBILE_TABS: string;
+    public static readonly LOCAL_MINDMAP_VIEWPORTS: string;
     public static readonly LOCAL_MOBILE_BOTTOM_BAR: string;
     public static readonly LOCAL_MOBILE_SIDE_PANEL: string;
     public static readonly LOCAL_MOBILE_MENU_COLLAPSED: string;
