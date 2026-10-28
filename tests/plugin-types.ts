@@ -5,6 +5,12 @@ declare const editor: Config.IEditor;
 const headings: boolean = editor.headingNumber;
 const loaded: boolean = editor.keepLoadedContent;
 const database: boolean = editor.databaseAttrShow;
+declare const web: Config.IAIWeb;
+const exaKey: string = web.exaApiKey;
+const setExaKey: APIPOSTRoutes["/api/setting/setAI"]["request"] = {web: {exaApiKey: "exa-key"}};
+const clearExaKey: APIPOSTRoutes["/api/setting/setAI"]["request"] = {web: {exaApiKey: null}};
+// @ts-expect-error Exa 密钥必须为字符串或 null。
+const invalidExaKey: APIPOSTRoutes["/api/setting/setAI"]["request"] = {web: {exaApiKey: 1}};
 declare const sync: Config.ISync;
 const lan: boolean = sync.lan.enabled;
 declare const appearance: Config.IAppearance;

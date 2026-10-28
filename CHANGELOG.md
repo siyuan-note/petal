@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare an independent Exa API key for built-in web search, preserving anonymous access and separate DeepSeek credentials](https://github.com/siyuan-note/siyuan/issues/21026)
+
 * [Declare single-column and row-first or column-first two-column database field layouts](https://github.com/siyuan-note/siyuan/issues/20551)
 
 * [Synchronize endpoint behavior comments and distinguish block-reference HTTP requests from undoable transactions](https://github.com/siyuan-note/siyuan/pull/21037)
