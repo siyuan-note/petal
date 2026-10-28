@@ -3546,7 +3546,7 @@ export interface APIPOSTRoutes {
     /**
      * 扫描失败返回标准错误，不将失败表示为成功的空列表。
      * keyword 可省略、为 null 或空白；非空时按完整文件名进行不区分大小写的字面量包含匹配。
-     * 完整未引用扫描后先筛选再截断，最多返回 512 项；空请求体及旧调用保留原有行为。
+     * 完整未引用扫描后先筛选再截断，最多返回 512 项；空请求体按截断返回。
      * all 为 true 时返回完整清单且不发送截断提示，供前端在当前面板内过滤；省略、null 或 false 保留截断行为。
      * 可选请求头 X-SiYuan-App-ID 将截断提示限定到对应前端，未提供时保留广播行为。
      */
@@ -3661,6 +3661,7 @@ export interface APIPOSTRoutes {
     };
     /**
      * 返回普通资源路径；已解锁的加密资源返回保留原始名称的受管临时明文副本路径。
+     * 请求持有加密笔记本租约直至响应序列化完成，外部编辑不写回加密源数据。
      */
     "/api/asset/resolveAssetPath": {
         request: AssetPathRequestInput;
@@ -3825,7 +3826,7 @@ export interface APIPOSTRoutes {
     };
     /**
      * 按模板创建条目；templateID 为空时创建空白游离条目。openAfterCreate 返回模板的交互偏好：
-     * true 表示创建后分屏打开，false 表示不打开，省略时保留旧行为（仅日历自动打开）。API 本身不触发界面操作。
+     * true 表示创建后分屏打开，false 表示不打开，省略时仅日历条目自动打开。API 本身不触发界面操作。
      */
     "/api/av/createAttributeViewItem": {
         request: CreateAttributeViewItemRequestInput;
@@ -5369,7 +5370,7 @@ export interface APIPOSTRoutes {
         authorization?: readonly ["authenticated","admin"];
     };
     /**
-     * 保留既有敏感路径和加密边界检查；整本删除不读取已撤销的寻址模式记录。
+     * 保留既有敏感路径和加密边界检查；整本删除时校验树内全部文档寻址记录。
      */
     "/api/file/removeFile": {
         request: RemoveFileRequestInput;
@@ -5487,7 +5488,11 @@ export interface APIPOSTRoutes {
         authorization?: readonly ["authenticated","admin","writable"];
     };
     /**
-     * evaluates block collection rules for every copied document and block, initializing only new rows.
+     * 将单篇文档及全部子文档复制到同一笔记本的原父目录，返回副本根文档的 id、notebook、path 和 hPath。
+     * 为副本文档和块执行块收集规则，仅初始化新行。
+     * 副本内部块引用、块链接和查询嵌入的显式块 ID 统一重映射，数据库定义与行绑定保持为共享镜像。
+     * 源快照经过认证读取且不执行修复写回；运行期失败时清理新建文档并恢复排序，属运行时补偿，
+     * 不保证进程崩溃时的事务原子性。
      */
     "/api/filetree/duplicateDocTree": {
         request: FileTreeIDRequestInput;
@@ -5692,7 +5697,7 @@ export interface APIPOSTRoutes {
      * 只读编译有效创建目标，同一次计划使用相同时间，日期可指定为 YYYY-MM-DD。
      * contextID 是源笔记本内的文档，child 使用该位置，configured 使用配置目标；title 可显式替换最终标题。
      * 调用方提前保存最终 id，返回步骤已分配全部祖先 ID。按顺序向 createDocByParent 提交，不承诺跨文件原子性。
-     * reuse 仅用于明确允许复用的业务。existingID 非空时不再创建；普通新建应保持 reuse=false。
+     * reuse 仅用于明确允许复用的业务。existingID 非空时不创建；普通新建应保持 reuse=false。
      * 上一步创建父文档后，将其返回的 revision 传为下一步 expectedParentRevision；错误或响应丢失时保留计划核对 ID。
      */
     "/api/filetree/planDocCreate": {
@@ -5841,7 +5846,7 @@ export interface APIPOSTRoutes {
         authorization?: readonly ["authenticated","admin","writable"];
     };
     /**
-     * 图谱查询需要与配置写入互斥；查询自带的配置由配置段发布负责通知，包装层不再补发。
+     * 图谱查询需要与配置写入互斥；查询自带的配置由配置段发布负责通知。
      */
     "/api/graph/getGraph": {
         request: GlobalGraphRequestInput;
@@ -6684,6 +6689,9 @@ export interface APIPOSTRoutes {
     /**
      * sourceFilter.database 在父块合并前按来源块的数据库字段筛选，不修改原数据库视图。
      * 无条件仅筛数据库成员，失效字段不放宽结果；原来源筛选、排序及加密笔记本租约保持不变。
+     * blockSort 为 0（默认）时保持正文顺序，1 按匹配引用的锚文本自然升序，2 为自然降序，其他值回退正文顺序。
+     * 条目取首个匹配引用的锚文本并去除首尾空白；排序键相同时保持正文顺序，无锚文本的条目在两个方向均置后。
+     * 来源文档内部把整篇文档条目展开为可独立排序的引用，恢复正文顺序时重新合并；排序模式参与上下文版本哈希。
      */
     "/api/ref/getBacklinkDoc": {
         request: BacklinkDocumentRequestInput;
@@ -6704,6 +6712,8 @@ export interface APIPOSTRoutes {
     };
     /**
      * 数据库条件与列表快照一致，不修改来源数据或原数据库视图。
+     * 必需的 snapshot 与最多 20 个属于该快照的块 ids 返回可独立编辑的块正文，保留面包屑和数据库引用信息。
+     * 返回前重新检查来源权限并持有加密笔记本请求租约；发布阅读者不能读取加密笔记本。
      */
     "/api/ref/getGlobalBacklinkContexts": {
         request: GlobalBacklinkContextRequestInput;
@@ -8169,7 +8179,7 @@ export interface APIPOSTRoutes {
         authorization?: readonly ["authenticated","admin"];
     };
     /**
-     * 保持单个 JSON 文件的设置压缩包，不再附加已撤销的 documentAddressing 下界记录。
+     * 导出单个 JSON 文件的设置压缩包。
      */
     "/api/system/exportConf": {
         request: EmptyRequestInput;
@@ -8650,6 +8660,10 @@ export interface APIPOSTRoutes {
      * 字段失效或目标数据库被删除时，后续条目写入停用规则并保留配置，源修改仍提交；提交后提示失效引用。
      * 修复后需手动启用，撤销源修改不重新启用规则；锁定、认证失败、损坏及实际写入失败仍一起回滚。
      * 跨库动作限于同一加密边界，要求目标可访问；单笔事务最多执行 1000 个自动操作。
+     * swapBlockRef 必须独立提交：id 指定引用块，blockID 指定定义块，data 携带 includeChildren 和 originalToEmbed，
+     * retData 返回受影响的文档 ID。逆向操作使用受影响顶层块的私有内存快照；快照不传给客户端，也不接受客户端提交。
+     * 重放保留块 ID 和数据库绑定，内容或位置已改变时拒绝覆盖；提交失败时补偿已写入的文档。
+     * 撤销与重放为所有受影响文档持有笔记本租约，直至响应序列化完成。
      */
     "/api/transactions": {
         request: PerformTransactionsRequestInput;

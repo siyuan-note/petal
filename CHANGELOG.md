@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Synchronize endpoint behavior comments and distinguish block-reference HTTP requests from undoable transactions](https://github.com/siyuan-note/siyuan/pull/21037)
+
 * [Clarify template-target reuse for ordinary daily-note creation and date-attribute reuse for explicit dates and previews](https://github.com/siyuan-note/siyuan/issues/19938)
 
 * [Clarify the 32-entry block collection scope limit and compatibility with existing larger scopes](https://github.com/siyuan-note/siyuan/issues/20997)
