@@ -845,6 +845,8 @@ export namespace Config {
          * 是否使用页签显示数据库属性
          */
         databaseAttrUseTabs: boolean;
+        /** 数据库字段布局：0 单栏，1 双栏按行（默认），2 双栏按列；按列按可见字段数量均分，空间不足时使用单栏 */
+        databaseAttrLayout: number;
         /**
          * 是否保留动态加载的内容区块
          */
