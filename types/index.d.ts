@@ -284,7 +284,35 @@ export interface IAVCustomColor extends IAVColor {
     hidden?: boolean;
 }
 
+/** 数据库级父子条目配置，各视图与镜像共享同一对自关联字段。 */
+export interface IAVSubItemsConfig {
+    enabled: boolean;
+    parentKeyID: string;
+    childrenKeyID: string;
+}
+
+/** 树形读取使用有界根分页与独立子分页；匹配数不含仅作上下文的祖先。 */
+export interface IAVNestedResult {
+    page: number;
+    pageSize: number;
+    rootCount: number;
+    rootLoaded: number;
+    matchedCount: number;
+    childPaging: Record<string, {page: number; pageSize: number; total: number; loaded: number}>;
+}
+
+/** 仅显式 nested 读取的表格和列表返回；层级基于当前读者可访问的数据计算。 */
+export interface IAVItemHierarchy {
+    parentID?: string;
+    depth: number;
+    childCount: number;
+    context: boolean;
+    expanded: boolean;
+}
+
 export interface IAV {
+    /** 启用时将此数据库升级为 Spec 14；停用保留关联字段与数据，不降低格式版本。 */
+    subItems?: IAVSubItemsConfig;
     id: string;
     name: string;
     view: IAVTable | IAVGallery;
@@ -318,6 +346,8 @@ export interface IAVContextFilterField {
 }
 
 export interface IAVRenderTarget {
+    /** 树形定位返回从根到父条目的可访问祖先，index 为本次返回行序列中的位置。 */
+    ancestorIDs?: string[];
     status: "visible" | "filtered" | "itemNotFound" | "groupHidden";
     itemID: string;
     groupID?: string;
@@ -370,6 +400,9 @@ interface IAVItemConditionalColors {
 }
 
 interface IAVView {
+    /** 表格和列表的显示偏好；省略为 flat，其他视图仍保持平铺。 */
+    subItemsDisplay?: "flat" | "nested";
+    nested?: IAVNestedResult;
     conditionalColors?: IAVConditionalColorRule[];
     name?: string;
     desc?: string;
@@ -580,6 +613,7 @@ interface IAVColumn {
 }
 
 interface IAVRow {
+    hierarchy?: IAVItemHierarchy;
     conditionalColors?: IAVItemConditionalColors;
     id: string,
     cells: IAVCell[]

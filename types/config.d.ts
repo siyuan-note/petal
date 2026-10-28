@@ -847,8 +847,6 @@ export namespace Config {
          * 是否使用页签显示数据库属性
          */
         databaseAttrUseTabs: boolean;
-        /** 数据库字段布局：0 单栏，1 双栏按行（默认），2 双栏按列；按列按可见字段数量均分，空间不足时使用单栏 */
-        databaseAttrLayout: number;
         /**
          * 是否保留动态加载的内容区块
          */
@@ -981,6 +979,11 @@ export namespace Config {
      * Document tree related configuration
      */
     export interface IFileTree {
+        /**
+         * 文档树单次按需加载数量，默认 512，有效范围为 1–10240。
+         * 首次升级继承原最大列出数量；设置为 null 时恢复默认值，不重新继承。
+         */
+        docTreeBatchSize: number;
         /** 默认 viewedAt，未知值回落默认值；文档树设置重置时恢复默认 */
         recentDocsSort: string;
         /**

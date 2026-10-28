@@ -2,6 +2,9 @@
 
 ## v1.3.0 2026
 
+* [Declare database sub-item configuration, nested reads, and undoable hierarchy operations for SiYuan v3.8.10](https://github.com/siyuan-note/siyuan/issues/21038)
+* Align generated API declarations, editor configuration, document-tree batch size, and local-state constants with the SiYuan v3.8.10 branch
+
 * [Clarify desktop workspace session expiration on reopen while preserving remembered logins](https://github.com/siyuan-note/siyuan/issues/21042)
 
 * [Declare an independent Exa API key for built-in web search, preserving anonymous access and separate DeepSeek credentials](https://github.com/siyuan-note/siyuan/issues/21026)
