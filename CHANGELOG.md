@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare PDF image preview provenance in agent attachments for version-checked session recovery](https://github.com/siyuan-note/siyuan/issues/21050)
+
 * [Clarify desktop workspace session expiration on reopen while preserving remembered logins](https://github.com/siyuan-note/siyuan/issues/21042)
 
 * [Declare an independent Exa API key for built-in web search, preserving anonymous access and separate DeepSeek credentials](https://github.com/siyuan-note/siyuan/issues/21026)
