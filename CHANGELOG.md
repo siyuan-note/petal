@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Clarify desktop workspace session expiration on reopen while preserving remembered logins](https://github.com/siyuan-note/siyuan/issues/21042)
+
 * [Declare an independent Exa API key for built-in web search, preserving anonymous access and separate DeepSeek credentials](https://github.com/siyuan-note/siyuan/issues/21026)
 
 * [Declare single-column and row-first or column-first two-column database field layouts](https://github.com/siyuan-note/siyuan/issues/20551)
