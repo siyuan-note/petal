@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Unify AI memory use, automatic maintenance, and future user-message capture under the enabled switch; remove the notebook allowlist and include all non-encrypted notebooks by default
+
 * [Merge rich document title declarations into main, including guarded editor focus, asynchronous save lifecycle, and current kernel contracts](https://github.com/siyuan-note/siyuan/issues/20837)
 
 * Merge SiYuan v3.8.10 declarations into the development baseline, retaining current API contracts and matching exported constants
