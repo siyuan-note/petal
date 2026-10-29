@@ -168,11 +168,11 @@ export namespace Config {
         decision: IDecision;
     }
 
-    /** 网页服务独立于对话模型；省略配置时搜索使用 Exa、抓取使用直接请求。 */
     /** 工作空间长期记忆；模型选择独立且不自动回退，配置不随记忆 Markdown 同步。 */
     export interface IMemory {
         enabled: boolean;
         autoMaintain: boolean;
+        /** 允许整理成功会话的用户原话，默认关闭；不采集助手输出。 */
         conversations: boolean;
         modelId: string;
         reasoningEffort: string;
@@ -180,6 +180,7 @@ export namespace Config {
         sources: string[];
     }
 
+    /** 网页服务独立于对话模型；省略配置时搜索使用 Exa、抓取使用直接请求。 */
     export interface IAIWeb {
         /** exa 或 deepseek；DeepSeek 固定请求 5 条结果且不包含正文。 */
         searchProvider: string;

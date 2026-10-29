@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Clarify the default-off, user-only conversation source permission for AI memory](https://github.com/siyuan-note/siyuan/issues/21062)
+
 * [Declare workspace AI long-term memory management, tasks, and independent model configuration](https://github.com/siyuan-note/siyuan/issues/21062)
 
 * [Declare database sub-item configuration, nested reads, and undoable hierarchy operations for SiYuan v3.8.10](https://github.com/siyuan-note/siyuan/issues/21038)
