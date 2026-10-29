@@ -1,5 +1,6 @@
 import {Constants, Menu, ProtyleMethod} from "../siyuan";
-import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, IAV, IBlock, IPosition, IScrollAttr, ISiyuan, TransactionOperationRequest} from "../siyuan";
+import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, TransactionOperationRequest} from "../siyuan";
+import type {IAVNewItemTemplate} from "../types";
 
 declare const editor: Config.IEditor;
 const headings: boolean = editor.headingNumber;
@@ -67,6 +68,18 @@ Menu.toggle({
     show: menu => menu.fullscreen("bottom"),
 });
 const headingAttribute: string = Constants.CUSTOM_SY_HEADING_NUMBER;
+const mindmapViewports: string = Constants.LOCAL_MINDMAP_VIEWPORTS;
+declare const titleEditor: IProtyle;
+const openTitle: Promise<void> = titleEditor.title.openEditor();
+const openCurrentTitle: Promise<void> = titleEditor.title.openEditor(() => true);
+// @ts-expect-error 异步标题聚焦必须使用返回布尔值的有效性检查。
+titleEditor.title.openEditor(() => "stale");
+const newItemTemplate: IAVNewItemTemplate = {id: "template", name: "Document", targetType: "document", openAfterCreate: false};
+declare const legacyPathResponse: APIPOSTRoutes["/api/filetree/getIDsByHPath"]["response"];
+if (legacyPathResponse.data && "reason" in legacyPathResponse.data && legacyPathResponse.data.reason === "pathAmbiguous") {
+    const cleanIDs: string[] | undefined = legacyPathResponse.data.cleanIDs;
+    const unsupportedIDs: string[] | undefined = legacyPathResponse.data.unsupportedIDs;
+}
 // @ts-expect-error 内核不再提供旧的 AI 配置常量。
 Constants.LOCAL_AI;
 // @ts-expect-error AI 配置中没有独立视觉模型配置。

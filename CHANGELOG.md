@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Merge rich document title declarations into main, including guarded editor focus, asynchronous save lifecycle, and current kernel contracts](https://github.com/siyuan-note/siyuan/issues/20837)
+
 * Merge SiYuan v3.8.10 declarations into the development baseline, retaining current API contracts and matching exported constants
 
 * [Clarify the default-off, user-only conversation source permission for AI memory](https://github.com/siyuan-note/siyuan/issues/21062)
@@ -22,6 +24,12 @@
 * [Synchronize endpoint behavior comments and distinguish block-reference HTTP requests from undoable transactions](https://github.com/siyuan-note/siyuan/pull/21037)
 
 * [Clarify template-target reuse for ordinary daily-note creation and date-attribute reuse for explicit dates and previews](https://github.com/siyuan-note/siyuan/issues/19938)
+
+* [Synchronize rich-title branch contracts with current daily-note reuse behavior and math delimiter compatibility](https://github.com/siyuan-note/siyuan/issues/20837)
+
+* Synchronize current API contracts with rich document titles and remove retired addressing-mode declarations
+
+* [Synchronize merged API contracts and public declarations, including mind map viewport storage and guarded rich title focus](https://github.com/siyuan-note/siyuan/issues/20837)
 
 * [Clarify the 32-entry block collection scope limit and compatibility with existing larger scopes](https://github.com/siyuan-note/siyuan/issues/20997)
 
@@ -46,6 +54,8 @@
 * [Declare per-template automatic split opening for bound and detached database items, preserving legacy calendar behavior when omitted](https://github.com/siyuan-note/siyuan/issues/20880)
 
 * Declare optional filename filtering and complete unused asset lists for local search, retaining the default result limit
+
+* [Declare rich document title sources, revision-checked title transactions, inline fragment normalization and tab cleanup after source removal](https://github.com/siyuan-note/siyuan/issues/20837)
 
 * [Declare metadata-only file traversal diagnostics in the kernel process](https://github.com/siyuan-note/siyuan/issues/20874)
 
