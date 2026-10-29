@@ -1,6 +1,11 @@
 import {Constants, Menu, ProtyleMethod} from "../siyuan";
 import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, TransactionOperationRequest} from "../siyuan";
 import type {IAVNewItemTemplate} from "../types";
+import type {Files} from "../types/layout/dock/Files";
+
+declare const documentTree: Files;
+const documentTreeItems: {id: string; path: string; notebookId: string}[] = documentTree.getSelectedItems();
+const documentTreeRows: NodeListOf<HTMLElement> = documentTree.getSelectionElements();
 
 declare const editor: Config.IEditor;
 const headings: boolean = editor.headingNumber;

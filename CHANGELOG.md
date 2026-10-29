@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Expose complete document-tree selections and document virtual row lifetimes](https://github.com/siyuan-note/siyuan/issues/20884)
+
 * Clarify that AI memory reasoning options follow the Agent policy rather than model-name capability guesses; provider acceptance is not guaranteed
 
 * Unify AI memory use, automatic maintenance, and future user-message capture under the enabled switch; remove the notebook allowlist and include all non-encrypted notebooks by default
