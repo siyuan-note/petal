@@ -2,6 +2,15 @@
 
 ## v1.3.0 2026
 
+* Merge SiYuan v3.8.10 declarations into the development baseline, retaining current API contracts and matching exported constants
+
+* [Clarify the default-off, user-only conversation source permission for AI memory](https://github.com/siyuan-note/siyuan/issues/21062)
+
+* [Declare workspace AI long-term memory management, tasks, and independent model configuration](https://github.com/siyuan-note/siyuan/issues/21062)
+
+* [Declare database sub-item configuration, nested reads, and undoable hierarchy operations for SiYuan v3.8.10](https://github.com/siyuan-note/siyuan/issues/21038)
+* Align generated API declarations, editor configuration, document-tree batch size, and local-state constants with the SiYuan v3.8.10 branch
+
 * [Declare PDF image preview provenance in agent attachments for version-checked session recovery](https://github.com/siyuan-note/siyuan/issues/21050)
 
 * [Clarify desktop workspace session expiration on reopen while preserving remembered logins](https://github.com/siyuan-note/siyuan/issues/21042)

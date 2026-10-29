@@ -29,7 +29,7 @@ let checked = 0;
 for (const [hostFile, petalFile, selected] of [
     ["constants.ts", "types/constants.ts", ["Constants"]],
     ["types/config.d.ts", "types/config.d.ts", null],
-    ["types/index.d.ts", "types/index.d.ts", ["ISiyuan", "IBlock", "IPosition", "ITabDragData"]],
+    ["types/index.d.ts", "types/index.d.ts", ["ISiyuan", "IBlock", "IPosition", "ITabDragData", "IAV", "IAVView", "IAVRow", "IAVRenderTarget", "IAVSubItemsConfig", "IAVNestedResult", "IAVItemHierarchy"]],
 ]) {
     const host = members(path.join(hostRoot, hostFile));
     const petal = members(path.join(petalRoot, petalFile));

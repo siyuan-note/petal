@@ -170,6 +170,8 @@ export abstract class Constants {
     public static readonly LOCAL_FLASHCARD = "local-flashcard";
     public static readonly LOCAL_FILEPOSITION = "local-fileposition";
     public static readonly LOCAL_FILESPATHS = "local-filespaths";
+    public static readonly LOCAL_PINNED_DOC_TREE_STATE = "local-pinned-doc-tree-state";
+    public static readonly LOCAL_MINDMAP_VIEWPORTS = "local-mindmap-viewports";
     public static readonly LOCAL_DIALOGPOSITION = "local-dialogposition";
     public static readonly LOCAL_SESSION_FIRSTLOAD = "local-session-firstload";
     /** @deprecated 内置偏好改用 config.appearance.outlineKeepCurrentExpand，不再读取此旧键 */
@@ -946,10 +948,6 @@ export abstract class Constants {
     public static readonly LOCAL_CLOSED_TABS: string;
     public static readonly LOCAL_AV_CALENDAR_MODES: string;
     public static readonly LOCAL_TABS_READING: string;
-    /** @deprecated 内置偏好改用 config.appearance.compactMode，不再读取此旧键 */
-    public static readonly LOCAL_COMPACT_MODE: string;
-    /** @deprecated 内置偏好改用 config.appearance.menuMouseScroll，不再读取此旧键 */
-    public static readonly LOCAL_MENU_MOUSE_SCROLL: string;
     public static readonly DIALOG_AIPROVIDER: string;
     public static readonly DIALOG_AIMODEL: string;
     public static readonly DIALOG_AIMCPSERVER: string;

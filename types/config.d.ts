@@ -156,6 +156,7 @@ export namespace Config {
      * Artificial Intelligence (AI) related configuration
      */
     export interface IAI {
+        memory: IMemory;
         web: IAIWeb;
         providers: IProvider[];
         editing: IEditing;
@@ -165,6 +166,18 @@ export namespace Config {
         embedding: IEmbedding;
         rerank: IRerank;
         decision: IDecision;
+    }
+
+    /** 工作空间长期记忆；模型选择独立且不自动回退，配置不随记忆 Markdown 同步。 */
+    export interface IMemory {
+        enabled: boolean;
+        autoMaintain: boolean;
+        /** 允许整理成功会话的用户原话，默认关闭；不采集助手输出。 */
+        conversations: boolean;
+        modelId: string;
+        reasoningEffort: string;
+        /** 用户明确允许自动整理的普通笔记本 ID；默认空，不自动扫描全库。 */
+        sources: string[];
     }
 
     /** 网页服务独立于对话模型；省略配置时搜索使用 Exa、抓取使用直接请求。 */
@@ -981,6 +994,11 @@ export namespace Config {
      * Document tree related configuration
      */
     export interface IFileTree {
+        /**
+         * 文档树单次按需加载数量，默认 512，有效范围为 1–10240。
+         * 首次升级继承原最大列出数量；设置为 null 时恢复默认值，不重新继承。
+         */
+        docTreeBatchSize: number;
         /** 默认 viewedAt，未知值回落默认值；文档树设置重置时恢复默认 */
         recentDocsSort: string;
         /**

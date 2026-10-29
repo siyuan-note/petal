@@ -1,5 +1,5 @@
 import {Constants, Menu, ProtyleMethod} from "../siyuan";
-import type {APIPOSTRoutes, AVTable, AVValueLocation, AVView, Config, IBlock, IPosition, IScrollAttr, ISiyuan} from "../siyuan";
+import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, IAV, IBlock, IPosition, IScrollAttr, ISiyuan, TransactionOperationRequest} from "../siyuan";
 
 declare const editor: Config.IEditor;
 const headings: boolean = editor.headingNumber;
@@ -88,3 +88,28 @@ const allImages: APIPOSTRoutes["/api/av/getCurrentAttrViewImages"]["request"] = 
 const nullImageGroup: APIPOSTRoutes["/api/av/getCurrentAttrViewImages"]["request"] = {id: "av", groupID: null};
 // @ts-expect-error 分组 ID 必须为字符串。
 const invalidImageGroup: APIPOSTRoutes["/api/av/getCurrentAttrViewImages"]["request"] = {id: "av", groupID: 1};
+
+const nestedRead: APIPOSTRoutes["/api/av/renderAttributeView"]["request"] = {
+    id: "av", nested: {expandedIDs: ["parent"], groupExpandedIDs: {group: ["parent"]},
+        childPaging: {"group/parent": {page: 2, pageSize: 50}}},
+};
+// @ts-expect-error 展开条目必须使用条目 ID 数组。
+const invalidNestedRead: APIPOSTRoutes["/api/av/renderAttributeView"]["request"] = {id: "av", nested: {expandedIDs: [1]}};
+const enableSubItems: TransactionOperationRequest = {
+    action: "setAttrViewSubItems", avID: "av", data: {enabled: true, parentName: "Parent", childrenName: "Children"},
+};
+const moveSubItems: TransactionOperationRequest = {
+    action: "reparentAttrViewItems", avID: "av", srcIDs: ["child"], parentID: "parent", nextID: "sibling",
+};
+// @ts-expect-error 启用状态必须为布尔值。
+const invalidSubItemsConfig: TransactionOperationRequest = {action: "setAttrViewSubItems", data: {enabled: "true"}};
+declare const nestedResponse: AVRenderData;
+const pluginDatabase: IAV = nestedResponse;
+const nestedDisplay: "flat" | "nested" | undefined = pluginDatabase.views[0].subItemsDisplay;
+const ancestorIDs: string[] | undefined = pluginDatabase.target?.ancestorIDs;
+const nestedStatuses: APIPOSTRoutes["/api/av/getAttributeViewItemStatuses"]["request"] = {
+    id: "av", itemIDs: ["child"], nested: {},
+};
+const visiblePasteRows: APIPOSTRoutes["/api/av/getAttributeViewPasteRows"]["request"] = {
+    avID: "av", blockID: "carrier", startItemID: "child", count: 2, itemIDs: ["child", "sibling"],
+};
