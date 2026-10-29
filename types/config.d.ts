@@ -156,6 +156,7 @@ export namespace Config {
      * Artificial Intelligence (AI) related configuration
      */
     export interface IAI {
+        memory: IMemory;
         web: IAIWeb;
         providers: IProvider[];
         editing: IEditing;
@@ -167,6 +168,18 @@ export namespace Config {
         decision: IDecision;
     }
 
+    /** 工作空间长期记忆；模型选择独立且不自动回退，配置不随记忆 Markdown 同步。 */
+    export interface IMemory {
+        enabled: boolean;
+        autoMaintain: boolean;
+        /** 允许整理成功会话的用户原话，默认关闭；不采集助手输出。 */
+        conversations: boolean;
+        modelId: string;
+        reasoningEffort: string;
+        /** 用户明确允许自动整理的普通笔记本 ID；默认空，不自动扫描全库。 */
+        sources: string[];
+    }
+
     /** 网页服务独立于对话模型；省略配置时搜索使用 Exa、抓取使用直接请求。 */
     export interface IAIWeb {
         /** exa 或 deepseek；DeepSeek 固定请求 5 条结果且不包含正文。 */
@@ -175,7 +188,9 @@ export namespace Config {
         fetchProvider: string;
         /** DeepSeek Search 与 Fetch 共用的凭证，由内核加密保存；服务失败不自动切换后端。 */
         apiKey: string;
-        /** DeepSeek 请求超时秒数，默认 30，范围 1–600。 */
+        /** 独立 Exa 凭据，由内核加密保存；空值使用匿名模式，非空通过 x-api-key 认证并可能产生费用。失败不切换模式或服务。 */
+        exaApiKey: string;
+        /** 网页请求超时秒数，默认 30，范围 1–600。 */
         timeout: number;
     }
 
@@ -790,6 +805,8 @@ export namespace Config {
          * Whether to auto-convert pasted URLs to links
          */
         pasteURLAutoConvert: boolean;
+        /** Recognize alternate LaTeX math delimiters in pasted and imported content; defaults to true */
+        mathDelimiterCompatibility: boolean;
         /**
          * Whether to enable read-only mode
          */
@@ -843,6 +860,8 @@ export namespace Config {
          * 是否使用页签显示数据库属性
          */
         databaseAttrUseTabs: boolean;
+        /** 数据库字段布局：0 单栏，1 双栏按行（默认），2 双栏按列；按列按可见字段数量均分，空间不足时使用单栏 */
+        databaseAttrLayout: number;
         /**
          * 是否保留动态加载的内容区块
          */
@@ -975,6 +994,11 @@ export namespace Config {
      * Document tree related configuration
      */
     export interface IFileTree {
+        /**
+         * 文档树单次按需加载数量，默认 512，有效范围为 1–10240。
+         * 首次升级继承原最大列出数量；设置为 null 时恢复默认值，不重新继承。
+         */
+        docTreeBatchSize: number;
         /** 默认 viewedAt，未知值回落默认值；文档树设置重置时恢复默认 */
         recentDocsSort: string;
         /**

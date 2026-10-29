@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Synchronize latest dev contracts and rich document title, virtual document tree, AI memory, and database sub-item declarations with flashcard v2
+
 * Synchronize current API contracts and mind map viewport storage with flashcard v2, retaining legacy transaction failure handling
 
 * Synchronize merged dev API contracts, lock screen and detached-window preferences, and document addressing capabilities with the flashcard branch
@@ -15,6 +17,27 @@
 * Synchronize API declarations after merging the latest SiYuan dev changes into the flashcard branch
 * Synchronize flashcard v2 session, query, and branch API declarations
 * Add typed flashcard queries and edit-later API declarations, including notes and scheduling preservation
+
+* Merge SiYuan v3.8.10 declarations into the development baseline, retaining current API contracts and matching exported constants
+
+* [Clarify the default-off, user-only conversation source permission for AI memory](https://github.com/siyuan-note/siyuan/issues/21062)
+
+* [Declare workspace AI long-term memory management, tasks, and independent model configuration](https://github.com/siyuan-note/siyuan/issues/21062)
+
+* [Declare database sub-item configuration, nested reads, and undoable hierarchy operations for SiYuan v3.8.10](https://github.com/siyuan-note/siyuan/issues/21038)
+* Align generated API declarations, editor configuration, document-tree batch size, and local-state constants with the SiYuan v3.8.10 branch
+
+* [Declare PDF image preview provenance in agent attachments for version-checked session recovery](https://github.com/siyuan-note/siyuan/issues/21050)
+
+* [Clarify desktop workspace session expiration on reopen while preserving remembered logins](https://github.com/siyuan-note/siyuan/issues/21042)
+
+* [Declare an independent Exa API key for built-in web search, preserving anonymous access and separate DeepSeek credentials](https://github.com/siyuan-note/siyuan/issues/21026)
+
+* [Declare single-column and row-first or column-first two-column database field layouts](https://github.com/siyuan-note/siyuan/issues/20551)
+
+* [Synchronize endpoint behavior comments and distinguish block-reference HTTP requests from undoable transactions](https://github.com/siyuan-note/siyuan/pull/21037)
+
+* [Clarify template-target reuse for ordinary daily-note creation and date-attribute reuse for explicit dates and previews](https://github.com/siyuan-note/siyuan/issues/19938)
 
 * [Clarify the 32-entry block collection scope limit and compatibility with existing larger scopes](https://github.com/siyuan-note/siyuan/issues/20997)
 
