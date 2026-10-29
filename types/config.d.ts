@@ -156,6 +156,7 @@ export namespace Config {
      * Artificial Intelligence (AI) related configuration
      */
     export interface IAI {
+        memory: IMemory;
         web: IAIWeb;
         providers: IProvider[];
         editing: IEditing;
@@ -168,6 +169,17 @@ export namespace Config {
     }
 
     /** 网页服务独立于对话模型；省略配置时搜索使用 Exa、抓取使用直接请求。 */
+    /** 工作空间长期记忆；模型选择独立且不自动回退，配置不随记忆 Markdown 同步。 */
+    export interface IMemory {
+        enabled: boolean;
+        autoMaintain: boolean;
+        conversations: boolean;
+        modelId: string;
+        reasoningEffort: string;
+        /** 用户明确允许自动整理的普通笔记本 ID；默认空，不自动扫描全库。 */
+        sources: string[];
+    }
+
     export interface IAIWeb {
         /** exa 或 deepseek；DeepSeek 固定请求 5 条结果且不包含正文。 */
         searchProvider: string;
