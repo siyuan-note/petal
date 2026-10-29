@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Clarify that AI memory reasoning options follow the Agent policy rather than model-name capability guesses; provider acceptance is not guaranteed
+
 * Unify AI memory use, automatic maintenance, and future user-message capture under the enabled switch; remove the notebook allowlist and include all non-encrypted notebooks by default
 
 * [Merge rich document title declarations into main, including guarded editor focus, asynchronous save lifecycle, and current kernel contracts](https://github.com/siyuan-note/siyuan/issues/20837)
