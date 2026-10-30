@@ -84,7 +84,7 @@ export type AIMemoryListRequestInput = { "limit"?: number; "offset"?: number; "q
 
 export type AIMemoryMaintainRequestInput = { "operationId": string; "sourceIDs"?: Array<string>; "text": string; };
 
-export type AIMemoryOverviewData = { "memory": string; "stale": boolean; "user": string; };
+export type AIMemoryOverviewData = { "count": number; "countComplete": boolean; "memory": string; "stale": boolean; "user": string; };
 
 export type AIMemoryRecord = { "confirmed": string; "content": string; "created": string; "id": string; "kind": string; "reason": string; "revision": string; "scope": string; "sources": Array<AIMemorySource> | null; "state": string; "subject": string; "supersedes": string; "updated": string; "validFrom": string; "validUntil": string; };
 
@@ -101,6 +101,10 @@ export type AIMemoryTaskRequestInput = { "taskId": string; };
 export type AIMemoryTaskResult = { "error": string; "id": string; "saved": boolean; };
 
 export type AIMemoryTaskStarted = { "taskId": string; };
+
+export type AIMemoryTranslateData = { "language": string; "memory": string; };
+
+export type AIMemoryTranslateRequestInput = { "language": string; "memory": string; };
 
 export type AIMessageRequestInput = { "msg": string; };
 
@@ -3484,6 +3488,10 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
+    /**
+     * memory 返回统一 MEMORY.md 只读概览；user 保留为空字符串供旧调用方兼容，stale 表示概览不可用或过期。
+     * count 只统计来源有效且当前可用的正式记忆；仅 countComplete=true 时可作为完整总数展示。
+     */
     "/api/ai/memory/overview": {
         request: EmptyRequestInput;
         response: { "code": 0; "data": AIMemoryOverviewData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -3509,6 +3517,17 @@ export interface APIPOSTRoutes {
         body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin"];
+    };
+    /**
+     * 仅翻译当前有效概览用于显示；需要启用记忆并配置记忆模型，可能产生模型费用。
+     * 缓存仅在当前进程内按内容、目标语言及配置复用；不会修改正式记录或 MEMORY.md。
+     */
+    "/api/ai/memory/translate": {
+        request: AIMemoryTranslateRequestInput;
+        response: { "code": 0; "data": AIMemoryTranslateData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
+        body: "json";
+        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
+        authorization?: readonly ["authenticated","admin","writable"];
     };
     /**
      * 手动调用设备选择的 OCR AI 模型识别本地 assets/ 图片，不使用会话、工具。

@@ -3,6 +3,23 @@ import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Conf
 import type {IAVNewItemTemplate} from "../types";
 import type {Files} from "../types/layout/dock/Files";
 
+declare const memoryOverview: APIPOSTRoutes["/api/ai/memory/overview"]["response"];
+if (memoryOverview.code === 0) {
+    const usableMemoryCount: number = memoryOverview.data.count;
+    const completeMemoryCount: boolean = memoryOverview.data.countComplete;
+    const unifiedMemory: string = memoryOverview.data.memory;
+    // @ts-expect-error The completeness flag is not a count.
+    const invalidMemoryCount: number = memoryOverview.data.countComplete;
+}
+const memoryDisplay: APIPOSTRoutes["/api/ai/memory/translate"]["request"] = {memory: "Current overview", language: "zh-CN"};
+// @ts-expect-error A display request must identify the current interface language.
+const incompleteMemoryDisplay: APIPOSTRoutes["/api/ai/memory/translate"]["request"] = {memory: "Current overview"};
+declare const memoryDisplayResult: APIPOSTRoutes["/api/ai/memory/translate"]["response"];
+if (memoryDisplayResult.code === 0) {
+    const displayMarkdown: string = memoryDisplayResult.data.memory;
+    const displayLanguage: string = memoryDisplayResult.data.language;
+}
+
 declare const documentTree: Files;
 const documentTreeItems: {id: string; path: string; notebookId: string}[] = documentTree.getSelectedItems();
 const documentTreeRows: NodeListOf<HTMLElement> = documentTree.getSelectionElements();
