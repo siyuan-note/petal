@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Clarify AI memory task persisted results and overview-pending status without implying that every proposal was saved
+
 * [Declare local, version-bound template network permission status and revocation](https://github.com/siyuan-note/siyuan/issues/21058)
 
 * [Declare single-use, 30-second preview-to-insertion HTTP confirmation handoff](https://github.com/siyuan-note/siyuan/issues/21058)
