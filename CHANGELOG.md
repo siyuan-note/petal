@@ -2,6 +2,10 @@
 
 ## v1.3.0 2026
 
+* [Declare local, version-bound template network permission status and revocation](https://github.com/siyuan-note/siyuan/issues/21058)
+
+* [Declare single-use, 30-second preview-to-insertion HTTP confirmation handoff](https://github.com/siyuan-note/siyuan/issues/21058)
+
 * [Declare execution-scoped HTTP template confirmation and lifecycle cleanup APIs](https://github.com/siyuan-note/siyuan/issues/21058)
 
 * [Expose complete document-tree selections and document virtual row lifetimes](https://github.com/siyuan-note/siyuan/issues/20884)
