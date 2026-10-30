@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare execution-scoped HTTP template confirmation and lifecycle cleanup APIs](https://github.com/siyuan-note/siyuan/issues/21058)
+
 * [Expose complete document-tree selections and document virtual row lifetimes](https://github.com/siyuan-note/siyuan/issues/20884)
 
 * Clarify that AI memory reasoning options follow the Agent policy rather than model-name capability guesses; provider acceptance is not guaranteed
