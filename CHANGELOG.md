@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare the appearance preference for temporary floating dock bars, enabled by default
+
 * Declare clearing all workspace memories and disabling long-term memory, including partial cleanup results
 
 * Document account-authenticated community clipping and fallback to the submitted browser content and resources
