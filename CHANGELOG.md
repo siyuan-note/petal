@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Document account-authenticated community clipping and fallback to the submitted browser content and resources
+
 * [Declare the unified memory overview, completeness-qualified usable count, and guarded display-language rendering](https://github.com/siyuan-note/siyuan/issues/21062)
 
 * Clarify AI memory task persisted results and overview-pending status without implying that every proposal was saved
