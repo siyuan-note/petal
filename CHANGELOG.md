@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare document, daily-note, and database creation candidates and explicit, revision-checked choices with a fixed template time
+
 * Declare the appearance preference for temporary floating dock bars, enabled by default
 
 * Declare clearing all workspace memories and disabling long-term memory, including partial cleanup results
