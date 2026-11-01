@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Clarify exact view targeting and field movement semantics for database view column ordering
+
 * [Declare the persisted kernel-maintained synchronization result](https://github.com/siyuan-note/siyuan/issues/21132)
 
 * [Exclude the SiYuan `siyuan` session cookie from kernel plugin private server request cookies](https://github.com/siyuan-note/siyuan/pull/21107)
