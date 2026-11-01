@@ -1995,6 +1995,8 @@ export namespace Config {
          * The prompt information of the last synchronization
          */
         stat: string;
+        /** Last completed sync result: 0 unknown (also for legacy settings), 1 success, 2 failure or automatic pause. Kernel-maintained. */
+        lastResult: number;
         /**
          * The time of the last synchronization (Unix timestamp)
          */

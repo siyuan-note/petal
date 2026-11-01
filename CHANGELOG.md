@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare the persisted kernel-maintained synchronization result](https://github.com/siyuan-note/siyuan/issues/21132)
+
 * [Exclude the SiYuan `siyuan` session cookie from kernel plugin private server request cookies](https://github.com/siyuan-note/siyuan/pull/21107)
 
 * Declare document-tree title formats and semantic revisions for rich title previews
