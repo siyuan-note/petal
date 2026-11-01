@@ -4,6 +4,8 @@
 
 * [Exclude the SiYuan `siyuan` session cookie from kernel plugin private server request cookies](https://github.com/siyuan-note/siyuan/pull/21107)
 
+* Declare document-tree title formats and semantic revisions for rich title previews
+
 * Declare document, daily-note, and database creation candidates and explicit, revision-checked choices with a fixed template time
 
 * Declare the appearance preference for temporary floating dock bars, enabled by default

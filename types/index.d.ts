@@ -93,6 +93,9 @@ export interface IFile {
     path: string;
     name: string;
     titleEmpty?: boolean;
+    /** Title format and semantic revision from the notebook index; omitted while metadata is unavailable. */
+    titleFormat?: "plain" | "inline-ast";
+    titleRevision?: string;
     hMtime: string;
     hCtime: string;
     hSize: string;

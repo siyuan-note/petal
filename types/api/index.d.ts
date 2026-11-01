@@ -1246,7 +1246,7 @@ export type FileTreeDocTreeData = { "tree": Array<FileTreeDocFile | null> | null
 
 export type FileTreeDuplicateData = { "hPath": string; "id": string; "notebook": string; "path": string; };
 
-export type FileTreeFile = { "alias": string; "bookmark": string; "childrenSortMode": number | null; "count": number; "ctime": number; "dueFlashcardCount": number; "flashcardCount": number; "hCtime": string; "hMtime": string; "hSize": string; "icon": string; "id": string; "memo": string; "mtime": number; "name": string; "name1": string; "newFlashcardCount": number; "path": string; "size": number; "sort": number; "subFileCount": number; "titleEmpty"?: boolean; };
+export type FileTreeFile = { "alias": string; "bookmark": string; "childrenSortMode": number | null; "count": number; "ctime": number; "dueFlashcardCount": number; "flashcardCount": number; "hCtime": string; "hMtime": string; "hSize": string; "icon": string; "id": string; "memo": string; "mtime": number; "name": string; "name1": string; "newFlashcardCount": number; "path": string; "size": number; "sort": number; "subFileCount": number; "titleEmpty"?: boolean; "titleFormat"?: "plain" | "inline-ast"; "titleRevision"?: string; };
 
 export type FileTreeGetDocData = { "blockCount": number; "box": string; "content": string; "docInfo"?: DocInfo; "eof": boolean; "headingNumbers": Record<string, string> | null; "id": string; "isBacklinkExpand": boolean; "isSyncing": boolean; "keywords": Array<string> | null; "mode": number; "parent2ID": string; "parentID": string; "path": string; "publishAccessRequired": boolean; "reqId": JSONValue; "rootID": string; "scroll": boolean; "type": string; };
 
@@ -5935,6 +5935,7 @@ export interface APIPOSTRoutes {
      * offset 为非负整数，limit 为 1..10240 的整数，省略时采用 docTreeBatchSize。返回 offset 不超过 total。
      * revision 是不透明的目录顺序版本。传入旧版本时返回 stale=true 和空 files，客户端须替换该目录状态后重试。
      * 隐藏、发布不可见及笔记本文档不计入 total；响应保留加密笔记本租约。旧 listDocsByPath 的上限语义不变。
+     * files 可附带标题格式 titleFormat 和语义源版本 titleRevision；索引未就绪时省略，name 始终为纯文本摘要。
      */
     "/api/filetree/listDocTreeRange": {
         request: FileTreeRangeRequestInput;
@@ -5943,6 +5944,9 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated"];
     };
+    /**
+     * 的 files 保留纯文本 name，可附带 titleFormat 和 titleRevision，供客户端按需读取富文本标题。
+     */
     "/api/filetree/listDocsByPath": {
         request: FileTreeListRequestInput;
         response: { "code": 0; "data": FileTreeListData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
