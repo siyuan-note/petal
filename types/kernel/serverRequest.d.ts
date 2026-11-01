@@ -117,9 +117,10 @@ export interface IRequestContent {
      */
     headers: Record<string, string[]>;
     /**
-     * Request cookies keyed by cookie name.
+     * Request cookies keyed by cookie name, excluding SiYuan's `siyuan` session cookie.
      *
-     * @remarks Each name maps to an array to handle duplicate cookie names.
+     * @remarks Each name maps to an array to handle duplicate cookie names. The session cookie is the
+     * kernel's login credential and is never passed to plugins.
      */
     cookies: Record<string, string[]>;
     /** Media type from the `Content-Type` header (parameters stripped), e.g. `"application/json"`. */
