@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare sync source previews and snapshot-pinned one-way decisions after source changes
+
 * Document default HTTPS for sync endpoints using dotted hostnames and HTTP for IP literals and single-label hosts; explicit schemes remain unchanged
 
 * Document history recovery for databases with missing calendar or list layouts and preservation of damaged originals
