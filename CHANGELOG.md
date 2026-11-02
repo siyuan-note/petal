@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Document history recovery for databases with missing calendar or list layouts and preservation of damaged originals
+
 * Clarify exact view targeting and field movement semantics for database view column ordering
 
 * [Declare the persisted kernel-maintained synchronization result](https://github.com/siyuan-note/siyuan/issues/21132)
