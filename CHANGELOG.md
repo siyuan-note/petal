@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare tag deletion previews and optional, undoable removal of automatically collected database entries
+
 * Declare sync source previews and snapshot-pinned one-way decisions after source changes
 
 * Document default HTTPS for sync endpoints using dotted hostnames and HTTP for IP literals and single-label hosts; explicit schemes remain unchanged
