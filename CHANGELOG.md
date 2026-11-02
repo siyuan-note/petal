@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Document default HTTPS for sync endpoints using dotted hostnames and HTTP for IP literals and single-label hosts; explicit schemes remain unchanged
+
 * Document history recovery for databases with missing calendar or list layouts and preservation of damaged originals
 
 * Clarify exact view targeting and field movement semantics for database view column ordering
