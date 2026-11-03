@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare deferred database HTTP template loading and presentation-only snapshot reuse
+
 * Declare automatic database template refresh with input-dependent result reuse
 
 * Clarify interactive HTTP templates in database attribute panels and isolation of template field errors
