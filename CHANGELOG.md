@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare related database views in entry details, scoped rendering and incremental relation changes
+
 * Clarify tag deletion previews after incremental renaming and preservation of manual or still-matching database entries
 
 * Declare tag deletion previews and optional, undoable removal of automatically collected database entries

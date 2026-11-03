@@ -148,3 +148,63 @@ const nestedStatuses: APIPOSTRoutes["/api/av/getAttributeViewItemStatuses"]["req
 const visiblePasteRows: APIPOSTRoutes["/api/av/getAttributeViewPasteRows"]["request"] = {
     avID: "av", blockID: "carrier", startItemID: "child", count: 2, itemIDs: ["child", "sibling"],
 };
+
+// Related entry views keep item identity separate from physical block identity.
+const relationDetailRender: APIPOSTRoutes["/api/av/renderAttributeView"]["request"] = {
+    id: "target-av",
+    relationContext: {sourceAvID: "source-av", sourceItemID: "source-item", relationKeyID: "relation-key"},
+    temporaryFilters: [],
+};
+const relationDetailConfig: TransactionOperationRequest = {
+    action: "setAttrViewRelationDetail", avID: "source-av", keyID: "relation-key",
+    data: {spec: 1, enabled: true, viewID: "target-table"},
+};
+const relationMembershipChange: TransactionOperationRequest = {
+    action: "updateAttrViewRelationItems", avID: "source-av", rowID: "source-item", keyID: "relation-key",
+    data: {addItemIDs: ["target-item"], removeItemIDs: []},
+};
+// @ts-expect-error A relation context identifies the source item as well as its database and field.
+const incompleteRelationContext: APIPOSTRoutes["/api/av/renderAttributeView"]["request"] = {id: "target", relationContext: {sourceAvID: "source", relationKeyID: "key"}};
+// @ts-expect-error Related-view configuration is structured data, not a filter expression.
+const invalidRelationDetailConfig: TransactionOperationRequest = {action: "setAttrViewRelationDetail", data: "filter"};
+
+const relationDetailCandidates: APIPOSTRoutes["/api/av/getAttributeViewRelationCandidates"]["request"] = {
+    avID: "source-av", keyID: "relation-key", includeNewItemPreview: true,
+    relationContext: {sourceAvID: "source-av", sourceItemID: "source-item", relationKeyID: "relation-key"},
+};
+
+const relationDetailRow: APIPOSTRoutes["/api/av/getAttributeViewKeys"]["request"] = {
+    avID: "target-av", itemID: "target-item", blockID: "source-carrier",
+    relationContext: {sourceAvID: "source-av", sourceItemID: "source-item", relationKeyID: "relation-key"},
+};
+const relationFieldViews: APIPOSTRoutes["/api/av/getAttributeView"]["request"] = {
+    id: "target-av", blockID: "source-carrier",
+    relationFieldContext: {sourceAvID: "source-av", relationKeyID: "relation-key"},
+};
+const relationFilterLabels: APIPOSTRoutes["/api/av/getAttributeViewPrimaryKeyValues"]["request"] = {
+    id: "dependency-av", blockID: "source-carrier",
+    relationDependencyContext: {
+        relationContext: {sourceAvID: "source-av", sourceItemID: "source-item", relationKeyID: "relation-key"},
+        relationKeyIDs: ["target-relation-key"],
+    },
+};
+const scopedEntryBacklinks: APIPOSTRoutes["/api/av/getAttributeViewBacklinks"]["request"] = {
+    avID: "target-av", itemID: "target-item", blockID: "target-carrier",
+};
+const relatedCellCandidates: APIPOSTRoutes["/api/av/getAttributeViewRelationCandidates"]["request"] = {
+    avID: "target-av", keyID: "target-relation-key", blockID: "root-carrier",
+    relationCellContext: {
+        relationContext: {sourceAvID: "root-av", sourceItemID: "root-item", relationKeyID: "root-key"},
+        sourceItemIDs: ["member-item"],
+    },
+};
+const relatedCellCreation: APIPOSTRoutes["/api/av/createAttributeViewRelationItem"]["request"] = {
+    avID: "target-av", keyID: "target-relation-key", blockID: "root-carrier",
+    cells: [{itemID: "member-item", relatedItemIDs: []}], preview: null,
+    relationCellContext: {
+        relationContext: {sourceAvID: "root-av", sourceItemID: "root-item", relationKeyID: "root-key"},
+        sourceItemIDs: ["member-item"],
+    },
+};
+// @ts-expect-error Dependency traversal uses actual relation field IDs.
+const invalidDependencyPath: APIPOSTRoutes["/api/av/getAttributeView"]["request"] = {id: "target", relationDependencyContext: {relationContext: {sourceAvID: "source", sourceItemID: "item", relationKeyID: "key"}, relationKeyIDs: [1]}};
