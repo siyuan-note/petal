@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Clarify interactive HTTP templates in database attribute panels and isolation of template field errors
+
 * Declare related database views in entry details, scoped rendering and incremental relation changes
 
 * Clarify tag deletion previews after incremental renaming and preservation of manual or still-matching database entries
