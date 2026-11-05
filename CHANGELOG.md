@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Declare document creation path validation and synchronous transaction error responses
+
 * Declare deferred database HTTP template loading and presentation-only snapshot reuse
 
 * Declare automatic database template refresh with input-dependent result reuse
