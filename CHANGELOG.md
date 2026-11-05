@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Clarify ordered agent streaming, interrupted recovery and compaction round identity](https://github.com/siyuan-note/siyuan/issues/21242)
+
 * [Declare `openDocTreeMenu` for native document and notebook menus, target validation and menu lifecycle](https://github.com/siyuan-note/siyuan/issues/21219)
 
 * Remove the unused Zod dependency after switching kernel declarations to local JSON Schema types
