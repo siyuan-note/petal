@@ -230,6 +230,7 @@ export interface IEventBusMap {
     "open-menu-tag": IMenuBaseDetail;
     "open-menu-doctree": {
         menu: subMenu,
+        /** 完整目标的离屏行快照，不保证挂载在官方文档树中。 */
         elements: NodeListOf<HTMLElement>,
         type: "doc" | "docs" | "notebook" | "notebooks" | "items",
         items: { id: string, path: string, notebookId: string }[],
@@ -490,6 +491,24 @@ export function expandDocTree(options: {
     id: string,
     isSetCurrent?: boolean
 }): Promise<void>;
+
+/**
+ * 按目标打开当前版本的官方菜单，不改变官方文档树的选择、展开或滚动位置。
+ * 省略 id 表示笔记本；提供 id 表示文档，即使 id 与 notebookId 相同也表示笔记本文档。
+ * 支持单项、多项及笔记本与文档混选；相同类型、笔记本 ID 和文档 ID 的目标合并，保留首次出现顺序。
+ * position 使用有限的 client 坐标，w、h 为可选的非负尺寸；桌面端必须提供，移动端可省略。
+ * 移动端主菜单使用底部菜单；传入的位置可用于后续弹窗定位。
+ * 路径、名称、子文档数和排序由思源解析，菜单项受只读、加密及平台能力限制，可随版本变化。
+ * 空目标、参数无效、目标不可访问或解析失败时整次返回 false，不部分打开。
+ * 文档目标必须是文档根且属于指定笔记本；关闭或锁定的笔记本不可用。
+ * 不同笔记本间存在相同文档 ID 或路径时返回 false；笔记本文档要求启用笔记本文档功能。
+ * 菜单构建时触发 open-menu-doctree，事件包含全部已解析目标；移动仅处理上层文档，混选删除由笔记本覆盖内部文档。
+ * true 仅表示菜单已显示，不表示某项动作已执行；显示前被取消或被其他菜单替换、无可显示项目时返回 false。
+ */
+export function openDocTreeMenu(options: {
+    position?: {x: number, y: number, w?: number, h?: number},
+    items: {notebookId: string, id?: string}[],
+}): Promise<boolean>;
 
 /**
  * 以移动端的方式打开文档，桌面端也导出此函数，但只有移动端布局会生效

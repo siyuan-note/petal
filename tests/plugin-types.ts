@@ -1,4 +1,4 @@
-import {Constants, Menu, ProtyleMethod} from "../siyuan";
+import {Constants, Menu, ProtyleMethod, openDocTreeMenu} from "../siyuan";
 import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, TransactionOperationRequest} from "../siyuan";
 import type {IAVNewItemTemplate} from "../types";
 import type {Files} from "../types/layout/dock/Files";
@@ -23,6 +23,32 @@ if (memoryDisplayResult.code === 0) {
 declare const documentTree: Files;
 const documentTreeItems: {id: string; path: string; notebookId: string}[] = documentTree.getSelectedItems();
 const documentTreeRows: NodeListOf<HTMLElement> = documentTree.getSelectionElements();
+
+const documentMenuOpened: Promise<boolean> = openDocTreeMenu({
+    position: {x: 20, y: 40, w: 12, h: 16},
+    items: [{notebookId: "notebook", id: "document"}],
+});
+const notebookMenuOpened: Promise<boolean> = openDocTreeMenu({items: [{notebookId: "notebook"}]});
+const notebooksMenuOpened: Promise<boolean> = openDocTreeMenu({
+    items: [{notebookId: "notebook"}, {notebookId: "other"}],
+});
+const documentsMenuOpened: Promise<boolean> = openDocTreeMenu({
+    position: {x: 20, y: 40},
+    items: [{notebookId: "notebook", id: "first"}, {notebookId: "notebook", id: "second"}],
+});
+const mixedMenuOpened: Promise<boolean> = openDocTreeMenu({
+    position: {x: 20, y: 40},
+    items: [{notebookId: "notebook"}, {notebookId: "notebook", id: "notebook"},
+        {notebookId: "other", id: "document"}],
+});
+// @ts-expect-error 每个目标必须指定笔记本。
+openDocTreeMenu({items: [{id: "document"}]});
+// @ts-expect-error 文档 ID 必须为字符串。
+openDocTreeMenu({items: [{notebookId: "notebook", id: 1}]});
+// @ts-expect-error 弹出位置使用 client 坐标，不接受文档树行。
+openDocTreeMenu({position: {x: 20, y: 40, target: document.body}, items: [{notebookId: "notebook"}]});
+// @ts-expect-error 打开结果为异步布尔值。
+const synchronousMenuOpened: boolean = openDocTreeMenu({items: [{notebookId: "notebook"}]});
 
 declare const editor: Config.IEditor;
 const headings: boolean = editor.headingNumber;

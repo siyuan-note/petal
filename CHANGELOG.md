@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare `openDocTreeMenu` for native document and notebook menus, target validation and menu lifecycle](https://github.com/siyuan-note/siyuan/issues/21219)
+
 * Remove the unused Zod dependency after switching kernel declarations to local JSON Schema types
 
 * Declare the opt-in floating status bar preference and its default-disabled behavior
