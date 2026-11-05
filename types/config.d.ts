@@ -417,6 +417,8 @@ export namespace Config {
          * Whether to hide status bar
          */
         hideStatusBar: boolean;
+        /** Show the hidden desktop status bar on bottom-right hover. Defaults to false. */
+        showFloatingStatusBar?: boolean;
         /**
          * The name of the icon currently in use
          */

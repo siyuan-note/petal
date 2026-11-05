@@ -4,6 +4,8 @@
 
 * Remove the unused Zod dependency after switching kernel declarations to local JSON Schema types
 
+* Declare the opt-in floating status bar preference and its default-disabled behavior
+
 * Declare optional plugin-name filtering for resource loading, preserving full loading when names are omitted or null
 
 * Declare document creation path validation and synchronous transaction error responses
