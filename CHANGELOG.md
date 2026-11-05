@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Remove the unused Zod dependency after switching kernel declarations to local JSON Schema types
+
 * Declare optional plugin-name filtering for resource loading, preserving full loading when names are omitted or null
 
 * Declare document creation path validation and synchronous transaction error responses
