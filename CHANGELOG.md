@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare the opt-in unified notebook, document and block breadcrumb preference](https://github.com/siyuan-note/siyuan/issues/3007)
+
 * [Clarify ordered agent streaming, interrupted recovery and compaction round identity](https://github.com/siyuan-note/siyuan/issues/21242)
 
 * [Declare `openDocTreeMenu` for native document and notebook menus, target validation and menu lifecycle](https://github.com/siyuan-note/siyuan/issues/21219)
