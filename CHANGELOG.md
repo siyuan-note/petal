@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare unified tag/reference removal previews, source-version checks and optional undoable cleanup of automatically collected entries](https://github.com/siyuan-note/siyuan/issues/21260)
+
 * [Declare current-pane opening for database item templates alongside automatic split opening](https://github.com/siyuan-note/siyuan/issues/20880)
 
 * [Declare the opt-in unified notebook, document and block breadcrumb preference](https://github.com/siyuan-note/siyuan/issues/3007)

@@ -3,6 +3,24 @@ import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Conf
 import type {IAVNewItemTemplate} from "../types";
 import type {Files} from "../types/layout/dock/Files";
 
+const collectionRemovalPreview: APIPOSTRoutes["/api/av/previewCollectionRemoval"]["request"] = {
+    operations: [{action: "update", id: "20260101000000-source1", data: "<div>Reference text</div>"}],
+    tagChanges: [{id: "20260101000000-source1", tags: ["removed"]}],
+};
+declare const collectionRemovalResult: APIPOSTRoutes["/api/av/previewCollectionRemoval"]["response"];
+if (collectionRemovalResult.code === 0 && collectionRemovalResult.data) {
+    const sourceVersions: Record<string, string> = collectionRemovalResult.data.sourceVersions;
+    const removalTransaction: APIPOSTRoutes["/api/transactions"]["request"] = {
+        reqId: 1,
+        transactions: [{collectionRemovalSourceVersions: sourceVersions, doOperations: collectionRemovalPreview.operations}],
+    };
+    void removalTransaction;
+}
+// @ts-expect-error Source versions must contain hashes, not numeric revisions.
+const invalidCollectionRemovalVersion: APIPOSTRoutes["/api/transactions"]["request"] = {reqId: 1, transactions: [{collectionRemovalSourceVersions: {root: 1}}]};
+// @ts-expect-error A source preview must include the proposed operations.
+const incompleteCollectionRemovalPreview: APIPOSTRoutes["/api/av/previewCollectionRemoval"]["request"] = {tagChanges: []};
+
 declare const memoryOverview: APIPOSTRoutes["/api/ai/memory/overview"]["response"];
 if (memoryOverview.code === 0) {
     const usableMemoryCount: number = memoryOverview.data.count;
