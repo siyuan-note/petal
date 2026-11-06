@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare optional document and ancestor icons in document path queries](https://github.com/siyuan-note/siyuan/issues/3007)
+
 * [Declare unified tag/reference removal previews, source-version checks and optional undoable cleanup of automatically collected entries](https://github.com/siyuan-note/siyuan/issues/21260)
 
 * [Declare current-pane opening for database item templates alongside automatic split opening](https://github.com/siyuan-note/siyuan/issues/20880)

@@ -3,6 +3,16 @@ import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Conf
 import type {IAVNewItemTemplate} from "../types";
 import type {Files} from "../types/layout/dock/Files";
 
+const iconPaths: APIPOSTRoutes["/api/filetree/getDocPaths"]["request"] = {notebook: "notebook", ids: ["document"], includeIcons: true};
+const defaultPaths: APIPOSTRoutes["/api/filetree/getDocPaths"]["request"] = {notebook: "notebook", ids: ["document"]};
+// @ts-expect-error 图标开关只接受布尔值。
+const invalidIconPaths: APIPOSTRoutes["/api/filetree/getDocPaths"]["request"] = {notebook: "notebook", ids: ["document"], includeIcons: "true"};
+declare const iconPathsResult: APIPOSTRoutes["/api/filetree/getDocPaths"]["response"];
+if (iconPathsResult.code === 0) {
+    const icons: Record<string, string> | undefined = iconPathsResult.data.icons;
+    void icons;
+}
+
 const collectionRemovalPreview: APIPOSTRoutes["/api/av/previewCollectionRemoval"]["request"] = {
     operations: [{action: "update", id: "20260101000000-source1", data: "<div>Reference text</div>"}],
     tagChanges: [{id: "20260101000000-source1", tags: ["removed"]}],
