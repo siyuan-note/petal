@@ -383,8 +383,10 @@ export interface IAVNewItemTemplate {
     saveLocation?: IAVNewItemSaveLocation;
     contentTemplatePath?: string;
     hideInFileTree?: boolean;
-    /** Split-open the bound or detached item after interactive creation. Omission opens calendar items only; false disables opening. API calls never open the UI. Mobile uses the existing page or dialog. */
+    /** 创建后打开绑定或游离条目；省略时仅日历自动打开，false 表示不打开。API 调用不打开界面。 */
     openAfterCreate?: boolean;
+    /** 自动打开时使用当前分屏；省略或 false 时向右分屏打开。 */
+    openInCurrentTab?: boolean;
 }
 
 /** 单字段条件颜色规则按顺序匹配，默认背景同样占据优先级。 */
