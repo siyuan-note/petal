@@ -314,6 +314,7 @@ export interface IAVItemHierarchy {
 }
 
 export interface IAV {
+    pendingHTTPTemplates?: string[];
     /** 启用时将此数据库升级为 Spec 14；停用保留关联字段与数据，不降低格式版本。 */
     subItems?: IAVSubItemsConfig;
     id: string;

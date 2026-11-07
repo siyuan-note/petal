@@ -920,6 +920,7 @@ export abstract class Constants {
     public static readonly SIYUAN_DROP_DOCUMENT_TAB: string;
     public static readonly SIYUAN_INSTALL_UPDATE: string;
     public static readonly SIYUAN_SYNC_APP_MENU: string;
+    public static readonly SIYUAN_SYNC_MARKDOWN_KEYMAP: string;
     public static readonly SIYUAN_READY_TO_SHOW: string;
     public static readonly SIYUAN_BLOCK_DRAG: string;
     public static readonly SIYUAN_SPELLCHECK_CONTEXT: string;

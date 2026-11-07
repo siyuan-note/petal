@@ -2,6 +2,10 @@
 
 ## v1.3.0 2026
 
+* [Clarify rich notebook document titles, linked plain notebook names and legacy rename protection](https://github.com/siyuan-note/siyuan/issues/20837)
+
+* Synchronize the Markdown keymap IPC constant and pending database HTTP template declarations
+
 * [Declare optional marketplace first-listed timestamps, independent version compatibility and per-category compatibility filter preferences](https://github.com/siyuan-note/siyuan/issues/21273)
 
 * [Declare optional document and ancestor icons in document path queries](https://github.com/siyuan-note/siyuan/issues/3007)
