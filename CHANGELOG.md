@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* Clarify initial database rows while HTTP sorting is pending and snapshot reuse during search
+
 * [Clarify rich notebook document titles, linked plain notebook names and legacy rename protection](https://github.com/siyuan-note/siyuan/issues/20837)
 
 * Synchronize the Markdown keymap IPC constant and pending database HTTP template declarations
