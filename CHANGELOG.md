@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare optional marketplace first-listed timestamps, independent version compatibility and per-category compatibility filter preferences](https://github.com/siyuan-note/siyuan/issues/21273)
+
 * [Declare optional document and ancestor icons in document path queries](https://github.com/siyuan-note/siyuan/issues/3007)
 
 * [Declare unified tag/reference removal previews, source-version checks and optional undoable cleanup of automatically collected entries](https://github.com/siyuan-note/siyuan/issues/21260)
