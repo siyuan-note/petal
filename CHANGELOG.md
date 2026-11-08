@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Restore string values for Plugin.i18n and its constructor option](https://github.com/siyuan-note/petal/issues/67)
+
 * [Declare manual database automation with confirmed HTTP access, atomic field updates and replayable undo results](https://github.com/siyuan-note/siyuan/issues/21058)
 
 * [Expose effective list sorting and declared child-document sorting in document-tree menu events](https://github.com/siyuan-note/siyuan/issues/21312)

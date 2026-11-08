@@ -751,7 +751,7 @@ export function hideMessage(id?: string): void;
  */
 export abstract class Plugin {
     eventBus: EventBus;
-    i18n: Record<string, import("./types/api").JSONValue>;
+    i18n: Record<string, string>;
     kernel: IKernelPlugin;
     /**
      * 当前插件实例的存储数据会话缓存，以传入的 storageName 为键，也是 loadData 读取失败时的回退值。
@@ -805,7 +805,7 @@ export abstract class Plugin {
         app: App,
         name: string,
         displayName: string,
-        i18n: Record<string, import("./types/api").JSONValue>,
+        i18n: Record<string, string>,
     });
 
     /** 当前端插件实例启动时运行。 */

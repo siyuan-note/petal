@@ -1,7 +1,30 @@
-import {Constants, Menu, ProtyleMethod, openDocTreeMenu} from "../siyuan";
-import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, EventBus, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, TransactionOperationRequest} from "../siyuan";
+import {Constants, Menu, Plugin, ProtyleMethod, openDocTreeMenu, showMessage} from "../siyuan";
+import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, EventBus, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, Petal, TransactionOperationRequest} from "../siyuan";
 import type {IAVNewItemTemplate} from "../types";
 import type {Files} from "../types/layout/dock/Files";
+
+class I18nPlugin extends Plugin {
+    onload() {
+        const message: string = this.i18n.greeting.replace("{name}", "Example");
+        const menu = new Menu();
+        menu.addItem({label: this.i18n.action});
+        showMessage(this.i18n.failed);
+        this.i18n.greeting = message;
+        // @ts-expect-error 插件文本必须为字符串。
+        this.i18n.greeting = 1;
+    }
+}
+
+type PluginOptions = ConstructorParameters<typeof Plugin>[0];
+declare const pluginOptions: PluginOptions;
+const constructorI18nText: string = pluginOptions.i18n.greeting;
+new I18nPlugin({...pluginOptions, i18n: {greeting: "Hello {name}", action: "Action", failed: "Failed"}});
+// @ts-expect-error 构造参数中的插件文本必须为字符串。
+const invalidPluginI18n: PluginOptions["i18n"] = {greeting: 1};
+// @ts-expect-error 插件公开文本映射不接受嵌套对象。
+const nestedPluginI18n: Plugin["i18n"] = {greeting: {text: "Hello"}};
+
+const rawPluginI18n: Petal["i18n"] = {nested: {label: "Text"}, values: [true, null, 1.5]};
 
 const iconPaths: APIPOSTRoutes["/api/filetree/getDocPaths"]["request"] = {notebook: "notebook", ids: ["document"], includeIcons: true};
 const defaultPaths: APIPOSTRoutes["/api/filetree/getDocPaths"]["request"] = {notebook: "notebook", ids: ["document"]};
