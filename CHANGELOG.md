@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare manual database automation with confirmed HTTP access, atomic field updates and replayable undo results](https://github.com/siyuan-note/siyuan/issues/21058)
+
 * [Expose effective list sorting and declared child-document sorting in document-tree menu events](https://github.com/siyuan-note/siyuan/issues/21312)
 
 * [Declare per-category package exclusions from batch updates while preserving manual updates](https://github.com/siyuan-note/siyuan/issues/21297)
