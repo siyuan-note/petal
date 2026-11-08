@@ -4,7 +4,7 @@
 
 * [Declare per-category package exclusions from batch updates while preserving manual updates](https://github.com/siyuan-note/siyuan/issues/21297)
 
-* [Declare persistent Markdown heading numbering preference and per-request overrides](https://github.com/siyuan-note/siyuan/issues/21296)
+* [Declare persistent Markdown heading numbering preference (disabled by default) and per-request overrides](https://github.com/siyuan-note/siyuan/issues/21296)
 
 * Clarify initial database rows while HTTP sorting is pending and snapshot reuse during search
 
