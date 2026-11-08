@@ -529,6 +529,8 @@ export namespace Config {
      * SiYuan bazaar related configuration
      */
     export interface IBazaar {
+        /** Package names skipped by batch updates; manual updates and update discovery remain available. */
+        batchUpdateExcluded?: Partial<Record<"plugins" | "themes" | "icons" | "templates" | "widgets", Record<string, boolean>>>;
         /**
          * 集市各分类的兼容性筛选偏好；两个开关默认 false，配置补丁可分别更新类型和开关。
          */
