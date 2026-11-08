@@ -1,5 +1,5 @@
 import {Constants, Menu, ProtyleMethod, openDocTreeMenu} from "../siyuan";
-import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, TransactionOperationRequest} from "../siyuan";
+import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, EventBus, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, TransactionOperationRequest} from "../siyuan";
 import type {IAVNewItemTemplate} from "../types";
 import type {Files} from "../types/layout/dock/Files";
 
@@ -51,6 +51,17 @@ if (memoryDisplayResult.code === 0) {
 declare const documentTree: Files;
 const documentTreeItems: {id: string; path: string; notebookId: string}[] = documentTree.getSelectedItems();
 const documentTreeRows: NodeListOf<HTMLElement> = documentTree.getSelectionElements();
+
+declare const eventBus: EventBus;
+eventBus.on("open-menu-doctree", event => {
+    for (const item of event.detail.items) {
+        const effective: number | undefined = item.effectiveSortMode;
+        const children: number | null | undefined = item.childrenSortMode;
+        // @ts-expect-error 排序方式为数字，不是字符串。
+        const invalid: string = item.effectiveSortMode;
+        void [effective, children, invalid];
+    }
+});
 
 const documentMenuOpened: Promise<boolean> = openDocTreeMenu({
     position: {x: 20, y: 40, w: 12, h: 16},

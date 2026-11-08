@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Expose effective list sorting and declared child-document sorting in document-tree menu events](https://github.com/siyuan-note/siyuan/issues/21312)
+
 * [Declare per-category package exclusions from batch updates while preserving manual updates](https://github.com/siyuan-note/siyuan/issues/21297)
 
 * [Declare persistent Markdown heading numbering preference (disabled by default) and per-request overrides](https://github.com/siyuan-note/siyuan/issues/21296)

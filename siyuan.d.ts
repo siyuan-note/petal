@@ -233,7 +233,18 @@ export interface IEventBusMap {
         /** 完整目标的离屏行快照，不保证挂载在官方文档树中。 */
         elements: NodeListOf<HTMLElement>,
         type: "doc" | "docs" | "notebook" | "notebooks" | "items",
-        items: { id: string, path: string, notebookId: string }[],
+        items: {
+            id: string,
+            path: string,
+            notebookId: string,
+            /**
+             * 文档所在列表的生效排序方式；笔记本项表示其根文档列表的生效排序。
+             * 15（跟随文档树）已解析为实际值，6 为自定义排序。
+             */
+            effectiveSortMode?: number,
+            /** 文档为其子文档列表声明的排序方式，null 表示继承；笔记本项不提供此字段。 */
+            childrenSortMode?: number | null,
+        }[],
     };
     "open-menu-inbox": {
         menu: subMenu,
