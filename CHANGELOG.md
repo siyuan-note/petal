@@ -4,6 +4,8 @@
 
 * [Declare per-category package exclusions from batch updates while preserving manual updates](https://github.com/siyuan-note/siyuan/issues/21297)
 
+* [Declare per-request heading numbering choices for Markdown copying and export](https://github.com/siyuan-note/siyuan/issues/21296)
+
 * Clarify initial database rows while HTTP sorting is pending and snapshot reuse during search
 
 * [Clarify rich notebook document titles, linked plain notebook names and legacy rename protection](https://github.com/siyuan-note/siyuan/issues/20837)
