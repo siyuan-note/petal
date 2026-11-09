@@ -96,6 +96,8 @@ export interface IFile {
     /** Title format and semantic revision from the notebook index; omitted while metadata is unavailable. */
     titleFormat?: "plain" | "inline-ast";
     titleRevision?: string;
+    /** True for a document written with a newer specification; properties are display-only and the source cannot be opened or edited. */
+    specTooNew?: boolean;
     hMtime: string;
     hCtime: string;
     hSize: string;

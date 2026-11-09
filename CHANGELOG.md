@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare read-only placeholders for documents written with a newer specification](https://github.com/siyuan-note/siyuan/pull/21336)
+
 * [Declare opt-in per-entry manual automation, resumable progress and safe retries while retaining atomic legacy calls](https://github.com/siyuan-note/siyuan/issues/21058)
 
 * [Declare event-triggered database HTTP automation, deferred result transactions and bounded template formatting helpers](https://github.com/siyuan-note/siyuan/issues/21058)
