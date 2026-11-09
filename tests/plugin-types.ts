@@ -1,5 +1,127 @@
-import {Constants, Menu, ProtyleMethod} from "../siyuan";
-import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, IAV, IBlock, IPosition, IScrollAttr, ISiyuan, TransactionOperationRequest} from "../siyuan";
+import {Constants, Menu, Plugin, ProtyleMethod, openDocTreeMenu, showMessage} from "../siyuan";
+import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, EventBus, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, Petal, TransactionOperationRequest} from "../siyuan";
+import type {IAVNewItemTemplate} from "../types";
+import type {Files} from "../types/layout/dock/Files";
+
+const historyFirstPage: APIPOSTRoutes["/api/history/getHistoryItems"]["request"] = {created: "1794225600"};
+const historyNextPage: APIPOSTRoutes["/api/history/getHistoryItems"]["request"] = {...historyFirstPage, page: 2, op: "delete"};
+const historyGroups: Extract<APIPOSTRoutes["/api/history/searchHistory"]["response"], {code: 0}>["data"] = {
+    histories: ["1794225600"], itemCounts: {"1794225600": 100}, pageCount: 1, totalCount: 1,
+};
+const historyPage: Extract<APIPOSTRoutes["/api/history/getHistoryItems"]["response"], {code: 0}>["data"] = {
+    items: [], pageCount: 4, totalCount: 100,
+};
+// @ts-expect-error 页码必须为数字。
+const invalidHistoryPage: APIPOSTRoutes["/api/history/getHistoryItems"]["request"] = {created: "1794225600", page: "2"};
+
+class I18nPlugin extends Plugin {
+    onload() {
+        const message: string = this.i18n.greeting.replace("{name}", "Example");
+        const menu = new Menu();
+        menu.addItem({label: this.i18n.action});
+        showMessage(this.i18n.failed);
+        this.i18n.greeting = message;
+        // @ts-expect-error 插件文本必须为字符串。
+        this.i18n.greeting = 1;
+    }
+}
+
+type PluginOptions = ConstructorParameters<typeof Plugin>[0];
+declare const pluginOptions: PluginOptions;
+const constructorI18nText: string = pluginOptions.i18n.greeting;
+new I18nPlugin({...pluginOptions, i18n: {greeting: "Hello {name}", action: "Action", failed: "Failed"}});
+// @ts-expect-error 构造参数中的插件文本必须为字符串。
+const invalidPluginI18n: PluginOptions["i18n"] = {greeting: 1};
+// @ts-expect-error 插件公开文本映射不接受嵌套对象。
+const nestedPluginI18n: Plugin["i18n"] = {greeting: {text: "Hello"}};
+
+const rawPluginI18n: Petal["i18n"] = {nested: {label: "Text"}, values: [true, null, 1.5]};
+
+const iconPaths: APIPOSTRoutes["/api/filetree/getDocPaths"]["request"] = {notebook: "notebook", ids: ["document"], includeIcons: true};
+const defaultPaths: APIPOSTRoutes["/api/filetree/getDocPaths"]["request"] = {notebook: "notebook", ids: ["document"]};
+// @ts-expect-error 图标开关只接受布尔值。
+const invalidIconPaths: APIPOSTRoutes["/api/filetree/getDocPaths"]["request"] = {notebook: "notebook", ids: ["document"], includeIcons: "true"};
+declare const iconPathsResult: APIPOSTRoutes["/api/filetree/getDocPaths"]["response"];
+if (iconPathsResult.code === 0) {
+    const icons: Record<string, string> | undefined = iconPathsResult.data.icons;
+    void icons;
+}
+
+const collectionRemovalPreview: APIPOSTRoutes["/api/av/previewCollectionRemoval"]["request"] = {
+    operations: [{action: "update", id: "20260101000000-source1", data: "<div>Reference text</div>"}],
+    tagChanges: [{id: "20260101000000-source1", tags: ["removed"]}],
+};
+declare const collectionRemovalResult: APIPOSTRoutes["/api/av/previewCollectionRemoval"]["response"];
+if (collectionRemovalResult.code === 0 && collectionRemovalResult.data) {
+    const sourceVersions: Record<string, string> = collectionRemovalResult.data.sourceVersions;
+    const removalTransaction: APIPOSTRoutes["/api/transactions"]["request"] = {
+        reqId: 1,
+        transactions: [{collectionRemovalSourceVersions: sourceVersions, doOperations: collectionRemovalPreview.operations}],
+    };
+    void removalTransaction;
+}
+// @ts-expect-error Source versions must contain hashes, not numeric revisions.
+const invalidCollectionRemovalVersion: APIPOSTRoutes["/api/transactions"]["request"] = {reqId: 1, transactions: [{collectionRemovalSourceVersions: {root: 1}}]};
+// @ts-expect-error A source preview must include the proposed operations.
+const incompleteCollectionRemovalPreview: APIPOSTRoutes["/api/av/previewCollectionRemoval"]["request"] = {tagChanges: []};
+
+declare const memoryOverview: APIPOSTRoutes["/api/ai/memory/overview"]["response"];
+if (memoryOverview.code === 0) {
+    const usableMemoryCount: number = memoryOverview.data.count;
+    const completeMemoryCount: boolean = memoryOverview.data.countComplete;
+    const unifiedMemory: string = memoryOverview.data.memory;
+    // @ts-expect-error The completeness flag is not a count.
+    const invalidMemoryCount: number = memoryOverview.data.countComplete;
+}
+const memoryDisplay: APIPOSTRoutes["/api/ai/memory/translate"]["request"] = {memory: "Current overview", language: "zh-CN"};
+// @ts-expect-error A display request must identify the current interface language.
+const incompleteMemoryDisplay: APIPOSTRoutes["/api/ai/memory/translate"]["request"] = {memory: "Current overview"};
+declare const memoryDisplayResult: APIPOSTRoutes["/api/ai/memory/translate"]["response"];
+if (memoryDisplayResult.code === 0) {
+    const displayMarkdown: string = memoryDisplayResult.data.memory;
+    const displayLanguage: string = memoryDisplayResult.data.language;
+}
+
+declare const documentTree: Files;
+const documentTreeItems: {id: string; path: string; notebookId: string}[] = documentTree.getSelectedItems();
+const documentTreeRows: NodeListOf<HTMLElement> = documentTree.getSelectionElements();
+
+declare const eventBus: EventBus;
+eventBus.on("open-menu-doctree", event => {
+    for (const item of event.detail.items) {
+        const effective: number | undefined = item.effectiveSortMode;
+        const children: number | null | undefined = item.childrenSortMode;
+        // @ts-expect-error 排序方式为数字，不是字符串。
+        const invalid: string = item.effectiveSortMode;
+        void [effective, children, invalid];
+    }
+});
+
+const documentMenuOpened: Promise<boolean> = openDocTreeMenu({
+    position: {x: 20, y: 40, w: 12, h: 16},
+    items: [{notebookId: "notebook", id: "document"}],
+});
+const notebookMenuOpened: Promise<boolean> = openDocTreeMenu({items: [{notebookId: "notebook"}]});
+const notebooksMenuOpened: Promise<boolean> = openDocTreeMenu({
+    items: [{notebookId: "notebook"}, {notebookId: "other"}],
+});
+const documentsMenuOpened: Promise<boolean> = openDocTreeMenu({
+    position: {x: 20, y: 40},
+    items: [{notebookId: "notebook", id: "first"}, {notebookId: "notebook", id: "second"}],
+});
+const mixedMenuOpened: Promise<boolean> = openDocTreeMenu({
+    position: {x: 20, y: 40},
+    items: [{notebookId: "notebook"}, {notebookId: "notebook", id: "notebook"},
+        {notebookId: "other", id: "document"}],
+});
+// @ts-expect-error 每个目标必须指定笔记本。
+openDocTreeMenu({items: [{id: "document"}]});
+// @ts-expect-error 文档 ID 必须为字符串。
+openDocTreeMenu({items: [{notebookId: "notebook", id: 1}]});
+// @ts-expect-error 弹出位置使用 client 坐标，不接受文档树行。
+openDocTreeMenu({position: {x: 20, y: 40, target: document.body}, items: [{notebookId: "notebook"}]});
+// @ts-expect-error 打开结果为异步布尔值。
+const synchronousMenuOpened: boolean = openDocTreeMenu({items: [{notebookId: "notebook"}]});
 
 declare const editor: Config.IEditor;
 const headings: boolean = editor.headingNumber;
@@ -67,6 +189,18 @@ Menu.toggle({
     show: menu => menu.fullscreen("bottom"),
 });
 const headingAttribute: string = Constants.CUSTOM_SY_HEADING_NUMBER;
+const mindmapViewports: string = Constants.LOCAL_MINDMAP_VIEWPORTS;
+declare const titleEditor: IProtyle;
+const openTitle: Promise<void> = titleEditor.title.openEditor();
+const openCurrentTitle: Promise<void> = titleEditor.title.openEditor(() => true);
+// @ts-expect-error 异步标题聚焦必须使用返回布尔值的有效性检查。
+titleEditor.title.openEditor(() => "stale");
+const newItemTemplate: IAVNewItemTemplate = {id: "template", name: "Document", targetType: "document", openAfterCreate: false};
+declare const legacyPathResponse: APIPOSTRoutes["/api/filetree/getIDsByHPath"]["response"];
+if (legacyPathResponse.data && "reason" in legacyPathResponse.data && legacyPathResponse.data.reason === "pathAmbiguous") {
+    const cleanIDs: string[] | undefined = legacyPathResponse.data.cleanIDs;
+    const unsupportedIDs: string[] | undefined = legacyPathResponse.data.unsupportedIDs;
+}
 // @ts-expect-error 内核不再提供旧的 AI 配置常量。
 Constants.LOCAL_AI;
 // @ts-expect-error AI 配置中没有独立视觉模型配置。
@@ -113,3 +247,63 @@ const nestedStatuses: APIPOSTRoutes["/api/av/getAttributeViewItemStatuses"]["req
 const visiblePasteRows: APIPOSTRoutes["/api/av/getAttributeViewPasteRows"]["request"] = {
     avID: "av", blockID: "carrier", startItemID: "child", count: 2, itemIDs: ["child", "sibling"],
 };
+
+// Related entry views keep item identity separate from physical block identity.
+const relationDetailRender: APIPOSTRoutes["/api/av/renderAttributeView"]["request"] = {
+    id: "target-av",
+    relationContext: {sourceAvID: "source-av", sourceItemID: "source-item", relationKeyID: "relation-key"},
+    temporaryFilters: [],
+};
+const relationDetailConfig: TransactionOperationRequest = {
+    action: "setAttrViewRelationDetail", avID: "source-av", keyID: "relation-key",
+    data: {spec: 1, enabled: true, viewID: "target-table"},
+};
+const relationMembershipChange: TransactionOperationRequest = {
+    action: "updateAttrViewRelationItems", avID: "source-av", rowID: "source-item", keyID: "relation-key",
+    data: {addItemIDs: ["target-item"], removeItemIDs: []},
+};
+// @ts-expect-error A relation context identifies the source item as well as its database and field.
+const incompleteRelationContext: APIPOSTRoutes["/api/av/renderAttributeView"]["request"] = {id: "target", relationContext: {sourceAvID: "source", relationKeyID: "key"}};
+// @ts-expect-error Related-view configuration is structured data, not a filter expression.
+const invalidRelationDetailConfig: TransactionOperationRequest = {action: "setAttrViewRelationDetail", data: "filter"};
+
+const relationDetailCandidates: APIPOSTRoutes["/api/av/getAttributeViewRelationCandidates"]["request"] = {
+    avID: "source-av", keyID: "relation-key", includeNewItemPreview: true,
+    relationContext: {sourceAvID: "source-av", sourceItemID: "source-item", relationKeyID: "relation-key"},
+};
+
+const relationDetailRow: APIPOSTRoutes["/api/av/getAttributeViewKeys"]["request"] = {
+    avID: "target-av", itemID: "target-item", blockID: "source-carrier",
+    relationContext: {sourceAvID: "source-av", sourceItemID: "source-item", relationKeyID: "relation-key"},
+};
+const relationFieldViews: APIPOSTRoutes["/api/av/getAttributeView"]["request"] = {
+    id: "target-av", blockID: "source-carrier",
+    relationFieldContext: {sourceAvID: "source-av", relationKeyID: "relation-key"},
+};
+const relationFilterLabels: APIPOSTRoutes["/api/av/getAttributeViewPrimaryKeyValues"]["request"] = {
+    id: "dependency-av", blockID: "source-carrier",
+    relationDependencyContext: {
+        relationContext: {sourceAvID: "source-av", sourceItemID: "source-item", relationKeyID: "relation-key"},
+        relationKeyIDs: ["target-relation-key"],
+    },
+};
+const scopedEntryBacklinks: APIPOSTRoutes["/api/av/getAttributeViewBacklinks"]["request"] = {
+    avID: "target-av", itemID: "target-item", blockID: "target-carrier",
+};
+const relatedCellCandidates: APIPOSTRoutes["/api/av/getAttributeViewRelationCandidates"]["request"] = {
+    avID: "target-av", keyID: "target-relation-key", blockID: "root-carrier",
+    relationCellContext: {
+        relationContext: {sourceAvID: "root-av", sourceItemID: "root-item", relationKeyID: "root-key"},
+        sourceItemIDs: ["member-item"],
+    },
+};
+const relatedCellCreation: APIPOSTRoutes["/api/av/createAttributeViewRelationItem"]["request"] = {
+    avID: "target-av", keyID: "target-relation-key", blockID: "root-carrier",
+    cells: [{itemID: "member-item", relatedItemIDs: []}], preview: null,
+    relationCellContext: {
+        relationContext: {sourceAvID: "root-av", sourceItemID: "root-item", relationKeyID: "root-key"},
+        sourceItemIDs: ["member-item"],
+    },
+};
+// @ts-expect-error Dependency traversal uses actual relation field IDs.
+const invalidDependencyPath: APIPOSTRoutes["/api/av/getAttributeView"]["request"] = {id: "target", relationDependencyContext: {relationContext: {sourceAvID: "source", sourceItemID: "item", relationKeyID: "key"}, relationKeyIDs: [1]}};

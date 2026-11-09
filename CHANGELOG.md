@@ -2,6 +2,106 @@
 
 ## v1.3.0 2026
 
+* Synchronize current SiYuan dev API contracts and plugin declarations with the flashcard branch
+
+* [Declare matching file history counts and stable paginated history entries](https://github.com/siyuan-note/siyuan/issues/21348)
+
+* [Declare read-only placeholders for documents written with a newer specification](https://github.com/siyuan-note/siyuan/pull/21336)
+
+* [Declare opt-in per-entry manual automation, resumable progress and safe retries while retaining atomic legacy calls](https://github.com/siyuan-note/siyuan/issues/21058)
+
+* [Declare event-triggered database HTTP automation, deferred result transactions and bounded template formatting helpers](https://github.com/siyuan-note/siyuan/issues/21058)
+
+* [Restore string values for Plugin.i18n and its constructor option](https://github.com/siyuan-note/petal/issues/67)
+
+* [Declare manual database automation with confirmed HTTP access, atomic field updates and replayable undo results](https://github.com/siyuan-note/siyuan/issues/21058)
+
+* [Expose effective list sorting and declared child-document sorting in document-tree menu events](https://github.com/siyuan-note/siyuan/issues/21312)
+
+* [Declare per-category package exclusions from batch updates while preserving manual updates](https://github.com/siyuan-note/siyuan/issues/21297)
+
+* [Declare persistent Markdown heading numbering preference (disabled by default) and per-request overrides](https://github.com/siyuan-note/siyuan/issues/21296)
+
+* Clarify initial database rows while HTTP sorting is pending and snapshot reuse during search
+
+* [Clarify rich notebook document titles, linked plain notebook names and legacy rename protection](https://github.com/siyuan-note/siyuan/issues/20837)
+
+* Synchronize the Markdown keymap IPC constant and pending database HTTP template declarations
+
+* [Declare optional marketplace first-listed timestamps, independent version compatibility and per-category compatibility filter preferences](https://github.com/siyuan-note/siyuan/issues/21273)
+
+* [Declare optional document and ancestor icons in document path queries](https://github.com/siyuan-note/siyuan/issues/3007)
+
+* [Declare unified tag/reference removal previews, source-version checks and optional undoable cleanup of automatically collected entries](https://github.com/siyuan-note/siyuan/issues/21260)
+
+* [Declare current-pane opening for database item templates alongside automatic split opening](https://github.com/siyuan-note/siyuan/issues/20880)
+
+* [Declare the opt-in unified notebook, document and block breadcrumb preference](https://github.com/siyuan-note/siyuan/issues/3007)
+
+* [Clarify ordered agent streaming, interrupted recovery and compaction round identity](https://github.com/siyuan-note/siyuan/issues/21242)
+
+* [Declare `openDocTreeMenu` for native document and notebook menus, target validation and menu lifecycle](https://github.com/siyuan-note/siyuan/issues/21219)
+
+* Remove the unused Zod dependency after switching kernel declarations to local JSON Schema types
+
+* Declare the opt-in floating status bar preference and its default-disabled behavior
+
+* Declare optional plugin-name filtering for resource loading, preserving full loading when names are omitted or null
+
+* Declare document creation path validation and synchronous transaction error responses
+
+* Declare deferred database HTTP template loading and presentation-only snapshot reuse
+
+* Declare automatic database template refresh with input-dependent result reuse
+
+* Clarify interactive HTTP templates in database attribute panels and isolation of template field errors
+
+* Declare related database views in entry details, scoped rendering and incremental relation changes
+
+* Clarify tag deletion previews after incremental renaming and preservation of manual or still-matching database entries
+
+* Declare tag deletion previews and optional, undoable removal of automatically collected database entries
+
+* Declare sync source previews and snapshot-pinned one-way decisions after source changes
+
+* Document default HTTPS for sync endpoints using dotted hostnames and HTTP for IP literals and single-label hosts; explicit schemes remain unchanged
+
+* Document history recovery for databases with missing calendar or list layouts and preservation of damaged originals
+
+* Clarify exact view targeting and field movement semantics for database view column ordering
+
+* [Declare the persisted kernel-maintained synchronization result](https://github.com/siyuan-note/siyuan/issues/21132)
+
+* [Exclude the SiYuan `siyuan` session cookie from kernel plugin private server request cookies](https://github.com/siyuan-note/siyuan/pull/21107)
+
+* Declare document-tree title formats and semantic revisions for rich title previews
+
+* Declare document, daily-note, and database creation candidates and explicit, revision-checked choices with a fixed template time
+
+* Declare the appearance preference for temporary floating dock bars, enabled by default
+
+* Declare clearing all workspace memories and disabling long-term memory, including partial cleanup results
+
+* Document account-authenticated community clipping and fallback to the submitted browser content and resources
+
+* [Declare the unified memory overview, completeness-qualified usable count, and guarded display-language rendering](https://github.com/siyuan-note/siyuan/issues/21062)
+
+* Clarify AI memory task persisted results and overview-pending status without implying that every proposal was saved
+
+* [Declare local, version-bound template network permission status and revocation](https://github.com/siyuan-note/siyuan/issues/21058)
+
+* [Declare single-use, 30-second preview-to-insertion HTTP confirmation handoff](https://github.com/siyuan-note/siyuan/issues/21058)
+
+* [Declare execution-scoped HTTP template confirmation and lifecycle cleanup APIs](https://github.com/siyuan-note/siyuan/issues/21058)
+
+* [Expose complete document-tree selections and document virtual row lifetimes](https://github.com/siyuan-note/siyuan/issues/20884)
+
+* Clarify that AI memory reasoning options follow the Agent policy rather than model-name capability guesses; provider acceptance is not guaranteed
+
+* Unify AI memory use, automatic maintenance, and future user-message capture under the enabled switch; remove the notebook allowlist and include all non-encrypted notebooks by default
+
+* [Merge rich document title declarations into main, including guarded editor focus, asynchronous save lifecycle, and current kernel contracts](https://github.com/siyuan-note/siyuan/issues/20837)
+
 * Synchronize latest dev contracts and rich document title, virtual document tree, AI memory, and database sub-item declarations with flashcard v2
 
 * Synchronize current API contracts and mind map viewport storage with flashcard v2, retaining legacy transaction failure handling
@@ -39,6 +139,12 @@
 
 * [Clarify template-target reuse for ordinary daily-note creation and date-attribute reuse for explicit dates and previews](https://github.com/siyuan-note/siyuan/issues/19938)
 
+* [Synchronize rich-title branch contracts with current daily-note reuse behavior and math delimiter compatibility](https://github.com/siyuan-note/siyuan/issues/20837)
+
+* Synchronize current API contracts with rich document titles and remove retired addressing-mode declarations
+
+* [Synchronize merged API contracts and public declarations, including mind map viewport storage and guarded rich title focus](https://github.com/siyuan-note/siyuan/issues/20837)
+
 * [Clarify the 32-entry block collection scope limit and compatibility with existing larger scopes](https://github.com/siyuan-note/siyuan/issues/20997)
 
 * [Declare optional PDF annotation save baselines, per-annotation merging, and stale-edit conflicts while preserving legacy replacement calls](https://github.com/siyuan-note/siyuan/issues/20990)
@@ -62,6 +168,8 @@
 * [Declare per-template automatic split opening for bound and detached database items, preserving legacy calendar behavior when omitted](https://github.com/siyuan-note/siyuan/issues/20880)
 
 * Declare optional filename filtering and complete unused asset lists for local search, retaining the default result limit
+
+* [Declare rich document title sources, revision-checked title transactions, inline fragment normalization and tab cleanup after source removal](https://github.com/siyuan-note/siyuan/issues/20837)
 
 * [Declare metadata-only file traversal diagnostics in the kernel process](https://github.com/siyuan-note/siyuan/issues/20874)
 
