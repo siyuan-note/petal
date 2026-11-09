@@ -3,6 +3,17 @@ import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Conf
 import type {IAVNewItemTemplate} from "../types";
 import type {Files} from "../types/layout/dock/Files";
 
+const historyFirstPage: APIPOSTRoutes["/api/history/getHistoryItems"]["request"] = {created: "1794225600"};
+const historyNextPage: APIPOSTRoutes["/api/history/getHistoryItems"]["request"] = {...historyFirstPage, page: 2, op: "delete"};
+const historyGroups: Extract<APIPOSTRoutes["/api/history/searchHistory"]["response"], {code: 0}>["data"] = {
+    histories: ["1794225600"], itemCounts: {"1794225600": 100}, pageCount: 1, totalCount: 1,
+};
+const historyPage: Extract<APIPOSTRoutes["/api/history/getHistoryItems"]["response"], {code: 0}>["data"] = {
+    items: [], pageCount: 4, totalCount: 100,
+};
+// @ts-expect-error 页码必须为数字。
+const invalidHistoryPage: APIPOSTRoutes["/api/history/getHistoryItems"]["request"] = {created: "1794225600", page: "2"};
+
 class I18nPlugin extends Plugin {
     onload() {
         const message: string = this.i18n.greeting.replace("{name}", "Example");

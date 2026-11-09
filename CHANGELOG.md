@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare matching file history counts and stable paginated history entries](https://github.com/siyuan-note/siyuan/issues/21348)
+
 * [Declare read-only placeholders for documents written with a newer specification](https://github.com/siyuan-note/siyuan/pull/21336)
 
 * [Declare opt-in per-entry manual automation, resumable progress and safe retries while retaining atomic legacy calls](https://github.com/siyuan-note/siyuan/issues/21058)
