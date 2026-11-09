@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare opt-in per-entry manual automation, resumable progress and safe retries while retaining atomic legacy calls](https://github.com/siyuan-note/siyuan/issues/21058)
+
 * [Declare event-triggered database HTTP automation, deferred result transactions and bounded template formatting helpers](https://github.com/siyuan-note/siyuan/issues/21058)
 
 * [Restore string values for Plugin.i18n and its constructor option](https://github.com/siyuan-note/petal/issues/67)
