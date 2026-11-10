@@ -1,349 +1,180 @@
 # Changelog
 
-## v1.3.0 2026
+## v1.3.0 2026-11-10
 
 * [Declare plugin snapshot search, program/data statistics and paired restoration with a backup snapshot](https://github.com/siyuan-note/siyuan/issues/21350)
-
 * [Declare the default-on document reading position restoration preference](https://github.com/siyuan-note/siyuan/issues/21320)
-
 * [Declare matching file history counts and stable paginated history entries](https://github.com/siyuan-note/siyuan/issues/21348)
-
 * [Declare read-only placeholders for documents written with a newer specification](https://github.com/siyuan-note/siyuan/pull/21336)
-
 * [Declare opt-in per-entry manual automation, resumable progress and safe retries while retaining atomic legacy calls](https://github.com/siyuan-note/siyuan/issues/21058)
-
 * [Declare event-triggered database HTTP automation, deferred result transactions and bounded template formatting helpers](https://github.com/siyuan-note/siyuan/issues/21058)
-
 * [Restore string values for Plugin.i18n and its constructor option](https://github.com/siyuan-note/petal/issues/67)
-
 * [Declare manual database automation with confirmed HTTP access, atomic field updates and replayable undo results](https://github.com/siyuan-note/siyuan/issues/21058)
-
 * [Expose effective list sorting and declared child-document sorting in document-tree menu events](https://github.com/siyuan-note/siyuan/issues/21312)
-
 * [Declare per-category package exclusions from batch updates while preserving manual updates](https://github.com/siyuan-note/siyuan/issues/21297)
-
 * [Declare persistent Markdown heading numbering preference (disabled by default) and per-request overrides](https://github.com/siyuan-note/siyuan/issues/21296)
-
 * Clarify initial database rows while HTTP sorting is pending and snapshot reuse during search
-
 * [Clarify rich notebook document titles, linked plain notebook names and legacy rename protection](https://github.com/siyuan-note/siyuan/issues/20837)
-
 * Synchronize the Markdown keymap IPC constant and pending database HTTP template declarations
-
 * [Declare optional marketplace first-listed timestamps, independent version compatibility and per-category compatibility filter preferences](https://github.com/siyuan-note/siyuan/issues/21273)
-
 * [Declare optional document and ancestor icons in document path queries](https://github.com/siyuan-note/siyuan/issues/3007)
-
 * [Declare unified tag/reference removal previews, source-version checks and optional undoable cleanup of automatically collected entries](https://github.com/siyuan-note/siyuan/issues/21260)
-
 * [Declare current-pane opening for database item templates alongside automatic split opening](https://github.com/siyuan-note/siyuan/issues/20880)
-
 * [Declare the opt-in unified notebook, document and block breadcrumb preference](https://github.com/siyuan-note/siyuan/issues/3007)
-
 * [Clarify ordered agent streaming, interrupted recovery and compaction round identity](https://github.com/siyuan-note/siyuan/issues/21242)
-
 * [Declare `openDocTreeMenu` for native document and notebook menus, target validation and menu lifecycle](https://github.com/siyuan-note/siyuan/issues/21219)
-
 * Remove the unused Zod dependency after switching kernel declarations to local JSON Schema types
-
 * Declare the opt-in floating status bar preference and its default-disabled behavior
-
 * Declare optional plugin-name filtering for resource loading, preserving full loading when names are omitted or null
-
 * Declare document creation path validation and synchronous transaction error responses
-
 * Declare deferred database HTTP template loading and presentation-only snapshot reuse
-
 * Declare automatic database template refresh with input-dependent result reuse
-
 * Clarify interactive HTTP templates in database attribute panels and isolation of template field errors
-
 * Declare related database views in entry details, scoped rendering and incremental relation changes
-
 * Clarify tag deletion previews after incremental renaming and preservation of manual or still-matching database entries
-
 * Declare tag deletion previews and optional, undoable removal of automatically collected database entries
-
 * Declare sync source previews and snapshot-pinned one-way decisions after source changes
-
 * Document default HTTPS for sync endpoints using dotted hostnames and HTTP for IP literals and single-label hosts; explicit schemes remain unchanged
-
 * Document history recovery for databases with missing calendar or list layouts and preservation of damaged originals
-
 * Clarify exact view targeting and field movement semantics for database view column ordering
-
 * [Declare the persisted kernel-maintained synchronization result](https://github.com/siyuan-note/siyuan/issues/21132)
-
 * [Exclude the SiYuan `siyuan` session cookie from kernel plugin private server request cookies](https://github.com/siyuan-note/siyuan/pull/21107)
-
 * Declare document-tree title formats and semantic revisions for rich title previews
-
 * Declare document, daily-note, and database creation candidates and explicit, revision-checked choices with a fixed template time
-
 * Declare the appearance preference for temporary floating dock bars, enabled by default
-
 * Declare clearing all workspace memories and disabling long-term memory, including partial cleanup results
-
 * Document account-authenticated community clipping and fallback to the submitted browser content and resources
-
 * [Declare the unified memory overview, completeness-qualified usable count, and guarded display-language rendering](https://github.com/siyuan-note/siyuan/issues/21062)
-
 * Clarify AI memory task persisted results and overview-pending status without implying that every proposal was saved
-
 * [Declare local, version-bound template network permission status and revocation](https://github.com/siyuan-note/siyuan/issues/21058)
-
 * [Declare single-use, 30-second preview-to-insertion HTTP confirmation handoff](https://github.com/siyuan-note/siyuan/issues/21058)
-
 * [Declare execution-scoped HTTP template confirmation and lifecycle cleanup APIs](https://github.com/siyuan-note/siyuan/issues/21058)
-
 * [Expose complete document-tree selections and document virtual row lifetimes](https://github.com/siyuan-note/siyuan/issues/20884)
-
 * Clarify that AI memory reasoning options follow the Agent policy rather than model-name capability guesses; provider acceptance is not guaranteed
-
 * Unify AI memory use, automatic maintenance, and future user-message capture under the enabled switch; remove the notebook allowlist and include all non-encrypted notebooks by default
-
 * [Merge rich document title declarations into main, including guarded editor focus, asynchronous save lifecycle, and current kernel contracts](https://github.com/siyuan-note/siyuan/issues/20837)
-
 * Merge SiYuan v3.8.10 declarations into the development baseline, retaining current API contracts and matching exported constants
-
 * [Clarify the default-off, user-only conversation source permission for AI memory](https://github.com/siyuan-note/siyuan/issues/21062)
-
 * [Declare workspace AI long-term memory management, tasks, and independent model configuration](https://github.com/siyuan-note/siyuan/issues/21062)
-
 * [Declare database sub-item configuration, nested reads, and undoable hierarchy operations for SiYuan v3.8.10](https://github.com/siyuan-note/siyuan/issues/21038)
 * Align generated API declarations, editor configuration, document-tree batch size, and local-state constants with the SiYuan v3.8.10 branch
-
 * [Declare PDF image preview provenance in agent attachments for version-checked session recovery](https://github.com/siyuan-note/siyuan/issues/21050)
-
 * [Clarify desktop workspace session expiration on reopen while preserving remembered logins](https://github.com/siyuan-note/siyuan/issues/21042)
-
 * [Declare an independent Exa API key for built-in web search, preserving anonymous access and separate DeepSeek credentials](https://github.com/siyuan-note/siyuan/issues/21026)
-
 * [Declare single-column and row-first or column-first two-column database field layouts](https://github.com/siyuan-note/siyuan/issues/20551)
-
 * [Synchronize endpoint behavior comments and distinguish block-reference HTTP requests from undoable transactions](https://github.com/siyuan-note/siyuan/pull/21037)
-
 * [Clarify template-target reuse for ordinary daily-note creation and date-attribute reuse for explicit dates and previews](https://github.com/siyuan-note/siyuan/issues/19938)
-
 * [Synchronize rich-title branch contracts with current daily-note reuse behavior and math delimiter compatibility](https://github.com/siyuan-note/siyuan/issues/20837)
-
 * Synchronize current API contracts with rich document titles and remove retired addressing-mode declarations
-
 * [Synchronize merged API contracts and public declarations, including mind map viewport storage and guarded rich title focus](https://github.com/siyuan-note/siyuan/issues/20837)
-
 * [Clarify the 32-entry block collection scope limit and compatibility with existing larger scopes](https://github.com/siyuan-note/siyuan/issues/20997)
-
 * [Declare optional PDF annotation save baselines, per-annotation merging, and stale-edit conflicts while preserving legacy replacement calls](https://github.com/siyuan-note/siyuan/issues/20990)
-
 * [Clarify flashcard add/remove transaction failures and persistent deck rollback](https://github.com/siyuan-note/siyuan/issues/20987)
-
 * [Clarify database block collection for document copies and moves, preserved row values, and move failures after relocation](https://github.com/siyuan-note/siyuan/issues/20923)
-
 * [Clarify exact block ID filters, literal multi-keyword matching, and grouped search pagination](https://github.com/siyuan-note/siyuan/issues/20919)
-
 * [Clarify asset content search relevance, per-method previews, and asynchronous index rebuild completion](https://github.com/siyuan-note/siyuan/issues/20918)
-
 * [Remove prerelease addressing-mode fields and unused failure variants; retain structured path capabilities and index readiness](https://github.com/siyuan-note/siyuan/issues/20892)
-
 * [Clarify cancellation and safe cleanup of pending exit synchronization](https://github.com/siyuan-note/siyuan/issues/20908)
-
 * [Declare block-reference collection targets with document content matching and backlink grouping in database automation format 8](https://github.com/siyuan-note/siyuan/issues/20907)
-
 * [Declare ancestor-checked legacy document paths, typed ambiguity candidates and fixed structured-title capabilities; retire addressing floors in settings backups](https://github.com/siyuan-note/siyuan/issues/20892)
-
 * [Declare per-template automatic split opening for bound and detached database items, preserving legacy calendar behavior when omitted](https://github.com/siyuan-note/siyuan/issues/20880)
-
 * Declare optional filename filtering and complete unused asset lists for local search, retaining the default result limit
-
 * [Declare rich document title sources, revision-checked title transactions, inline fragment normalization and tab cleanup after source removal](https://github.com/siyuan-note/siyuan/issues/20837)
-
 * [Declare metadata-only file traversal diagnostics in the kernel process](https://github.com/siyuan-note/siyuan/issues/20874)
-
 * Declare the optional per-view field name display setting for database calendars
-
 * [Declare optional full content checks when creating snapshots and clarify local file change detection](https://github.com/siyuan-note/siyuan/issues/20861)
-
 * [Document per-method RPC write admission without retaining leases on idle WebSockets](https://github.com/siyuan-note/siyuan/issues/20855)
-
 * [Declare embedded breadcrumb parent-path defaults, document titles and the persisted block override attribute](https://github.com/siyuan-note/siyuan/issues/20698)
-
 * [Clarify that all sync devices must support structured titles and that minimum reader release metadata does not permit mixing with older clients](https://github.com/siyuan-note/siyuan/issues/19938)
-
 * [Document structured titles as the default in ordinary builds, independent of verified minimum reader release metadata](https://github.com/siyuan-note/siyuan/issues/19938)
-
 * [Document SQL write execution, read-only mode and sequential multi-statement results](https://github.com/siyuan-note/siyuan/issues/20823)
-
 * [Declare automatic structured-title migration without a user setting, read-only runtime capabilities and notebook-wide legacy path errors in the feature release](https://github.com/siyuan-note/siyuan/issues/19938)
-
 * [Declare document capability discovery, structured paths, exact title resolution, fixed-ID creation plans and parent-ID creation with recoverable commit states; preserve versioned encrypted creation targets and source-format checks on raw files and archives](https://github.com/siyuan-note/siyuan/issues/19938)
-
 * [Document notebook addressing preflight for raw file writes and monotonic capability records in settings backups](https://github.com/siyuan-note/siyuan/issues/19938)
-
 * [Declare backlink filtering by fields in a selected database and metadata-only database candidates, retaining pagination and encrypted-notebook access boundaries](https://github.com/siyuan-note/siyuan/issues/20802)
-
 * [Declare single workspace lock screen wallpaper uploads, public image reads and removal, with a separate appearance preference](https://github.com/siyuan-note/siyuan/issues/20797)
-
 * [Declare optional exclusion of selected documents from automation scopes while retaining descendant depth and scope unions](https://github.com/siyuan-note/siyuan/issues/20792)
-
 * [Declare clearing local recent document browsing, opening and closing records while retaining documents and subsequent activity recording](https://github.com/siyuan-note/siyuan/issues/20785)
-
 * [Declare literal substring and Go regular expression matching for auto-collection attribute names, retaining exact defaults](https://github.com/siyuan-note/siyuan/issues/20781)
-
 * [Document cancellation for single and batch marketplace updates, retaining committed packages](https://github.com/siyuan-note/siyuan/issues/20687)
-
 * [Declare version-bound manual update downloads without changing automatic download settings](https://github.com/siyuan-note/siyuan/issues/20771)
-
 * [Declare staged sync editing protection, client preparation, reconnect state, cooperative cancellation and preview render completion callbacks](https://github.com/siyuan-note/siyuan/issues/20763)
-
 * [Document missing asset scan errors and incomplete document scans without changing successful list responses](https://github.com/siyuan-note/siyuan/issues/20767)
-
 * [Document unified AI instruction storage under data/storage/ai and compatible migration from data/ai on save](https://github.com/siyuan-note/siyuan/issues/20768)
-
 * [Declare cooperative sync checkout cancellation that retains completed files](https://github.com/siyuan-note/siyuan/issues/20763)
-
 * [Declare dialog close guards and clarify expired Data.zip preparation cleanup](https://github.com/siyuan-note/siyuan/issues/20758)
-
 * [Declare draft WebDAV and local sync connection tests with isolated probe cleanup](https://github.com/siyuan-note/siyuan/issues/20760)
-
 * [Declare staged Data.zip imports with encrypted notebook conflict choices, authentication and recoverable path-based overwrite](https://github.com/siyuan-note/siyuan/issues/20758)
-
 * [Declare optional relative subdocument depth limits for database automation scopes](https://github.com/siyuan-note/siyuan/issues/20753)
-
 * [Declare persisted agent session pinning and pin-first session pagination](https://github.com/siyuan-note/siyuan/issues/20699)
-
 * [Declare the default-enabled setting to close detached windows after their last tab is closed or moved out](https://github.com/siyuan-note/siyuan/issues/20736)
-
 * [Synchronize current setting input compatibility and notification contract documentation](https://github.com/siyuan-note/siyuan/pull/20710)
-
 * [Declare optional database image preview groups with group ordering and unpaged results](https://github.com/siyuan-note/siyuan/issues/20707)
-
 * Preserve complete appearance preferences, including nullable PDF and mobile settings, in marketplace theme and icon responses
-
 * [Document URL-encoded Live Photo preview paths, resource boundaries and notebook scoping](https://github.com/siyuan-note/siyuan/issues/20675)
-
 * [Document cancellation before marketplace package installation is committed](https://github.com/siyuan-note/siyuan/issues/20687)
-
 * [Declare reader, outline, recent document, mobile control and agent rendering preferences persisted in configuration](https://github.com/siyuan-note/siyuan/issues/20685)
-
 * [Declare iOS Live Photo image attributes and cancellable local preview conversion](https://github.com/siyuan-note/siyuan/issues/20675)
-
 * [Declare collection review categories, filtered pagination, and indeterminate reasons](https://github.com/siyuan-note/siyuan/issues/20664)
-
 * [Declare the optional menu mouse scrolling preference key](https://github.com/siyuan-note/siyuan/issues/20663)
-
 * [Declare independent web search and fetch providers with shared DeepSeek credentials](https://github.com/siyuan-note/siyuan/issues/20659)
-
 * [Declare a native boolean full block indicator setting](https://github.com/siyuan-note/siyuan/issues/20647)
-
 * [Declare draft-only S3 connection probes and endpoint path warnings](https://github.com/siyuan-note/siyuan/pull/20654)
-
 * [Declare append-only block collection and confirmed cleanup with review, revalidation, and undo](https://github.com/siyuan-note/siyuan/issues/20645)
-
 * [Unify tag collection target selection and avoid duplicate list-item paragraphs](https://github.com/siyuan-note/siyuan/issues/20646)
-
 * [Declare compact and full editor block indicator modes, with compact as the default](https://github.com/siyuan-note/siyuan/issues/20647)
-
 * [Declare versioned tag collection targets for direct blocks and nearest matching containers](https://github.com/siyuan-note/siyuan/issues/20646)
-
 * [Declare per-rule success notifications for committed database automation results](https://github.com/siyuan-note/siyuan/issues/20642)
-
 * [Declare per-group AND/OR matching for block collection tags and attributes](https://github.com/siyuan-note/siyuan/issues/20641)
-
 * [Declare versioned database automation block subtype filters](https://github.com/siyuan-note/siyuan/issues/20644)
-
 * [Declare scoped unused-asset cleanup for unlocked encrypted notebooks with ciphertext history recovery](https://github.com/siyuan-note/siyuan/issues/20633)
-
 * [Declare PDF resource export that preserves existing files and copies only linked assets](https://github.com/siyuan-note/siyuan/issues/20583)
-
 * Declare pinned document tooltip metadata matching the document tree, with empty details for closed notebooks
-
 * [Declare title image exclusion for PDF export previews](https://github.com/siyuan-note/siyuan/issues/20583)
-
 * [Declare always-present effect flags in generated AI capability and action responses](https://github.com/siyuan-note/siyuan/pull/20616)
-
 * [Declare typed database automation templates, saved time zones, and read-only previews](https://github.com/siyuan-note/siyuan/issues/20611)
-
 * [Document portable preferences restored by settings import and local configuration preserved during transfer](https://github.com/siyuan-note/siyuan/issues/20610)
-
 * [Declare configurable embedding concurrency and batch size with defaults and bounds](https://github.com/siyuan-note/siyuan/pull/20609)
-
 * Keep legacy calendar row order optional in generated API responses, matching empty layout serialization
-
 * [Declare optional, non-persistent database render sorting applied before pagination](https://github.com/siyuan-note/siyuan/issues/20608)
-
 * [Remove expired deprecated kernel fields and endpoints from generated API declarations and remove `Protyle.updateTransaction`; use `updateTransactionElement` instead](https://github.com/siyuan-note/siyuan/issues/20605)
 * [Align CSS Highlight declarations with the standard range set API](https://github.com/siyuan-note/siyuan/issues/20605)
 * [Synchronize UI density, compact mode and mobile menu constants and remove the retired page button storage constant](https://github.com/siyuan-note/siyuan/issues/20605)
 * [Complete existing database row navigation shortcut and restored tab context declarations](https://github.com/siyuan-note/siyuan/issues/20605)
-
 * [Declare the editor page scroll button preference, disabled by default without migrating the old local preference](https://github.com/siyuan-note/siyuan/issues/20603)
-
 * [Document device-local ChatGPT account bindings excluded from workspace configuration and settings exports](https://github.com/siyuan-note/siyuan/issues/20572)
-
 * [Declare guarded forced recovery of a previous desktop kernel exit](https://github.com/siyuan-note/siyuan/issues/20599)
-
 * Synchronize generated marketplace choice declarations with the existing kernel contracts
-
 * [Declare the optional title image exclusion for image export previews](https://github.com/siyuan-note/siyuan/issues/20583)
-
 * [Declare block collection automation, matching-block previews, explicit collection, and collected-row provenance](https://github.com/siyuan-note/siyuan/issues/20547)
-
 * [Declare Gemini Interactions provider support, native model discovery, and local conversation history](https://github.com/siyuan-note/siyuan/issues/20560)
-
 * [Add `insertContent` for Markdown or HTML insertion at the current or remembered selection of a visible editor, with explicit editor/range targeting and failure states](https://github.com/siyuan-note/siyuan/issues/20566)
-
 * [Declare read-only third-party sync configuration rules shared by forms and kernel validation](https://github.com/siyuan-note/siyuan/issues/20427)
-
 * [Fix strict type checking errors in shortcut key declarations](https://github.com/siyuan-note/petal/pull/60)
-
 * [Synchronize block, database, and layout data declarations with SiYuan, including gallery cover positions, and remove the obsolete `viewNotFound` render target status](https://github.com/siyuan-note/petal/pull/60)
-
 * [Add missing public members to `Dock`, `Editor`, `Layout`, `BlockPanel`, `Scroll`, `Title`, `Tree`, mobile dock panels, and Protyle components](https://github.com/siyuan-note/petal/pull/60)
-
 * [Correct plugin declarations: rename `agentActions` to `agentCapabilities`, report the undefined results of registration in independent settings windows, and fix the `paste`, `code-language-update`, `open-menu-av`, and `open-asset` event details](https://github.com/siyuan-note/petal/pull/60)
-
 * [Export `Lute`, `Custom`, `Tab`, `Model`, and other classes that the `siyuan` module does not provide at runtime as types only](https://github.com/siyuan-note/petal/pull/60)
-
 * [Correct exported API signatures: asynchronous `lockScreen`, `exitSiYuan`, and `expandDocTree`, possibly undefined tabs and editors, `saveExportFile` results, `openSetting` without a settings tab argument, and the missing `confirm`, `openEmoji`, `openInputDialog`, `Dialog`, `Menu`, and `Setting` options and members](https://github.com/siyuan-note/petal/pull/60)
-
 * [Declare the kernel plugin private server proxy response body, and correct raw response data, form parsing, response headers, cookies, status codes, synchronous SSE sending, request routing, and access checks](https://github.com/siyuan-note/petal/pull/60)
-
 * [Correct kernel plugin RPC and agent capability declarations: endpoints, authorization, error codes, parameter spreading, and registration records with schema wrappers and always-present effect flags](https://github.com/siyuan-note/petal/pull/60)
-
 * [Correct kernel plugin runtime declarations: platform values, nullable `i18n`, lifecycle order and unbound callback logging, the per-plugin event bus and its topics, synchronous `siyuan.logger`, and the `data/storage/petal/<name>/` storage directory](https://github.com/siyuan-note/petal/pull/60)
-
 * [Correct kernel plugin WebSocket and EventSource declarations: `text` and `binary` message events, `wasClean`, always-empty `extensions`, and the order in which the open, close, error, and reconnect callbacks run](https://github.com/siyuan-note/petal/pull/60)
-
 * [Correct the kernel plugin data accessor and fetch response declarations: repeatable reads over shared views, the request path as the response URL, the status line in `statusText`, and a `timeout` that only bounds receiving the response headers](https://github.com/siyuan-note/petal/pull/60)
-
 * [Document setting value ranges, invalid-value defaults, and preserved sync validation](https://github.com/siyuan-note/siyuan/issues/20468)
-
 * [Declare additional setting patch namespaces, field diagnostics, and write compatibility](https://github.com/siyuan-note/siyuan/issues/20443)
-
 * [Document WebDAV and local sync address validation while preserving anonymous WebDAV access](https://github.com/siyuan-note/siyuan/issues/20427)
-
 * Remove database map views and map service APIs while retaining location values and canonical WGS84 text exchange
-
 * [Declare clearing third-party sync configuration while protecting incomplete resources and history](https://github.com/siyuan-note/siyuan/issues/20427)
-
 * [Document normalization of deprecated block reference export modes when saving and importing settings](https://github.com/siyuan-note/siyuan/issues/20426)
-
 * [Document setting notifications for the encrypted notebook system-lock policy](https://github.com/siyuan-note/siyuan/issues/20419)
-
 * Declare per-view map height choices of 320, 480, 640, and 800 CSS pixels, defaulting to 480 when omitted
-
 * [Add `Menu.toggle` to switch shared menus by trigger element while retaining existing construction and opening behavior](https://github.com/siyuan-note/siyuan/issues/20418)
-
 * Clarify longitude-first location display and latitude-first canonical copy and export text
-
 * Declare independently paginated unplaced map records with current view filters, searches, sorting, and location-field selection
-
 * [Simplify database maps to built-in OpenFreeMap and WGS84 location values without service configuration](https://github.com/siyuan-note/siyuan/issues/20129)
-
 * [Document automatic heading numbers in Markdown exports and copying](https://github.com/siyuan-note/siyuan/issues/20393)
-
 * Generate endpoint documentation from kernel contract comments and keep fetch helper documentation focused on transport
-
 * [Declare database map views and device-local map service configuration](https://github.com/siyuan-note/siyuan/issues/20129)
 * [Declare field-level lunar date input and display while preserving stored timestamps](https://github.com/siyuan-note/siyuan/issues/20322)
 * [Declare database location values, per-field defaults, explicit coordinate systems, and preserved source input](https://github.com/siyuan-note/siyuan/issues/20325)
