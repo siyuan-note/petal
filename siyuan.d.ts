@@ -619,6 +619,46 @@ export function getAllModels(): IModels
  */
 export function openSetting(app: App): Dialog | undefined;
 
+export interface IColorValue {
+    hex: string;
+    rgb: {r: number; g: number; b: number};
+}
+
+export type TColorPickerResult =
+    | {type: "confirm"; value: IColorValue; changed: boolean}
+    | {type: "cancel"; reason: "cancel" | "escape" | "dismiss" | "owner-destroyed" | "replaced" | "destroy"};
+
+export interface IColorPickerOptions {
+    /** 严格接受三位或六位 HEX（可省略 #）或 0..255 的 RGB 整数；非法初值在替换已有会话前同步报错。 */
+    value: string | {r: number; g: number; b: number};
+    /** 按纯文本显示，不解析 HTML。 */
+    title?: string;
+    /** 必须是仍存活且尚未开始卸载的实际插件实例；停用、重载和卸载均同步取消所属会话。 */
+    ownerPlugin: Plugin;
+    /** 已连接且属于就绪的思源窗口；按其 ownerDocument 打开，不接受任意 iframe。迁出该文档或移除时取消。 */
+    ownerElement: HTMLElement;
+    /** 合法草稿最多每动画帧通知一次；原生面板可能仅在关闭时返回值，不保证连续预览。此通知不代表保存。 */
+    onPreview?: (value: IColorValue) => void;
+    /** 确认、取消和销毁均清理预览一次；应恢复调用方当前已确认状态，避免覆盖后续会话。回调异常不阻断清理。 */
+    onPreviewEnd?: () => void;
+}
+
+export interface IColorPickerHandle {
+    /** 仅在思源层明确确认或取消时终结一次；原生 change 只更新草稿。确认不代表调用方保存成功。 */
+    result: Promise<TColorPickerResult>;
+    /** 幂等取消，结果原因是 destroy。 */
+    destroy(): void;
+}
+
+/**
+ * 打开 sRGB 颜色编辑器，始终提供 HEX/RGB 输入；图形选色由系统或浏览器提供，不支持透明度与广色域。
+ * 输出为小写六位 HEX 及对应 RGB；changed 只比较打开时与确认时的颜色字节。
+ * 同一目标文档只保留一个独立编辑会话；新请求以 replaced 取消旧请求，不同窗口隔离。
+ * onPreview/onPreviewEnd 是同步通知，不等待返回的 Promise；回调可重入打开或销毁，最新打开请求优先。
+ * 调用方自行保存并处理保存失败；需为旧版缺少此 API 的情况提供兼容入口。
+ */
+export function openColorPicker(options: IColorPickerOptions): IColorPickerHandle;
+
 export function openEmoji(options: {
     position: IPosition,
     selectedCB?: (emoji: string) => void,

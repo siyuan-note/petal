@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* [Declare a native color picker with HEX/RGB drafts, explicit confirmation and plugin/window lifecycle ownership](https://github.com/siyuan-note/siyuan/issues/21134)
 * [Declare plugin snapshot search, program/data statistics and paired restoration with a backup snapshot](https://github.com/siyuan-note/siyuan/issues/21350)
 
 ## v1.3.0 2026-11-10
