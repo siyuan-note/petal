@@ -3,6 +3,12 @@ name: Publish npm package
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing GitHub Release tag to publish
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -23,6 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
           persist-credentials: false
 
       - uses: actions/setup-node@v6
@@ -33,19 +40,24 @@ jobs:
 
       - name: Validate release version
         env:
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
-          RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           node <<'NODE'
+          const {execFileSync} = require("node:child_process");
           const {name, version} = require("./package.json");
           const tag = process.env.RELEASE_TAG;
+          const release = JSON.parse(execFileSync("gh", ["api", `repos/siyuan-note/petal/releases/tags/${tag}`], {encoding: "utf8"}));
+          if (release.draft) {
+              throw new Error("Release must be published");
+          }
           if (name !== "siyuan") {
               throw new Error(`Unexpected package name ${name}`);
           }
           if (tag !== version && tag !== `v${version}`) {
               throw new Error(`Release tag ${tag} does not match package version ${version}`);
           }
-          if (version.includes("-") !== (process.env.RELEASE_PRERELEASE === "true")) {
+          if (version.includes("-") !== release.prerelease) {
               throw new Error("Release prerelease status does not match package version");
           }
           NODE
@@ -54,7 +66,7 @@ jobs:
         run: npm install --global pnpm@12.6.0
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Check declarations
         run: pnpm run test:kernel-types

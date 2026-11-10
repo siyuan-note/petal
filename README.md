@@ -16,4 +16,6 @@ Before releasing, finalize the declarations and changelog, choose an unused vers
 
 Commit and push the release changes, then publish a GitHub Release whose tag is the package version or that version prefixed with `v`. The tagged commit must contain `.github/workflows/publish.yml` and the intended release contents. Mark versions containing a prerelease suffix as GitHub pre-releases; these publish to npm's `alpha` tag. Stable releases publish to `latest`. Publishing a draft Release also triggers the workflow.
 
+The repository does not track a lockfile, so Actions installs dependencies with `pnpm install --no-frozen-lockfile`. If publication fails before npm accepts the version, the workflow can be dispatched from the default branch with the existing Release tag as its `tag` input. It checks out that tag and validates the published Release before publishing.
+
 After publication, check the Actions run, `npm view siyuan version dist-tags --registry=https://registry.npmjs.org`, and the published package contents. Published versions cannot be overwritten; choose a new version for subsequent changes.
