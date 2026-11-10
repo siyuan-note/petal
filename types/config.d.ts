@@ -856,6 +856,10 @@ export namespace Config {
          * 是否在文档顶部显示数据库属性
          */
         databaseAttrShow: boolean;
+        /** 默认开启；新建数据库和视图时显示主键条目的图标，不影响已有视图 */
+        databaseShowIcon: boolean;
+        /** 默认开启；新建数据库和视图时显示关联和汇总条目的图标，不影响已有视图 */
+        databaseShowRelationIcon: boolean;
         /**
          * 点击数据库标记的行为
          * - `0`：聚焦区块并展开数据库面板

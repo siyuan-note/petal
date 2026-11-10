@@ -420,6 +420,8 @@ interface IAVView {
     hideAttrViewName?: boolean;
     pageSize?: number;
     showIcon?: boolean;
+    /** 关联和汇总条目的图标开关；旧视图缺省时跟随 showIcon */
+    showRelationIcon?: boolean;
     wrapField?: boolean;
     groupHidden?: number,  // 0：显示，1：空白隐藏，2：手动隐藏
     groupFolded?: boolean,

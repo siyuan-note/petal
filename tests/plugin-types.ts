@@ -1,5 +1,5 @@
 import {Constants, Menu, Plugin, ProtyleMethod, openDocTreeMenu, showMessage} from "../siyuan";
-import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, EventBus, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, Petal, TransactionOperationRequest} from "../siyuan";
+import type {APIPOSTRoutes, AVLayoutTable, AVRenderData, AVTable, AVValueLocation, AVView, Config, EventBus, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, Petal, TransactionOperationRequest} from "../siyuan";
 import type {IAVNewItemTemplate} from "../types";
 import type {Files} from "../types/layout/dock/Files";
 
@@ -127,6 +127,16 @@ declare const editor: Config.IEditor;
 const headings: boolean = editor.headingNumber;
 const loaded: boolean = editor.keepLoadedContent;
 const database: boolean = editor.databaseAttrShow;
+const databasePrimaryIcons: boolean = editor.databaseShowIcon;
+const databaseRelationIcons: boolean = editor.databaseShowRelationIcon;
+const databaseIconDefaults: APIPOSTRoutes["/api/setting/setEditor"]["request"] = {
+    databaseShowIcon: false, databaseShowRelationIcon: true,
+};
+const defaultDatabaseIcons: APIPOSTRoutes["/api/setting/setEditor"]["request"] = {
+    databaseShowIcon: null, databaseShowRelationIcon: null,
+};
+// @ts-expect-error 数据库图标默认开关只接受布尔值或 null。
+const invalidDatabaseIconDefaults: APIPOSTRoutes["/api/setting/setEditor"]["request"] = {databaseShowRelationIcon: "true"};
 declare const web: Config.IAIWeb;
 const exaKey: string = web.exaApiKey;
 const setExaKey: APIPOSTRoutes["/api/setting/setAI"]["request"] = {web: {exaApiKey: "exa-key"}};
@@ -208,6 +218,24 @@ declare const removedVision: Config.IAI["vision"];
 
 const location: AVValueLocation = {name: "Office", longitude: 120, latitude: 0};
 const tableLayout: AVView["type"] = "table";
+const legacyDatabaseIcons: Pick<AVLayoutTable, "showIcon" | "showRelationIcon"> = {showIcon: false};
+const independentDatabaseIcons: Pick<AVLayoutTable, "showIcon" | "showRelationIcon"> = {
+    showIcon: false, showRelationIcon: true,
+};
+const pluginLegacyIcons: Pick<IAV["view"], "showIcon" | "showRelationIcon"> = {showIcon: true};
+const pluginIndependentIcons: Pick<IAV["view"], "showIcon" | "showRelationIcon"> = {
+    showIcon: true, showRelationIcon: false,
+};
+declare const renderedDatabase: Extract<AVTable, {showIcon: boolean}>;
+const renderedRelationIcons: boolean = renderedDatabase.showRelationIcon;
+const setPrimaryIcons: TransactionOperationRequest = {
+    action: "setAttrViewShowIcon", avID: "av", id: "view", blockID: "carrier", data: false,
+};
+const setRelationIcons: TransactionOperationRequest = {
+    action: "setAttrViewShowRelationIcon", avID: "av", id: "view", blockID: "carrier", data: true,
+};
+// @ts-expect-error 关联和汇总图标开关不接受字符串。
+const invalidRelationIcons: TransactionOperationRequest = {action: "setAttrViewShowRelationIcon", data: "true"};
 // @ts-expect-error 地图布局不再属于数据库视图类型。
 const removedMapLayout: AVView["type"] = "map";
 // @ts-expect-error 表格数据不再提供地图设置。
