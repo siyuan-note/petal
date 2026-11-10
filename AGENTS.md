@@ -7,6 +7,7 @@ Petal 发布维护指南。仓库：`siyuan-note/petal`；npm 包名：`siyuan`�
 - 开始任务时核对仓库、分支、提交、远程地址和工作区；最新分支任务先获取相关远程引用。默认分支为 `main`。保留已有改动，确认发布范围，不将未授权的改动带入发布
 - 未获用户明确授权，不提交、推送、创建发布标签、发布 GitHub Release 或触发 npm 发布；同一任务中已有的授权在约定范围内持续有效
 - 版本来源为 `package.json`。发布前查询 npm 已有版本和 dist-tags，选择未使用的版本，核对 CHANGELOG 与待发布内容。发布时 CHANGELOG 版本标题使用完整的实际发布日期，格式为 `YYYY-MM-DD`，不只写年份
+- 开发期间将尚未发布的声明变更逐步记录在 CHANGELOG 顶部的 `Unreleased` 章节，不追加到已发布版本下。发布时按实际发布提交确定条目范围，将对应条目归入带版本号和完整发布日期的章节；未包含在发布提交中的条目继续留在 `Unreleased`，不提前填写其发布日期
 - 仓库不跟踪 `pnpm-lock.yaml`，使用 `pnpm install --no-frozen-lockfile` 安装依赖。Actions 使用 Node.js 24 和 pnpm 12.6.0，调整工具链时同步检查 `.github/workflows/publish.yml`
 - 发布前运行 `pnpm run test:kernel-types`、`pnpm run test:mirrors <path-to-siyuan>` 和 `npm pack --dry-run`。镜像检查需要匹配的 SiYuan 仓库；Actions 不运行此项检查，应在本地完成并说明检查范围
 - 本包直接发布声明文件，无需构建。检查打包内容包含 `siyuan.d.ts`、`kernel.d.ts` 及所需的 `types/` 文件；生成的 API 声明应从 SiYuan 合约源重新生成，不手工修改

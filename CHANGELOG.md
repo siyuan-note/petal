@@ -1,8 +1,11 @@
 # Changelog
 
-## v1.3.0 2026-11-10
+## Unreleased
 
 * [Declare plugin snapshot search, program/data statistics and paired restoration with a backup snapshot](https://github.com/siyuan-note/siyuan/issues/21350)
+
+## v1.3.0 2026-11-10
+
 * [Declare the default-on document reading position restoration preference](https://github.com/siyuan-note/siyuan/issues/21320)
 * [Declare matching file history counts and stable paginated history entries](https://github.com/siyuan-note/siyuan/issues/21348)
 * [Declare read-only placeholders for documents written with a newer specification](https://github.com/siyuan-note/siyuan/pull/21336)
