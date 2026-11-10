@@ -2,6 +2,8 @@
 
 ## v1.3.0 2026
 
+* [Declare plugin snapshot search, program/data statistics and paired restoration with a backup snapshot](https://github.com/siyuan-note/siyuan/issues/21350)
+
 * [Declare the default-on document reading position restoration preference](https://github.com/siyuan-note/siyuan/issues/21320)
 
 * [Declare matching file history counts and stable paginated history entries](https://github.com/siyuan-note/siyuan/issues/21348)
