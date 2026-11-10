@@ -1074,6 +1074,8 @@ export namespace Config {
          * Defaults to true; does not affect the main window.
          */
         closeWindowOnLastTabClosed: boolean;
+        /** Restore the saved reading position on ordinary document reopening (default true); explicit navigation and tab restoration retain their targets. */
+        restoreDocPosition: boolean;
         /**
          * The storage path of the new document created using block references
          */
