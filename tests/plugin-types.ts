@@ -1,7 +1,32 @@
-import {Constants, Menu, Plugin, ProtyleMethod, openDocTreeMenu, showMessage} from "../siyuan";
+import {Constants, Menu, Plugin, ProtyleMethod, openDatePicker, openDocTreeMenu, showMessage} from "../siyuan";
 import type {APIPOSTRoutes, AVLayoutTable, AVRenderData, AVTable, AVValueLocation, AVView, Config, EventBus, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, Petal, TransactionOperationRequest} from "../siyuan";
 import type {IAVNewItemTemplate} from "../types";
 import type {Files} from "../types/layout/dock/Files";
+
+declare const datePickerPlugin: Plugin;
+declare const datePickerOwner: HTMLElement;
+const datePicker = openDatePicker({type: "datetime-local", value: "2026-11-11T09:00", min: "2026-01-01T00:00",
+    max: "2026-12-31T23:59", step: "60", required: false, locale: "zh-CN", ownerPlugin: datePickerPlugin,
+    ownerElement: datePickerOwner});
+datePicker.result.then(result => {
+    if (result.type === "confirm") {
+        const value: string = result.value;
+        const changed: boolean = result.changed;
+        void value; void changed;
+    } else {
+        const reason: string = result.reason;
+        void reason;
+        // @ts-expect-error 取消结果不包含日期值。
+        void result.value;
+    }
+});
+datePicker.destroy();
+// @ts-expect-error 日期选择器必须指定实际插件实例。
+openDatePicker({type: "date", ownerElement: datePickerOwner});
+// @ts-expect-error 日期值使用本地日历字符串，而非 Date 或时间戳。
+openDatePicker({type: "date", value: new Date(), ownerPlugin: datePickerPlugin, ownerElement: datePickerOwner});
+// @ts-expect-error 原生周输入不是本选择器的公开类型。
+openDatePicker({type: "week", ownerPlugin: datePickerPlugin, ownerElement: datePickerOwner});
 
 const historyFirstPage: APIPOSTRoutes["/api/history/getHistoryItems"]["request"] = {created: "1794225600"};
 const historyNextPage: APIPOSTRoutes["/api/history/getHistoryItems"]["request"] = {...historyFirstPage, page: 2, op: "delete"};
@@ -200,6 +225,8 @@ Menu.toggle({
 });
 const headingAttribute: string = Constants.CUSTOM_SY_HEADING_NUMBER;
 const mindmapViewports: string = Constants.LOCAL_MINDMAP_VIEWPORTS;
+const tableCornersAttribute: "data-table-corners" = Constants.TABLE_CORNERS;
+const tableCellCornerAttribute: "data-table-cell-corner" = Constants.TABLE_CELL_CORNER;
 declare const titleEditor: IProtyle;
 const openTitle: Promise<void> = titleEditor.title.openEditor();
 const openCurrentTitle: Promise<void> = titleEditor.title.openEditor(() => true);

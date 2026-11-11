@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Synchronize table and table-cell corner attribute constants with SiYuan
+* [Declare the built-in date and time picker with civil values, constraints, explicit clearing and plugin/window ownership](https://github.com/siyuan-note/siyuan/issues/21127)
 * [Declare independent primary-key and relation/rollup content icon preferences for database views and their creation defaults](https://github.com/siyuan-note/siyuan/issues/21366)
 * [Declare rich primary-key sources and inline editing with document-title validation](https://github.com/siyuan-note/siyuan/issues/21136)
 * [Declare a native color picker with HEX/RGB drafts, explicit confirmation and plugin/window lifecycle ownership](https://github.com/siyuan-note/siyuan/issues/21134)

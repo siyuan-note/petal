@@ -3,6 +3,8 @@ import type {Config} from "../siyuan";
 const altNumber = navigator.platform.toUpperCase().indexOf("MAC") > -1 ? "⌃" : "⌥";
 
 export abstract class Constants {
+    public static readonly TABLE_CORNERS = "data-table-corners";
+    public static readonly TABLE_CELL_CORNER = "data-table-cell-corner";
     public static readonly SIYUAN_VERSION: string;
     public static readonly NODE_ENV: string;
     public static readonly SIYUAN_APPID: string = Math.random().toString(36).substring(8);

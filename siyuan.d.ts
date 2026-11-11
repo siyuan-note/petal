@@ -659,6 +659,49 @@ export interface IColorPickerHandle {
  */
 export function openColorPicker(options: IColorPickerOptions): IColorPickerHandle;
 
+export type TDatePickerType = "date" | "datetime-local" | "time";
+
+export type TDatePickerResult =
+    | {type: "confirm"; value: string; changed: boolean}
+    | {type: "cancel"; reason: "cancel" | "escape" | "dismiss" | "destroy" | "replaced" | "owner-destroyed"};
+
+export interface IDatePickerOptions {
+    type: TDatePickerType;
+    /** 公历 YYYY-MM-DD、本地日期时间 YYYY-MM-DDTHH:mm 或 HH:mm；时间可带秒和毫秒。省略为空，不预选今天。 */
+    value?: string;
+    /** 与 type 对应的最小和最大值；日期时间允许 T 或空格分隔，格式非法时按 HTML 日期输入规则忽略。 */
+    min?: string;
+    max?: string;
+    /** date 的单位为天，其他类型为秒；默认分别为 1 和 60，any 表示不限步长。 */
+    step?: string;
+    /** 默认 false；为 true 时不能确认空值。 */
+    required?: boolean;
+    /** 按纯文本显示。 */
+    title?: string;
+    /** 有效 BCP 47 标签；省略时使用目标文档语言或浏览器语言，影响月名、周名与每周首日。 */
+    locale?: string;
+    /** 尚未开始停用、重载或卸载的实际插件实例。 */
+    ownerPlugin: Plugin;
+    /** 已连接且属于就绪思源窗口的元素；决定弹窗所属文档，移除或迁出时取消会话。 */
+    ownerElement: HTMLElement;
+}
+
+export interface IDatePickerHandle {
+    /** 每次会话只终结一次；确认空字符串表示清空，取消没有 value。确认不代表业务数据已保存。 */
+    result: Promise<TDatePickerResult>;
+    /** 幂等取消，结果原因为 destroy。 */
+    destroy(): void;
+}
+
+/**
+ * 打开内置公历日期或时间选择器；独立调用需明确确认，不转换时区或保存业务数据。
+ * 日期时间初值使用 T 分隔且不接受时区后缀；格式非法时同步报错，格式合法但超出约束的初值可修正后确认。
+ * 返回与 HTML 日期输入一致的字符串；清空为 ""。changed 比较日期和时间值，不因等价格式规范化而改变。
+ * 同一目标文档只保留一个会话，新请求以 replaced 取消旧请求；不同窗口相互独立。
+ * 插件停用、重载、卸载和所属窗口关闭会取消会话。调用方负责保存、错误处理及旧版本兼容入口。
+ */
+export function openDatePicker(options: IDatePickerOptions): IDatePickerHandle;
+
 export function openEmoji(options: {
     position: IPosition,
     selectedCB?: (emoji: string) => void,
