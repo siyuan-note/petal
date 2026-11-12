@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* [Declare asset cleanup exclusion management and upload-time protection](https://github.com/siyuan-note/siyuan/issues/21398)
 * [Declare per-export block reference modes for PDF previews](https://github.com/siyuan-note/siyuan/issues/21391)
 * Synchronize table and table-cell corner attribute constants with SiYuan
 * [Declare the built-in date and time picker with civil values, constraints, explicit clearing and plugin/window ownership](https://github.com/siyuan-note/siyuan/issues/21127)
