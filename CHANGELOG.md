@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Declare sync preview invalidation responses that require a fresh preview and explicit direction confirmation
 * [Declare folded-block visibility for reference navigation](https://github.com/siyuan-note/siyuan/issues/21400)
 * [Declare asset cleanup exclusion management and upload-time protection](https://github.com/siyuan-note/siyuan/issues/21398)
 * [Declare per-export block reference modes for PDF previews](https://github.com/siyuan-note/siyuan/issues/21391)
