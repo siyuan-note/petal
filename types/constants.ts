@@ -929,6 +929,7 @@ export abstract class Constants {
     public static readonly SIYUAN_SPELLCHECK_ACTION: string;
     public static readonly SIYUAN_CONFIRM_DIALOG: string;
     public static readonly SIYUAN_ALERT_DIALOG: string;
+    public static readonly SIYUAN_AGENT_NOTIFICATION: string;
     public static readonly SIYUAN_OPEN_SETTING: string;
     public static readonly SIYUAN_OPEN_HELP: string;
     public static readonly SIYUAN_TOPBAR_CONTEXT_MENU: string;

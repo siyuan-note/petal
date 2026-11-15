@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Synchronize the existing agent notification event constant with SiYuan
 * Add the search preference to collapse document groups by default (off by default)
 * Declare sync preview invalidation responses that require a fresh preview and explicit direction confirmation
 * [Declare folded-block visibility for reference navigation](https://github.com/siyuan-note/siyuan/issues/21400)
@@ -10,7 +11,7 @@
 * Synchronize table and table-cell corner attribute constants with SiYuan
 * [Declare the built-in date and time picker with civil values, constraints, explicit clearing and plugin/window ownership](https://github.com/siyuan-note/siyuan/issues/21127)
 * [Declare independent primary-key and relation/rollup content icon preferences for database views and their creation defaults](https://github.com/siyuan-note/siyuan/issues/21366)
-* [Declare rich primary-key sources and inline editing with document-title validation](https://github.com/siyuan-note/siyuan/issues/21136)
+* [Declare primary-key Kramdown block sources (database format 16) with legacy inline-ast reading and source-aware updates](https://github.com/siyuan-note/siyuan/issues/21136)
 * [Declare a native color picker with HEX/RGB drafts, explicit confirmation and plugin/window lifecycle ownership](https://github.com/siyuan-note/siyuan/issues/21134)
 * [Declare plugin snapshot search, program/data statistics and paired restoration with a backup snapshot](https://github.com/siyuan-note/siyuan/issues/21350)
 
