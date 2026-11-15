@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Clarify skipped legacy mind map conversion for read-only documents and localized errors for invalid document targets
 * Synchronize the existing agent notification event constant with SiYuan
 * Add the search preference to collapse document groups by default (off by default)
 * Declare sync preview invalidation responses that require a fresh preview and explicit direction confirmation
