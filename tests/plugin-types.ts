@@ -3,6 +3,14 @@ import type {APIPOSTRoutes, AVLayoutTable, AVRenderData, AVTable, AVValueLocatio
 import type {IAVNewItemTemplate} from "../types";
 import type {Files} from "../types/layout/dock/Files";
 
+const singleTagRemoval: APIPOSTRoutes["/api/tag/removeTagWithCollections"]["request"] = {label: "todo", collections: []};
+const batchTagPreview: APIPOSTRoutes["/api/tag/previewTagRemoval"]["request"] = {labels: ["todo", "done"]};
+const batchTagRemoval: APIPOSTRoutes["/api/tag/removeTagWithCollections"]["request"] = {labels: ["todo", "done"], collections: []};
+// @ts-expect-error 批量标签必须使用字符串数组。
+const invalidBatchTagPreview: APIPOSTRoutes["/api/tag/previewTagRemoval"]["request"] = {labels: "todo"};
+// @ts-expect-error 批量标签不接受数值条目。
+const invalidBatchTagRemoval: APIPOSTRoutes["/api/tag/removeTagWithCollections"]["request"] = {labels: [1], collections: []};
+
 declare const datePickerPlugin: Plugin;
 declare const datePickerOwner: HTMLElement;
 const datePicker = openDatePicker({type: "datetime-local", value: "2026-11-11T09:00", min: "2026-01-01T00:00",

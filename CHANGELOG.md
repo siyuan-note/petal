@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* [Declare atomic batch tag deletion and final-state collection previews with exact labels and single-tag compatibility](https://github.com/siyuan-note/siyuan/issues/21479)
 * Clarify skipped legacy mind map conversion for read-only documents and localized errors for invalid document targets
 * Synchronize the existing agent notification event constant with SiYuan
 * Add the search preference to collapse document groups by default (off by default)
