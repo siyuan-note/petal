@@ -856,6 +856,10 @@ export namespace Config {
          * 是否在文档顶部显示数据库属性
          */
         databaseAttrShow: boolean;
+        /** 默认开启；新建数据库和视图时显示主键条目的图标，不影响已有视图 */
+        databaseShowIcon: boolean;
+        /** 默认开启；新建数据库和视图时显示关联和汇总条目的图标，不影响已有视图 */
+        databaseShowRelationIcon: boolean;
         /**
          * 点击数据库标记的行为
          * - `0`：聚焦区块并展开数据库面板
@@ -1074,6 +1078,8 @@ export namespace Config {
          * Defaults to true; does not affect the main window.
          */
         closeWindowOnLastTabClosed: boolean;
+        /** Restore the saved reading position on ordinary document reopening (default true); explicit navigation and tab restoration retain their targets. */
+        restoreDocPosition: boolean;
         /**
          * The storage path of the new document created using block references
          */
@@ -1720,6 +1726,8 @@ export namespace Config {
      * SiYuan search related configuration
      */
     export interface ISearch {
+        /** 文档分组结果默认折叠，缺省为 false；仅影响新渲染的分组，手动展开或折叠不修改此偏好 */
+        groupFolded?: boolean;
         /**
          * Whether to search in block aliases
          */

@@ -1,0 +1,81 @@
+name: Publish npm package
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing GitHub Release tag to publish
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'siyuan-note/petal'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Validate release version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node <<'NODE'
+          const {execFileSync} = require("node:child_process");
+          const {name, version} = require("./package.json");
+          const tag = process.env.RELEASE_TAG;
+          const release = JSON.parse(execFileSync("gh", ["api", `repos/siyuan-note/petal/releases/tags/${tag}`], {encoding: "utf8"}));
+          if (release.draft) {
+              throw new Error("Release must be published");
+          }
+          if (name !== "siyuan") {
+              throw new Error(`Unexpected package name ${name}`);
+          }
+          if (tag !== version && tag !== `v${version}`) {
+              throw new Error(`Release tag ${tag} does not match package version ${version}`);
+          }
+          if (version.includes("-") !== release.prerelease) {
+              throw new Error("Release prerelease status does not match package version");
+          }
+          NODE
+
+      - name: Install pnpm
+        run: npm install --global pnpm@12.6.0
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Check declarations
+        run: pnpm run test:kernel-types
+
+      - name: Inspect package
+        run: npm pack --dry-run
+
+      - name: Publish to npm
+        shell: bash
+        run: |
+          TAG=$(node -p "require('./package.json').version.includes('-') ? 'alpha' : 'latest'")
+          npm publish --registry https://registry.npmjs.org --tag "$TAG"

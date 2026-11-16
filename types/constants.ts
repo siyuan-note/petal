@@ -3,6 +3,8 @@ import type {Config} from "../siyuan";
 const altNumber = navigator.platform.toUpperCase().indexOf("MAC") > -1 ? "⌃" : "⌥";
 
 export abstract class Constants {
+    public static readonly TABLE_CORNERS = "data-table-corners";
+    public static readonly TABLE_CELL_CORNER = "data-table-cell-corner";
     public static readonly SIYUAN_VERSION: string;
     public static readonly NODE_ENV: string;
     public static readonly SIYUAN_APPID: string = Math.random().toString(36).substring(8);
@@ -277,7 +279,6 @@ export abstract class Constants {
     public static readonly MENU_AV_ADD_FILTER = "av-add-filter"; // 数据库添加筛选条件菜单
     public static readonly MENU_AV_ADD_SORT = "av-add-sort"; // 数据库添加排序条件菜单
     public static readonly MENU_AV_COL_OPTION = "av-col-option"; // 数据库单选多选字段的选项编辑菜单
-    public static readonly MENU_AV_COL_FORMAT_NUMBER = "av-col-format-number"; // 数据库数字字段格式化菜单
     public static readonly MENU_AV_GROUP_DATE = "avGroupDate"; // 数据库日期字段分组菜单的日期菜单
     public static readonly MENU_AV_GROUP_SORT = "avGroupSort"; // 数据库日期字段分组菜单的排序菜单
     public static readonly MENU_AV_ASSET_EDIT = "av-asset-edit"; // 数据库资源字段链接或资源文件菜单
@@ -927,10 +928,12 @@ export abstract class Constants {
     public static readonly SIYUAN_SPELLCHECK_ACTION: string;
     public static readonly SIYUAN_CONFIRM_DIALOG: string;
     public static readonly SIYUAN_ALERT_DIALOG: string;
+    public static readonly SIYUAN_AGENT_NOTIFICATION: string;
     public static readonly SIYUAN_OPEN_SETTING: string;
     public static readonly SIYUAN_OPEN_HELP: string;
     public static readonly SIYUAN_TOPBAR_CONTEXT_MENU: string;
     public static readonly CUSTOM_SY_HEADING_NUMBER: string;
+    public static readonly CUSTOM_SY_RESTORE_DOC_POSITION: string;
     public static readonly CUSTOM_SY_AV_VISIBLE_VIEWS: string;
     public static readonly CUSTOM_SY_TITLE_EMPTY: string;
     public static readonly CUSTOM_SY_CODE_TAB_SPACES: string;

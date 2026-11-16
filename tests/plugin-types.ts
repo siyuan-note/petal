@@ -1,7 +1,40 @@
-import {Constants, Menu, Plugin, ProtyleMethod, openDocTreeMenu, showMessage} from "../siyuan";
-import type {APIPOSTRoutes, AVRenderData, AVTable, AVValueLocation, AVView, Config, EventBus, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, Petal, TransactionOperationRequest} from "../siyuan";
+import {Constants, Menu, Plugin, ProtyleMethod, openDatePicker, openDocTreeMenu, showMessage} from "../siyuan";
+import type {APIPOSTRoutes, AVLayoutTable, AVRenderData, AVTable, AVValueLocation, AVView, Config, EventBus, IAV, IBlock, IPosition, IProtyle, IScrollAttr, ISiyuan, Petal, TransactionOperationRequest} from "../siyuan";
 import type {IAVNewItemTemplate} from "../types";
 import type {Files} from "../types/layout/dock/Files";
+
+const singleTagRemoval: APIPOSTRoutes["/api/tag/removeTagWithCollections"]["request"] = {label: "todo", collections: []};
+const batchTagPreview: APIPOSTRoutes["/api/tag/previewTagRemoval"]["request"] = {labels: ["todo", "done"]};
+const batchTagRemoval: APIPOSTRoutes["/api/tag/removeTagWithCollections"]["request"] = {labels: ["todo", "done"], collections: []};
+// @ts-expect-error 批量标签必须使用字符串数组。
+const invalidBatchTagPreview: APIPOSTRoutes["/api/tag/previewTagRemoval"]["request"] = {labels: "todo"};
+// @ts-expect-error 批量标签不接受数值条目。
+const invalidBatchTagRemoval: APIPOSTRoutes["/api/tag/removeTagWithCollections"]["request"] = {labels: [1], collections: []};
+
+declare const datePickerPlugin: Plugin;
+declare const datePickerOwner: HTMLElement;
+const datePicker = openDatePicker({type: "datetime-local", value: "2026-11-11T09:00", min: "2026-01-01T00:00",
+    max: "2026-12-31T23:59", step: "60", required: false, locale: "zh-CN", ownerPlugin: datePickerPlugin,
+    ownerElement: datePickerOwner});
+datePicker.result.then(result => {
+    if (result.type === "confirm") {
+        const value: string = result.value;
+        const changed: boolean = result.changed;
+        void value; void changed;
+    } else {
+        const reason: string = result.reason;
+        void reason;
+        // @ts-expect-error 取消结果不包含日期值。
+        void result.value;
+    }
+});
+datePicker.destroy();
+// @ts-expect-error 日期选择器必须指定实际插件实例。
+openDatePicker({type: "date", ownerElement: datePickerOwner});
+// @ts-expect-error 日期值使用本地日历字符串，而非 Date 或时间戳。
+openDatePicker({type: "date", value: new Date(), ownerPlugin: datePickerPlugin, ownerElement: datePickerOwner});
+// @ts-expect-error 原生周输入不是本选择器的公开类型。
+openDatePicker({type: "week", ownerPlugin: datePickerPlugin, ownerElement: datePickerOwner});
 
 const historyFirstPage: APIPOSTRoutes["/api/history/getHistoryItems"]["request"] = {created: "1794225600"};
 const historyNextPage: APIPOSTRoutes["/api/history/getHistoryItems"]["request"] = {...historyFirstPage, page: 2, op: "delete"};
@@ -127,6 +160,16 @@ declare const editor: Config.IEditor;
 const headings: boolean = editor.headingNumber;
 const loaded: boolean = editor.keepLoadedContent;
 const database: boolean = editor.databaseAttrShow;
+const databasePrimaryIcons: boolean = editor.databaseShowIcon;
+const databaseRelationIcons: boolean = editor.databaseShowRelationIcon;
+const databaseIconDefaults: APIPOSTRoutes["/api/setting/setEditor"]["request"] = {
+    databaseShowIcon: false, databaseShowRelationIcon: true,
+};
+const defaultDatabaseIcons: APIPOSTRoutes["/api/setting/setEditor"]["request"] = {
+    databaseShowIcon: null, databaseShowRelationIcon: null,
+};
+// @ts-expect-error 数据库图标默认开关只接受布尔值或 null。
+const invalidDatabaseIconDefaults: APIPOSTRoutes["/api/setting/setEditor"]["request"] = {databaseShowRelationIcon: "true"};
 declare const web: Config.IAIWeb;
 const exaKey: string = web.exaApiKey;
 const setExaKey: APIPOSTRoutes["/api/setting/setAI"]["request"] = {web: {exaApiKey: "exa-key"}};
@@ -190,6 +233,8 @@ Menu.toggle({
 });
 const headingAttribute: string = Constants.CUSTOM_SY_HEADING_NUMBER;
 const mindmapViewports: string = Constants.LOCAL_MINDMAP_VIEWPORTS;
+const tableCornersAttribute: "data-table-corners" = Constants.TABLE_CORNERS;
+const tableCellCornerAttribute: "data-table-cell-corner" = Constants.TABLE_CELL_CORNER;
 declare const titleEditor: IProtyle;
 const openTitle: Promise<void> = titleEditor.title.openEditor();
 const openCurrentTitle: Promise<void> = titleEditor.title.openEditor(() => true);
@@ -208,6 +253,24 @@ declare const removedVision: Config.IAI["vision"];
 
 const location: AVValueLocation = {name: "Office", longitude: 120, latitude: 0};
 const tableLayout: AVView["type"] = "table";
+const legacyDatabaseIcons: Pick<AVLayoutTable, "showIcon" | "showRelationIcon"> = {showIcon: false};
+const independentDatabaseIcons: Pick<AVLayoutTable, "showIcon" | "showRelationIcon"> = {
+    showIcon: false, showRelationIcon: true,
+};
+const pluginLegacyIcons: Pick<IAV["view"], "showIcon" | "showRelationIcon"> = {showIcon: true};
+const pluginIndependentIcons: Pick<IAV["view"], "showIcon" | "showRelationIcon"> = {
+    showIcon: true, showRelationIcon: false,
+};
+declare const renderedDatabase: Extract<AVTable, {showIcon: boolean}>;
+const renderedRelationIcons: boolean = renderedDatabase.showRelationIcon;
+const setPrimaryIcons: TransactionOperationRequest = {
+    action: "setAttrViewShowIcon", avID: "av", id: "view", blockID: "carrier", data: false,
+};
+const setRelationIcons: TransactionOperationRequest = {
+    action: "setAttrViewShowRelationIcon", avID: "av", id: "view", blockID: "carrier", data: true,
+};
+// @ts-expect-error 关联和汇总图标开关不接受字符串。
+const invalidRelationIcons: TransactionOperationRequest = {action: "setAttrViewShowRelationIcon", data: "true"};
 // @ts-expect-error 地图布局不再属于数据库视图类型。
 const removedMapLayout: AVView["type"] = "map";
 // @ts-expect-error 表格数据不再提供地图设置。
