@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Add atomic built-in ordered flashcard step reordering contracts that preserve card identities, source references, scheduling and history, with read-only source details and an initial content-fingerprint precondition
+* Add read-only static flashcard draft preview models and block snapshots without creating cards or migrating legacy data
 * Align flashcard branch declarations with the current development baseline, including document reading position and database menu constants
 * Synchronize latest dev contracts and rich document title, virtual document tree, AI memory, and database sub-item declarations with flashcard v2
 * Synchronize current API contracts and mind map viewport storage with flashcard v2, retaining legacy transaction failure handling
