@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* [Declare the pending installer's version-specific release announcement in the exit response](https://github.com/siyuan-note/siyuan/issues/21503)
 * Clarify undoable tag renaming, source snapshot checks, and preservation of existing collected entries
 * Clarify internal tag-removal contract metadata; these declarations do not define a stable public plugin API
 * Clarify skipped legacy mind map conversion for read-only documents and localized errors for invalid document targets
