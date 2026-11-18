@@ -400,7 +400,8 @@ export interface ICardData {
 export function adaptHotkey(hotkey: string): string
 
 /**
- * title 和 text 均为空时不打开对话框，直接以无参数形式调用 confirmCallback。
+ * 即使 title 和 text 均为空，仍会打开对话框；用户确认后才调用 confirmCallback。
+ * 等待 confirmCallback 完成后关闭对话框；回调返回 false 或抛出错误时保持打开。
  * @param {boolean} [isDelete=false] - 为 true 时确认按钮使用删除样式和删除文案
  * @param extraAction - 在按钮区额外添加的操作按钮
  * @param confirmLabel - 确认按钮文字，优先于 isDelete 的默认文案
