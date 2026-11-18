@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Declare `CUSTOM_SY_RESTORE_DOC_POSITION` and remove `MENU_AV_COL_FORMAT_NUMBER` to match the SiYuan runtime
 * [Document recently added tag sorting and block tag creation times](https://github.com/siyuan-note/siyuan/issues/21509)
 * [Declare full tag-tree reads and custom sibling tag ordering](https://github.com/siyuan-note/siyuan/issues/21508)
 * [Plugin confirmation now requires user confirmation even with empty content and waits for asynchronous callbacks](https://github.com/siyuan-note/siyuan/pull/21514)
