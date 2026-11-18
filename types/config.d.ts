@@ -720,6 +720,8 @@ export namespace Config {
         embedBlockBreadcrumb: boolean;
         /** 是否将笔记本、文档和块路径合并为一条面包屑，默认关闭 */
         globalBreadcrumb: boolean;
+        /** 隐藏桌面全局面包屑中的默认文档图标，默认关闭。 */
+        hideDefaultBreadcrumbDocIcons: boolean;
         /** 默认显示文档上层路径；块级设置为默认时继承此值 */
         embedBlockBreadcrumbParentPath: boolean;
         /**
