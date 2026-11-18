@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* [Declare full tag-tree reads and custom sibling tag ordering](https://github.com/siyuan-note/siyuan/issues/21508)
 * [Declare the independent editor breadcrumb icon preference as `hideBreadcrumbIcons`](https://github.com/siyuan-note/siyuan/issues/3007)
 * [Declare the pending installer's version-specific release announcement in the exit response](https://github.com/siyuan-note/siyuan/issues/21503)
 * Clarify undoable tag renaming, source snapshot checks, and preservation of existing collected entries
