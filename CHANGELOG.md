@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-* [Declare the preference to hide icons next to labels in global breadcrumbs](https://github.com/siyuan-note/siyuan/issues/3007)
+* [Document that the editor breadcrumb icon preference also applies when global breadcrumbs are off](https://github.com/siyuan-note/siyuan/issues/3007)
 * [Declare the pending installer's version-specific release announcement in the exit response](https://github.com/siyuan-note/siyuan/issues/21503)
 * Clarify undoable tag renaming, source snapshot checks, and preservation of existing collected entries
 * Clarify internal tag-removal contract metadata; these declarations do not define a stable public plugin API
