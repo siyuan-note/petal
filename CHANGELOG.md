@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* [Declare the read-only sync association flag in configuration responses](https://github.com/siyuan-note/siyuan/issues/18034)
 * [Rename the desktop main menu constant to `MENU_BAR_MAIN_MENU` and use `barMainMenu` for its button ID and plugin event name](https://github.com/siyuan-note/siyuan/issues/21544)
 * Declare `CUSTOM_SY_RESTORE_DOC_POSITION` and remove `MENU_AV_COL_FORMAT_NUMBER` to match the SiYuan runtime
 * [Document recently added tag sorting and block tag creation times](https://github.com/siyuan-note/siyuan/issues/21509)

@@ -1975,6 +1975,11 @@ export namespace Config {
      */
     export interface ISync {
         /**
+         * Whether this workspace has a current or prior sync association, including paused sync.
+         * Maintained by the kernel; may be omitted by older kernels.
+         */
+        readonly configured?: boolean;
+        /**
          * Cloud workspace name
          */
         cloudName: string;
