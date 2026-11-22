@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* [Declare inline references to previous agent messages](https://github.com/siyuan-note/siyuan/issues/21596)
+* [Declare the resolved block prompt when continuing an editor task in the agent](https://github.com/siyuan-note/siyuan/issues/21597)
 * [Declare the agent stream's optional marker for a failed automatic snapshot](https://github.com/siyuan-note/siyuan/issues/21599)
 * Document publish access for database names, backlink IDs and custom emoji, and session limits for MCP OAuth codes
 * Document publish access rules for document statistics and virtual references
