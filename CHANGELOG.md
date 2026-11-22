@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* [Declare the agent stream's optional marker for a failed automatic snapshot](https://github.com/siyuan-note/siyuan/issues/21599)
 * Document publish access for database names, backlink IDs and custom emoji, and session limits for MCP OAuth codes
 * Document publish access rules for document statistics and virtual references
 * [Declare the read-only sync association flag in configuration responses](https://github.com/siyuan-note/siyuan/issues/18034)
