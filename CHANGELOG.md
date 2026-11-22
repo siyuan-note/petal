@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Document publish access for database names, backlink IDs and custom emoji, and session limits for MCP OAuth codes
 * Document publish access rules for document statistics and virtual references
 * [Declare the read-only sync association flag in configuration responses](https://github.com/siyuan-note/siyuan/issues/18034)
 * [Rename the desktop main menu constant to `MENU_BAR_MAIN_MENU` and use `barMainMenu` for its button ID and plugin event name](https://github.com/siyuan-note/siyuan/issues/21544)
