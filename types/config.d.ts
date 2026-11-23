@@ -242,6 +242,8 @@ export namespace Config {
      */
     export interface IEditing {
         modelId: string;
+        /** 智能编辑的默认思考强度，空字符串使用模型默认值。 */
+        reasoningEffort: string;
         maxHistoryMessages: number;
         temperature: number;
         maxCompletionTokens: number;
