@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* [Document sync failure responses and the last successful sync timestamp](https://github.com/siyuan-note/siyuan/issues/21644)
 * [Declare the AI editor's default reasoning effort and per-request model and reasoning overrides](https://github.com/siyuan-note/siyuan/issues/21635)
 * [Declare inline references to previous agent messages](https://github.com/siyuan-note/siyuan/issues/21596)
 * [Declare the resolved block prompt when continuing an editor task in the agent](https://github.com/siyuan-note/siyuan/issues/21597)
