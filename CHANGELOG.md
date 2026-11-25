@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Document publish-reader visibility for document tree ranges, file tree settings, full-text search, and backlinks
 * [Document sync failure responses and the last successful sync timestamp](https://github.com/siyuan-note/siyuan/issues/21644)
 * [Declare the AI editor's default reasoning effort and per-request model and reasoning overrides](https://github.com/siyuan-note/siyuan/issues/21635)
 * [Declare inline references to previous agent messages](https://github.com/siyuan-note/siyuan/issues/21596)
