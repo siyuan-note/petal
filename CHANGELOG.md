@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Synchronize the flashcard API and plugin declarations with SiYuan dev
 * Document publish-reader visibility for document tree ranges, file tree settings, full-text search, and backlinks
 * [Document sync failure responses and the last successful sync timestamp](https://github.com/siyuan-note/siyuan/issues/21644)
 * [Declare the AI editor's default reasoning effort and per-request model and reasoning overrides](https://github.com/siyuan-note/siyuan/issues/21635)
@@ -18,6 +19,20 @@
 * [Plugin confirmation now requires user confirmation even with empty content and waits for asynchronous callbacks](https://github.com/siyuan-note/siyuan/pull/21514)
 * [Declare the independent editor breadcrumb icon preference as `hideBreadcrumbIcons`](https://github.com/siyuan-note/siyuan/issues/3007)
 * [Declare the pending installer's version-specific release announcement in the exit response](https://github.com/siyuan-note/siyuan/issues/21503)
+* Add atomic built-in ordered flashcard step reordering contracts that preserve card identities, source references, scheduling and history, with read-only source details and an initial content-fingerprint precondition
+* Add read-only static flashcard draft preview models and block snapshots without creating cards or migrating legacy data
+* Align flashcard branch declarations with the current development baseline, including document reading position and database menu constants
+* Synchronize latest dev contracts and rich document title, virtual document tree, AI memory, and database sub-item declarations with flashcard v2
+* Synchronize current API contracts and mind map viewport storage with flashcard v2, retaining legacy transaction failure handling
+* Synchronize merged dev API contracts, lock screen and detached-window preferences, and document addressing capabilities with the flashcard branch
+* Synchronize API contracts, configuration preferences, and Live Photo constants after merging SiYuan dev into the flashcard branch
+* Migrate flashcard APIs to complete typed route contracts while preserving request and response compatibility
+* Synchronize merged SiYuan dev API contracts, route authorization, and attribute-view declarations with the flashcard branch
+* [Support AnkiConnect-compatible flashcard requests and configuration declarations](https://github.com/siyuan-note/siyuan/issues/20008)
+* Synchronize API declarations after merging the latest SiYuan dev changes into the flashcard branch
+* Synchronize flashcard v2 session, query, and branch API declarations
+* Add typed flashcard queries and edit-later API declarations, including notes and scheduling preservation
+* Synchronize current SiYuan dev API contracts and plugin declarations with the flashcard branch
 * Clarify undoable tag renaming, source snapshot checks, and preservation of existing collected entries
 * Clarify internal tag-removal contract metadata; these declarations do not define a stable public plugin API
 * Clarify skipped legacy mind map conversion for read-only documents and localized errors for invalid document targets

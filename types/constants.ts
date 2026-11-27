@@ -5,6 +5,8 @@ const altNumber = navigator.platform.toUpperCase().indexOf("MAC") > -1 ? "⌃" :
 export abstract class Constants {
     public static readonly TABLE_CORNERS = "data-table-corners";
     public static readonly TABLE_CELL_CORNER = "data-table-cell-corner";
+    public static readonly TABLE_PINNED_COLUMN_CELL = "data-table-pinned-column-cell";
+    public static readonly TABLE_PINNED_COLUMN_ACTIVE = "data-table-pinned-column-active";
     public static readonly SIYUAN_VERSION: string;
     public static readonly NODE_ENV: string;
     public static readonly SIYUAN_APPID: string = Math.random().toString(36).substring(8);
@@ -14,6 +16,7 @@ export abstract class Constants {
     public static readonly PROTYLE_CDN: string = "/stage/protyle";
     public static readonly UPLOAD_ADDRESS: string = "/upload";
     public static readonly SERVICE_WORKER_PATH: string = "/service-worker.js";
+    public static readonly SIYUAN_SYNC_NOTICE_HEADER: string = "X-Siyuan-Sync-Notice";
 
     // drop 事件
     public static readonly SIYUAN_DROP_FILE: string = "application/siyuan-file";
@@ -57,6 +60,7 @@ export abstract class Constants {
 
     // custom
     public static readonly CUSTOM_SY_READONLY: string = "custom-sy-readonly";
+    public static readonly CUSTOM_SY_AI_SOURCE: string = "custom-sy-ai-source";
     public static readonly CUSTOM_SY_EMBED_BREADCRUMB_PARENT_PATH: string = "custom-sy-embed-breadcrumb-parent-path";
     public static readonly CUSTOM_SY_RESTORE_DOC_POSITION: string = "custom-sy-restore-doc-position";
     public static readonly CUSTOM_SY_SUBDOC_SORT_MODE: string = "custom-sy-subdoc-sort-mode";
@@ -64,6 +68,7 @@ export abstract class Constants {
     public static readonly CUSTOM_SY_TABLE_RICH: string = "custom-sy-table-rich";
     public static readonly CUSTOM_SY_TABLE_HEADER_ROW: string = "custom-sy-table-header-row";
     public static readonly CUSTOM_SY_TABLE_HEADER_COLUMN: string = "custom-sy-table-header-column";
+    public static readonly CUSTOM_SY_TABLE_PIN_COLUMN: string = "custom-sy-table-pin-column";
     public static readonly CUSTOM_SY_AV_STATIC_TEXT: string = "custom-sy-av-s-text-";
     public static readonly CUSTOM_SY_LIVE_PHOTO: string = "custom-sy-live-photo";
     public static readonly CUSTOM_SY_LIVE_PHOTO_VIDEO: string = "custom-sy-live-photo-video";
@@ -171,6 +176,7 @@ export abstract class Constants {
     public static readonly LOCAL_WINDOW_WORKSPACE = "local-window-workspace-";
     public static readonly LOCAL_PLUGINTOPUNPIN = "local-plugintopunpin";
     public static readonly LOCAL_FLASHCARD = "local-flashcard";
+    public static readonly LOCAL_AGENT_PERMISSION_MODE = "local-agent-permission-mode";
     public static readonly LOCAL_FILEPOSITION = "local-fileposition";
     public static readonly LOCAL_FILESPATHS = "local-filespaths";
     public static readonly LOCAL_PINNED_DOC_TREE_STATE = "local-pinned-doc-tree-state";
@@ -850,6 +856,7 @@ export abstract class Constants {
 
     // assets
     public static readonly SIYUAN_ASSETS_IMAGE: string[] = [".apng", ".ico", ".cur", ".jpg", ".jpe", ".jpeg", ".jfif", ".pjp", ".pjpeg", ".png", ".gif", ".webp", ".bmp", ".svg", ".avif", ".tiff", ".tif"];
+    public static readonly AGENT_IMAGE_MIME_TYPES: readonly string[] = ["image/png", "image/jpeg", "image/gif", "image/webp"];
     public static readonly SIYUAN_ASSETS_AUDIO: string[] = [".mp3", ".wav", ".ogg", ".m4a", ".aac", ".flac"];
     public static readonly SIYUAN_ASSETS_VIDEO: string[] = [".mov", ".weba", ".mkv", ".mp4", ".webm"];
     public static readonly SIYUAN_ASSETS_EXTS: string[] = [".pdf"].concat(Constants.SIYUAN_ASSETS_IMAGE, Constants.SIYUAN_ASSETS_AUDIO, Constants.SIYUAN_ASSETS_VIDEO);
@@ -968,6 +975,7 @@ export abstract class Constants {
     public static readonly TIMEOUT_TAB_SWITCH: number;
     public static readonly TIMEOUT_SNIPPET_LOAD: number;
     public static readonly TIMEOUT_LONGPRESS: number;
+    public static readonly TIMEOUT_TOUCH_DRAG_STILLNESS = 120;
     public static readonly TIMEOUT_VIBRATION_DURATION: number;
     public static readonly SIYUAN_IMAGE_SPONSOR: string;
     public static readonly WORD_JOINER: string;
