@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Declare the active source block IDs returned after quick flashcard creation or removal
 * Synchronize the flashcard API and plugin declarations with SiYuan dev
 * Document publish-reader visibility for document tree ranges, file tree settings, full-text search, and backlinks
 * [Document sync failure responses and the last successful sync timestamp](https://github.com/siyuan-note/siyuan/issues/21644)

@@ -77,6 +77,7 @@ export abstract class Constants {
     public static readonly CUSTOM_SY_LIST_MINDMAP_DATA: string = "custom-sy-list-mindmap-data";
     public static readonly CUSTOM_REMINDER_WECHAT: string = "custom-reminder-wechat";
     public static readonly CUSTOM_RIFF_DECKS: string = "custom-riff-decks";
+    public static readonly DATA_FLASHCARD_SOURCE = "data-flashcard-source";
 
     public static readonly ATTRIBUTE_DOCK_WIDTH = "data-dock-width";
     public static readonly ATTRIBUTE_MENU_KEYMAP = "data-menu-keymap";
