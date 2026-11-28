@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* [Declare optional hints for image occlusion masks](https://github.com/siyuan-note/siyuan/issues/21733)
 * [Declare the background option for AI action requests](https://github.com/siyuan-note/siyuan/issues/21735)
 * Declare optional rating interval estimates for the flashcard render model
 * Declare the active source block IDs returned after quick flashcard creation or removal
