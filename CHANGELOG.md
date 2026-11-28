@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Declare the editor option for displaying image titles above images
 * [Declare typed answers and explanation blocks for image masks](https://github.com/siyuan-note/siyuan/issues/21733)
 * [Declare image mask reveal order, flashcard sorting, and local-only OCR](https://github.com/siyuan-note/siyuan/issues/21733)
 * [Declare per-group review areas for image occlusion cards](https://github.com/siyuan-note/siyuan/issues/21733)
